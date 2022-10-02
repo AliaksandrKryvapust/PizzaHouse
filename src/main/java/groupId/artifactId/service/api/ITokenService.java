@@ -1,6 +1,6 @@
 package groupId.artifactId.service.api;
 
-import groupId.artifactId.core.entity.api.IToken;
+import groupId.artifactId.core.api.IToken;
 
 import java.util.Optional;
 

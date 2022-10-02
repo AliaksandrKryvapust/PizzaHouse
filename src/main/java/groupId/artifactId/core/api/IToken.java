@@ -1,4 +1,4 @@
-package groupId.artifactId.core.entity.api;
+package groupId.artifactId.core.api;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

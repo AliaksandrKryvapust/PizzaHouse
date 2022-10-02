@@ -1,4 +1,4 @@
-package groupId.artifactId.core.entity.api;
+package groupId.artifactId.core.api;
 
 public enum PaymentType {
     Cash,
