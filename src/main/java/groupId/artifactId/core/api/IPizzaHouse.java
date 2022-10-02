@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface IPizzaHouse {
     List<IPizza> getMenu();
-    IToken getOrder(List<IPizza> order);
-    IOrderData getOrderData(IOrder order);
+    IToken makeOrder(List<IPizza> order);
+    IOrderData getOrderDataByToken(IToken token);
     IOrder getByToken(IToken token);
 }

@@ -6,5 +6,6 @@ import groupId.artifactId.core.entity.api.IToken;
 import java.util.Optional;
 
 public interface IOrderService extends IEssenceService<IOrder> {
-    Optional<IOrder> getByToken(IToken token);
+    Optional<IOrder> getById(int id);
+    IToken getToken(IOrder order);
 }
