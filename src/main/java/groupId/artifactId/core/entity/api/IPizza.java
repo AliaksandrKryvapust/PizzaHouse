@@ -1,4 +1,4 @@
-package groupId.artifactId.core.api;
+package groupId.artifactId.core.entity.api;
 
 public interface IPizza {
     String getDescription();
