@@ -2,10 +2,8 @@ package groupId.artifactId.entity.api;
 
 import java.util.List;
 
-public interface IOrderData {
+public interface ICompletedOrder {
     IToken getToken();
 
-    List<IOrderStage> getHistory();
-
-    boolean isDone();
+    List<IPizza> getItems();
 }
