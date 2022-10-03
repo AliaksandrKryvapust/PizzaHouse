@@ -1,6 +1,6 @@
 package groupId.artifactId.service.api;
 
-import groupId.artifactId.core.api.IPizza;
+import groupId.artifactId.entity.api.IPizza;
 
 import java.util.Optional;
 

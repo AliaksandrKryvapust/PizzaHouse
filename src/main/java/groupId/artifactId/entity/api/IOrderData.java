@@ -1,12 +1,17 @@
-package groupId.artifactId.core.api;
+package groupId.artifactId.entity.api;
 
 import java.time.LocalDateTime;
 
 public interface IOrderData {
     LocalDateTime getOrderAcceptedTime();
+
     LocalDateTime getPizzaStartCookingTime();
+
     LocalDateTime getPackingTime();
+
     LocalDateTime getOrderReadyTime();
-    OrderType getOrderType();
-    PaymentType getPaymentType();
+
+    EOrderType getOrderType();
+
+    EPaymentType getPaymentType();
 }
