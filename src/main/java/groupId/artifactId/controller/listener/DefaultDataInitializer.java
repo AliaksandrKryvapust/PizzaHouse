@@ -16,7 +16,7 @@ public class DefaultDataInitializer implements ServletContextListener {
     IMenuService menuService = MenuService.getInstance();
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        List<IMenuItem> temp = new ArrayList<>();
+        List<MenuItemDto> temp = new ArrayList<>();
         temp.add(new MenuItemDto(new PizzaInfo("MARGHERITA PIZZA","Mozzarella cheese, herb tomato sauce",
                 32),15.0));
         temp.add(new MenuItemDto(new PizzaInfo("PEPPERONI PIZZA","Pepperoni sausage, mozzarella cheese, herb tomato sauce",
@@ -25,7 +25,7 @@ public class DefaultDataInitializer implements ServletContextListener {
                 32),19.0));
         temp.add(new MenuItemDto(new PizzaInfo("AMERICANA PIZZA","Mushrooms, tomatoes, mozzarella cheese, herb tomato sauce",
                 32),18.0));
-        menuService.add(MenuMapper.menuMapping(temp));
+        menuService.add(temp);
     }
 
     @Override

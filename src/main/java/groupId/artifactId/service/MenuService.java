@@ -1,5 +1,7 @@
 package groupId.artifactId.service;
 
+import groupId.artifactId.core.dto.MenuItemDto;
+import groupId.artifactId.core.mapper.MenuMapper;
 import groupId.artifactId.storage.entity.api.IMenu;
 import groupId.artifactId.service.api.IMenuService;
 import groupId.artifactId.storage.api.IMenuStorage;
@@ -30,8 +32,8 @@ public class MenuService implements IMenuService {
     }
 
     @Override
-    public void add(IMenu menu) {
-//        this.validator.validate(productCreationDto);
-        this.storage.save(ProductMapper.productMapping(productCreationDto));
+    public void add(List<MenuItemDto> menuItemDto) {
+        this.validator.validate(productCreationDto);
+        this.storage.add(MenuMapper.menuMapping(menuItemDto));
     }
 }

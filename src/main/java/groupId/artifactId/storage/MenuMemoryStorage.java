@@ -1,5 +1,6 @@
 package groupId.artifactId.storage;
 
+import groupId.artifactId.storage.entity.Menu;
 import groupId.artifactId.storage.entity.api.IMenu;
 import groupId.artifactId.storage.api.IMenuStorage;
 import groupId.artifactId.storage.entity.api.IMenuItem;
@@ -22,8 +23,13 @@ public class MenuMemoryStorage implements IMenuStorage {
     }
 
     @Override
-    public void save(IMenu menu) {
-        this.menuList.add(menu);
+    public void add(IMenu menu) {
+        if (menu.getId() != null) {
+            throw new IllegalStateException("Error code 500. id should be empty");
+        }
+        Menu temp = (Menu) menu;
+        temp.setId(menuList.size() + 1);
+        this.menuList.add(temp);
     }
 
     @Override
@@ -35,16 +41,16 @@ public class MenuMemoryStorage implements IMenuStorage {
     @Override
     public void addMenuItem(IMenuItem menuItem, int menuId) {
         IMenu menu = this.getById(menuId).orElse(null);
-        if (menu==null){
+        if (menu == null) {
             throw new IllegalStateException("There is no such menu id in the storage");
         } else {
             menu.getItems().add(menuItem);
-            this.save(menu);
+            this.add(menu);
         }
     }
 
     @Override
     public Optional<IMenu> getById(int id) {
-        return this.menuList.stream().filter((i)->i.getId() ==id).findFirst();
+        return this.menuList.stream().filter((i) -> i.getId() == id).findFirst();
     }
 }
