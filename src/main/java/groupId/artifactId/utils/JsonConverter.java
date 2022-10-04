@@ -1,22 +1,28 @@
 package groupId.artifactId.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import groupId.artifactId.core.dto.MenuItemDto;
 import groupId.artifactId.exceptions.IncorrectJsonParseException;
-import groupId.artifactId.storage.entity.api.IMenuItem;
+import groupId.artifactId.storage.entity.api.IMenu;
 
 import javax.servlet.ServletInputStream;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 public class JsonConverter {
-    public static String toJson(List<Product> product) throws JsonProcessingException {
-        return new ObjectMapper().writeValueAsString(product);
+    public static String toJson(List<IMenu> menu) {
+        try {
+            return new ObjectMapper().writeValueAsString(menu);
+        } catch (JsonProcessingException e) {
+            throw new IncorrectJsonParseException("failed to write IMenu as json",e);
+        }
     }
     public static List<MenuItemDto> fromJson(ServletInputStream servletInputStream)  {
         try {
-            return Arrays.asList(new ObjectMapper().readValue(servletInputStream, MenuItemDto[].class));
+            return new ObjectMapper().readValue(servletInputStream, new TypeReference<>() {
+            });
         } catch (IOException e) {
             throw new IncorrectJsonParseException("failed to read servletInputStream of MenuItemDto[].class",e);
         }

@@ -7,6 +7,9 @@ public class PizzaInfoDto implements IPizzaInfo {
     private String description;
     private Integer size;
 
+    public PizzaInfoDto() {
+    }
+
     public PizzaInfoDto(String name, String description, Integer size) {
         this.name = name;
         this.description = description;

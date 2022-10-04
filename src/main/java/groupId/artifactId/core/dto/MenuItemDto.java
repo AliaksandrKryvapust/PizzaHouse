@@ -4,6 +4,9 @@ public class MenuItemDto {
     private PizzaInfoDto pizzaInfo;
     private double price;
 
+    public MenuItemDto() {
+    }
+
     public MenuItemDto(PizzaInfoDto pizzaInfoDto, double price) {
         this.pizzaInfo = pizzaInfoDto;
         this.price=price;

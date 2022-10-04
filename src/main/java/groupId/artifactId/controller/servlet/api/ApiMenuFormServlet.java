@@ -2,6 +2,7 @@ package groupId.artifactId.controller.servlet.api;
 
 import groupId.artifactId.exceptions.IncorrectEncodingException;
 import groupId.artifactId.exceptions.IncorrectServletInputStreamException;
+import groupId.artifactId.exceptions.IncorrectServletWriterException;
 import groupId.artifactId.service.MenuService;
 import groupId.artifactId.service.api.IMenuService;
 import groupId.artifactId.utils.JsonConverter;
@@ -22,9 +23,10 @@ public class ApiMenuFormServlet extends HttpServlet {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
         try {
-            resp.getWriter().write(JsonConverter.toJson(productService.get()));
-        } catch (Exception e) {
+            resp.getWriter().write(JsonConverter.toJson(menuService.get()));
+        } catch (IOException e){
             resp.setStatus(500);
+            throw new IncorrectServletWriterException("Incorrect servlet state during response writer method", e);
         }
         resp.setStatus(200);
     }
@@ -39,6 +41,7 @@ public class ApiMenuFormServlet extends HttpServlet {
             resp.setStatus(500);
             throw new IncorrectEncodingException("Failed to set character encoding UTF-8", e);
         } catch (IOException e){
+            resp.setStatus(500);
             throw new IncorrectServletInputStreamException("Impossible to get input stream from request",e);
         }
         resp.setStatus(201);
