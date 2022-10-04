@@ -1,7 +1,7 @@
 package groupId.artifactId.storage.entity;
 
 import groupId.artifactId.storage.entity.api.IMenu;
-import groupId.artifactId.entity.api.IMenuItem;
+import groupId.artifactId.storage.entity.api.IMenuItem;
 
 import java.util.List;
 

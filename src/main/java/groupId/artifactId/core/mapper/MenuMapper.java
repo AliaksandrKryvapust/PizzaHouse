@@ -1,6 +1,6 @@
 package groupId.artifactId.core.mapper;
 
-import groupId.artifactId.entity.api.IMenuItem;
+import groupId.artifactId.storage.entity.api.IMenuItem;
 import groupId.artifactId.storage.entity.Menu;
 import groupId.artifactId.storage.entity.api.IMenu;
 

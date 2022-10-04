@@ -1,6 +1,6 @@
 package groupId.artifactId.entity;
 
-import groupId.artifactId.entity.api.IMenuItem;
+import groupId.artifactId.storage.entity.api.IMenuItem;
 import groupId.artifactId.entity.api.ISelectedItem;
 
 public class SelectedItem implements ISelectedItem {

@@ -1,7 +1,7 @@
-package groupId.artifactId.core.dto;
+package groupId.artifactId.storage.entity;
 
-import groupId.artifactId.storage.entity.api.IMenuItem;
 import groupId.artifactId.core.dto.api.IPizzaInfo;
+import groupId.artifactId.storage.entity.api.IMenuItem;
 
 public class MenuItem implements IMenuItem {
     private IPizzaInfo pizzaInfo;

@@ -1,6 +1,6 @@
-package groupId.artifactId.entity;
+package groupId.artifactId.core.dto;
 
-import groupId.artifactId.entity.api.IPizzaInfo;
+import groupId.artifactId.core.dto.api.IPizzaInfo;
 
 public class PizzaInfo implements IPizzaInfo {
     private String name;

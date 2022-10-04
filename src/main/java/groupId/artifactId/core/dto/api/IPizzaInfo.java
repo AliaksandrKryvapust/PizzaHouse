@@ -1,4 +1,4 @@
-package groupId.artifactId.entity.api;
+package groupId.artifactId.core.dto.api;
 
 public interface IPizzaInfo {
     String getName();

@@ -1,0 +1,13 @@
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+         http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <display-name>it_acad_HW_Interfaces</display-name>
+    <error-page>
+        <exception-type>java.lang.Throwable</exception-type >
+        <location>/exception</location>
+    </error-page>
+    <listener>
+        <listener-class>groupId.artifactId.controller.listener.DefaultDataInitializer</listener-class>
+    </listener>
+</web-app>
