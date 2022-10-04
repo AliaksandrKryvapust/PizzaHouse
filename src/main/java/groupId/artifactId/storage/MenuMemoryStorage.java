@@ -7,6 +7,7 @@ import groupId.artifactId.storage.entity.api.IMenuItem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -40,17 +41,16 @@ public class MenuMemoryStorage implements IMenuStorage {
 
     @Override
     public void addMenuItem(IMenuItem menuItem, int menuId) {
-        IMenu menu = this.getById(menuId).orElse(null);
-        if (menu == null) {
-            throw new IllegalStateException("There is no such menu id in the storage");
-        } else {
-            menu.getItems().add(menuItem);
-            this.add(menu);
-        }
+    Objects.requireNonNull(this.getById(menuId).orElse(null)).getItems().add(menuItem);
     }
 
     @Override
     public Optional<IMenu> getById(int id) {
         return this.menuList.stream().filter((i) -> i.getId() == id).findFirst();
+    }
+
+    @Override
+    public Boolean isIdExist(int id) {
+        return this.menuList.stream().anyMatch((i)->i.getId()==id);
     }
 }

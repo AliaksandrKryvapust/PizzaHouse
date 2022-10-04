@@ -1,6 +1,7 @@
 package groupId.artifactId.service;
 
 import groupId.artifactId.core.dto.MenuItemDto;
+import groupId.artifactId.core.dto.MenuItemDtoWithId;
 import groupId.artifactId.core.mapper.MenuMapper;
 import groupId.artifactId.service.api.IMenuValidator;
 import groupId.artifactId.storage.entity.api.IMenu;
@@ -35,8 +36,19 @@ public class MenuService implements IMenuService {
     }
 
     @Override
+    public Boolean isIdValid(int id) {
+        return this.storage.isIdExist(id);
+    }
+
+    @Override
     public void add(List<MenuItemDto> menuItemDto) {
-        this.validator.validate(menuItemDto);
+        this.validator.validateMenu(menuItemDto);
         this.storage.add(MenuMapper.menuMapping(menuItemDto));
+    }
+
+    @Override
+    public void addMenuItem(MenuItemDtoWithId menuItemDtoWithId) {
+        this.validator.validateMenuItem(menuItemDtoWithId);
+        this.storage.addMenuItem(MenuMapper.menuItemWithIdMapping(menuItemDtoWithId), menuItemDtoWithId.getId());
     }
 }
