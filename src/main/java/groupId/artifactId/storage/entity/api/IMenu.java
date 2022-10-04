@@ -4,4 +4,5 @@ import java.util.List;
 
 public interface IMenu {
     List<IMenuItem> getItems();
+    public Integer getId();
 }

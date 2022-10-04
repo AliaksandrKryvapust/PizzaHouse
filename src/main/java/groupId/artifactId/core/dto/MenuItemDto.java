@@ -1,13 +1,12 @@
 package groupId.artifactId.core.dto;
 
-import groupId.artifactId.storage.entity.api.IMenuItem;
 import groupId.artifactId.core.dto.api.IPizzaInfo;
 
-public class MenuItem implements IMenuItem {
+public class MenuItemDto {
     private IPizzaInfo pizzaInfo;
     private double price;
 
-    public MenuItem(IPizzaInfo pizzaInfo, double price) {
+    public MenuItemDto(IPizzaInfo pizzaInfo, double price) {
         this.pizzaInfo = pizzaInfo;
         this.price=price;
     }
@@ -20,12 +19,12 @@ public class MenuItem implements IMenuItem {
         this.price = price;
     }
 
-    @Override
+
     public IPizzaInfo getInfo() {
         return this.pizzaInfo;
     }
 
-    @Override
+
     public double getPrice() {
         return price;
     }

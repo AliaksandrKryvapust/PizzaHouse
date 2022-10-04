@@ -32,6 +32,6 @@ public class MenuService implements IMenuService {
     @Override
     public void add(IMenu menu) {
 //        this.validator.validate(productCreationDto);
-//        this.storage.save(ProductMapper.productMapping(productCreationDto));
+        this.storage.save(ProductMapper.productMapping(productCreationDto));
     }
 }
