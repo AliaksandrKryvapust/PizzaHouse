@@ -25,7 +25,7 @@ public class MenuMemoryStorage implements IMenuStorage {
     @Override
     public void add(IMenu menu) {
         if (menu.getId() != null) {
-            throw new IllegalStateException("Error code 500. id should be empty");
+            throw new IllegalStateException("Error code 500. Menu id should be empty");
         }
         Menu temp = (Menu) menu;
         temp.setId(menuList.size() + 1);

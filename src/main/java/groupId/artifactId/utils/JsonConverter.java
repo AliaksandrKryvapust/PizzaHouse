@@ -9,9 +9,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class JsonConverter {
-//    public static String toJson(List<Product> product) throws JsonProcessingException {
-//        return new ObjectMapper().writeValueAsString(product);
-//    }
+    public static String toJson(List<Product> product) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(product);
+    }
     public static List<IMenuItem> fromJson(ServletInputStream servletInputStream) throws IOException {
         return Arrays.asList(new ObjectMapper().readValue(servletInputStream, IMenuItem[].class));
     }

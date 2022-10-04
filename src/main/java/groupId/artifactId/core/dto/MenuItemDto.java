@@ -1,18 +1,16 @@
 package groupId.artifactId.core.dto;
 
-import groupId.artifactId.core.dto.api.IPizzaInfo;
-
 public class MenuItemDto {
-    private IPizzaInfo pizzaInfo;
+    private PizzaInfoDto pizzaInfo;
     private double price;
 
-    public MenuItemDto(IPizzaInfo pizzaInfo, double price) {
-        this.pizzaInfo = pizzaInfo;
+    public MenuItemDto(PizzaInfoDto pizzaInfoDto, double price) {
+        this.pizzaInfo = pizzaInfoDto;
         this.price=price;
     }
 
-    public void setPizzaInfo(IPizzaInfo pizzaInfo) {
-        this.pizzaInfo = pizzaInfo;
+    public void setPizzaInfo(PizzaInfoDto pizzaInfoDto) {
+        this.pizzaInfo = pizzaInfoDto;
     }
 
     public void setPrice(double price) {
@@ -20,7 +18,7 @@ public class MenuItemDto {
     }
 
 
-    public IPizzaInfo getInfo() {
+    public PizzaInfoDto getInfo() {
         return this.pizzaInfo;
     }
 

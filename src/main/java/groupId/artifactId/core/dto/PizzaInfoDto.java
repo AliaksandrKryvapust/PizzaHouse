@@ -1,13 +1,13 @@
 package groupId.artifactId.core.dto;
 
-import groupId.artifactId.core.dto.api.IPizzaInfo;
+import groupId.artifactId.storage.entity.api.IPizzaInfo;
 
-public class PizzaInfo implements IPizzaInfo {
+public class PizzaInfoDto implements IPizzaInfo {
     private String name;
     private String description;
     private Integer size;
 
-    public PizzaInfo(String name, String description, Integer size) {
+    public PizzaInfoDto(String name, String description, Integer size) {
         this.name = name;
         this.description = description;
         this.size = size;

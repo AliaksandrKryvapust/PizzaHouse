@@ -1,6 +1,6 @@
 package groupId.artifactId.storage.entity;
 
-import groupId.artifactId.core.dto.api.IPizzaInfo;
+import groupId.artifactId.storage.entity.api.IPizzaInfo;
 import groupId.artifactId.storage.entity.api.IMenuItem;
 
 public class MenuItem implements IMenuItem {
