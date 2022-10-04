@@ -1,7 +1,7 @@
 package groupId.artifactId.entity.api;
 
 public interface ISelectedItem {
-    IMenuRow getRow();
+    IMenuItem getItem();
 
     int getCount();
 }
