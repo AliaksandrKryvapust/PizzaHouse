@@ -2,6 +2,7 @@ package groupId.artifactId.service;
 
 import groupId.artifactId.core.dto.MenuItemDto;
 import groupId.artifactId.core.mapper.MenuMapper;
+import groupId.artifactId.service.api.IMenuValidator;
 import groupId.artifactId.storage.entity.api.IMenu;
 import groupId.artifactId.service.api.IMenuService;
 import groupId.artifactId.storage.api.IMenuStorage;
@@ -12,9 +13,11 @@ import java.util.List;
 public class MenuService implements IMenuService {
     private static MenuService firstInstance = null;
     private final IMenuStorage storage;
+    private final IMenuValidator validator;
 
     private MenuService() {
         this.storage = StorageFactory.getInstance().getMenuStorage();
+        this.validator=MenuValidator.getInstance();
     }
 
     public static MenuService getInstance() {
@@ -33,7 +36,7 @@ public class MenuService implements IMenuService {
 
     @Override
     public void add(List<MenuItemDto> menuItemDto) {
-        this.validator.validate(productCreationDto);
+        this.validator.validate(menuItemDto);
         this.storage.add(MenuMapper.menuMapping(menuItemDto));
     }
 }
