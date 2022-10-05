@@ -55,4 +55,14 @@ public class MenuMemoryStorage implements IMenuStorage {
     public Boolean isIdExist(int id) {
         return this.menuList.stream().anyMatch((i)->i.getId()==id);
     }
+
+    @Override
+    public Boolean isDishExist(String name) {
+        boolean temp=false;
+        for (IMenu menu: menuList ) {
+           temp= menu.getItems().stream().anyMatch((i)->i.getInfo().getName().equals(name));
+        }
+
+        return temp;
+    }
 }

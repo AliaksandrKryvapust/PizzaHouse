@@ -10,4 +10,5 @@ public interface IMenuStorage extends IEssenceStorage<IMenu>{
     void addMenuItem(IMenuItem menuItem, int menuId);
     Optional<IMenu> getById(int id);
     Boolean isIdExist(int id);
+    Boolean isDishExist(String name);
 }

@@ -34,6 +34,10 @@ public class TokenValidator implements ITokenValidator {
             if (dto.getMenuItem().getInfo().getName() == null || dto.getMenuItem().getInfo().getName().isBlank()) {
                 throw new IllegalArgumentException("Error code 400. Pizza`s name is not valid");
             }
+            MenuService menuService = MenuService.getInstance();
+            if (!menuService.isDishExist(dto.getMenuItem().getInfo().getName())){
+                throw new IllegalArgumentException("Error code 400. There is no such dish at the menu");
+            }
             if (dto.getMenuItem().getInfo().getDescription() == null || dto.getMenuItem().getInfo().getDescription().isBlank()) {
                 throw new IllegalArgumentException("Error code 400. Pizza`s description is not valid");
             }

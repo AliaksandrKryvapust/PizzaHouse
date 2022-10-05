@@ -23,7 +23,7 @@ public class ApiMenuFormServlet extends HttpServlet {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
         try {
-            resp.getWriter().write(JsonConverter.toJson(menuService.get()));
+            resp.getWriter().write(JsonConverter.fromMenuToJson(menuService.get()));
         } catch (IOException e){
             resp.setStatus(500);
             throw new IncorrectServletWriterException("Incorrect servlet state during response writer method", e);
@@ -36,7 +36,7 @@ public class ApiMenuFormServlet extends HttpServlet {
         try {
             req.setCharacterEncoding("UTF-8");
             resp.setContentType("application/json");
-            menuService.add(JsonConverter.fromJsonToList(req.getInputStream()));
+            menuService.add(JsonConverter.fromJsonToMenu(req.getInputStream()));
         } catch (UnsupportedEncodingException e) {
             resp.setStatus(500);
             throw new IncorrectEncodingException("Failed to set character encoding UTF-8", e);
@@ -47,3 +47,14 @@ public class ApiMenuFormServlet extends HttpServlet {
         resp.setStatus(201);
     }
 }
+//to add new Menu in Storage
+//[
+//   {
+//           "price":20.0,
+//           "pizzaInfo":{
+//           "name":"ITALIANO PIZZA",
+//           "description":"Mozzarella cheese, basilica, ham",
+//           "size":32
+//           }
+//           }
+//           ]

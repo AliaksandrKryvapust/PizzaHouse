@@ -2,8 +2,9 @@ package groupId.artifactId.controller.servlet.api;
 
 import groupId.artifactId.exceptions.IncorrectEncodingException;
 import groupId.artifactId.exceptions.IncorrectServletInputStreamException;
-import groupId.artifactId.service.MenuService;
-import groupId.artifactId.service.api.IMenuService;
+import groupId.artifactId.exceptions.IncorrectServletRedirectException;
+import groupId.artifactId.service.TokenService;
+import groupId.artifactId.service.api.ITokenService;
 import groupId.artifactId.utils.JsonConverter;
 
 import javax.servlet.annotation.WebServlet;
@@ -13,15 +14,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-@WebServlet(name = "MenuItem", urlPatterns = "/api/menu_item")
-public class ApiMenuItemServlet extends HttpServlet {
-    private final IMenuService menuService = MenuService.getInstance();
+@WebServlet(name = "OrderForm", urlPatterns = "/api/order_form")
+public class ApiOrderFormServlet extends HttpServlet {
+    private final ITokenService tokenService = TokenService.getInstance();
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         try {
             req.setCharacterEncoding("UTF-8");
             resp.setContentType("application/json");
-            menuService.addMenuItem(JsonConverter.fromJsonToMenuWithId(req.getInputStream()));
+            tokenService.add(JsonConverter.fromJsonToOrder(req.getInputStream()));
         } catch (UnsupportedEncodingException e) {
             resp.setStatus(500);
             throw new IncorrectEncodingException("Failed to set character encoding UTF-8", e);
@@ -30,15 +31,27 @@ public class ApiMenuItemServlet extends HttpServlet {
             throw new IncorrectServletInputStreamException("Impossible to get input stream from request",e);
         }
         resp.setStatus(201);
+        try {
+            resp.sendRedirect(req.getContextPath() + "/api/token_form");
+        } catch (IOException e) {
+            resp.setStatus(500);
+            throw new IncorrectServletRedirectException("Wrong location for Servlet redirect",e);
+        }
     }
 }
-//to add new Menu item by Menu id
-//   {
-//           "price":20.0,
-//           "id":1,
-//           "pizzaInfo":{
-//           "name":"ITALIANO PIZZA",
-//           "description":"Mozzarella cheese, basilica, ham",
-//           "size":32
-//           }
-//           }
+//to add new Order in Storage
+//{
+//        "selectedItems":[
+//        {
+//        "menuItem":{
+//        "price":20.0,
+//        "pizzaInfo":{
+//        "name":"AMERICANA PIZZA",
+//        "description":"Mozzarella cheese, basilica, ham",
+//        "size":32
+//        }
+//        },
+//        "count":2
+//        }
+//        ]
+//        }

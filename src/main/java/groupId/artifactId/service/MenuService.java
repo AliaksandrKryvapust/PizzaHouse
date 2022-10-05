@@ -41,6 +41,11 @@ public class MenuService implements IMenuService {
     }
 
     @Override
+    public Boolean isDishExist(String name) {
+        return this.storage.isDishExist(name);
+    }
+
+    @Override
     public void add(List<MenuItemDto> menuItemDto) {
         this.validator.validateMenu(menuItemDto);
         this.storage.add(MenuMapper.menuMapping(menuItemDto));

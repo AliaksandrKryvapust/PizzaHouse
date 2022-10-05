@@ -41,6 +41,13 @@ public class TokenService implements ITokenService {
     }
 
     @Override
+    public IToken getTokenIdToSend() {
+       if (this.isIdValid(this.storage.getTokenIdToSend().get())) {
+           return this.storage.getById(this.storage.getTokenIdToSend().get()).orElse(null);
+       } else throw new RuntimeException("There is no Token with such id to return");
+    }
+
+    @Override
     public Boolean isIdValid(int id) {
         return this.storage.isIdExist(id);
     }

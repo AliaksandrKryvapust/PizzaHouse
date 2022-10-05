@@ -19,7 +19,7 @@ public class DefaultDataInitializer implements ServletContextListener {
                 32),15.0));
         temp.add(new MenuItemDto(new PizzaInfoDto("PEPPERONI PIZZA","Pepperoni sausage, mozzarella cheese, herb tomato sauce",
                 32),18.0));
-        temp.add(new MenuItemDto(new PizzaInfoDto("CLASSICA PIZZA","Ham, mushrooms, mozzarella cheese, herb tomato sauce",
+        temp.add(new MenuItemDto(new PizzaInfoDto("CLASSIC PIZZA","Ham, mushrooms, mozzarella cheese, herb tomato sauce",
                 32),19.0));
         temp.add(new MenuItemDto(new PizzaInfoDto("AMERICANA PIZZA","Mushrooms, tomatoes, mozzarella cheese, herb tomato sauce",
                 32),18.0));

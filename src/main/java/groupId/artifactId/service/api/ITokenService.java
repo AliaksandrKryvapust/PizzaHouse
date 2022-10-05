@@ -7,6 +7,10 @@ import java.util.List;
 
 public interface ITokenService {
     void add(OrderDto orderDto);
+
     List<IToken> get();
+
+    IToken getTokenIdToSend();
+
     Boolean isIdValid(int id);
 }

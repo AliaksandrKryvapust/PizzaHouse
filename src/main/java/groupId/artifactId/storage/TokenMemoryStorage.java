@@ -8,9 +8,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class TokenMemoryStorage implements ITokenStorage {
     private final List<IToken> tokenList = new ArrayList<>();
+
+    private AtomicInteger tokenIdToSend = new AtomicInteger(0);
 
     public TokenMemoryStorage() {
     }
@@ -18,6 +21,11 @@ public class TokenMemoryStorage implements ITokenStorage {
     @Override
     public List<IToken> get() {
         return this.tokenList;
+    }
+
+    @Override
+    public AtomicInteger getTokenIdToSend() {
+        return tokenIdToSend;
     }
 
     @Override
@@ -31,16 +39,18 @@ public class TokenMemoryStorage implements ITokenStorage {
         Token temp = (Token) token;
         temp.setId(tokenList.size() + 1);
         temp.setCreateAt(LocalDateTime.now());
+        this.tokenIdToSend.set(token.getId());
         this.tokenList.add(temp);
     }
 
     @Override
     public Optional<IToken> getById(int id) {
-        return this.tokenList.stream().filter((i)->i.getId()==id).findFirst();
+        return this.tokenList.stream().filter((i) -> i.getId() == id).findFirst();
     }
 
     @Override
     public Boolean isIdExist(int id) {
-        return this.tokenList.stream().anyMatch((i)->i.getId()==id);
+        return this.tokenList.stream().anyMatch((i) -> i.getId() == id);
     }
+
 }

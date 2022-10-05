@@ -11,4 +11,5 @@ public interface IMenuService {
     void addMenuItem(MenuItemDtoWithId menuItemDtoWithId);
     List<IMenu> get();
     Boolean isIdValid(int id);
+    Boolean isDishExist(String name);
 }
