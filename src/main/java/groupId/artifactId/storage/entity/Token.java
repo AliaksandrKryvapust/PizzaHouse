@@ -1,23 +1,22 @@
-package groupId.artifactId.entity;
+package groupId.artifactId.storage.entity;
 
 import groupId.artifactId.entity.api.IOrder;
-import groupId.artifactId.entity.api.IToken;
+import groupId.artifactId.storage.entity.api.IToken;
 
 import java.time.LocalDateTime;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class Token implements IToken {
-    private AtomicInteger id;
+    private Integer id;
     private LocalDateTime createAt;
     private IOrder order;
 
-    public Token(AtomicInteger id, LocalDateTime createAt, IOrder order) {
+    public Token(Integer id, LocalDateTime createAt, IOrder order) {
         this.id = id;
         this.createAt = createAt;
         this.order = order;
     }
 
-    public void setId(AtomicInteger id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -30,7 +29,7 @@ public class Token implements IToken {
     }
 
     @Override
-    public AtomicInteger getId() {
+    public Integer getId() {
         return id;
     }
 

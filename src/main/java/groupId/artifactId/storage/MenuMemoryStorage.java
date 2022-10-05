@@ -35,8 +35,10 @@ public class MenuMemoryStorage implements IMenuStorage {
 
     @Override
     public void saveNew(IMenu menu) {
-        this.menuList.clear();
-        this.menuList.add(menu);
+        Menu old = (Menu) this.menuList.get(menu.getId()-1);
+        Menu temp = (Menu) menu;
+        temp.setId(old.getId());
+        this.menuList.set(old.getId()-1,temp);
     }
 
     @Override

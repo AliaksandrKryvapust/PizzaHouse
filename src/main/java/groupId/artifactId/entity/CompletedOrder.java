@@ -2,7 +2,7 @@ package groupId.artifactId.entity;
 
 import groupId.artifactId.entity.api.ICompletedOrder;
 import groupId.artifactId.entity.api.IPizza;
-import groupId.artifactId.entity.api.IToken;
+import groupId.artifactId.storage.entity.api.IToken;
 
 import java.util.List;
 
