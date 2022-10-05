@@ -10,9 +10,7 @@ public class Token implements IToken {
     private LocalDateTime createAt;
     private IOrder order;
 
-    public Token(Integer id, LocalDateTime createAt, IOrder order) {
-        this.id = id;
-        this.createAt = createAt;
+    public Token(IOrder order) {
         this.order = order;
     }
 

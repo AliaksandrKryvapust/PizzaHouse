@@ -1,8 +1,6 @@
 package groupId.artifactId.core.dto;
 
-import groupId.artifactId.storage.entity.api.IPizzaInfo;
-
-public class PizzaInfoDto implements IPizzaInfo {
+public class PizzaInfoDto{
     private String name;
     private String description;
     private Integer size;
@@ -28,17 +26,14 @@ public class PizzaInfoDto implements IPizzaInfo {
         this.size = size;
     }
 
-    @Override
     public String getName() {
         return name;
     }
 
-    @Override
     public String getDescription() {
         return description;
     }
 
-    @Override
     public int getSize() {
         return size;
     }

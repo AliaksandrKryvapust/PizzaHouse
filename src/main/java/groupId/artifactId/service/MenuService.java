@@ -18,7 +18,7 @@ public class MenuService implements IMenuService {
 
     private MenuService() {
         this.storage = StorageFactory.getInstance().getMenuStorage();
-        this.validator=MenuValidator.getInstance();
+        this.validator = MenuValidator.getInstance();
     }
 
     public static MenuService getInstance() {

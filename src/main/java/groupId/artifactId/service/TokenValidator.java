@@ -1,0 +1,51 @@
+package groupId.artifactId.service;
+
+import groupId.artifactId.core.dto.OrderDto;
+import groupId.artifactId.core.dto.SelectedItemDto;
+import groupId.artifactId.service.api.ITokenValidator;
+
+public class TokenValidator implements ITokenValidator {
+    private static TokenValidator firstInstance = null;
+
+    public static TokenValidator getInstance() {
+        synchronized (TokenValidator.class) {
+            if (firstInstance == null) {
+                firstInstance = new TokenValidator();
+            }
+            return firstInstance;
+        }
+    }
+
+    @Override
+    public void validateToken(OrderDto orderDto) {
+        if (orderDto == null) {
+            throw new IllegalStateException("Error code 500. None of OrderDto have been sent as an input");
+        }
+        if (orderDto.getSelectedItems() == null) {
+            throw new IllegalStateException("Error code 500. None of SelectedItems in OrderDto have been sent as an input");
+        }
+        for (SelectedItemDto dto : orderDto.getSelectedItems()) {
+            if (dto.getMenuItem() == null) {
+                throw new IllegalStateException("Error code 500. None of MenuItem have been sent as an input");
+            }
+            if (dto.getMenuItem().getInfo() == null) {
+                throw new IllegalStateException("Error code 500. None of PizzaInfoDto have been sent as an input");
+            }
+            if (dto.getMenuItem().getInfo().getName() == null || dto.getMenuItem().getInfo().getName().isBlank()) {
+                throw new IllegalArgumentException("Error code 400. Pizza`s name is not valid");
+            }
+            if (dto.getMenuItem().getInfo().getDescription() == null || dto.getMenuItem().getInfo().getDescription().isBlank()) {
+                throw new IllegalArgumentException("Error code 400. Pizza`s description is not valid");
+            }
+            if (dto.getMenuItem().getInfo().getSize() <= 0) {
+                throw new IllegalArgumentException("Error code 400. Pizza`s size is not valid");
+            }
+            if (dto.getMenuItem().getPrice() <= 0) {
+                throw new IllegalArgumentException("Error code 400. Pizza`s price is not valid");
+            }
+            if (dto.getCount() <= 0) {
+                throw new IllegalArgumentException("Error code 400. Items count in Order is not valid");
+            }
+        }
+    }
+}
