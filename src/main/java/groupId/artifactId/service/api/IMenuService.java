@@ -3,7 +3,6 @@ package groupId.artifactId.service.api;
 import groupId.artifactId.core.dto.MenuItemDto;
 import groupId.artifactId.core.dto.MenuItemDtoWithId;
 import groupId.artifactId.storage.entity.api.IMenu;
-import groupId.artifactId.storage.entity.api.IMenuItem;
 
 import java.util.List;
 

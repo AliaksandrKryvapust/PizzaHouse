@@ -1,6 +1,6 @@
 package groupId.artifactId.storage.entity;
 
-import groupId.artifactId.entity.api.IOrder;
+import groupId.artifactId.storage.entity.api.IOrder;
 import groupId.artifactId.storage.entity.api.IToken;
 
 import java.time.LocalDateTime;

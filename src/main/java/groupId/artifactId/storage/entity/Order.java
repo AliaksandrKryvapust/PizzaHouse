@@ -1,7 +1,7 @@
-package groupId.artifactId.entity;
+package groupId.artifactId.storage.entity;
 
-import groupId.artifactId.entity.api.IOrder;
-import groupId.artifactId.entity.api.ISelectedItem;
+import groupId.artifactId.storage.entity.api.IOrder;
+import groupId.artifactId.storage.entity.api.ISelectedItem;
 
 import java.util.List;
 

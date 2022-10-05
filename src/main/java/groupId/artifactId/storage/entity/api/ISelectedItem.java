@@ -1,4 +1,4 @@
-package groupId.artifactId.entity.api;
+package groupId.artifactId.storage.entity.api;
 
 import groupId.artifactId.storage.entity.api.IMenuItem;
 

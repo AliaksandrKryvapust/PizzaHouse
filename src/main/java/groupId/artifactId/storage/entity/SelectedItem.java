@@ -1,7 +1,7 @@
-package groupId.artifactId.entity;
+package groupId.artifactId.storage.entity;
 
 import groupId.artifactId.storage.entity.api.IMenuItem;
-import groupId.artifactId.entity.api.ISelectedItem;
+import groupId.artifactId.storage.entity.api.ISelectedItem;
 
 public class SelectedItem implements ISelectedItem {
     private IMenuItem menuItem;
