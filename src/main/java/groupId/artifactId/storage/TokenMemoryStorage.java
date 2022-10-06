@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class TokenMemoryStorage implements ITokenStorage {
     private final List<IToken> tokenList = new ArrayList<>();
 
-    private AtomicInteger tokenIdToSend = new AtomicInteger(0);
+    private final AtomicInteger tokenIdToSend = new AtomicInteger(0);
 
     public TokenMemoryStorage() {
     }

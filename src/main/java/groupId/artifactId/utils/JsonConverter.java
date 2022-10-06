@@ -3,10 +3,11 @@ package groupId.artifactId.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import groupId.artifactId.core.dto.MenuItemDto;
 import groupId.artifactId.core.dto.MenuItemDtoWithId;
 import groupId.artifactId.core.dto.OrderDto;
+import groupId.artifactId.core.dto.TokenDto;
 import groupId.artifactId.exceptions.IncorrectJsonParseException;
 import groupId.artifactId.storage.entity.api.IMenu;
 import groupId.artifactId.storage.entity.api.IToken;
@@ -25,7 +26,7 @@ public class JsonConverter {
     }
     public static String fromTokenToJson(IToken token) {
         try {
-            return new ObjectMapper().registerModule(new JSR310Module()).writeValueAsString(token);
+            return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(token);
         } catch (JsonProcessingException e) {
             throw new IncorrectJsonParseException("failed to write IToken as json",e);
         }
@@ -48,6 +49,13 @@ public class JsonConverter {
     public static OrderDto fromJsonToOrder(ServletInputStream servletInputStream)  {
         try {
             return new ObjectMapper().readValue(servletInputStream, OrderDto.class);
+        } catch (IOException e) {
+            throw new IncorrectJsonParseException("failed to read servletInputStream of OrderDto.class",e);
+        }
+    }
+    public static TokenDto fromJsonToToken(ServletInputStream servletInputStream)  {
+        try {
+            return new ObjectMapper().readValue(servletInputStream, TokenDto.class);
         } catch (IOException e) {
             throw new IncorrectJsonParseException("failed to read servletInputStream of OrderDto.class",e);
         }
