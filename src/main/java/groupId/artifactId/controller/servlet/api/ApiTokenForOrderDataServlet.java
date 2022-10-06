@@ -3,7 +3,10 @@ package groupId.artifactId.controller.servlet.api;
 import groupId.artifactId.exceptions.IncorrectEncodingException;
 import groupId.artifactId.exceptions.IncorrectServletInputStreamException;
 import groupId.artifactId.exceptions.IncorrectServletRedirectException;
+import groupId.artifactId.exceptions.IncorrectServletWriterException;
+import groupId.artifactId.service.OrderDataService;
 import groupId.artifactId.service.TokenService;
+import groupId.artifactId.service.api.IOrderDataService;
 import groupId.artifactId.service.api.ITokenService;
 import groupId.artifactId.utils.JsonConverter;
 
@@ -17,6 +20,20 @@ import java.io.UnsupportedEncodingException;
 @WebServlet(name = "TokenForm", urlPatterns = "/api/token_order_data")
 public class ApiTokenForOrderDataServlet extends HttpServlet {
     private final ITokenService tokenService = TokenService.getInstance();
+    private final IOrderDataService orderDataService= OrderDataService.getInstance();
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+        try {
+            resp.getWriter().write(JsonConverter.fromOrderDataToJson(orderDataService.
+                    getById(tokenService.getTokenIdForResponse().get()).orElse(null)));
+        } catch (IOException e){
+            resp.setStatus(500);
+            throw new IncorrectServletWriterException("Incorrect servlet state during response writer method", e);
+        }
+        resp.setStatus(200);
+    }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         try {

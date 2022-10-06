@@ -5,11 +5,14 @@ import groupId.artifactId.core.dto.TokenDto;
 import groupId.artifactId.storage.entity.api.IToken;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public interface ITokenService {
     void add(OrderDto orderDto);
 
     void setTokenIdForResponse(TokenDto tokenDto);
+
+    AtomicInteger getTokenIdForResponse();
 
     List<IToken> get();
 

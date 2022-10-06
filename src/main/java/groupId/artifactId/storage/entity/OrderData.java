@@ -4,11 +4,12 @@ import groupId.artifactId.storage.entity.api.IOrderData;
 import groupId.artifactId.storage.entity.api.IOrderStage;
 import groupId.artifactId.storage.entity.api.IToken;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrderData implements IOrderData {
     private IToken token;
-    private List<IOrderStage> orderHistory;
+    private List<IOrderStage> orderHistory = new ArrayList<>();
     private Boolean done;
 
     public OrderData(IToken token, Boolean done) {

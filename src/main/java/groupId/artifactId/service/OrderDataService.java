@@ -11,6 +11,7 @@ import groupId.artifactId.storage.entity.api.IOrderData;
 import groupId.artifactId.storage.entity.api.IToken;
 
 import java.util.List;
+import java.util.Optional;
 
 public class OrderDataService implements IOrderDataService {
     private static OrderDataService firstInstance = null;
@@ -45,6 +46,11 @@ public class OrderDataService implements IOrderDataService {
     @Override
     public List<IOrderData> get() {
         return this.storage.get();
+    }
+
+    @Override
+    public Optional<IOrderData> getById(int id) {
+        return this.storage.getById(id);
     }
 
     @Override

@@ -39,6 +39,11 @@ public class TokenService implements ITokenService {
     }
 
     @Override
+    public AtomicInteger getTokenIdForResponse() {
+        return tokenIdForResponse;
+    }
+
+    @Override
     public void add(OrderDto orderDto) {
         this.validator.validateToken(orderDto);
         this.storage.add(TokenMapper.orderMapping(orderDto));

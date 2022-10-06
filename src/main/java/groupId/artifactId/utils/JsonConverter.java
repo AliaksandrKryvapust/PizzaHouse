@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import groupId.artifactId.core.dto.*;
 import groupId.artifactId.exceptions.IncorrectJsonParseException;
 import groupId.artifactId.storage.entity.api.IMenu;
+import groupId.artifactId.storage.entity.api.IOrderData;
 import groupId.artifactId.storage.entity.api.IToken;
 
 import javax.servlet.ServletInputStream;
@@ -26,6 +27,13 @@ public class JsonConverter {
             return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(token);
         } catch (JsonProcessingException e) {
             throw new IncorrectJsonParseException("failed to write IToken as json",e);
+        }
+    }
+    public static String fromOrderDataToJson(IOrderData orderData) {
+        try {
+            return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(orderData);
+        } catch (JsonProcessingException e) {
+            throw new IncorrectJsonParseException("failed to write IOrderData as json",e);
         }
     }
     public static List<MenuItemDto> fromJsonToMenu(ServletInputStream servletInputStream)  {
@@ -59,7 +67,7 @@ public class JsonConverter {
     }
     public static OrderStageDtoWithId fromJsonToOrderStageWithId(ServletInputStream servletInputStream)  {
         try {
-            return new ObjectMapper().readValue(servletInputStream, OrderStageDtoWithId.class);
+            return new ObjectMapper().registerModule(new JavaTimeModule()).readValue(servletInputStream, OrderStageDtoWithId.class);
         } catch (IOException e) {
             throw new IncorrectJsonParseException("failed to read servletInputStream of OrderStageDtoWithId.class",e);
         }

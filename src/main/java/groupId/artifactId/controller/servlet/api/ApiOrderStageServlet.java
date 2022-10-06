@@ -33,3 +33,14 @@ public class ApiOrderStageServlet extends HttpServlet {
         resp.setStatus(201);
     }
 }
+//to add new Order stage by Token/Order id
+//   {
+//           "description":"Cooking",
+//           "time":[
+//        11,
+//        7,
+//        19,
+//        279225100
+//        ],
+//           "id":1
+//   }
