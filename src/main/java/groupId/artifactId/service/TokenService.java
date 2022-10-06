@@ -1,6 +1,7 @@
 package groupId.artifactId.service;
 
 import groupId.artifactId.core.dto.OrderDto;
+import groupId.artifactId.core.dto.TokenDto;
 import groupId.artifactId.core.mapper.TokenMapper;
 import groupId.artifactId.service.api.ITokenService;
 import groupId.artifactId.service.api.ITokenValidator;
@@ -9,11 +10,13 @@ import groupId.artifactId.storage.api.StorageFactory;
 import groupId.artifactId.storage.entity.api.IToken;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class TokenService implements ITokenService {
-    private static TokenService firstInstance=null;
+    private static TokenService firstInstance = null;
     private final ITokenStorage storage;
     private final ITokenValidator validator;
+    private final AtomicInteger tokenIdForResponse = new AtomicInteger(0);
 
     private TokenService() {
         this.storage = StorageFactory.getInstance().getTokenStorage();
@@ -30,6 +33,11 @@ public class TokenService implements ITokenService {
     }
 
     @Override
+    public void setTokenIdForResponse(TokenDto tokenDto) {
+        this.tokenIdForResponse.set(tokenDto.getId());
+    }
+
+    @Override
     public void add(OrderDto orderDto) {
         this.validator.validateToken(orderDto);
         this.storage.add(TokenMapper.orderMapping(orderDto));
@@ -42,9 +50,9 @@ public class TokenService implements ITokenService {
 
     @Override
     public IToken getTokenIdToSend() {
-       if (this.isIdValid(this.storage.getTokenIdToSend().get())) {
-           return this.storage.getById(this.storage.getTokenIdToSend().get()).orElse(null);
-       } else throw new RuntimeException("There is no Token with such id to return");
+        if (this.isIdValid(this.storage.getTokenIdToSend().get())) {
+            return this.storage.getById(this.storage.getTokenIdToSend().get()).orElse(null);
+        } else throw new RuntimeException("There is no Token with such id to return");
     }
 
     @Override

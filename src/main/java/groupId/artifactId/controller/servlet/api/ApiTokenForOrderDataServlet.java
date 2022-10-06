@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-@WebServlet(name = "TokenForm", urlPatterns = "/api/token_form")
+@WebServlet(name = "TokenForm", urlPatterns = "/api/token_order_data")
 public class ApiTokenForOrderDataServlet extends HttpServlet {
     private final ITokenService tokenService = TokenService.getInstance();
     @Override
@@ -22,7 +22,7 @@ public class ApiTokenForOrderDataServlet extends HttpServlet {
         try {
             req.setCharacterEncoding("UTF-8");
             resp.setContentType("application/json");
-            tokenService.add(JsonConverter.fromJsonToToken(req.getInputStream()));
+            tokenService.setTokenIdForResponse(JsonConverter.fromJsonToToken(req.getInputStream()));
         } catch (UnsupportedEncodingException e) {
             resp.setStatus(500);
             throw new IncorrectEncodingException("Failed to set character encoding UTF-8", e);
@@ -41,29 +41,5 @@ public class ApiTokenForOrderDataServlet extends HttpServlet {
 }
 
 //{
-//        "id": 1,
-//        "order": {
-//        "selectedItems": [
-//        {
-//        "count": 2,
-//        "item": {
-//        "price": 20.0,
-//        "info": {
-//        "name": "AMERICANA PIZZA",
-//        "description": "Mozzarella cheese, basilica, ham",
-//        "size": 32
-//        }
-//        }
-//        }
-//        ]
-//        },
-//        "creatAt": [
-//        2022,
-//        10,
-//        6,
-//        10,
-//        47,
-//        41,
-//        942148100
-//        ]
+//        "id": 1
 //        }
