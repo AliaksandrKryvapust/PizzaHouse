@@ -1,7 +1,7 @@
-package groupId.artifactId.entity;
+package groupId.artifactId.storage.entity;
 
-import groupId.artifactId.entity.api.IOrderData;
-import groupId.artifactId.entity.api.IOrderStage;
+import groupId.artifactId.storage.entity.api.IOrderData;
+import groupId.artifactId.storage.entity.api.IOrderStage;
 import groupId.artifactId.storage.entity.api.IToken;
 
 import java.util.List;
@@ -37,6 +37,11 @@ public class OrderData implements IOrderData {
     @Override
     public List<IOrderStage> getHistory() {
         return orderHistory;
+    }
+
+    @Override
+    public void addOrderStage(IOrderStage orderStage) {
+        this.orderHistory.add(orderStage);
     }
 
     @Override

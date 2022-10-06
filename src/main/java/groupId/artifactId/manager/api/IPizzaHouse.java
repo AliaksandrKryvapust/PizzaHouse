@@ -3,6 +3,7 @@ package groupId.artifactId.manager.api;
 import groupId.artifactId.entity.api.*;
 import groupId.artifactId.storage.entity.api.IMenu;
 import groupId.artifactId.storage.entity.api.IOrder;
+import groupId.artifactId.storage.entity.api.IOrderData;
 import groupId.artifactId.storage.entity.api.IToken;
 
 public interface IPizzaHouse {
