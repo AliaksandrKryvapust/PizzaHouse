@@ -4,10 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import groupId.artifactId.core.dto.MenuItemDto;
-import groupId.artifactId.core.dto.MenuItemDtoWithId;
-import groupId.artifactId.core.dto.OrderDto;
-import groupId.artifactId.core.dto.TokenDto;
+import groupId.artifactId.core.dto.*;
 import groupId.artifactId.exceptions.IncorrectJsonParseException;
 import groupId.artifactId.storage.entity.api.IMenu;
 import groupId.artifactId.storage.entity.api.IToken;
@@ -57,7 +54,14 @@ public class JsonConverter {
         try {
             return new ObjectMapper().readValue(servletInputStream, TokenDto.class);
         } catch (IOException e) {
-            throw new IncorrectJsonParseException("failed to read servletInputStream of OrderDto.class",e);
+            throw new IncorrectJsonParseException("failed to read servletInputStream of TokenDto.class",e);
+        }
+    }
+    public static OrderStageDtoWithId fromJsonToOrderStageWithId(ServletInputStream servletInputStream)  {
+        try {
+            return new ObjectMapper().readValue(servletInputStream, OrderStageDtoWithId.class);
+        } catch (IOException e) {
+            throw new IncorrectJsonParseException("failed to read servletInputStream of OrderStageDtoWithId.class",e);
         }
     }
 }

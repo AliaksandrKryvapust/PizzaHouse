@@ -1,13 +1,13 @@
 package groupId.artifactId.service;
 
-import groupId.artifactId.core.dto.MenuItemDtoWithId;
 import groupId.artifactId.core.dto.OrderStageDtoWithId;
+import groupId.artifactId.core.mapper.OrderDataMapper;
 import groupId.artifactId.service.api.IOrderDataService;
 import groupId.artifactId.service.api.IOrderDataValidator;
 import groupId.artifactId.storage.api.IOrderDataStorage;
 import groupId.artifactId.storage.api.StorageFactory;
 import groupId.artifactId.storage.entity.OrderData;
-import groupId.artifactId.storage.entity.api.IMenu;
+import groupId.artifactId.storage.entity.api.IOrderData;
 import groupId.artifactId.storage.entity.api.IToken;
 
 import java.util.List;
@@ -33,26 +33,22 @@ public class OrderDataService implements IOrderDataService {
 
     @Override
     public void add(IToken token) {
-    this.storage.add(new OrderData(token,false));
+        this.storage.add(new OrderData(token, false));
     }
 
     @Override
     public void addOrderStage(OrderStageDtoWithId orderStageDtoWithId) {
-
+        this.validator.validateOrderStage(orderStageDtoWithId);
+        this.storage.addOrderStage(OrderDataMapper.OrderStageWithIdMapping(orderStageDtoWithId), orderStageDtoWithId.getId());
     }
 
     @Override
-    public List<IMenu> get() {
-        return null;
+    public List<IOrderData> get() {
+        return this.storage.get();
     }
 
     @Override
     public Boolean isIdValid(int id) {
-        return null;
-    }
-
-    @Override
-    public Boolean isDishExist(String name) {
-        return null;
+        return this.storage.isIdExist(id);
     }
 }

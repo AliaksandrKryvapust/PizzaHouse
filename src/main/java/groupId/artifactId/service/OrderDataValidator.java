@@ -2,6 +2,7 @@ package groupId.artifactId.service;
 
 import groupId.artifactId.core.dto.OrderStageDtoWithId;
 import groupId.artifactId.service.api.IOrderDataValidator;
+import groupId.artifactId.service.api.ITokenService;
 
 import java.time.LocalTime;
 
@@ -26,6 +27,10 @@ public class OrderDataValidator implements IOrderDataValidator {
         }
         if (LocalTime.now().isBefore(orderStage.getTime())){
             throw new IllegalArgumentException("Error code 400. The time is not valid");
+        }
+        ITokenService tokenService = TokenService.getInstance();
+        if (!tokenService.isIdValid(orderStage.getId())){
+            throw new IllegalArgumentException("Error code 400. There is no order with such id");
         }
     }
 }
