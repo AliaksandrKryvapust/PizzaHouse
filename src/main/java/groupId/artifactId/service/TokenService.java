@@ -48,7 +48,7 @@ public class TokenService implements ITokenService {
         this.validator.validateToken(orderDto);
         this.storage.add(TokenMapper.orderMapping(orderDto));
         IOrderDataService orderData = OrderDataService.getInstance();
-        orderData.add(storage.getLastToken());
+        orderData.addToken(storage.getLastToken());
     }
 
     @Override

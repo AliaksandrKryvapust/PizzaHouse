@@ -72,4 +72,11 @@ public class JsonConverter {
             throw new IncorrectJsonParseException("failed to read servletInputStream of OrderStageDtoWithId.class",e);
         }
     }
+    public static OrderDataDto fromJsonToOrderData(ServletInputStream servletInputStream)  {
+        try {
+            return new ObjectMapper().registerModule(new JavaTimeModule()).readValue(servletInputStream, OrderDataDto.class);
+        } catch (IOException e) {
+            throw new IncorrectJsonParseException("failed to read servletInputStream of OrderDataDto.class",e);
+        }
+    }
 }

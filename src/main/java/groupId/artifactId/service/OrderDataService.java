@@ -1,5 +1,6 @@
 package groupId.artifactId.service;
 
+import groupId.artifactId.core.dto.OrderDataDto;
 import groupId.artifactId.core.dto.OrderStageDtoWithId;
 import groupId.artifactId.core.mapper.OrderDataMapper;
 import groupId.artifactId.service.api.IOrderDataService;
@@ -33,14 +34,20 @@ public class OrderDataService implements IOrderDataService {
     }
 
     @Override
-    public void add(IToken token) {
+    public void addToken(IToken token) {
         this.storage.add(new OrderData(token, false));
     }
 
     @Override
+    public void update(OrderDataDto orderDataDto) {
+        this.validator.validate(orderDataDto);
+        this.storage.updateOrderData(OrderDataMapper.orderDataMapping(orderDataDto));
+    } // use if to create Completed order storage
+
+    @Override
     public void addOrderStage(OrderStageDtoWithId orderStageDtoWithId) {
         this.validator.validateOrderStage(orderStageDtoWithId);
-        this.storage.addOrderStage(OrderDataMapper.OrderStageWithIdMapping(orderStageDtoWithId), orderStageDtoWithId.getId());
+        this.storage.addOrderStage(OrderDataMapper.orderStageWithIdMapping(orderStageDtoWithId), orderStageDtoWithId.getId());
     }
 
     @Override
