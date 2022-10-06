@@ -34,4 +34,9 @@ public class StorageFactory implements IStorageFactory {
     public ITokenStorage getTokenStorage() {
         return this.tokenStorage;
     }
+
+    @Override
+    public IOrderDataStorage getOrderDataStorage() {
+        return this.orderDataStorage;
+    }
 }

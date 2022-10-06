@@ -49,6 +49,11 @@ public class TokenMemoryStorage implements ITokenStorage {
     }
 
     @Override
+    public IToken getLastToken() {
+        return this.getById(this.tokenList.size()+1).orElse(null);
+    }
+
+    @Override
     public Boolean isIdExist(int id) {
         return this.tokenList.stream().anyMatch((i) -> i.getId() == id);
     }

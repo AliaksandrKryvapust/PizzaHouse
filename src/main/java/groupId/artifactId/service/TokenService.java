@@ -3,6 +3,7 @@ package groupId.artifactId.service;
 import groupId.artifactId.core.dto.OrderDto;
 import groupId.artifactId.core.dto.TokenDto;
 import groupId.artifactId.core.mapper.TokenMapper;
+import groupId.artifactId.service.api.IOrderDataService;
 import groupId.artifactId.service.api.ITokenService;
 import groupId.artifactId.service.api.ITokenValidator;
 import groupId.artifactId.storage.api.ITokenStorage;
@@ -41,6 +42,8 @@ public class TokenService implements ITokenService {
     public void add(OrderDto orderDto) {
         this.validator.validateToken(orderDto);
         this.storage.add(TokenMapper.orderMapping(orderDto));
+        IOrderDataService orderData = OrderDataService.getInstance();
+        orderData.add(storage.getLastToken());
     }
 
     @Override

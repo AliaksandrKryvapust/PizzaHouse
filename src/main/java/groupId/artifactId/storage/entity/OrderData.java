@@ -11,6 +11,11 @@ public class OrderData implements IOrderData {
     private List<IOrderStage> orderHistory;
     private Boolean done;
 
+    public OrderData(IToken token, Boolean done) {
+        this.token = token;
+        this.done = done;
+    }
+
     public OrderData(IToken token, List<IOrderStage> orderHistory, Boolean done) {
         this.token = token;
         this.orderHistory = orderHistory;
