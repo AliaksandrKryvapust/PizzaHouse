@@ -10,6 +10,9 @@ public class CompletedOrder implements ICompletedOrder {
     private IToken token;
     private List<IPizza> items;
 
+    public CompletedOrder() {
+    }
+
     public CompletedOrder(IToken token, List<IPizza> items) {
         this.token = token;
         this.items = items;

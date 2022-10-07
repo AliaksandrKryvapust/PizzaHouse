@@ -3,6 +3,7 @@ package groupId.artifactId.service;
 import groupId.artifactId.core.dto.OrderDataDto;
 import groupId.artifactId.core.dto.OrderStageDtoWithId;
 import groupId.artifactId.core.mapper.OrderDataMapper;
+import groupId.artifactId.service.api.ICompletedOrderService;
 import groupId.artifactId.service.api.IOrderDataService;
 import groupId.artifactId.service.api.IOrderDataValidator;
 import groupId.artifactId.storage.api.IOrderDataStorage;
@@ -42,7 +43,11 @@ public class OrderDataService implements IOrderDataService {
     public void update(OrderDataDto orderDataDto) {
         this.validator.validate(orderDataDto);
         this.storage.updateOrderData(OrderDataMapper.orderDataMapping(orderDataDto));
-    } // use if to create Completed order storage
+        ICompletedOrderService completedOrderService = CompletedOrderService.getInstance();
+        if (orderDataDto.getDone()) {
+            completedOrderService.add(OrderDataMapper.orderDataMapping(orderDataDto));
+        }
+    }
 
     @Override
     public void addOrderStage(OrderStageDtoWithId orderStageDtoWithId) {
