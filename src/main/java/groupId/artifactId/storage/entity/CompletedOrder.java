@@ -1,7 +1,7 @@
-package groupId.artifactId.entity;
+package groupId.artifactId.storage.entity;
 
-import groupId.artifactId.entity.api.ICompletedOrder;
-import groupId.artifactId.entity.api.IPizza;
+import groupId.artifactId.storage.entity.api.ICompletedOrder;
+import groupId.artifactId.storage.entity.api.IPizza;
 import groupId.artifactId.storage.entity.api.IToken;
 
 import java.util.List;

@@ -1,6 +1,4 @@
-package groupId.artifactId.entity.api;
-
-import groupId.artifactId.storage.entity.api.IToken;
+package groupId.artifactId.storage.entity.api;
 
 import java.util.List;
 

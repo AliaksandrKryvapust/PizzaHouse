@@ -1,5 +1,6 @@
 package groupId.artifactId.storage.api;
 
+import groupId.artifactId.storage.CompletedOrderMemoryStorage;
 import groupId.artifactId.storage.MenuMemoryStorage;
 import groupId.artifactId.storage.OrderDataMemoryStorage;
 import groupId.artifactId.storage.TokenMemoryStorage;
@@ -9,11 +10,13 @@ public class StorageFactory implements IStorageFactory {
     private final IMenuStorage menuStorage;
     private final ITokenStorage tokenStorage;
     private final IOrderDataStorage orderDataStorage;
+    private final ICompletedOrderStorage completedOrderStorage;
 
     private StorageFactory() {
         this.menuStorage = new MenuMemoryStorage();
         this.tokenStorage = new TokenMemoryStorage();
         this.orderDataStorage = new OrderDataMemoryStorage();
+        this.completedOrderStorage = new CompletedOrderMemoryStorage();
     }
 
     public static StorageFactory getInstance() {
@@ -38,5 +41,10 @@ public class StorageFactory implements IStorageFactory {
     @Override
     public IOrderDataStorage getOrderDataStorage() {
         return this.orderDataStorage;
+    }
+
+    @Override
+    public ICompletedOrderStorage getCompletedOrderStorage() {
+        return this.completedOrderStorage;
     }
 }

@@ -1,6 +1,6 @@
-package groupId.artifactId.entity;
+package groupId.artifactId.storage.entity;
 
-import groupId.artifactId.entity.api.IPizza;
+import groupId.artifactId.storage.entity.api.IPizza;
 
 public class Pizza implements IPizza {
     private String name;
