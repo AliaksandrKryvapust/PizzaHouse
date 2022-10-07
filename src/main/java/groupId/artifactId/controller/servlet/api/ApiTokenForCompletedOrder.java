@@ -4,9 +4,9 @@ import groupId.artifactId.exceptions.IncorrectEncodingException;
 import groupId.artifactId.exceptions.IncorrectServletInputStreamException;
 import groupId.artifactId.exceptions.IncorrectServletRedirectException;
 import groupId.artifactId.exceptions.IncorrectServletWriterException;
-import groupId.artifactId.service.OrderDataService;
+import groupId.artifactId.service.CompletedOrderService;
 import groupId.artifactId.service.TokenService;
-import groupId.artifactId.service.api.IOrderDataService;
+import groupId.artifactId.service.api.ICompletedOrderService;
 import groupId.artifactId.service.api.ITokenService;
 import groupId.artifactId.utils.JsonConverter;
 
@@ -17,23 +17,25 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-@WebServlet(name = "TokenForm", urlPatterns = "/api/token_order_data")
-public class ApiTokenForOrderDataServlet extends HttpServlet {
+@WebServlet(name = "TokenFormComplete", urlPatterns = "/api/token_order_complete")
+public class ApiTokenForCompletedOrder extends HttpServlet {
     private final ITokenService tokenService = TokenService.getInstance();
-    private final IOrderDataService orderDataService= OrderDataService.getInstance();
+    private final ICompletedOrderService orderService = CompletedOrderService.getInstance();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
         try {
-            resp.getWriter().write(JsonConverter.fromOrderDataToJson(orderDataService.
-                    getById(tokenService.getTokenIdForResponse().get()).orElse(null)));
-        } catch (IOException e){
-            resp.setStatus(500);
-            throw new IncorrectServletWriterException("Incorrect servlet state during response writer method", e);
-        }
-        resp.setStatus(200);
+        resp.getWriter().write(JsonConverter.fromCompletedOrderToJson(orderService.
+                getById(tokenService.getTokenIdForResponse().get()).orElse(null)));
+    } catch (
+    IOException e){
+        resp.setStatus(500);
+        throw new IncorrectServletWriterException("Incorrect servlet state during response writer method", e);
     }
+        resp.setStatus(200);
+}
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         try {
@@ -49,14 +51,14 @@ public class ApiTokenForOrderDataServlet extends HttpServlet {
         }
         resp.setStatus(201);
         try {
-            resp.sendRedirect(req.getContextPath() + "/api/token_order_data");
+            resp.sendRedirect(req.getContextPath() + "/api/token_order_complete");
         } catch (IOException e) {
             resp.setStatus(500);
             throw new IncorrectServletRedirectException("Wrong location for Servlet redirect",e);
         }
     }
 }
-// To get Order data by Token
+
 //{
 //        "id": 1
 //        }

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import groupId.artifactId.core.dto.*;
 import groupId.artifactId.exceptions.IncorrectJsonParseException;
+import groupId.artifactId.storage.entity.api.ICompletedOrder;
 import groupId.artifactId.storage.entity.api.IMenu;
 import groupId.artifactId.storage.entity.api.IOrderData;
 import groupId.artifactId.storage.entity.api.IToken;
@@ -77,6 +78,13 @@ public class JsonConverter {
             return new ObjectMapper().registerModule(new JavaTimeModule()).readValue(servletInputStream, OrderDataDto.class);
         } catch (IOException e) {
             throw new IncorrectJsonParseException("failed to read servletInputStream of OrderDataDto.class",e);
+        }
+    }
+    public static String fromCompletedOrderToJson(ICompletedOrder completedOrder) {
+        try {
+            return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(completedOrder);
+        } catch (JsonProcessingException e) {
+            throw new IncorrectJsonParseException("failed to write IOrderData as json",e);
         }
     }
 }

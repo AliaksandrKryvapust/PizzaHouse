@@ -45,7 +45,7 @@ public class OrderDataService implements IOrderDataService {
         this.storage.updateOrderData(OrderDataMapper.orderDataMapping(orderDataDto));
         ICompletedOrderService completedOrderService = CompletedOrderService.getInstance();
         if (orderDataDto.getDone()) {
-            completedOrderService.add(OrderDataMapper.orderDataMapping(orderDataDto));
+            completedOrderService.add(this.storage.getById(orderDataDto.getToken().getId()).orElse(null));
         }
     }
 
