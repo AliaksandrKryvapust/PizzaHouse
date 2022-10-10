@@ -58,7 +58,7 @@ public class ApiTokenForCompletedOrder extends HttpServlet {
         }
     }
 }
-
+// To get Order data by Token
 //{
 //        "id": 1
 //        }
