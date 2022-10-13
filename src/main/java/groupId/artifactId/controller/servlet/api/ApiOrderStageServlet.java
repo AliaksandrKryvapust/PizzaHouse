@@ -26,9 +26,9 @@ public class ApiOrderStageServlet extends HttpServlet {
         } catch (UnsupportedEncodingException e) {
             resp.setStatus(500);
             throw new IncorrectEncodingException("Failed to set character encoding UTF-8", e);
-        } catch (IOException e){
+        } catch (IOException e) {
             resp.setStatus(500);
-            throw new IncorrectServletInputStreamException("Impossible to get input stream from request",e);
+            throw new IncorrectServletInputStreamException("Impossible to get input stream from request", e);
         }
         resp.setStatus(201);
     }
