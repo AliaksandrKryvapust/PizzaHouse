@@ -27,15 +27,16 @@ public class ApiTokenForCompletedOrder extends HttpServlet {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
         try {
-        resp.getWriter().write(JsonConverter.fromCompletedOrderToJson(orderService.
-                getById(tokenService.getTokenIdForResponse().get()).orElse(null)));
-    } catch (
-    IOException e){
-        resp.setStatus(500);
-        throw new IncorrectServletWriterException("Incorrect servlet state during response writer method", e);
-    }
+            resp.getWriter().write(JsonConverter.fromCompletedOrderToJson(orderService.
+                    getById(tokenService.getTokenIdForResponse().get()).orElse(null)));
+        } catch (
+                IOException e) {
+            resp.setStatus(500);
+            throw new IncorrectServletWriterException("Incorrect servlet state during response writer method", e);
+        }
         resp.setStatus(200);
-}
+    }
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         try {
@@ -45,16 +46,16 @@ public class ApiTokenForCompletedOrder extends HttpServlet {
         } catch (UnsupportedEncodingException e) {
             resp.setStatus(500);
             throw new IncorrectEncodingException("Failed to set character encoding UTF-8", e);
-        } catch (IOException e){
+        } catch (IOException e) {
             resp.setStatus(500);
-            throw new IncorrectServletInputStreamException("Impossible to get input stream from request",e);
+            throw new IncorrectServletInputStreamException("Impossible to get input stream from request", e);
         }
         resp.setStatus(201);
         try {
             resp.sendRedirect(req.getContextPath() + "/api/token_order_complete");
         } catch (IOException e) {
             resp.setStatus(500);
-            throw new IncorrectServletRedirectException("Wrong location for Servlet redirect",e);
+            throw new IncorrectServletRedirectException("Wrong location for Servlet redirect", e);
         }
     }
 }
