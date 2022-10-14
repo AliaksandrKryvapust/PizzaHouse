@@ -9,7 +9,7 @@ public class MenuItemDto {
 
     public MenuItemDto(PizzaInfoDto pizzaInfoDto, double price) {
         this.pizzaInfo = pizzaInfoDto;
-        this.price=price;
+        this.price = price;
     }
 
     public void setPizzaInfo(PizzaInfoDto pizzaInfoDto) {
