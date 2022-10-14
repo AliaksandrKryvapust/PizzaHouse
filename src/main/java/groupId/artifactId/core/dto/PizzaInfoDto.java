@@ -1,6 +1,6 @@
 package groupId.artifactId.core.dto;
 
-public class PizzaInfoDto{
+public class PizzaInfoDto {
     private String name;
     private String description;
     private Integer size;
