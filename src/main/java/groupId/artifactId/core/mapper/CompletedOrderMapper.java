@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CompletedOrderMapper {
-    public static ICompletedOrder orderDataMapping(IOrderData orderData){
+    public static ICompletedOrder orderDataMapping(IOrderData orderData) {
         CompletedOrder order = new CompletedOrder();
         order.setToken(orderData.getToken());
         List<ISelectedItem> temp = orderData.getToken().getOrder().getSelectedItems();
