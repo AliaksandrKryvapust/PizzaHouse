@@ -8,10 +8,11 @@ import groupId.artifactId.storage.entity.api.IOrderData;
 import groupId.artifactId.storage.entity.api.IOrderStage;
 
 public class OrderDataMapper {
-    public static IOrderStage orderStageWithIdMapping(OrderStageDtoWithId orderStageDtoWithId){
+    public static IOrderStage orderStageWithIdMapping(OrderStageDtoWithId orderStageDtoWithId) {
         return new OrderStage(orderStageDtoWithId.getDescription(), orderStageDtoWithId.getTime());
     }
-    public static IOrderData orderDataMapping(OrderDataDto orderDataDto){
-        return new OrderData(orderDataDto.getToken(),orderDataDto.getDone());
+
+    public static IOrderData orderDataMapping(OrderDataDto orderDataDto) {
+        return new OrderData(orderDataDto.getToken(), orderDataDto.getDone());
     }
 }
