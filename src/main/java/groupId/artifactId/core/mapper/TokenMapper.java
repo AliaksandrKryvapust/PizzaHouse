@@ -10,13 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TokenMapper {
-    public static IToken orderMapping(OrderDto orderDto){
+    public static IToken orderMapping(OrderDto orderDto) {
         List<ISelectedItem> temp = new ArrayList<>();
-        for (SelectedItemDto select: orderDto.getSelectedItems()) {
+        for (SelectedItemDto select : orderDto.getSelectedItems()) {
             PizzaInfo pizzaInfo = new PizzaInfo(select.getMenuItem().getInfo().getName(),
-                    select.getMenuItem().getInfo().getDescription(),select.getMenuItem().getInfo().getSize());
+                    select.getMenuItem().getInfo().getDescription(), select.getMenuItem().getInfo().getSize());
             MenuItem menuItem = new MenuItem(pizzaInfo, select.getMenuItem().getPrice());
-           temp.add(new SelectedItem(menuItem, select.getCount()));
+            temp.add(new SelectedItem(menuItem, select.getCount()));
         }
         return new Token(new Order(temp));
     }
