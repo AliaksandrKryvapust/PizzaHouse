@@ -14,13 +14,13 @@ import java.util.stream.Collectors;
 public class MenuMapper {
     public static IMenu menuMapping(List<MenuItemDto> menuItemDto) {
         List<IMenuItem> temp = menuItemDto.stream().map(
-                (i)-> new MenuItem(new PizzaInfo(i.getInfo().getName(),i.getInfo().getDescription(),
-                        i.getInfo().getSize()),i.getPrice())).collect(Collectors.toList());
+                (i) -> new MenuItem(new PizzaInfo(i.getInfo().getName(), i.getInfo().getDescription(),
+                        i.getInfo().getSize()), i.getPrice())).collect(Collectors.toList());
         return new Menu(temp);
     }
 
-    public static IMenuItem menuItemWithIdMapping(MenuItemDtoWithId menuItemDtoWithId){
-        return new MenuItem(new PizzaInfo(menuItemDtoWithId.getInfo().getName(),menuItemDtoWithId.getInfo().getDescription(),
+    public static IMenuItem menuItemWithIdMapping(MenuItemDtoWithId menuItemDtoWithId) {
+        return new MenuItem(new PizzaInfo(menuItemDtoWithId.getInfo().getName(), menuItemDtoWithId.getInfo().getDescription(),
                 menuItemDtoWithId.getInfo().getSize()), menuItemDtoWithId.getPrice());
     }
 }
