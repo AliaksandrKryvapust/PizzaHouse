@@ -26,9 +26,10 @@ public class CompletedOrderService implements ICompletedOrderService {
         }
         return firstInstance;
     }
+
     @Override
     public void add(IOrderData orderData) {
-    this.storage.add(CompletedOrderMapper.orderDataMapping(orderData));
+        this.storage.add(CompletedOrderMapper.orderDataMapping(orderData));
     }
 
     @Override
