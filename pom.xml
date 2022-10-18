@@ -36,11 +36,16 @@
             <version>1.7.1</version>
             <scope>test</scope>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>mysql</groupId>-->
-        <!--            <artifactId>mysql-connector-java</artifactId>-->
-        <!--            <version>8.0.11</version>-->
-        <!--        </dependency>-->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.3.6</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mchange</groupId>
+            <artifactId>c3p0</artifactId>
+            <version>0.9.5.5</version>
+        </dependency>
         <!--        &lt;!&ndash; Hibernate 5.2.6 Final &ndash;&gt;-->
         <!--        <dependency>-->
         <!--            <groupId>org.hibernate</groupId>-->
