@@ -14,16 +14,20 @@ public class main1 {
         try (Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Company",
                 "postgres", "postgres")) {
             try (Statement statement = con.createStatement()) {
-                try (ResultSet resultSet = statement.executeQuery("SELECT id, name, job, department\n" + "FROM structure.employ;")) {
+                try (ResultSet resultSet = statement.executeQuery("SELECT id, name, job, department\n"
+                        + "FROM structure.employ;")) {
                     List<Employ> list = new ArrayList<>();
                     while (resultSet.next()){
                         Employ employ = new Employ();
                         employ.setId(resultSet.getLong("id"));
                         employ.setName(resultSet.getString("name"));
-                        long depRaw = employ.setJobId(resultSet.getLong("job"));
-                        employ.setDepartmentId(resultSet.getLong("department"));
+                        long departmentTemp= resultSet.getLong("department");
                         if (!resultSet.wasNull()){
-                            employ.setJobId();
+                            employ.setDepartmentId(departmentTemp);
+                        }
+                        long jobTemp= resultSet.getLong("job");
+                        if (!resultSet.wasNull()){
+                            employ.setJobId(jobTemp);
                         }
                         list.add(employ);
                     }
