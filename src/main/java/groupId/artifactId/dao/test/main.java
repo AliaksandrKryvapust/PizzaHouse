@@ -31,7 +31,6 @@ public class main {
     }
     public static Employ map(ResultSet resultSet) throws SQLException {
         Employ employ = new Employ();
-        while (resultSet.next()) {
             employ.setId(resultSet.getLong("id"));
             employ.setName(resultSet.getString("name"));
             long departmentTemp = resultSet.getLong("department");
@@ -42,7 +41,6 @@ public class main {
             if (!resultSet.wasNull()) {
                 employ.setJobId(jobTemp);
             }
-        }
         return employ;
     }
     public static List<Employ> mapList(ResultSet resultSet) throws SQLException {
