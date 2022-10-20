@@ -1,12 +1,9 @@
 package groupId.artifactId.dao;
 
-import groupId.artifactId.core.mapper.MenuMapper;
 import groupId.artifactId.dao.api.IMenuDao;
 import groupId.artifactId.dao.entity.Menu;
 import groupId.artifactId.dao.entity.MenuItem;
 import groupId.artifactId.dao.entity.api.IMenu;
-import groupId.artifactId.dao.entity.api.IMenuItem;
-import groupId.artifactId.exceptions.IncorrectSQLConnectionException;
 
 import javax.sql.DataSource;
 import java.io.Serializable;
@@ -17,7 +14,7 @@ import java.util.List;
 
 public class MenuDao implements IMenuDao {
 
-    private DataSource dataSource;
+    private DataSource dataSource; // create singleton
     private static Long id = 1L;
 
     public MenuDao() {
@@ -32,38 +29,65 @@ public class MenuDao implements IMenuDao {
                         "WHERE id=?\n GROUP BY id\n ORDER BY count";
                 try (PreparedStatement statement = con.prepareStatement(sql)) {
                     statement.setLong(1, i + 1);
-                try (ResultSet resultSet = statement.executeQuery()){
-                    if (resultSet.next()){
-                        List<MenuItem> items = new ArrayList<>();
-                        for (int j = 0; j < resultSet.getLong("count"); j++) {
-                            items.add(new MenuItem());
+                    try (ResultSet resultSet = statement.executeQuery()) {
+                        if (resultSet.next()) {
+                            List<MenuItem> items = new ArrayList<>();
+                            for (int j = 0; j < resultSet.getLong("count"); j++) {
+                                items.add(new MenuItem());
+                            }
+                            menus.add(new Menu(items, (long) (i + 1)));
+                        } else {
+                            throw new SQLException("SELECT COUNT(menu_item_id) failed, no data returned");
                         }
-                        menus.add(new Menu(items,(long) (i + 1)));
-                    } else {
-                        throw new SQLException("SELECT COUNT(menu_item_id) failed, no data returned");
                     }
                 }
+                String sqln = "SELECT menu_item_id FROM menu\n" +
+                        "WHERE id=?\n ORDER BY menu_item_id";
+                try (PreparedStatement statement = con.prepareStatement(sqln)) {
+                    statement.setLong(1, i + 1);
+                    try (ResultSet resultSet = statement.executeQuery()) {
+                        for (MenuItem item : menus.get(i).getItems()) {
+                            resultSet.next();
+                            item.setId(resultSet.getLong("menu_item_id"));
+                        }
+                    }
                 }
             }
             String sql = "SELECT id, menu_item_id, price, pizza_info_id, name, description, size\n FROM menu\n" +
                     "INNER JOIN menu_item ON menu.menu_item_id=menu_item.id\n" +
-                    "INNER JOIN pizza_info ON menu_item.pizza_info_id=pizza_info.id;";
+                    "INNER JOIN pizza_info ON menu_item.pizza_info_id=pizza_info.id\n" +
+                    "ORDER BY id, menu_item_id, pizza_info_id;";
             try (PreparedStatement statement = con.prepareStatement(sql)) {
                 try (ResultSet resultSet = statement.executeQuery()) {
-                    for (IMenu menu : menus) {
-                        if (menu.getId() == resultSet.getLong("id")) {
-
+                    while (resultSet.next()) {
+                        for (IMenu menu : menus) {
+                            if (menu.getId() == resultSet.getLong("id")) {
+                                for (MenuItem item : menu.getItems()) {
+                                    double price = resultSet.getDouble("price");
+                                    if (!resultSet.wasNull()) {
+                                        item.setPrice(price);
+                                    }
+                                    if (item.getId() == resultSet.getLong("menu_item_id")) {
+                                        long id = resultSet.getLong("pizza_info_id");
+                                        if (!resultSet.wasNull()) {
+                                            item.getInfo().setId(id);
+                                        }
+                                        item.getInfo().setName(resultSet.getString("name"));
+                                        item.getInfo().setDescription(resultSet.getString("description"));
+                                        long size =resultSet.getLong("size");
+                                        if (!resultSet.wasNull()) {
+                                            item.getInfo().setSize(size);
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
-
-                    while (resultSet.next()) {
-                        list.add(MenuMapper.menuMapping(resultSet));
-                    }
-                    return list;
+                    return menus;
                 }
             }
         } catch (SQLException e) {
-            throw new IncorrectSQLConnectionException("Failed to connect to DB", e);
+            throw new RuntimeException(e);
         }
     }
 
