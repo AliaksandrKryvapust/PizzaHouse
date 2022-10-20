@@ -34,7 +34,7 @@ public class PizzaInfoDto {
         return description;
     }
 
-    public int getSize() {
-        return size;
+    public Long getSize() {
+        return Long.valueOf(size);
     }
 }

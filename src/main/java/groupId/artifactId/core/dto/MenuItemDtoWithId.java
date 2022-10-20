@@ -36,7 +36,7 @@ public class MenuItemDtoWithId {
         return price;
     }
 
-    public Integer getId() {
-        return id;
+    public Long getId() {
+        return Long.valueOf(id);
     }
 }

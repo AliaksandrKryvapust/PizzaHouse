@@ -168,8 +168,8 @@ public class MenuDao implements IMenuDao {
     }
 
     @Override
-    public void add(MenuItem menuItem, int menuId) {
-        if (this.isIdExist((long) menuId)) {
+    public void add(MenuItem menuItem, Long menuId) {
+        if (this.isIdExist(menuId)) {
             try (Connection con = dataSource.getConnection()) {
                 String pizzaInfoSql = "INSERT INTO pizza_info (name, description, size)\n VALUES (?, ?, ?)";
                 try (PreparedStatement statement = con.prepareStatement(pizzaInfoSql, Statement.RETURN_GENERATED_KEYS)) {

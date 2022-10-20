@@ -12,6 +12,10 @@ public class Menu implements IMenu {
     public Menu() {
     }
 
+    public Menu(List<MenuItem> items) {
+        this.items = items;
+    }
+
     public Menu(List<MenuItem> items, Long id) {
         this.items = items;
         this.id = id;
