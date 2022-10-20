@@ -6,7 +6,6 @@ import groupId.artifactId.dao.entity.MenuItem;
 import groupId.artifactId.dao.entity.api.IMenu;
 
 import javax.sql.DataSource;
-import java.io.Serializable;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +53,7 @@ public class MenuDao implements IMenuDao {
                 }
             }
             String sql = "SELECT id, menu_item_id, price, pizza_info_id, name, description, size\n FROM menu\n" +
-                    "INNER JOIN menu_item ON menu.menu_item_id=menu_item.id\n" +
+                    "INNER JOIN menu_item ON menu.menu_item_id=menu_item.id,\n" +
                     "INNER JOIN pizza_info ON menu_item.pizza_info_id=pizza_info.id\n" +
                     "ORDER BY id, menu_item_id, pizza_info_id;";
             try (PreparedStatement statement = con.prepareStatement(sql)) {
@@ -218,7 +217,7 @@ public class MenuDao implements IMenuDao {
             Menu menu = new Menu();
             menu.setId(id);
             String sql = "SELECT menu_item_id, price, pizza_info_id, name, description, size\n FROM menu\n" +
-                    "INNER JOIN menu_item ON menu.menu_item_id=menu_item.id\n" +
+                    "INNER JOIN menu_item ON menu.menu_item_id=menu_item.id,\n" +
                     "INNER JOIN pizza_info ON menu_item.pizza_info_id=pizza_info.id\n" +
                     "WHERE id=?\n ORDER BY menu_item_id, pizza_info_id;";
             try (PreparedStatement statement = con.prepareStatement(sql)) {
@@ -258,41 +257,67 @@ public class MenuDao implements IMenuDao {
             throw new IllegalStateException("Error code 500. Menu id is not valid");
         }
         try (Connection con = dataSource.getConnection()) {
-            String sql = "DELETE FROM menu \n VALUES (?, ?, ?)";
-            try (PreparedStatement statement = con.prepareStatement(pizzaInfoSql, Statement.RETURN_GENERATED_KEYS)) {
+            String pizzaInfoSql = "DELETE FROM pizza_info\n INNER JOIN menu_item ON menu_item.pizza_info_id=pizza_info.id,\n" +
+                    "INNER JOIN menu ON menu.menu_item_id=menu_item.id\n WHERE menu.id=?;";
+            try (PreparedStatement statement = con.prepareStatement(pizzaInfoSql)) {
                 long rows = 0;
-                statement.setString(1, menuItem.getInfo().getName());
-                statement.setString(2, menuItem.getInfo().getDescription());
-                statement.setLong(3, menuItem.getInfo().getSize()); //check
+                statement.setLong(1, id);
                 rows += statement.executeUpdate();
                 if (rows == 0) {
-                    throw new SQLException("pizza_info table update failed, no rows affected");
+                    throw new SQLException("pizza_info table delete failed, no rows affected"); //check
                 }
-                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        menuItem.getInfo().setId(generatedKeys.getLong(1));
-                    } else {
-                        throw new SQLException("pizza_info table update failed, no generated id returned");
-                    }
+            }
+            String menuItemSql = "DELETE FROM menu_item\n INNER JOIN menu ON menu.menu_item_id=menu_item.id\n" +
+                    " WHERE menu.id=?;";
+            try (PreparedStatement statement = con.prepareStatement(menuItemSql)) {
+                long rows = 0;
+                statement.setLong(1, id);
+                rows += statement.executeUpdate();
+                if (rows == 0) {
+                    throw new SQLException("menu_item table delete failed, no rows affected");
+                }
+            }
+            String menuSql = "DELETE FROM menu\n WHERE menu.id=?;";
+            try (PreparedStatement statement = con.prepareStatement(menuSql)) {
+                long rows = 0;
+                statement.setLong(1, id);
+                rows += statement.executeUpdate();
+                if (rows == 0) {
+                    throw new SQLException("menu table delete failed, no rows affected");
                 }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-        @Override
-        public Boolean isIdExist (Long id){
-            return this.menuList.stream().anyMatch((i) -> i.getId() == id);
-        }
-
-        @Override
-        public Boolean isDishExist (String name){
-            boolean temp = false;
-            for (IMenu menu : menuList) {
-                temp = menu.getItems().stream().anyMatch((i) -> i.getInfo().getName().equals(name));
-            }
-
-            return temp;
-        }
-
     }
+
+    @Override
+    public Boolean isIdExist(Long id) {
+        try (Connection con = dataSource.getConnection()) {
+            String sql = "SELECT id FROM menu\n WHERE id=?\n ORDER BY id;";
+            try (PreparedStatement statement = con.prepareStatement(sql)) {
+                statement.setLong(1, id);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    return resultSet.next();
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Boolean isDishExist(String name) {
+        try (Connection con = dataSource.getConnection()) {
+            String sql = "SELECT name FROM pizza_info\n WHERE name=?\n ORDER BY name;";
+            try (PreparedStatement statement = con.prepareStatement(sql)) {
+                statement.setString(1, name);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    return resultSet.next();
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
