@@ -4,26 +4,40 @@ import groupId.artifactId.dao.api.IMenuDao;
 import groupId.artifactId.dao.entity.Menu;
 import groupId.artifactId.dao.entity.MenuItem;
 import groupId.artifactId.dao.entity.api.IMenu;
+import groupId.artifactId.exceptions.IncorrectDataSourceException;
 
 import javax.sql.DataSource;
+import java.beans.PropertyVetoException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class MenuDao implements IMenuDao {
-
-    private DataSource dataSource; // create singleton
+    private static MenuDao firstInstance=null;
+    private final DataSource dataSource;
     private static Long id = 1L;
 
     public MenuDao() {
+        try {
+            this.dataSource=DataSourceCreator.getInstance();
+        } catch (PropertyVetoException e) {
+            throw new IncorrectDataSourceException("Unable to get Data Source class at MenuDao",e);
+        }
     }
-
+    public static MenuDao getInstance() {
+        synchronized (MenuDao.class) {
+            if (firstInstance == null) {
+                firstInstance = new MenuDao();
+            }
+        }
+        return firstInstance;
+    }
     @Override
     public List<IMenu> get() {
         try (Connection con = dataSource.getConnection()) {
             List<IMenu> menus = new ArrayList<>();
-            for (int i = 0; i < this.id; i++) {
+            for (int i = 0; i < id; i++) {
                 String sql = "SELECT COUNT(menu_item_id) AS count FROM menu\n" +
                         "WHERE id=?\n GROUP BY id\n ORDER BY count";
                 try (PreparedStatement statement = con.prepareStatement(sql)) {
@@ -40,9 +54,9 @@ public class MenuDao implements IMenuDao {
                         }
                     }
                 }
-                String sqln = "SELECT menu_item_id FROM menu\n" +
+                String sqlNew = "SELECT menu_item_id FROM menu\n" +
                         "WHERE id=?\n ORDER BY menu_item_id";
-                try (PreparedStatement statement = con.prepareStatement(sqln)) {
+                try (PreparedStatement statement = con.prepareStatement(sqlNew)) {
                     statement.setLong(1, i + 1);
                     try (ResultSet resultSet = statement.executeQuery()) {
                         for (MenuItem item : menus.get(i).getItems()) {
