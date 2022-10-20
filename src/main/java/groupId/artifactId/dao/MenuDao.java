@@ -63,18 +63,18 @@ public class MenuDao implements IMenuDao {
                         for (IMenu menu : menus) {
                             if (menu.getId() == resultSet.getLong("id")) {
                                 for (MenuItem item : menu.getItems()) {
-                                    double price = resultSet.getDouble("price");
-                                    if (!resultSet.wasNull()) {
-                                        item.setPrice(price);
-                                    }
                                     if (item.getId() == resultSet.getLong("menu_item_id")) {
+                                        double price = resultSet.getDouble("price");
+                                        if (!resultSet.wasNull()) {
+                                            item.setPrice(price);
+                                        }
                                         long id = resultSet.getLong("pizza_info_id");
                                         if (!resultSet.wasNull()) {
                                             item.getInfo().setId(id);
                                         }
                                         item.getInfo().setName(resultSet.getString("name"));
                                         item.getInfo().setDescription(resultSet.getString("description"));
-                                        long size =resultSet.getLong("size");
+                                        long size = resultSet.getLong("size");
                                         if (!resultSet.wasNull()) {
                                             item.getInfo().setSize(size);
                                         }
@@ -210,11 +210,46 @@ public class MenuDao implements IMenuDao {
     }
 
     @Override
-    public IMenu get(Serializable id) {
-        if (!this.isIdExist((Long) id)) {
+    public IMenu get(Long id) {
+        if (!this.isIdExist(id)) {
             throw new IllegalStateException("Error code 500. Menu id is not valid");
         }
-        return this.menuList.stream().filter((i) -> i.getId() == id).findFirst();
+        try (Connection con = dataSource.getConnection()) {
+            Menu menu = new Menu();
+            menu.setId(id);
+            String sql = "SELECT menu_item_id, price, pizza_info_id, name, description, size\n FROM menu\n" +
+                    "INNER JOIN menu_item ON menu.menu_item_id=menu_item.id\n" +
+                    "INNER JOIN pizza_info ON menu_item.pizza_info_id=pizza_info.id\n" +
+                    "WHERE id=?\n ORDER BY menu_item_id, pizza_info_id;";
+            try (PreparedStatement statement = con.prepareStatement(sql)) {
+                statement.setLong(1, id);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    while (resultSet.next()) {
+                        for (MenuItem item : menu.getItems()) {
+                            if (item.getId() == resultSet.getLong("menu_item_id")) {
+                                double price = resultSet.getDouble("price");
+                                if (!resultSet.wasNull()) {
+                                    item.setPrice(price);
+                                }
+                                long itemId = resultSet.getLong("pizza_info_id");
+                                if (!resultSet.wasNull()) {
+                                    item.getInfo().setId(itemId);
+                                }
+                                item.getInfo().setName(resultSet.getString("name"));
+                                item.getInfo().setDescription(resultSet.getString("description"));
+                                long size = resultSet.getLong("size");
+                                if (!resultSet.wasNull()) {
+                                    item.getInfo().setSize(size);
+                                }
+                            }
+                        }
+                    }
+                    return menu;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
