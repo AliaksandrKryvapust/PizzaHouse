@@ -19,7 +19,7 @@ public class CompletedOrderMapper {
         for (ISelectedItem selectedItem : temp) {
             for (int j = 0; j < selectedItem.getCount(); j++) {
                 pizzas.add(new Pizza(selectedItem.getItem().getInfo().getName(),
-                        selectedItem.getItem().getInfo().getSize()));
+                        Math.toIntExact(selectedItem.getItem().getInfo().getSize())));
             }
         }
         order.setItems(pizzas);

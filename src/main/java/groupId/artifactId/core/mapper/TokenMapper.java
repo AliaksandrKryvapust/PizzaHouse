@@ -2,6 +2,7 @@ package groupId.artifactId.core.mapper;
 
 import groupId.artifactId.core.dto.OrderDto;
 import groupId.artifactId.core.dto.SelectedItemDto;
+import groupId.artifactId.dao.entity.MenuItem;
 import groupId.artifactId.storage.entity.*;
 import groupId.artifactId.storage.entity.api.ISelectedItem;
 import groupId.artifactId.storage.entity.api.IToken;
@@ -13,9 +14,9 @@ public class TokenMapper {
     public static IToken orderMapping(OrderDto orderDto) {
         List<ISelectedItem> temp = new ArrayList<>();
         for (SelectedItemDto select : orderDto.getSelectedItems()) {
-            PizzaInfo pizzaInfo = new PizzaInfo(select.getMenuItem().getInfo().getName(),
+            groupId.artifactId.dao.entity.PizzaInfo pizzaInfo = new groupId.artifactId.dao.entity.PizzaInfo(select.getMenuItem().getInfo().getName(),
                     select.getMenuItem().getInfo().getDescription(), select.getMenuItem().getInfo().getSize());
-            MenuItem menuItem = new MenuItem(pizzaInfo, select.getMenuItem().getPrice());
+            MenuItem menuItem = new groupId.artifactId.dao.entity.MenuItem(pizzaInfo, select.getMenuItem().getPrice());
             temp.add(new SelectedItem(menuItem, select.getCount()));
         }
         return new Token(new Order(temp));
