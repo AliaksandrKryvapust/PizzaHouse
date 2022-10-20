@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Menu implements IMenu {
-    private List<MenuItem> items= new ArrayList<>();
+    private List<MenuItem> items = new ArrayList<>();
     private Long id;
 
     public Menu() {

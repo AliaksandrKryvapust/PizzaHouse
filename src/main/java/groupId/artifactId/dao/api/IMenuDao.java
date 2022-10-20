@@ -1,13 +1,14 @@
 package groupId.artifactId.dao.api;
 
+import groupId.artifactId.dao.entity.MenuItem;
 import groupId.artifactId.dao.entity.api.IMenu;
-import groupId.artifactId.dao.entity.api.IMenuItem;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface IMenuDao extends IDao<IMenu> {
     List<IMenu> get();
-    void update(IMenuItem menuItem, int menuId);
-    Boolean isIdExist(int id);
+    void add(MenuItem menuItem, int menuId) throws SQLException;
+    Boolean isIdExist(Long id);
     Boolean isDishExist(String name);
 }
