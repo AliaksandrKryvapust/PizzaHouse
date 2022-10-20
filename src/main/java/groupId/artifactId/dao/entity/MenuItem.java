@@ -1,20 +1,27 @@
 package groupId.artifactId.dao.entity;
 
 import groupId.artifactId.dao.entity.api.IMenuItem;
-import groupId.artifactId.storage.entity.api.IPizzaInfo;
+import groupId.artifactId.dao.entity.api.IPizzaInfo;
 
 public class MenuItem implements IMenuItem {
     private Long id;
     private IPizzaInfo pizzaInfo;
-    private double price;
+    private Double price;
 
-    public MenuItem(IPizzaInfo pizzaInfo, double price) {
+    public MenuItem() {
+    }
+
+    public MenuItem(IPizzaInfo pizzaInfo, Double price) {
         this.pizzaInfo = pizzaInfo;
         this.price=price;
     }
 
-    public void setPizzaInfo(IPizzaInfo pizzaInfo) {
-        this.pizzaInfo = pizzaInfo;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setPizzaInfo(PizzaInfo pizzaInfo) {
+        this.pizzaInfo = (IPizzaInfo) pizzaInfo;
     }
 
     public void setPrice(double price) {
@@ -26,12 +33,12 @@ public class MenuItem implements IMenuItem {
     }
 
     @Override
-    public IPizzaInfo getInfo() {
-        return this.pizzaInfo;
+    public PizzaInfo getInfo() {
+        return (PizzaInfo) this.pizzaInfo;
     }
 
     @Override
-    public double getPrice() {
+    public Double getPrice() {
         return price;
     }
 }

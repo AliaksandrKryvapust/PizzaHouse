@@ -5,5 +5,5 @@ public interface IPizzaInfo {
 
     String getDescription();
 
-    int getSize();
+    Long getSize();
 }

@@ -6,12 +6,19 @@ public class PizzaInfo implements IPizzaInfo {
     private Long id;
     private String name;
     private String description;
-    private Integer size;
+    private Long size;
 
-    public PizzaInfo(String name, String description, Integer size) {
+    public PizzaInfo() {
+    }
+
+    public PizzaInfo(String name, String description, Long size) {
         this.name = name;
         this.description = description;
         this.size = size;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public void setName(String name) {
@@ -22,7 +29,7 @@ public class PizzaInfo implements IPizzaInfo {
         this.description = description;
     }
 
-    public void setSize(Integer size) {
+    public void setSize(Long size) {
         this.size = size;
     }
 
@@ -41,7 +48,7 @@ public class PizzaInfo implements IPizzaInfo {
     }
 
     @Override
-    public int getSize() {
+    public Long getSize() {
         return size;
     }
 }
