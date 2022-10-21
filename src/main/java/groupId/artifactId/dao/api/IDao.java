@@ -1,6 +1,5 @@
 package groupId.artifactId.dao.api;
 
-import java.io.Serializable;
 import java.sql.SQLException;
 
 public interface IDao<TYPE> {

@@ -14,17 +14,18 @@ import java.util.List;
 
 
 public class MenuDao implements IMenuDao {
-    private static MenuDao firstInstance=null;
+    private static MenuDao firstInstance = null;
     private final DataSource dataSource;
     private static Long id = 1L;
 
     public MenuDao() {
         try {
-            this.dataSource=DataSourceCreator.getInstance();
+            this.dataSource = DataSourceCreator.getInstance();
         } catch (PropertyVetoException e) {
-            throw new IncorrectDataSourceException("Unable to get Data Source class at MenuDao",e);
+            throw new IncorrectDataSourceException("Unable to get Data Source class at MenuDao", e);
         }
     }
+
     public static MenuDao getInstance() {
         synchronized (MenuDao.class) {
             if (firstInstance == null) {
@@ -33,12 +34,13 @@ public class MenuDao implements IMenuDao {
         }
         return firstInstance;
     }
+
     @Override
     public List<IMenu> get() {
         try (Connection con = dataSource.getConnection()) {
             List<IMenu> menus = new ArrayList<>();
             for (int i = 0; i < id; i++) {
-                String sql = "SELECT COUNT(menu_item_id) AS count FROM menu\n" +
+                String sql = "SELECT COUNT(menu_item_id) AS count FROM pizza_manager.menu\n" +
                         "WHERE id=?\n GROUP BY id\n ORDER BY count";
                 try (PreparedStatement statement = con.prepareStatement(sql)) {
                     statement.setLong(1, i + 1);
@@ -54,7 +56,7 @@ public class MenuDao implements IMenuDao {
                         }
                     }
                 }
-                String sqlNew = "SELECT menu_item_id FROM menu\n" +
+                String sqlNew = "SELECT menu_item_id FROM pizza_manager.menu\n" +
                         "WHERE id=?\n ORDER BY menu_item_id";
                 try (PreparedStatement statement = con.prepareStatement(sqlNew)) {
                     statement.setLong(1, i + 1);
@@ -66,9 +68,9 @@ public class MenuDao implements IMenuDao {
                     }
                 }
             }
-            String sql = "SELECT id, menu_item_id, price, pizza_info_id, name, description, size\n FROM menu\n" +
-                    "INNER JOIN menu_item ON menu.menu_item_id=menu_item.id,\n" +
-                    "INNER JOIN pizza_info ON menu_item.pizza_info_id=pizza_info.id\n" +
+            String sql = "SELECT id, menu_item_id, price, pizza_info_id, name, description, size\n FROM pizza_manager.menu\n" +
+                    "INNER JOIN pizza_manager.menu_item ON menu.menu_item_id=menu_item.id,\n" +
+                    "INNER JOIN pizza_manager.pizza_info ON menu_item.pizza_info_id=pizza_info.id\n" +
                     "ORDER BY id, menu_item_id, pizza_info_id;";
             try (PreparedStatement statement = con.prepareStatement(sql)) {
                 try (ResultSet resultSet = statement.executeQuery()) {
@@ -110,19 +112,17 @@ public class MenuDao implements IMenuDao {
             throw new IllegalStateException("Error code 500. Menu id should be empty");
         }
         try (Connection con = dataSource.getConnection()) {
-            String pizzaInfoSql = "INSERT INTO pizza_info (name, description, size)\n VALUES (?, ?, ?)";
+            String pizzaInfoSql = "INSERT INTO pizza_manager.pizza_info (name, description, size)\n VALUES (?, ?, ?);";
             try (PreparedStatement statement = con.prepareStatement(pizzaInfoSql, Statement.RETURN_GENERATED_KEYS)) {
                 long rows = 0;
                 for (MenuItem item : menu.getItems()) {
                     statement.setString(1, item.getInfo().getName());
                     statement.setString(2, item.getInfo().getDescription());
-                    statement.setLong(3, item.getInfo().getSize()); //check
+                    statement.setLong(3, item.getInfo().getSize());
                     rows += statement.executeUpdate();
                     try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                         while (generatedKeys.next()) {
-                            for (MenuItem i : menu.getItems()) {
-                                i.getInfo().setId(generatedKeys.getLong(1));
-                            }
+                            item.getInfo().setId(generatedKeys.getLong(1));
                         }
                     }
                 }
@@ -130,7 +130,7 @@ public class MenuDao implements IMenuDao {
                     throw new SQLException("pizza_info table update failed, no rows affected");
                 }
             }
-            String menuItemSql = "INSERT INTO menu_item (price, pizza_info_id)\n VALUES (?, ?)";
+            String menuItemSql = "INSERT INTO pizza_manager.menu_item (price, pizza_info_id)\n VALUES (?, ?);";
             try (PreparedStatement statement = con.prepareStatement(menuItemSql, Statement.RETURN_GENERATED_KEYS)) {
                 long rows = 0;
                 for (MenuItem item : menu.getItems()) {
@@ -139,9 +139,7 @@ public class MenuDao implements IMenuDao {
                     rows += statement.executeUpdate();
                     try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                         while (generatedKeys.next()) {
-                            for (MenuItem i : menu.getItems()) {
-                                i.setId(generatedKeys.getLong(1));
-                            }
+                                item.setId(generatedKeys.getLong(1));
                         }
                     }
                 }
@@ -149,7 +147,7 @@ public class MenuDao implements IMenuDao {
                     throw new SQLException("menu_item table update failed, no rows affected");
                 }
             }
-            String menuSql = "INSERT INTO menu (id, menu_item_id)\n VALUES (?, ?)";
+            String menuSql = "INSERT INTO pizza_manager.menu (id, menu_item_id)\n VALUES (?, ?)";
             try (PreparedStatement statement = con.prepareStatement(menuSql)) {
                 long rows = 0;
                 for (MenuItem item : menu.getItems()) {
@@ -171,7 +169,7 @@ public class MenuDao implements IMenuDao {
     public void add(MenuItem menuItem, Long menuId) {
         if (this.isIdExist(menuId)) {
             try (Connection con = dataSource.getConnection()) {
-                String pizzaInfoSql = "INSERT INTO pizza_info (name, description, size)\n VALUES (?, ?, ?)";
+                String pizzaInfoSql = "INSERT INTO pizza_manager.pizza_info (name, description, size)\n VALUES (?, ?, ?)";
                 try (PreparedStatement statement = con.prepareStatement(pizzaInfoSql, Statement.RETURN_GENERATED_KEYS)) {
                     long rows = 0;
                     statement.setString(1, menuItem.getInfo().getName());
@@ -189,7 +187,7 @@ public class MenuDao implements IMenuDao {
                         }
                     }
                 }
-                String menuItemSql = "INSERT INTO menu_item (price, pizza_info_id)\n VALUES (?, ?)";
+                String menuItemSql = "INSERT INTO pizza_manager.menu_item (price, pizza_info_id)\n VALUES (?, ?)";
                 try (PreparedStatement statement = con.prepareStatement(menuItemSql, Statement.RETURN_GENERATED_KEYS)) {
                     long rows = 0;
                     statement.setDouble(1, menuItem.getPrice());
@@ -206,7 +204,7 @@ public class MenuDao implements IMenuDao {
                         }
                     }
                 }
-                String menuSql = "INSERT INTO menu (id, menu_item_id)\n VALUES (?, ?)";
+                String menuSql = "INSERT INTO pizza_manager.menu (id, menu_item_id)\n VALUES (?, ?)";
                 try (PreparedStatement statement = con.prepareStatement(menuSql)) {
                     long rows = 0;
                     statement.setLong(1, menuId);
@@ -230,9 +228,9 @@ public class MenuDao implements IMenuDao {
         try (Connection con = dataSource.getConnection()) {
             Menu menu = new Menu();
             menu.setId(id);
-            String sql = "SELECT menu_item_id, price, pizza_info_id, name, description, size\n FROM menu\n" +
-                    "INNER JOIN menu_item ON menu.menu_item_id=menu_item.id,\n" +
-                    "INNER JOIN pizza_info ON menu_item.pizza_info_id=pizza_info.id\n" +
+            String sql = "SELECT menu_item_id, price, pizza_info_id, name, description, size\n FROM pizza_manager.menu\n" +
+                    "INNER JOIN pizza_manager.menu_item ON menu.menu_item_id=menu_item.id,\n" +
+                    "INNER JOIN pizza_manager.pizza_info ON menu_item.pizza_info_id=pizza_info.id\n" +
                     "WHERE id=?\n ORDER BY menu_item_id, pizza_info_id;";
             try (PreparedStatement statement = con.prepareStatement(sql)) {
                 statement.setLong(1, id);
@@ -271,8 +269,8 @@ public class MenuDao implements IMenuDao {
             throw new IllegalStateException("Error code 500. Menu id is not valid");
         }
         try (Connection con = dataSource.getConnection()) {
-            String pizzaInfoSql = "DELETE FROM pizza_info\n INNER JOIN menu_item ON menu_item.pizza_info_id=pizza_info.id,\n" +
-                    "INNER JOIN menu ON menu.menu_item_id=menu_item.id\n WHERE menu.id=?;";
+            String pizzaInfoSql = "DELETE FROM pizza_manager.pizza_info\n INNER JOIN pizza_manager.menu_item ON menu_item.pizza_info_id=pizza_info.id,\n" +
+                    "INNER JOIN pizza_manager.menu ON menu.menu_item_id=menu_item.id\n WHERE menu.id=?;";
             try (PreparedStatement statement = con.prepareStatement(pizzaInfoSql)) {
                 long rows = 0;
                 statement.setLong(1, id);
@@ -281,7 +279,7 @@ public class MenuDao implements IMenuDao {
                     throw new SQLException("pizza_info table delete failed, no rows affected"); //check
                 }
             }
-            String menuItemSql = "DELETE FROM menu_item\n INNER JOIN menu ON menu.menu_item_id=menu_item.id\n" +
+            String menuItemSql = "DELETE FROM pizza_manager.menu_item\n INNER JOIN pizza_manager.menu ON menu.menu_item_id=menu_item.id\n" +
                     " WHERE menu.id=?;";
             try (PreparedStatement statement = con.prepareStatement(menuItemSql)) {
                 long rows = 0;
@@ -291,7 +289,7 @@ public class MenuDao implements IMenuDao {
                     throw new SQLException("menu_item table delete failed, no rows affected");
                 }
             }
-            String menuSql = "DELETE FROM menu\n WHERE menu.id=?;";
+            String menuSql = "DELETE FROM pizza_manager.menu\n WHERE menu.id=?;";
             try (PreparedStatement statement = con.prepareStatement(menuSql)) {
                 long rows = 0;
                 statement.setLong(1, id);
@@ -308,7 +306,7 @@ public class MenuDao implements IMenuDao {
     @Override
     public Boolean isIdExist(Long id) {
         try (Connection con = dataSource.getConnection()) {
-            String sql = "SELECT id FROM menu\n WHERE id=?\n ORDER BY id;";
+            String sql = "SELECT id FROM pizza_manager.menu\n WHERE id=?\n ORDER BY id;";
             try (PreparedStatement statement = con.prepareStatement(sql)) {
                 statement.setLong(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
@@ -323,7 +321,7 @@ public class MenuDao implements IMenuDao {
     @Override
     public Boolean isDishExist(String name) {
         try (Connection con = dataSource.getConnection()) {
-            String sql = "SELECT name FROM pizza_info\n WHERE name=?\n ORDER BY name;";
+            String sql = "SELECT name FROM pizza_manager.pizza_info\n WHERE name=?\n ORDER BY name;";
             try (PreparedStatement statement = con.prepareStatement(sql)) {
                 statement.setString(1, name);
                 try (ResultSet resultSet = statement.executeQuery()) {
