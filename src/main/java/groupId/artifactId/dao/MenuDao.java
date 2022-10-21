@@ -106,7 +106,11 @@ public class MenuDao implements IMenuDao {
             throw new RuntimeException(e);
         }
     }
-
+//    SELECT pizza_manager.menu.id, menu_item_id, price, pizza_info_id, name, description, size
+//    FROM pizza_manager.menu
+//    INNER JOIN pizza_manager.menu_item ON menu.menu_item_id=menu_item.id
+//    INNER JOIN pizza_manager.pizza_info ON menu_item.pizza_info_id=pizza_info.id
+//    ORDER BY id, menu_item_id, pizza_info_id;
     @Override
     public void save(IMenu menu) {
         if (menu.getId() != null) {
@@ -271,8 +275,10 @@ public class MenuDao implements IMenuDao {
             throw new IllegalStateException("Error code 500. Menu id is not valid");
         }
         try (Connection con = dataSource.getConnection()) {
-            String pizzaInfoSql = "DELETE FROM pizza_manager.pizza_info\n INNER JOIN pizza_manager.menu_item ON menu_item.pizza_info_id=pizza_info.id,\n" +
-                    "INNER JOIN pizza_manager.menu ON menu.menu_item_id=menu_item.id\n WHERE menu.id=?;";
+            String pizzaInfoSql = "DELETE FROM pizza_manager.pizza_info \n" +
+                    "USING pizza_manager.menu_item, pizza_manager.menu\n" +
+                    "WHERE menu_item.pizza_info_id=pizza_info.id  AND \n" +
+                    "menu.menu_item_id=menu_item.id AND pizza_manager.menu.id=?;";
             try (PreparedStatement statement = con.prepareStatement(pizzaInfoSql)) {
                 long rows = 0;
                 statement.setLong(1, id);
@@ -281,8 +287,9 @@ public class MenuDao implements IMenuDao {
                     throw new SQLException("pizza_info table delete failed, no rows affected"); //check
                 }
             }
-            String menuItemSql = "DELETE FROM pizza_manager.menu_item\n INNER JOIN pizza_manager.menu ON menu.menu_item_id=menu_item.id\n" +
-                    " WHERE menu.id=?;";
+            String menuItemSql = "DELETE FROM  pizza_manager.menu_item\n" +
+                    "USING pizza_manager.menu\n" +
+                    "WHERE menu.menu_item_id=menu_item.id AND pizza_manager.menu.id=?";
             try (PreparedStatement statement = con.prepareStatement(menuItemSql)) {
                 long rows = 0;
                 statement.setLong(1, id);
@@ -291,7 +298,8 @@ public class MenuDao implements IMenuDao {
                     throw new SQLException("menu_item table delete failed, no rows affected");
                 }
             }
-            String menuSql = "DELETE FROM pizza_manager.menu\n WHERE menu.id=?;";
+            String menuSql = "DELETE FROM  pizza_manager.menu\n" +
+                    "WHERE pizza_manager.menu.id=?;";
             try (PreparedStatement statement = con.prepareStatement(menuSql)) {
                 long rows = 0;
                 statement.setLong(1, id);
