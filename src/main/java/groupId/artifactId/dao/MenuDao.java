@@ -3,6 +3,7 @@ package groupId.artifactId.dao;
 import groupId.artifactId.dao.api.IMenuDao;
 import groupId.artifactId.dao.entity.Menu;
 import groupId.artifactId.dao.entity.MenuItem;
+import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.api.IMenu;
 import groupId.artifactId.exceptions.IncorrectDataSourceException;
 
@@ -48,7 +49,7 @@ public class MenuDao implements IMenuDao {
                         if (resultSet.next()) {
                             List<MenuItem> items = new ArrayList<>();
                             for (int j = 0; j < resultSet.getLong("count"); j++) {
-                                items.add(new MenuItem());
+                                items.add(new MenuItem(new PizzaInfo()));
                             }
                             menus.add(new Menu(items, (long) (i + 1)));
                         } else {
@@ -68,8 +69,8 @@ public class MenuDao implements IMenuDao {
                     }
                 }
             }
-            String sql = "SELECT id, menu_item_id, price, pizza_info_id, name, description, size\n FROM pizza_manager.menu\n" +
-                    "INNER JOIN pizza_manager.menu_item ON menu.menu_item_id=menu_item.id,\n" +
+            String sql = "SELECT pizza_manager.menu.id, menu_item_id, price, pizza_info_id, name, description, size\n FROM pizza_manager.menu\n" +
+                    "INNER JOIN pizza_manager.menu_item ON menu.menu_item_id=menu_item.id\n" +
                     "INNER JOIN pizza_manager.pizza_info ON menu_item.pizza_info_id=pizza_info.id\n" +
                     "ORDER BY id, menu_item_id, pizza_info_id;";
             try (PreparedStatement statement = con.prepareStatement(sql)) {
@@ -174,7 +175,7 @@ public class MenuDao implements IMenuDao {
                     long rows = 0;
                     statement.setString(1, menuItem.getInfo().getName());
                     statement.setString(2, menuItem.getInfo().getDescription());
-                    statement.setLong(3, menuItem.getInfo().getSize()); //check
+                    statement.setLong(3, menuItem.getInfo().getSize());
                     rows += statement.executeUpdate();
                     if (rows == 0) {
                         throw new SQLException("pizza_info table update failed, no rows affected");
