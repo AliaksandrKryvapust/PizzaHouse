@@ -11,6 +11,10 @@ public class MenuItem implements IMenuItem {
     public MenuItem() {
     }
 
+    public MenuItem(IPizzaInfo pizzaInfo) {
+        this.pizzaInfo = pizzaInfo;
+    }
+
     public MenuItem(IPizzaInfo pizzaInfo, Double price) {
         this.pizzaInfo = pizzaInfo;
         this.price=price;
@@ -40,5 +44,14 @@ public class MenuItem implements IMenuItem {
     @Override
     public Double getPrice() {
         return price;
+    }
+
+    @Override
+    public String toString() {
+        return "MenuItem{" +
+                "id=" + id +
+                ", pizzaInfo=" + pizzaInfo +
+                ", price=" + price +
+                '}';
     }
 }

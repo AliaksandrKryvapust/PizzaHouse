@@ -38,4 +38,12 @@ public class Menu implements IMenu {
     public Long getId() {
         return this.id;
     }
+
+    @Override
+    public String toString() {
+        return "Menu{" +
+                "items=" + items +
+                ", id=" + id +
+                '}';
+    }
 }

@@ -51,4 +51,14 @@ public class PizzaInfo implements IPizzaInfo {
     public Long getSize() {
         return size;
     }
+
+    @Override
+    public String toString() {
+        return "PizzaInfo{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", size=" + size +
+                '}';
+    }
 }
