@@ -140,7 +140,7 @@ public class MenuDao implements IMenuDao {
                     rows += statement.executeUpdate();
                     try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                         while (generatedKeys.next()) {
-                                item.setId(generatedKeys.getLong(1));
+                            item.setId(generatedKeys.getLong(1));
                         }
                     }
                 }
@@ -229,33 +229,34 @@ public class MenuDao implements IMenuDao {
         try (Connection con = dataSource.getConnection()) {
             Menu menu = new Menu();
             menu.setId(id);
+            List<MenuItem> list = new ArrayList<>();
             String sql = "SELECT menu_item_id, price, pizza_info_id, name, description, size\n FROM pizza_manager.menu\n" +
-                    "INNER JOIN pizza_manager.menu_item ON menu.menu_item_id=menu_item.id,\n" +
+                    "INNER JOIN pizza_manager.menu_item ON menu.menu_item_id=menu_item.id\n" +
                     "INNER JOIN pizza_manager.pizza_info ON menu_item.pizza_info_id=pizza_info.id\n" +
-                    "WHERE id=?\n ORDER BY menu_item_id, pizza_info_id;";
+                    "WHERE pizza_manager.menu.id=?\n ORDER BY menu_item_id, pizza_info_id;";
             try (PreparedStatement statement = con.prepareStatement(sql)) {
                 statement.setLong(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        for (MenuItem item : menu.getItems()) {
-                            if (item.getId() == resultSet.getLong("menu_item_id")) {
-                                double price = resultSet.getDouble("price");
-                                if (!resultSet.wasNull()) {
-                                    item.setPrice(price);
-                                }
-                                long itemId = resultSet.getLong("pizza_info_id");
-                                if (!resultSet.wasNull()) {
-                                    item.getInfo().setId(itemId);
-                                }
-                                item.getInfo().setName(resultSet.getString("name"));
-                                item.getInfo().setDescription(resultSet.getString("description"));
-                                long size = resultSet.getLong("size");
-                                if (!resultSet.wasNull()) {
-                                    item.getInfo().setSize(size);
-                                }
-                            }
+                        MenuItem item = new MenuItem(new PizzaInfo());
+                        item.setId(resultSet.getLong("menu_item_id"));
+                        double price = resultSet.getDouble("price");
+                        if (!resultSet.wasNull()) {
+                           item.setPrice(price);
                         }
+                        long itemId = resultSet.getLong("pizza_info_id");
+                        if (!resultSet.wasNull()) {
+                            item.getInfo().setId(itemId);
+                        }
+                        item.getInfo().setName(resultSet.getString("name"));
+                        item.getInfo().setDescription(resultSet.getString("description"));
+                        long size = resultSet.getLong("size");
+                        if (!resultSet.wasNull()) {
+                            item.getInfo().setSize(size);
+                        }
+                        list.add(item);
                     }
+                    menu.setItems(list);
                     return menu;
                 }
             }
