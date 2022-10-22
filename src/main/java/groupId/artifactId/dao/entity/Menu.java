@@ -2,12 +2,15 @@ package groupId.artifactId.dao.entity;
 
 import groupId.artifactId.dao.entity.api.IMenu;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Menu implements IMenu {
     private List<MenuItem> items = new ArrayList<>();
     private Long id;
+    private LocalDateTime creationDate;
+    private LocalDateTime editDate;
 
     public Menu() {
     }
@@ -29,6 +32,10 @@ public class Menu implements IMenu {
         this.id = id;
     }
 
+    public void setEditDate(LocalDateTime editDate) {
+        this.editDate = editDate;
+    }
+
     @Override
     public List<MenuItem> getItems() {
         return this.items;
@@ -39,11 +46,21 @@ public class Menu implements IMenu {
         return this.id;
     }
 
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    public LocalDateTime getEditDate() {
+        return editDate;
+    }
+
     @Override
     public String toString() {
         return "Menu{" +
                 "items=" + items +
                 ", id=" + id +
+                ", creationDate=" + creationDate +
+                ", editDate=" + editDate +
                 '}';
     }
 }
