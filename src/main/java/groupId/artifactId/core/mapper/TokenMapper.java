@@ -7,6 +7,7 @@ import groupId.artifactId.storage.entity.*;
 import groupId.artifactId.storage.entity.api.ISelectedItem;
 import groupId.artifactId.storage.entity.api.IToken;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +16,7 @@ public class TokenMapper {
         List<ISelectedItem> temp = new ArrayList<>();
         for (SelectedItemDto select : orderDto.getSelectedItems()) {
             groupId.artifactId.dao.entity.PizzaInfo pizzaInfo = new groupId.artifactId.dao.entity.PizzaInfo(select.getMenuItem().getInfo().getName(),
-                    select.getMenuItem().getInfo().getDescription(), select.getMenuItem().getInfo().getSize());
+                    select.getMenuItem().getInfo().getDescription(), select.getMenuItem().getInfo().getSize(), LocalDateTime.now());
             MenuItem menuItem = new groupId.artifactId.dao.entity.MenuItem(pizzaInfo, select.getMenuItem().getPrice());
             temp.add(new SelectedItem(menuItem, select.getCount()));
         }

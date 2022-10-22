@@ -2,19 +2,28 @@ package groupId.artifactId.dao.entity;
 
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
 
+import java.time.LocalDateTime;
+
 public class PizzaInfo implements IPizzaInfo {
     private Long id;
     private String name;
     private String description;
     private Long size;
+    private LocalDateTime creationDate;
+    private LocalDateTime editDate;
 
     public PizzaInfo() {
     }
 
-    public PizzaInfo(String name, String description, Long size) {
+    public PizzaInfo(String name, String description, Long size, LocalDateTime creationDate) {
         this.name = name;
         this.description = description;
         this.size = size;
+        this.creationDate = creationDate;
+    }
+
+    public void setEditDate(LocalDateTime editDate) {
+        this.editDate = editDate;
     }
 
     public void setId(Long id) {
@@ -52,6 +61,14 @@ public class PizzaInfo implements IPizzaInfo {
         return size;
     }
 
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    public LocalDateTime getEditDate() {
+        return editDate;
+    }
+
     @Override
     public String toString() {
         return "PizzaInfo{" +
@@ -59,6 +76,8 @@ public class PizzaInfo implements IPizzaInfo {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", size=" + size +
+                ", creationDate=" + creationDate +
+                ", editDate=" + editDate +
                 '}';
     }
 }

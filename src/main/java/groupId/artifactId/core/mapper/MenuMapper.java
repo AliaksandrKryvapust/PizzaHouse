@@ -6,6 +6,7 @@ import groupId.artifactId.dao.entity.MenuItem;
 import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.Menu;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,12 +14,13 @@ public class MenuMapper {
     public static Menu menuMapping(List<MenuItemDto> menuItemDto) {
         List<MenuItem> temp = menuItemDto.stream().map(
                 (i) -> new MenuItem(new PizzaInfo(i.getInfo().getName(), i.getInfo().getDescription(),
-                        i.getInfo().getSize()), i.getPrice())).collect(Collectors.toList());
+                        i.getInfo().getSize(), LocalDateTime.now()), i.getPrice())).collect(Collectors.toList());
         return new Menu(temp);
     }
 
     public static groupId.artifactId.dao.entity.MenuItem menuItemWithIdMapping(MenuItemDtoWithId menuItemDtoWithId) {
-        return new groupId.artifactId.dao.entity.MenuItem(new groupId.artifactId.dao.entity.PizzaInfo(menuItemDtoWithId.getInfo().getName(), menuItemDtoWithId.getInfo().getDescription(),
-                menuItemDtoWithId.getInfo().getSize()), menuItemDtoWithId.getPrice());
+        return new groupId.artifactId.dao.entity.MenuItem(new groupId.artifactId.dao.entity.
+                PizzaInfo(menuItemDtoWithId.getInfo().getName(), menuItemDtoWithId.getInfo().getDescription(),
+                menuItemDtoWithId.getInfo().getSize(), LocalDateTime.now()), menuItemDtoWithId.getPrice());
     }
 }
