@@ -15,11 +15,10 @@ public class PizzaInfo implements IPizzaInfo {
     public PizzaInfo() {
     }
 
-    public PizzaInfo(String name, String description, Long size, LocalDateTime creationDate) {
+    public PizzaInfo(String name, String description, Long size) {
         this.name = name;
         this.description = description;
         this.size = size;
-        this.creationDate = creationDate;
     }
 
     public void setEditDate(LocalDateTime editDate) {
