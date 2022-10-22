@@ -21,6 +21,10 @@ public class PizzaInfo implements IPizzaInfo {
         this.size = size;
     }
 
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+
     public void setEditDate(LocalDateTime editDate) {
         this.editDate = editDate;
     }

@@ -29,11 +29,15 @@ public class MenuItem implements IMenuItem {
     }
 
     public void setPizzaInfo(PizzaInfo pizzaInfo) {
-        this.pizzaInfo = (IPizzaInfo) pizzaInfo;
+        this.pizzaInfo = pizzaInfo;
     }
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
     }
 
     public void setEditDate(LocalDateTime editDate) {

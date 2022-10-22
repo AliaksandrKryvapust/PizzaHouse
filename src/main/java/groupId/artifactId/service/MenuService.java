@@ -5,6 +5,7 @@ import groupId.artifactId.core.dto.MenuItemDtoWithId;
 import groupId.artifactId.core.mapper.MenuMapper;
 import groupId.artifactId.dao.MenuDao;
 import groupId.artifactId.dao.api.IMenuDao;
+import groupId.artifactId.dao.entity.Menu;
 import groupId.artifactId.dao.entity.api.IMenu;
 import groupId.artifactId.exceptions.IncorrectSQLConnectionException;
 import groupId.artifactId.service.api.IMenuValidator;
@@ -15,11 +16,11 @@ import java.util.List;
 
 public class MenuService implements IMenuService {
     private static MenuService firstInstance = null;
-    private final IMenuDao storage;
+    private final IMenuDao dao;
     private final IMenuValidator validator;
 
     private MenuService() {
-        this.storage = MenuDao.getInstance();
+        this.dao = MenuDao.getInstance();
         this.validator = MenuValidator.getInstance();
     }
 
@@ -33,25 +34,34 @@ public class MenuService implements IMenuService {
     }
 
     @Override
-    public List<IMenu> get() {
-        return this.storage.get();
+    public List<Menu> get() {
+        return this.dao.get();
+    }
+
+    @Override
+    public IMenu get(Long id) {
+        try {
+            return this.dao.get(id);
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to get Menu with id " + id,e);
+        }
     }
 
     @Override
     public Boolean isIdValid(Long id) {
-        return this.storage.isIdExist(id);
+        return this.dao.isIdExist(id);
     }
 
     @Override
     public Boolean isDishExist(String name) {
-        return this.storage.isDishExist(name);
+        return this.dao.isDishExist(name);
     }
 
     @Override
     public void add(List<MenuItemDto> menuItemDto) {
         this.validator.validateMenu(menuItemDto);
         try {
-            this.storage.save(MenuMapper.menuMapping(menuItemDto));
+            this.dao.save(MenuMapper.menuMapping(menuItemDto));
         } catch (SQLException e) {
             throw new IncorrectSQLConnectionException("Failed to save new Menu", e);
         }
@@ -60,6 +70,6 @@ public class MenuService implements IMenuService {
     @Override
     public void addMenuItem(MenuItemDtoWithId menuItemDtoWithId) {
         this.validator.validateMenuItem(menuItemDtoWithId);
-        this.storage.add(MenuMapper.menuItemWithIdMapping(menuItemDtoWithId), menuItemDtoWithId.getId());
+        this.dao.add(MenuMapper.menuItemWithIdMapping(menuItemDtoWithId), menuItemDtoWithId.getId());
     }
 }

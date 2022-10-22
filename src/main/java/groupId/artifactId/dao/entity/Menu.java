@@ -32,6 +32,10 @@ public class Menu implements IMenu {
         this.id = id;
     }
 
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+
     public void setEditDate(LocalDateTime editDate) {
         this.editDate = editDate;
     }

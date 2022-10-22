@@ -14,16 +14,32 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-@WebServlet(name = "MenuForm", urlPatterns = "/api/menu_form")
-public class ApiMenuFormServlet extends HttpServlet {
+//CRUD controller
+//IMenuRow
+@WebServlet(name = "MenuForm", urlPatterns = "/api/menu")
+public class ApiMenuServlet extends HttpServlet {
     private final IMenuService menuService = MenuService.getInstance();
 
+    //Read POSITION
+    //1) Read list
+    //2) Read item need id param
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
+        String id = req.getParameter("id");
         try {
-            resp.getWriter().write(JsonConverter.fromMenuToJson(menuService.get()));
+            if (id != null) {
+                if (menuService.isIdValid(Long.valueOf(id))) {
+                    resp.getWriter().write(JsonConverter.fromMenuToJson(menuService.get(Long.valueOf(id))));
+                } else {
+                    resp.setStatus(400);
+                    throw new IllegalArgumentException("Error code 400. Menu id is not exist");
+                }
+
+            } else {
+                resp.getWriter().write(JsonConverter.fromMenuListToJson(menuService.get()));
+            }
         } catch (IOException e) {
             resp.setStatus(500);
             throw new IncorrectServletWriterException("Incorrect servlet state during response writer method", e);

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import groupId.artifactId.core.dto.*;
+import groupId.artifactId.dao.entity.Menu;
 import groupId.artifactId.dao.entity.api.IMenu;
 import groupId.artifactId.exceptions.IncorrectJsonParseException;
 import groupId.artifactId.storage.entity.api.ICompletedOrder;
@@ -16,9 +17,16 @@ import java.io.IOException;
 import java.util.List;
 
 public class JsonConverter {
-    public static String fromMenuToJson(List<IMenu> menu) {
+    public static String fromMenuListToJson(List<Menu> menu) {
         try {
-            return new ObjectMapper().writeValueAsString(menu);
+            return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(menu);
+        } catch (JsonProcessingException e) {
+            throw new IncorrectJsonParseException("failed to write IMenu as json",e);
+        }
+    }
+    public static String fromMenuToJson(IMenu menu) {
+        try {
+            return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(menu);
         } catch (JsonProcessingException e) {
             throw new IncorrectJsonParseException("failed to write IMenu as json",e);
         }

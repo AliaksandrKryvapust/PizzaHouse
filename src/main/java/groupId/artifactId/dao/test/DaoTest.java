@@ -1,6 +1,7 @@
 package groupId.artifactId.dao.test;
 
 import groupId.artifactId.dao.MenuDao;
+import groupId.artifactId.dao.entity.Menu;
 import groupId.artifactId.dao.entity.api.IMenu;
 
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.List;
 public class DaoTest {
     public static void main(String[] args) {
         MenuDao menuDao = MenuDao.getInstance();
-        List<IMenu> list = menuDao.get();
+        List<Menu> list = menuDao.get();
         System.out.println(list);
         System.out.println();
         System.out.println();
