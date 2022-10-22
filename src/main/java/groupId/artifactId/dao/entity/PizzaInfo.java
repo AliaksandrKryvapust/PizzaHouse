@@ -10,7 +10,7 @@ public class PizzaInfo implements IPizzaInfo {
     private String description;
     private Long size;
     private LocalDateTime creationDate;
-    private LocalDateTime editDate;
+    private Integer version;
 
     public PizzaInfo() {
     }
@@ -23,10 +23,6 @@ public class PizzaInfo implements IPizzaInfo {
 
     public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
-    }
-
-    public void setEditDate(LocalDateTime editDate) {
-        this.editDate = editDate;
     }
 
     public void setId(Long id) {
@@ -43,6 +39,10 @@ public class PizzaInfo implements IPizzaInfo {
 
     public void setSize(Long size) {
         this.size = size;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 
     public Long getId() {
@@ -68,8 +68,8 @@ public class PizzaInfo implements IPizzaInfo {
         return creationDate;
     }
 
-    public LocalDateTime getEditDate() {
-        return editDate;
+    public Integer getVersion() {
+        return version;
     }
 
     @Override
@@ -80,7 +80,7 @@ public class PizzaInfo implements IPizzaInfo {
                 ", description='" + description + '\'' +
                 ", size=" + size +
                 ", creationDate=" + creationDate +
-                ", editDate=" + editDate +
+                ", version=" + version +
                 '}';
     }
 }

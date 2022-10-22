@@ -22,7 +22,8 @@ public class ApiMenuServlet extends HttpServlet {
 
     //Read POSITION
     //1) Read list
-    //2) Read item need id param
+    //2) Read item need id param  (id = 1)
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         resp.setContentType("application/json");
@@ -46,24 +47,9 @@ public class ApiMenuServlet extends HttpServlet {
         }
         resp.setStatus(200);
     }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
-        try {
-            req.setCharacterEncoding("UTF-8");
-            resp.setContentType("application/json");
-            menuService.add(JsonConverter.fromJsonToMenu(req.getInputStream()));
-        } catch (UnsupportedEncodingException e) {
-            resp.setStatus(500);
-            throw new IncorrectEncodingException("Failed to set character encoding UTF-8", e);
-        } catch (IOException e) {
-            resp.setStatus(500);
-            throw new IncorrectServletInputStreamException("Impossible to get input stream from request", e);
-        }
-        resp.setStatus(201);
-    }
-}
-//to add new Menu in Storage
+    //CREATE POSITION
+    //body json
+    //to add new Menu in Storage
 //[
 //   {
 //           "price":20.0,
@@ -74,3 +60,45 @@ public class ApiMenuServlet extends HttpServlet {
 //           }
 //           }
 //           ]
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
+        try {
+            req.setCharacterEncoding("UTF-8");
+            resp.setContentType("application/json");
+            menuService.save(JsonConverter.fromJsonToMenu(req.getInputStream()));
+        } catch (UnsupportedEncodingException e) {
+            resp.setStatus(500);
+            throw new IncorrectEncodingException("Failed to set character encoding UTF-8", e);
+        } catch (IOException e) {
+            resp.setStatus(500);
+            throw new IncorrectServletInputStreamException("Impossible to get input stream from request", e);
+        }
+        resp.setStatus(201);
+    }
+    //UPDATE POSITION
+    //need param id  (id = 1)
+    //need param version/date_update - optimistic lock
+    //body json
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) {
+//        try {
+//            req.setCharacterEncoding("UTF-8");
+//            resp.setContentType("application/json");
+//            menuService.update(JsonConverter.fromJsonToMenu(req.getInputStream()));
+//        } catch (UnsupportedEncodingException e) {
+//            resp.setStatus(500);
+//            throw new IncorrectEncodingException("Failed to set character encoding UTF-8", e);
+//        } catch (IOException e) {
+//            resp.setStatus(500);
+//            throw new IncorrectServletInputStreamException("Impossible to get input stream from request", e);
+//        }
+//        resp.setStatus(201);
+    }
+    //DELETE POSITION
+    //need param id
+    //need param version/date_update - optimistic lock
+//    @Override
+//    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//        super.doDelete(req, resp);
+//    }
+}

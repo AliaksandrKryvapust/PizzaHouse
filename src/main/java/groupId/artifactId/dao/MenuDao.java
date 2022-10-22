@@ -39,6 +39,17 @@ public class MenuDao implements IMenuDao {
     @Override
     public List<Menu> get() {
         try (Connection con = dataSource.getConnection()) {
+            String sqlNew = "SELECT menu_item_id FROM pizza_manager.menu\n" +
+                    "WHERE id=?\n ORDER BY menu_item_id";
+            try (PreparedStatement statement = con.prepareStatement(sqlNew)) {
+                statement.setLong(1, i + 1);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    for (MenuItem item : menus.get(i).getItems()) {
+                        resultSet.next();
+                        item.setId(resultSet.getLong("menu_item_id"));
+                    }
+                }
+            }
             List<Menu> menus = new ArrayList<>();
             for (int i = 0; i < id; i++) {
                 String sql = "SELECT COUNT(menu_item_id) AS count FROM pizza_manager.menu\n" +
@@ -69,9 +80,9 @@ public class MenuDao implements IMenuDao {
                     }
                 }
             }
-            String sql = "SELECT pizza_manager.menu.id, pizza_manager.menu.creation_date AS mcd, pizza_manager.menu.edit_date AS med," +
-                    " menu_item_id,  pizza_manager.menu_item.creation_date AS micd, pizza_manager.menu_item.edit_date AS mied, " +
-                    "price, pizza_info_id, name, description, size, pizza_manager.pizza_info.creation_date AS picd, pizza_manager.pizza_info.edit_date AS pied\n" +
+            String sql = "SELECT pizza_manager.menu.id, pizza_manager.menu.creation_date AS mcd, pizza_manager.menu.version AS med," +
+                    " menu_item_id,  pizza_manager.menu_item.creation_date AS micd, pizza_manager.menu_item.version  AS mied, " +
+                    "price, pizza_info_id, name, description, size, pizza_manager.pizza_info.creation_date AS picd, pizza_manager.pizza_info.version  AS pied\n" +
                     "FROM pizza_manager.menu\n" +
                     "INNER JOIN pizza_manager.menu_item ON menu.menu_item_id=menu_item.id\n" +
                     "INNER JOIN pizza_manager.pizza_info ON menu_item.pizza_info_id=pizza_info.id\n" +
@@ -82,7 +93,7 @@ public class MenuDao implements IMenuDao {
                         for (Menu menu : menus) {
                             if (menu.getId() == resultSet.getLong("id")) {
                                 menu.setCreationDate(resultSet.getTimestamp("mcd").toLocalDateTime());
-                                menu.setEditDate(resultSet.getTimestamp("med").toLocalDateTime());
+                                menu.setVersion(resultSet.getInt("med"));
                                 for (MenuItem item : menu.getItems()) {
                                     if (item.getId() == resultSet.getLong("menu_item_id")) {
                                         double price = resultSet.getDouble("price");
@@ -90,7 +101,7 @@ public class MenuDao implements IMenuDao {
                                             item.setPrice(price);
                                         }
                                         item.setCreationDate(resultSet.getTimestamp("micd").toLocalDateTime());
-                                        item.setEditDate(resultSet.getTimestamp("mied").toLocalDateTime());
+                                        item.setVersion(resultSet.getInt("mied"));
                                         long id = resultSet.getLong("pizza_info_id");
                                         if (!resultSet.wasNull()) {
                                             item.getInfo().setId(id);
@@ -102,7 +113,7 @@ public class MenuDao implements IMenuDao {
                                             item.getInfo().setSize(size);
                                         }
                                         item.getInfo().setCreationDate(resultSet.getTimestamp("picd").toLocalDateTime());
-                                        item.getInfo().setEditDate(resultSet.getTimestamp("pied").toLocalDateTime());
+                                        item.getInfo().setVersion(resultSet.getInt("pied"));
                                     }
                                 }
                             }
@@ -132,9 +143,9 @@ public class MenuDao implements IMenuDao {
             Menu menu = new Menu();
             menu.setId(id);
             List<MenuItem> list = new ArrayList<>();
-            String sql = "SELECT pizza_manager.menu.id,pizza_manager.menu.creation_date AS mcd, pizza_manager.menu.edit_date AS med, " +
-                    "menu_item_id, price, pizza_manager.menu_item.creation_date AS micd, pizza_manager.menu_item.edit_date AS mied," +
-                    "pizza_info_id, name, description, size, pizza_manager.pizza_info.creation_date AS picd, pizza_manager.pizza_info.edit_date AS pied\n " +
+            String sql = "SELECT pizza_manager.menu.id,pizza_manager.menu.creation_date AS mcd, pizza_manager.menu.version AS med, " +
+                    "menu_item_id, price, pizza_manager.menu_item.creation_date AS micd, pizza_manager.menu_item.version AS mied," +
+                    "pizza_info_id, name, description, size, pizza_manager.pizza_info.creation_date AS picd, pizza_manager.pizza_info.version AS pied\n " +
                     "FROM pizza_manager.menu\n INNER JOIN pizza_manager.menu_item ON menu.menu_item_id=menu_item.id\n" +
                     "INNER JOIN pizza_manager.pizza_info ON menu_item.pizza_info_id=pizza_info.id\n" +
                     "WHERE pizza_manager.menu.id=?\n ORDER BY id, menu_item_id, pizza_info_id;";
@@ -143,7 +154,7 @@ public class MenuDao implements IMenuDao {
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
                         menu.setCreationDate(resultSet.getTimestamp("mcd").toLocalDateTime());
-                        menu.setEditDate(resultSet.getTimestamp("med").toLocalDateTime());
+                        menu.setVersion(resultSet.getInt("med"));
                         MenuItem item = new MenuItem(new PizzaInfo());
                         item.setId(resultSet.getLong("menu_item_id"));
                         double price = resultSet.getDouble("price");
@@ -151,7 +162,7 @@ public class MenuDao implements IMenuDao {
                             item.setPrice(price);
                         }
                         item.setCreationDate(resultSet.getTimestamp("micd").toLocalDateTime());
-                        item.setEditDate(resultSet.getTimestamp("mied").toLocalDateTime());
+                        item.setVersion(resultSet.getInt("mied"));
                         long itemId = resultSet.getLong("pizza_info_id");
                         if (!resultSet.wasNull()) {
                             item.getInfo().setId(itemId);
@@ -163,7 +174,7 @@ public class MenuDao implements IMenuDao {
                             item.getInfo().setSize(size);
                         }
                         item.getInfo().setCreationDate(resultSet.getTimestamp("picd").toLocalDateTime());
-                        item.getInfo().setEditDate(resultSet.getTimestamp("pied").toLocalDateTime());
+                        item.getInfo().setVersion(resultSet.getInt("pied"));
                         list.add(item);
                     }
                     menu.setItems(list);
@@ -240,6 +251,11 @@ public class MenuDao implements IMenuDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void update(IMenu iMenu) {
+
     }
 
     @Override

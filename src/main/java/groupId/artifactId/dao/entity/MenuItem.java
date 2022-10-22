@@ -10,7 +10,7 @@ public class MenuItem implements IMenuItem {
     private IPizzaInfo pizzaInfo;
     private Double price;
     private LocalDateTime creationDate;
-    private LocalDateTime editDate;
+    private Integer version;
 
     public MenuItem() {
     }
@@ -40,8 +40,8 @@ public class MenuItem implements IMenuItem {
         this.creationDate = creationDate;
     }
 
-    public void setEditDate(LocalDateTime editDate) {
-        this.editDate = editDate;
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 
     public Long getId() {
@@ -62,8 +62,8 @@ public class MenuItem implements IMenuItem {
         return creationDate;
     }
 
-    public LocalDateTime getEditDate() {
-        return editDate;
+    public Integer getVersion() {
+        return version;
     }
 
     @Override
@@ -73,7 +73,7 @@ public class MenuItem implements IMenuItem {
                 ", pizzaInfo=" + pizzaInfo +
                 ", price=" + price +
                 ", creationDate=" + creationDate +
-                ", editDate=" + editDate +
+                ", version=" + version +
                 '}';
     }
 }

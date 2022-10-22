@@ -23,7 +23,7 @@ public class DefaultDataInitializer implements ServletContextListener {
 //                32),19.0));
 //        temp.add(new MenuItemDto(new PizzaInfoDto("AMERICANA PIZZA","Mushrooms, tomatoes, mozzarella cheese, herb tomato sauce",
 //                32),18.0));
-//        menuService.add(temp);
+//        menuService.save(temp);
     }
 
     @Override

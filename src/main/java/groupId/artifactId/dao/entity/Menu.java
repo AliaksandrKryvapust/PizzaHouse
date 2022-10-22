@@ -10,7 +10,7 @@ public class Menu implements IMenu {
     private List<MenuItem> items = new ArrayList<>();
     private Long id;
     private LocalDateTime creationDate;
-    private LocalDateTime editDate;
+    private Integer version;
 
     public Menu() {
     }
@@ -36,8 +36,8 @@ public class Menu implements IMenu {
         this.creationDate = creationDate;
     }
 
-    public void setEditDate(LocalDateTime editDate) {
-        this.editDate = editDate;
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 
     @Override
@@ -54,8 +54,8 @@ public class Menu implements IMenu {
         return creationDate;
     }
 
-    public LocalDateTime getEditDate() {
-        return editDate;
+    public Integer getVersion() {
+        return version;
     }
 
     @Override
@@ -64,7 +64,7 @@ public class Menu implements IMenu {
                 "items=" + items +
                 ", id=" + id +
                 ", creationDate=" + creationDate +
-                ", editDate=" + editDate +
+                ", version=" + version +
                 '}';
     }
 }
