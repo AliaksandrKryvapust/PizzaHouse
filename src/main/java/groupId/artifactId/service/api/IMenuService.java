@@ -16,4 +16,5 @@ public interface IMenuService {
     Boolean isIdValid(Long id);
     Boolean isDishExist(String name);
     void update(MenuDto menuDto);
+    void delete(String id, String version);
 }

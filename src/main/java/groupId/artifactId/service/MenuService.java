@@ -69,6 +69,15 @@ public class MenuService implements IMenuService {
     }
 
     @Override
+    public void delete(String id, String version) {
+        try {
+            this.dao.delete(Long.valueOf(id),Integer.valueOf(version));
+        } catch (SQLException e) {
+            throw new IncorrectSQLConnectionException("Failed to delete Menu", e);
+        }
+    }
+
+    @Override
     public void save(List<MenuItemDto> menuItemDto) {
         this.validator.validateListMenuItems(menuItemDto);
         try {

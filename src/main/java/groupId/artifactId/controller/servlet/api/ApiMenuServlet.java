@@ -121,10 +121,30 @@ public class ApiMenuServlet extends HttpServlet {
     }
 
     //DELETE POSITION
-    //need param id
-    //need param version/date_update - optimistic lock
-//    @Override
-//    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        super.doDelete(req, resp);
-//    }
+    //need param id  (id = 1)
+    //need param version/date_update - optimistic lock (version=7)
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
+        try {
+            req.setCharacterEncoding("UTF-8");
+            resp.setContentType("application/json");
+            String id = req.getParameter("id");
+            String version = req.getParameter("version");
+            if (id!=null && version!=null){
+                if (menuService.isIdValid(Long.valueOf(id))) {
+                    menuService.delete(id,version);
+                } else {
+                    resp.setStatus(400);
+                    throw new IllegalArgumentException("Menu id is not exist");
+                }
+            } else {
+                resp.setStatus(400);
+                throw new IllegalArgumentException("Field Menu id or Menu version is empty");
+            }
+        } catch (UnsupportedEncodingException e) {
+            resp.setStatus(500);
+            throw new IncorrectEncodingException("Failed to set character encoding UTF-8", e);
+        }
+        resp.setStatus(200);
+    }
 }
