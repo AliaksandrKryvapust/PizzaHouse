@@ -1,14 +1,10 @@
 package groupId.artifactId.controller.listener;
 
-import groupId.artifactId.core.dto.MenuItemDto;
-import groupId.artifactId.core.dto.PizzaInfoDto;
 import groupId.artifactId.service.MenuService;
 import groupId.artifactId.service.api.IMenuService;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import java.util.ArrayList;
-import java.util.List;
 
 public class DefaultDataInitializer implements ServletContextListener {
     IMenuService menuService = MenuService.getInstance();

@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 //CRUD controller
-//IMenuRow
-@WebServlet(name = "Menu", urlPatterns = "/api/menu/item")
+//IMenuItem
+@WebServlet(name = "MenuItem", urlPatterns = "/api/menu/item")
 public class ApiMenuItemServlet extends HttpServlet {
     private final IMenuService menuService = MenuService.getInstance();
 

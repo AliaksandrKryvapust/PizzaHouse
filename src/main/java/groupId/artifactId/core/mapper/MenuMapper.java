@@ -2,7 +2,6 @@ package groupId.artifactId.core.mapper;
 
 import groupId.artifactId.core.dto.MenuDto;
 import groupId.artifactId.core.dto.MenuItemDto;
-import groupId.artifactId.core.dto.MenuItemDtoWithId;
 import groupId.artifactId.dao.entity.MenuItem;
 import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.Menu;
@@ -28,9 +27,9 @@ public class MenuMapper {
         return new Menu(temp);
     }
 
-    public static groupId.artifactId.dao.entity.MenuItem menuItemWithIdMapping(MenuItemDtoWithId menuItemDtoWithId) {
+    public static groupId.artifactId.dao.entity.MenuItem menuItemWithIdMapping(MenuItemDto menuItemDto) {
         return new groupId.artifactId.dao.entity.MenuItem(new groupId.artifactId.dao.entity.
-                PizzaInfo(menuItemDtoWithId.getInfo().getName(), menuItemDtoWithId.getInfo().getDescription(),
-                menuItemDtoWithId.getInfo().getSize()), menuItemDtoWithId.getPrice());
+                PizzaInfo(menuItemDto.getInfo().getName(), menuItemDto.getInfo().getDescription(),
+                menuItemDto.getInfo().getSize()), menuItemDto.getPrice());
     }
 }

@@ -7,9 +7,8 @@ import groupId.artifactId.dao.entity.api.IMenu;
 
 import java.util.List;
 
-public interface IMenuService {
-    void save(List<MenuItemDto> menuItemDto);
-    void addMenuItem(MenuItemDto menuItemDto);
+public interface IMenuItemService {
+    void save(MenuItemDto menuItemDto);
     List<Menu> get();
     IMenu get(Long id);
     Boolean isIdValid(Long id);

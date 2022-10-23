@@ -2,7 +2,6 @@ package groupId.artifactId.service;
 
 import groupId.artifactId.core.dto.MenuDto;
 import groupId.artifactId.core.dto.MenuItemDto;
-import groupId.artifactId.core.dto.MenuItemDtoWithId;
 import groupId.artifactId.service.api.IMenuValidator;
 
 import java.util.List;
@@ -41,23 +40,23 @@ public class MenuValidator implements IMenuValidator {
     }
 
     @Override
-    public void validateMenuItem(MenuItemDtoWithId menuItemDtoWithId) {
-        if (menuItemDtoWithId.getInfo() == null) {
+    public void validateMenuItem(MenuItemDto menuItemDto) {
+        if (menuItemDto.getInfo() == null) {
             throw new IllegalStateException("Error code 500. None of MenuItem have been sent as an input");
         }
-        if (menuItemDtoWithId.getInfo().getName() == null || menuItemDtoWithId.getInfo().getName().isBlank()) {
+        if (menuItemDto.getInfo().getName() == null || menuItemDto.getInfo().getName().isBlank()) {
             throw new IllegalArgumentException("Error code 400. Pizza`s name is not valid");
         }
-        if (menuItemDtoWithId.getInfo().getDescription() == null || menuItemDtoWithId.getInfo().getDescription().isBlank()) {
+        if (menuItemDto.getInfo().getDescription() == null || menuItemDto.getInfo().getDescription().isBlank()) {
             throw new IllegalArgumentException("Error code 400. Pizza`s description is not valid");
         }
-        if (menuItemDtoWithId.getInfo().getSize() <= 0) {
+        if (menuItemDto.getInfo().getSize() <= 0) {
             throw new IllegalArgumentException("Error code 400. Pizza`s size is not valid");
         }
-        if (menuItemDtoWithId.getPrice() <= 0) {
+        if (menuItemDto.getPrice() <= 0) {
             throw new IllegalArgumentException("Error code 400. Pizza`s price is not valid");
         }
-        if (!MenuService.getInstance().isIdValid(menuItemDtoWithId.getId())) {
+        if (!MenuService.getInstance().isIdValid(menuItemDto.getId())) {
             throw new IllegalArgumentException("Error code 400. Menu with such id do not exist");
         }
     }

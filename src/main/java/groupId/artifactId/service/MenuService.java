@@ -2,7 +2,6 @@ package groupId.artifactId.service;
 
 import groupId.artifactId.core.dto.MenuDto;
 import groupId.artifactId.core.dto.MenuItemDto;
-import groupId.artifactId.core.dto.MenuItemDtoWithId;
 import groupId.artifactId.core.mapper.MenuMapper;
 import groupId.artifactId.dao.MenuDao;
 import groupId.artifactId.dao.api.IMenuDao;
@@ -88,8 +87,8 @@ public class MenuService implements IMenuService {
     }
 
     @Override
-    public void addMenuItem(MenuItemDtoWithId menuItemDtoWithId) {
-        this.validator.validateMenuItem(menuItemDtoWithId);
-        this.dao.add(MenuMapper.menuItemWithIdMapping(menuItemDtoWithId), menuItemDtoWithId.getId());
+    public void addMenuItem(MenuItemDto menuItemDto) {
+        this.validator.validateMenuItem(menuItemDto);
+        this.dao.add(MenuMapper.menuItemWithIdMapping(menuItemDto), menuItemDto.getId());
     }
 }
