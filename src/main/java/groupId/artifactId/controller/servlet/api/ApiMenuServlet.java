@@ -16,7 +16,7 @@ import java.io.UnsupportedEncodingException;
 
 //CRUD controller
 //IMenuRow
-@WebServlet(name = "MenuForm", urlPatterns = "/api/menu")
+@WebServlet(name = "Menu", urlPatterns = "/api/menu")
 public class ApiMenuServlet extends HttpServlet {
     private final IMenuService menuService = MenuService.getInstance();
 
