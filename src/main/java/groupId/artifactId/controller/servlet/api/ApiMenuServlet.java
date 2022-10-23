@@ -78,13 +78,13 @@ public class ApiMenuServlet extends HttpServlet {
 
     //UPDATE POSITION
     //need param id  (id = 1)
-    //need param version/date_update - optimistic lock (version=1)
+    //need param version/date_update - optimistic lock (version=7)
     //body json
 //    {
 //        "items":[
 //        {
 //            "price":20.0,
-//                "info":{
+//                "pizzaInfo":{
 //            "name":"MARGHERITA PIZZA",
 //                    "description":"Mozzarella cheese, herb tomato sauce",
 //                    "size":48
@@ -108,7 +108,7 @@ public class ApiMenuServlet extends HttpServlet {
                 }
             } else {
                 resp.setStatus(400);
-                throw new IllegalArgumentException("Field Menu id is empty");
+                throw new IllegalArgumentException("Field Menu id or Menu version is empty");
             }
         } catch (UnsupportedEncodingException e) {
             resp.setStatus(500);
