@@ -1,5 +1,6 @@
 package groupId.artifactId.service;
 
+import groupId.artifactId.core.dto.MenuDto;
 import groupId.artifactId.core.dto.MenuItemDto;
 import groupId.artifactId.core.dto.MenuItemDtoWithId;
 import groupId.artifactId.core.mapper.MenuMapper;
@@ -58,10 +59,20 @@ public class MenuService implements IMenuService {
     }
 
     @Override
-    public void save(List<MenuItemDto> menuItemDto) {
-        this.validator.validateMenu(menuItemDto);
+    public void update(MenuDto menuDto) {
+        this.validator.validateMenu(menuDto);
         try {
-            this.dao.save(MenuMapper.menuMapping(menuItemDto));
+            this.dao.update(MenuMapper.menuMapping(menuDto));
+        } catch (SQLException e) {
+            throw new IncorrectSQLConnectionException("Failed to update Menu", e);
+        }
+    }
+
+    @Override
+    public void save(List<MenuItemDto> menuItemDto) {
+        this.validator.validateListMenuItems(menuItemDto);
+        try {
+            this.dao.save(MenuMapper.menuItemsMapping(menuItemDto));
         } catch (SQLException e) {
             throw new IncorrectSQLConnectionException("Failed to save new Menu", e);
         }

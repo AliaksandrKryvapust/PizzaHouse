@@ -1,5 +1,6 @@
 package groupId.artifactId.service.api;
 
+import groupId.artifactId.core.dto.MenuDto;
 import groupId.artifactId.core.dto.MenuItemDto;
 import groupId.artifactId.core.dto.MenuItemDtoWithId;
 import groupId.artifactId.dao.entity.Menu;
@@ -14,4 +15,5 @@ public interface IMenuService {
     IMenu get(Long id);
     Boolean isIdValid(Long id);
     Boolean isDishExist(String name);
+    void update(MenuDto menuDto);
 }

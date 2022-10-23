@@ -1,5 +1,6 @@
 package groupId.artifactId.service;
 
+import groupId.artifactId.core.dto.MenuDto;
 import groupId.artifactId.core.dto.MenuItemDto;
 import groupId.artifactId.core.dto.MenuItemDtoWithId;
 import groupId.artifactId.service.api.IMenuValidator;
@@ -19,7 +20,7 @@ public class MenuValidator implements IMenuValidator {
     }
 
     @Override
-    public void validateMenu(List<MenuItemDto> menuItemDto) {
+    public void validateListMenuItems(List<MenuItemDto> menuItemDto) {
         for (MenuItemDto dto : menuItemDto) {
             if (dto.getInfo() == null) {
                 throw new IllegalStateException("Error code 500. None of MenuItem have been sent as an input");
@@ -59,5 +60,13 @@ public class MenuValidator implements IMenuValidator {
         if (!MenuService.getInstance().isIdValid(menuItemDtoWithId.getId())) {
             throw new IllegalArgumentException("Error code 400. Menu with such id do not exist");
         }
+    }
+
+    @Override
+    public void validateMenu(MenuDto menuDto) {
+        if (!MenuService.getInstance().isIdValid(menuDto.getId())) {
+            throw new IllegalArgumentException("Error code 400. Menu with such id do not exist");
+        }
+        this.validateListMenuItems(menuDto.getItems());
     }
 }
