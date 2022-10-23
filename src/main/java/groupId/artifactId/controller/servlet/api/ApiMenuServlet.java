@@ -26,18 +26,17 @@ public class ApiMenuServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
-        resp.setContentType("application/json");
-        resp.setCharacterEncoding("UTF-8");
-        String id = req.getParameter("id");
         try {
+            resp.setContentType("application/json");
+            resp.setCharacterEncoding("UTF-8");
+            String id = req.getParameter("id");
             if (id != null) {
                 if (menuService.isIdValid(Long.valueOf(id))) {
                     resp.getWriter().write(JsonConverter.fromMenuToJson(menuService.get(Long.valueOf(id))));
                 } else {
                     resp.setStatus(400);
-                    throw new IllegalArgumentException("Error code 400. Menu id is not exist");
+                    throw new IllegalArgumentException("Menu id is not exist");
                 }
-
             } else {
                 resp.getWriter().write(JsonConverter.fromMenuListToJson(menuService.get()));
             }
@@ -47,6 +46,7 @@ public class ApiMenuServlet extends HttpServlet {
         }
         resp.setStatus(200);
     }
+
     //CREATE POSITION
     //body json
     //to add new Menu in Storage
@@ -65,7 +65,7 @@ public class ApiMenuServlet extends HttpServlet {
         try {
             req.setCharacterEncoding("UTF-8");
             resp.setContentType("application/json");
-            menuService.save(JsonConverter.fromJsonToMenu(req.getInputStream()));
+            menuService.save(JsonConverter.fromJsonToListMenuItem(req.getInputStream()));
         } catch (UnsupportedEncodingException e) {
             resp.setStatus(500);
             throw new IncorrectEncodingException("Failed to set character encoding UTF-8", e);
@@ -75,25 +75,51 @@ public class ApiMenuServlet extends HttpServlet {
         }
         resp.setStatus(201);
     }
+
     //UPDATE POSITION
     //need param id  (id = 1)
-    //need param version/date_update - optimistic lock
+    //need param version/date_update - optimistic lock (version=1)
     //body json
+//    {
+//        "items":[
+//        {
+//            "price":20.0,
+//                "info":{
+//            "name":"MARGHERITA PIZZA",
+//                    "description":"Mozzarella cheese, herb tomato sauce",
+//                    "size":48
+//        }
+//        }
+//   ]
+//    }
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) {
-//        try {
-//            req.setCharacterEncoding("UTF-8");
-//            resp.setContentType("application/json");
-//            menuService.update(JsonConverter.fromJsonToMenu(req.getInputStream()));
-//        } catch (UnsupportedEncodingException e) {
-//            resp.setStatus(500);
-//            throw new IncorrectEncodingException("Failed to set character encoding UTF-8", e);
-//        } catch (IOException e) {
-//            resp.setStatus(500);
-//            throw new IncorrectServletInputStreamException("Impossible to get input stream from request", e);
-//        }
-//        resp.setStatus(201);
+        try {
+            req.setCharacterEncoding("UTF-8");
+            resp.setContentType("application/json");
+            String id = req.getParameter("id");
+            String version = req.getParameter("version");
+            if (id!=null && version!=null){
+                if (menuService.isIdValid(Long.valueOf(id))) {
+                    menuService.update(JsonConverter.fromJsonToMenu(req.getInputStream(),id,version));
+                } else {
+                    resp.setStatus(400);
+                    throw new IllegalArgumentException("Menu id is not exist");
+                }
+            } else {
+                resp.setStatus(400);
+                throw new IllegalArgumentException("Field Menu id is empty");
+            }
+        } catch (UnsupportedEncodingException e) {
+            resp.setStatus(500);
+            throw new IncorrectEncodingException("Failed to set character encoding UTF-8", e);
+        } catch (IOException e) {
+            resp.setStatus(500);
+            throw new IncorrectServletInputStreamException("Impossible to get input stream from request", e);
+        }
+        resp.setStatus(201);
     }
+
     //DELETE POSITION
     //need param id
     //need param version/date_update - optimistic lock

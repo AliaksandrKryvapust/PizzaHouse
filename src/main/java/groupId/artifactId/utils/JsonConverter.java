@@ -45,7 +45,17 @@ public class JsonConverter {
             throw new IncorrectJsonParseException("failed to write IOrderData as json",e);
         }
     }
-    public static List<MenuItemDto> fromJsonToMenu(ServletInputStream servletInputStream)  {
+    public static MenuDto fromJsonToMenu(ServletInputStream servletInputStream, String id, String version)  {
+        try {
+            MenuDto menu = new ObjectMapper().readValue(servletInputStream, new TypeReference<>() { });
+            menu.setId(Long.valueOf(id));
+            menu.setVersion(Integer.valueOf(version));
+            return menu;
+        } catch (IOException e) {
+            throw new IncorrectJsonParseException("failed to read servletInputStream of Menu.class",e);
+        }
+    }
+    public static List<MenuItemDto> fromJsonToListMenuItem(ServletInputStream servletInputStream)  {
         try {
             return new ObjectMapper().readValue(servletInputStream, new TypeReference<>() {
             });
