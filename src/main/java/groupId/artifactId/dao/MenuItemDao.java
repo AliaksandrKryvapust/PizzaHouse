@@ -124,7 +124,7 @@ public class MenuItemDao implements IMenuItemDao {
     @Override
     public IMenuItem get(Long id) throws SQLException {
         if (!this.isIdExist(id)) {
-            throw new IllegalStateException("Error code 500. Menu id is not valid");
+            throw new IllegalStateException("Error code 500. MenuItem id is not valid");
         }
         try (Connection con = dataSource.getConnection()) {
             MenuItem item = new MenuItem(new PizzaInfo());
@@ -278,7 +278,6 @@ public class MenuItemDao implements IMenuItemDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     @Override
