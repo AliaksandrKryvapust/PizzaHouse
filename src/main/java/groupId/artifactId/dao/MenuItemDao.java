@@ -8,10 +8,7 @@ import groupId.artifactId.exceptions.IncorrectDataSourceException;
 
 import javax.sql.DataSource;
 import java.beans.PropertyVetoException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +32,40 @@ public class MenuItemDao implements IMenuItemDao {
     }
     @Override
     public void save(IMenuItem iMenuItem){
-
+        MenuItem menuItem = (MenuItem) iMenuItem;
+        if (menuItem.getId() != null) {
+            throw new IllegalStateException("Error code 500. Menu id should be empty");
+        }
+        try (Connection con = dataSource.getConnection()) {
+            String pizzaInfoSql = "INSERT INTO pizza_manager.pizza_info (name, description, size)\n VALUES (?, ?, ?);";
+            try (PreparedStatement statement = con.prepareStatement(pizzaInfoSql, Statement.RETURN_GENERATED_KEYS)) {
+                long rows = 0;
+                    statement.setString(1, menuItem.getInfo().getName());
+                    statement.setString(2, menuItem.getInfo().getDescription());
+                    statement.setLong(3, menuItem.getInfo().getSize());
+                    rows += statement.executeUpdate();
+                    try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                        while (generatedKeys.next()) {
+                            menuItem.getInfo().setId(generatedKeys.getLong(1));
+                        }
+                    }
+                if (rows == 0) {
+                    throw new SQLException("pizza_info table insert failed, no rows affected");
+                }
+            }
+            String menuItemSql = "INSERT INTO pizza_manager.menu_item (price, pizza_info_id)\n VALUES (?, ?);";
+            try (PreparedStatement statement = con.prepareStatement(menuItemSql)) {
+                long rows = 0;
+                    statement.setDouble(1, menuItem.getPrice());
+                    statement.setLong(2, menuItem.getInfo().getId());
+                    rows += statement.executeUpdate();
+                if (rows == 0) {
+                    throw new SQLException("menu_item table insert failed, no rows affected");
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

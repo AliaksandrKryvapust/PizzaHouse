@@ -79,7 +79,7 @@ public class JsonConverter {
             throw new IncorrectJsonParseException("failed to read servletInputStream of MenuItemDto[].class",e);
         }
     }
-    public static MenuItemDto fromJsonToMenuWithId(ServletInputStream servletInputStream)  {
+    public static MenuItemDto fromJsonToMenuItem(ServletInputStream servletInputStream)  {
         try {
             return new ObjectMapper().readValue(servletInputStream, MenuItemDto.class);
         } catch (IOException e) {

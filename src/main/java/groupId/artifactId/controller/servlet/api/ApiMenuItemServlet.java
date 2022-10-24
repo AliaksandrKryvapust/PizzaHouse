@@ -1,5 +1,7 @@
 package groupId.artifactId.controller.servlet.api;
 
+import groupId.artifactId.exceptions.IncorrectEncodingException;
+import groupId.artifactId.exceptions.IncorrectServletInputStreamException;
 import groupId.artifactId.exceptions.IncorrectServletWriterException;
 import groupId.artifactId.service.MenuItemService;
 import groupId.artifactId.service.api.IMenuItemService;
@@ -10,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 //CRUD controller
 //IMenuItem
@@ -43,29 +46,30 @@ public class ApiMenuItemServlet extends HttpServlet {
         resp.setStatus(200);
     }
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
-//        try {
-//            req.setCharacterEncoding("UTF-8");
-//            resp.setContentType("application/json");
-//            menuService.addMenuItem(JsonConverter.fromJsonToMenuWithId(req.getInputStream()));
-//        } catch (UnsupportedEncodingException e) {
-//            resp.setStatus(500);
-//            throw new IncorrectEncodingException("Failed to set character encoding UTF-8", e);
-//        } catch (IOException e) {
-//            resp.setStatus(500);
-//            throw new IncorrectServletInputStreamException("Impossible to get input stream from request", e);
-//        }
-//        resp.setStatus(201);
-    }
-}
-//to add new Menu item by Menu id
+    //CREATE POSITION
+    //body json
+    //to add new MenuItem in Storage
 //   {
 //           "price":20.0,
-//           "id":1,
 //           "pizzaInfo":{
 //           "name":"ITALIANO PIZZA",
 //           "description":"Mozzarella cheese, basilica, ham",
 //           "size":32
 //           }
 //           }
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
+        try {
+            req.setCharacterEncoding("UTF-8");
+            resp.setContentType("application/json");
+            menuItemService.save(JsonConverter.fromJsonToMenuItem(req.getInputStream()));
+        } catch (UnsupportedEncodingException e) {
+            resp.setStatus(500);
+            throw new IncorrectEncodingException("Failed to set character encoding UTF-8", e);
+        } catch (IOException e) {
+            resp.setStatus(500);
+            throw new IncorrectServletInputStreamException("Impossible to get input stream from request", e);
+        }
+        resp.setStatus(201);
+    }
+}
