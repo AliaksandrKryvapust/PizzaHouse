@@ -63,7 +63,12 @@ public class MenuItemService implements IMenuItemService {
 
     @Override
     public void update(MenuItemDto menuItemDto) {
-
+        this.validator.validateMenuItem(menuItemDto);
+        try {
+            this.dao.update(MenuMapper.menuItemMapping(menuItemDto));
+        } catch (SQLException e) {
+            throw new IncorrectSQLConnectionException("Failed to update Menu", e);
+        }
     }
 
     @Override

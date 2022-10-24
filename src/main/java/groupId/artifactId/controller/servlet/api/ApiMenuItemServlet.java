@@ -72,4 +72,43 @@ public class ApiMenuItemServlet extends HttpServlet {
         }
         resp.setStatus(201);
     }
+    //UPDATE POSITION
+    //need param id  (id = 76)
+    //need param version/date_update - optimistic lock (version=1)
+    //body json
+//   {
+//           "price":25.0,
+//           "pizzaInfo":{
+//           "name":"ITALIANO PIZZA",
+//           "description":"Mozzarella cheese, basilica, ham",
+//           "size":48
+//           }
+//           }
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) {
+        try {
+            req.setCharacterEncoding("UTF-8");
+            resp.setContentType("application/json");
+            String id = req.getParameter("id");
+            String version = req.getParameter("version");
+            if (id!=null && version!=null){
+                if (menuItemService.isIdValid(Long.valueOf(id))) {
+                   menuItemService.update(JsonConverter.fromJsonToMenuItemUpdate(req.getInputStream(),id,version));
+                } else {
+                    resp.setStatus(400);
+                    throw new IllegalArgumentException("MenuItem id is not exist");
+                }
+            } else {
+                resp.setStatus(400);
+                throw new IllegalArgumentException("Field MenuItem id or MenuItem version is empty");
+            }
+        } catch (UnsupportedEncodingException e) {
+            resp.setStatus(500);
+            throw new IncorrectEncodingException("Failed to set character encoding UTF-8", e);
+        } catch (IOException e) {
+            resp.setStatus(500);
+            throw new IncorrectServletInputStreamException("Impossible to get input stream from request", e);
+        }
+        resp.setStatus(201);
+    }
 }

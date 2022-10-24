@@ -86,6 +86,16 @@ public class JsonConverter {
             throw new IncorrectJsonParseException("failed to read servletInputStream of MenuItemDto.class",e);
         }
     }
+    public static MenuItemDto fromJsonToMenuItemUpdate(ServletInputStream servletInputStream, String id, String version)  {
+        try {
+            MenuItemDto menuItem = new ObjectMapper().readValue(servletInputStream, new TypeReference<>() { });
+            menuItem.setId(Long.valueOf(id));
+            menuItem.setVersion(Integer.valueOf(version));
+            return menuItem;
+        } catch (IOException e) {
+            throw new IncorrectJsonParseException("failed to read servletInputStream of MenuItem.class",e);
+        }
+    }
     public static OrderDto fromJsonToOrder(ServletInputStream servletInputStream)  {
         try {
             return new ObjectMapper().readValue(servletInputStream, OrderDto.class);

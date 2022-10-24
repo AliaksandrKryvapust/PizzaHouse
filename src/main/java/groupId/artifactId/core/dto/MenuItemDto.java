@@ -4,15 +4,17 @@ public class MenuItemDto {
     private PizzaInfoDto pizzaInfo;
     private double price;
 
-    private Integer id;
+    private Long id;
+    private Integer version;
 
     public MenuItemDto() {
     }
 
-    public MenuItemDto(PizzaInfoDto pizzaInfo, double price, Integer id) {
+    public MenuItemDto(PizzaInfoDto pizzaInfo, double price, Long id, Integer version) {
         this.pizzaInfo = pizzaInfo;
         this.price = price;
         this.id = id;
+        this.version = version;
     }
 
     public void setPizzaInfo(PizzaInfoDto pizzaInfoDto) {
@@ -23,8 +25,12 @@ public class MenuItemDto {
         this.price = price;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 
     public PizzaInfoDto getInfo() {
@@ -37,6 +43,10 @@ public class MenuItemDto {
     }
 
     public Long getId() {
-        return Long.valueOf(id);
+        return id;
+    }
+
+    public Integer getVersion() {
+        return version;
     }
 }
