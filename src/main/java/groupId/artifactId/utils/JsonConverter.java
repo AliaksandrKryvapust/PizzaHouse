@@ -123,6 +123,17 @@ public class JsonConverter {
         }
     }
 
+    public static PizzaInfoDto fromJsonToPizzaInfoUpdate(ServletInputStream servletInputStream, String id, String version) {
+        try {
+            PizzaInfoDto dto = new ObjectMapper().readValue(servletInputStream, new TypeReference<>() {
+            });
+            dto.setId(Long.valueOf(id));
+            dto.setVersion(Integer.valueOf(version));
+            return dto;
+        } catch (IOException e) {
+            throw new IncorrectJsonParseException("failed to read servletInputStream of PizzaInfoDto.class", e);
+        }
+    }
     public static OrderDto fromJsonToOrder(ServletInputStream servletInputStream) {
         try {
             return new ObjectMapper().readValue(servletInputStream, OrderDto.class);
