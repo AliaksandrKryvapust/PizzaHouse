@@ -18,7 +18,7 @@ public class ApiMenuItemServlet extends HttpServlet {
     private final IMenuItemService menuItemService = MenuItemService.getInstance();
     //Read POSITION
     //1) Read list
-    //2) Read item need id param  (id = 1)
+    //2) Read item need id param  (id = 75)
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
