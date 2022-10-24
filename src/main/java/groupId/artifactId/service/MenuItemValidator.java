@@ -54,8 +54,5 @@ public class MenuItemValidator implements IMenuItemValidator {
         if (menuItemDto.getPrice() <= 0) {
             throw new IllegalArgumentException("Error code 400. Pizza`s price is not valid");
         }
-        if (!MenuService.getInstance().isIdValid(menuItemDto.getId())) {
-            throw new IllegalArgumentException("Error code 400. Menu with such id do not exist");
-        }
     }
 }

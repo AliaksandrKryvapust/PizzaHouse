@@ -28,6 +28,9 @@ public class MenuValidator implements IMenuValidator {
     public void validateMenuItem(MenuItemDto menuItemDto) {
         MenuItemValidator itemValidator = MenuItemValidator.getInstance();
         itemValidator.validateMenuItem(menuItemDto);
+        if (!MenuService.getInstance().isIdValid(menuItemDto.getId())) {
+            throw new IllegalArgumentException("Error code 400. Menu with such id do not exist");
+        }
     }
 
     @Override
