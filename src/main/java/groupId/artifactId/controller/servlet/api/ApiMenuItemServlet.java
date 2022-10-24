@@ -34,7 +34,7 @@ public class ApiMenuItemServlet extends HttpServlet {
                     resp.getWriter().write(JsonConverter.fromMenuItemToJson(menuItemService.get(Long.valueOf(id))));
                 } else {
                     resp.setStatus(400);
-                    throw new IllegalArgumentException("Menu id is not exist");
+                    throw new IllegalArgumentException("MenuItem id is not exist");
                 }
             } else {
                 resp.getWriter().write(JsonConverter.fromMenuItemListToJson(menuItemService.get()));

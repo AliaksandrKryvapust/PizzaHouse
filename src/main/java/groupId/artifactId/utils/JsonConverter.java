@@ -7,8 +7,10 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import groupId.artifactId.core.dto.*;
 import groupId.artifactId.dao.entity.Menu;
 import groupId.artifactId.dao.entity.MenuItem;
+import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.api.IMenu;
 import groupId.artifactId.dao.entity.api.IMenuItem;
+import groupId.artifactId.dao.entity.api.IPizzaInfo;
 import groupId.artifactId.exceptions.IncorrectJsonParseException;
 import groupId.artifactId.storage.entity.api.ICompletedOrder;
 import groupId.artifactId.storage.entity.api.IOrderData;
@@ -45,6 +47,20 @@ public class JsonConverter {
             return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(item);
         } catch (JsonProcessingException e) {
             throw new IncorrectJsonParseException("failed to write IMenuItem as json",e);
+        }
+    }
+    public static String fromPizzaInfoListToJson(List<PizzaInfo> items) {
+        try {
+            return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(items);
+        } catch (JsonProcessingException e) {
+            throw new IncorrectJsonParseException("failed to write List PizzaInfo as json",e);
+        }
+    }
+    public static String fromPizzaInfoToJson(IPizzaInfo pizzaInfo) {
+        try {
+            return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(pizzaInfo);
+        } catch (JsonProcessingException e) {
+            throw new IncorrectJsonParseException("failed to write IPizzaInfo as json",e);
         }
     }
     public static String fromTokenToJson(IToken token) {
