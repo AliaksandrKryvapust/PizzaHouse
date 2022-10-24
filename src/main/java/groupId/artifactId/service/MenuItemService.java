@@ -67,7 +67,7 @@ public class MenuItemService implements IMenuItemService {
         try {
             this.dao.update(MenuMapper.menuItemMapping(menuItemDto));
         } catch (SQLException e) {
-            throw new IncorrectSQLConnectionException("Failed to update Menu", e);
+            throw new IncorrectSQLConnectionException("Failed to update MenuItem", e);
         }
     }
 
