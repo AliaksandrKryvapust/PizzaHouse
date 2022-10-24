@@ -63,7 +63,12 @@ public class PizzaInfoService implements IPizzaInfoService {
 
     @Override
     public void update(PizzaInfoDto pizzaInfoDto) {
-
+        this.validator.validatePizzaInfo(pizzaInfoDto);
+        try {
+            this.dao.update(MenuMapper.pizzaInfoMapping(pizzaInfoDto));
+        } catch (SQLException e) {
+            throw new IncorrectSQLConnectionException("Failed to update PizzaInfo", e);
+        }
     }
 
     @Override
