@@ -6,7 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import groupId.artifactId.core.dto.*;
 import groupId.artifactId.dao.entity.Menu;
+import groupId.artifactId.dao.entity.MenuItem;
 import groupId.artifactId.dao.entity.api.IMenu;
+import groupId.artifactId.dao.entity.api.IMenuItem;
 import groupId.artifactId.exceptions.IncorrectJsonParseException;
 import groupId.artifactId.storage.entity.api.ICompletedOrder;
 import groupId.artifactId.storage.entity.api.IOrderData;
@@ -21,7 +23,7 @@ public class JsonConverter {
         try {
             return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(menu);
         } catch (JsonProcessingException e) {
-            throw new IncorrectJsonParseException("failed to write IMenu as json",e);
+            throw new IncorrectJsonParseException("failed to write List IMenu as json",e);
         }
     }
     public static String fromMenuToJson(IMenu menu) {
@@ -29,6 +31,20 @@ public class JsonConverter {
             return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(menu);
         } catch (JsonProcessingException e) {
             throw new IncorrectJsonParseException("failed to write IMenu as json",e);
+        }
+    }
+    public static String fromMenuItemListToJson(List<MenuItem> items) {
+        try {
+            return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(items);
+        } catch (JsonProcessingException e) {
+            throw new IncorrectJsonParseException("failed to write List MenuItem as json",e);
+        }
+    }
+    public static String fromMenuItemToJson(IMenuItem item) {
+        try {
+            return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(item);
+        } catch (JsonProcessingException e) {
+            throw new IncorrectJsonParseException("failed to write IMenuItem as json",e);
         }
     }
     public static String fromTokenToJson(IToken token) {

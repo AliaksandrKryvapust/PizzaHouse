@@ -8,6 +8,7 @@ import groupId.artifactId.dao.entity.api.IMenuItem;
 import groupId.artifactId.service.api.IMenuItemValidator;
 import groupId.artifactId.service.api.IMenuItemService;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class MenuItemService implements IMenuItemService {
@@ -36,12 +37,16 @@ public class MenuItemService implements IMenuItemService {
 
     @Override
     public List<MenuItem> get() {
-        return null;
+        return this.dao.get();
     }
 
     @Override
     public IMenuItem get(Long id) {
-        return null;
+        try {
+            return this.dao.get(id);
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to get MenuItem with id " + id,e);
+        }
     }
 
     @Override

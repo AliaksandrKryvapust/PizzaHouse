@@ -28,13 +28,13 @@ public class ApiMenuItemServlet extends HttpServlet {
             String id = req.getParameter("id");
             if (id != null) {
                 if (menuItemService.isIdValid(Long.valueOf(id))) {
-                    resp.getWriter().write(JsonConverter.fromMenuToJson(menuService.get(Long.valueOf(id))));
+                    resp.getWriter().write(JsonConverter.fromMenuItemToJson(menuItemService.get(Long.valueOf(id))));
                 } else {
                     resp.setStatus(400);
                     throw new IllegalArgumentException("Menu id is not exist");
                 }
             } else {
-                resp.getWriter().write(JsonConverter.fromMenuListToJson(menuItemService.get()));
+                resp.getWriter().write(JsonConverter.fromMenuItemListToJson(menuItemService.get()));
             }
         } catch (IOException e) {
             resp.setStatus(500);
