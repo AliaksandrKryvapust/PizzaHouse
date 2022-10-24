@@ -24,6 +24,13 @@ public class MenuItem implements IMenuItem {
         this.price = price;
     }
 
+    public MenuItem(Long id, IPizzaInfo pizzaInfo, Double price, Integer version) {
+        this.id = id;
+        this.pizzaInfo = pizzaInfo;
+        this.price = price;
+        this.version = version;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }

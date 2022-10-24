@@ -70,7 +70,55 @@ public class MenuItemDao implements IMenuItemDao {
 
     @Override
     public void update(IMenuItem iMenuItem) throws SQLException {
-
+        MenuItem menuItem = (MenuItem) iMenuItem;
+        if (this.isIdExist(menuItem.getId())) {
+            try (Connection con = dataSource.getConnection()) {
+                String pizzaInfoSql = "SELECT pizza_info.version, pizza_info.id\n FROM pizza_manager.pizza_info\n" +
+                        "INNER JOIN pizza_manager.menu_item ON menu_item.pizza_info_id=pizza_info.id\n" +
+                        "WHERE pizza_manager.menu_item.id=? AND pizza_manager.menu_item.version=?\n " +
+                        "ORDER BY pizza_info.id;";
+                try (PreparedStatement statement = con.prepareStatement(pizzaInfoSql)) {
+                    statement.setLong(1, menuItem.getId());
+                    statement.setInt(2, menuItem.getVersion());
+                    try (ResultSet resultSet = statement.executeQuery()) {
+                        while (resultSet.next()) {
+                            menuItem.getInfo().setVersion(resultSet.getInt("version"));
+                            menuItem.getInfo().setId(resultSet.getLong("id"));
+                        }
+                    }
+                }
+                String menuItemSqlUpdate = "UPDATE pizza_manager.menu_item\n " +
+                        "SET price=?, version=version+1\n" +
+                        "WHERE pizza_manager.menu_item.id=? AND pizza_manager.menu_item.version=?\n";
+                try (PreparedStatement statement = con.prepareStatement(menuItemSqlUpdate)) {
+                    long rows = 0;
+                    statement.setDouble(1, menuItem.getPrice());
+                    statement.setLong(2, menuItem.getId());
+                    statement.setInt(3, menuItem.getVersion());
+                    rows += statement.executeUpdate();
+                    if (rows == 0) {
+                        throw new SQLException("menu_item table update failed, no rows affected");
+                    }
+                }
+                String pizzaInfoSqlUpdate = "UPDATE pizza_manager.pizza_info\n " +
+                        "SET name=?, description=?, size=?, version=version+1\n" +
+                        "WHERE pizza_manager.pizza_info.id=? AND pizza_manager.pizza_info.version=?\n";
+                try (PreparedStatement statement = con.prepareStatement(pizzaInfoSqlUpdate)) {
+                    long rows = 0;
+                    statement.setString(1, menuItem.getInfo().getName());
+                    statement.setString(2, menuItem.getInfo().getDescription());
+                    statement.setLong(3, menuItem.getInfo().getSize());
+                    statement.setLong(4, menuItem.getInfo().getId());
+                    statement.setInt(5, menuItem.getInfo().getVersion());
+                    rows += statement.executeUpdate();
+                    if (rows == 0) {
+                        throw new SQLException("pizza_info table update failed, no rows affected");
+                    }
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } else throw new IllegalStateException("Error code 500. MenuItem id is not valid");
     }
 
     @Override
