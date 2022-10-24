@@ -37,7 +37,25 @@ public class PizzaInfoDao implements IPizzaInfoDao {
 
     @Override
     public void save(IPizzaInfo iPizzaInfo) throws SQLException {
-
+        PizzaInfo info = (PizzaInfo) iPizzaInfo;
+        if (info.getId() != null) {
+            throw new IllegalStateException("Error code 500. Menu id should be empty");
+        }
+        try (Connection con = dataSource.getConnection()) {
+            String pizzaInfoSql = "INSERT INTO pizza_manager.pizza_info (name, description, size)\n VALUES (?, ?, ?);";
+            try (PreparedStatement statement = con.prepareStatement(pizzaInfoSql)) {
+                long rows = 0;
+                statement.setString(1, info.getName());
+                statement.setString(2, info.getDescription());
+                statement.setLong(3, info.getSize());
+                rows += statement.executeUpdate();
+                if (rows == 0) {
+                    throw new SQLException("pizza_info table insert failed, no rows affected");
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

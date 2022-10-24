@@ -21,6 +21,14 @@ public class PizzaInfo implements IPizzaInfo {
         this.size = size;
     }
 
+    public PizzaInfo(Long id, String name, String description, Long size, Integer version) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.size = size;
+        this.version = version;
+    }
+
     public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
     }
