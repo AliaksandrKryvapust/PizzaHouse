@@ -73,6 +73,10 @@ public class MenuItemService implements IMenuItemService {
 
     @Override
     public void delete(String id, String version) {
-
+        try {
+            this.dao.delete(Long.valueOf(id),Integer.valueOf(version));
+        } catch (SQLException e) {
+            throw new IncorrectSQLConnectionException("Failed to delete MenuItem", e);
+        }
     }
 }

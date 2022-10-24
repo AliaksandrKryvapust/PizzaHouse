@@ -111,4 +111,31 @@ public class ApiMenuItemServlet extends HttpServlet {
         }
         resp.setStatus(201);
     }
+    //DELETE POSITION
+    //need param id  (id = 76)
+    //need param version/date_update - optimistic lock (version=2)
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
+        try {
+            req.setCharacterEncoding("UTF-8");
+            resp.setContentType("application/json");
+            String id = req.getParameter("id");
+            String version = req.getParameter("version");
+            if (id!=null && version!=null){
+                if (menuItemService.isIdValid(Long.valueOf(id))) {
+                    menuItemService.delete(id,version);
+                } else {
+                    resp.setStatus(400);
+                    throw new IllegalArgumentException("MenuItem id is not exist");
+                }
+            } else {
+                resp.setStatus(400);
+                throw new IllegalArgumentException("Field MenuItem id or MenuItem version is empty");
+            }
+        } catch (UnsupportedEncodingException e) {
+            resp.setStatus(500);
+            throw new IncorrectEncodingException("Failed to set character encoding UTF-8", e);
+        }
+        resp.setStatus(200);
+    }
 }
