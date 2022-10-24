@@ -168,7 +168,53 @@ public class MenuItemDao implements IMenuItemDao {
 
     @Override
     public void delete(Long id, Integer version){
-
+        if (!this.isIdExist(id)) {
+            throw new IllegalStateException("Error code 500. MenuItem id is not valid");
+        }
+        MenuItem menuItem = new MenuItem();
+        menuItem.setId(id);
+        menuItem.setVersion(version);
+        menuItem.setPizzaInfo(new PizzaInfo());
+        try (Connection con = dataSource.getConnection()) {
+            String pizzaInfoSql = "SELECT pizza_info.version, pizza_info.id\n FROM pizza_manager.pizza_info\n" +
+                    "INNER JOIN pizza_manager.menu_item ON menu_item.pizza_info_id=pizza_info.id\n" +
+                    "WHERE pizza_manager.menu_item.id=? AND pizza_manager.menu_item.version=?\n " +
+                    "ORDER BY pizza_info.id;";
+            try (PreparedStatement statement = con.prepareStatement(pizzaInfoSql)) {
+                statement.setLong(1, id);
+                statement.setInt(2, version);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    while (resultSet.next()) {
+                        menuItem.getInfo().setVersion(resultSet.getInt("version"));
+                        menuItem.getInfo().setId(resultSet.getLong("id"));
+                    }
+                }
+            }
+            String menuItemSqlDelete = "DELETE FROM pizza_manager.menu_item\n " +
+                    "WHERE pizza_manager.menu_item.id=? AND pizza_manager.menu_item.version=?\n";
+            try (PreparedStatement statement = con.prepareStatement(menuItemSqlDelete)) {
+                long rows = 0;
+                statement.setLong(1, menuItem.getId());
+                statement.setInt(2, menuItem.getVersion());
+                rows += statement.executeUpdate();
+                if (rows == 0) {
+                    throw new SQLException("menu_item table delete failed, no rows affected");
+                }
+            }
+            String pizzaInfoSqlDelete = "DELETE FROM pizza_manager.pizza_info\n " +
+                    "WHERE pizza_manager.pizza_info.id=? AND pizza_manager.pizza_info.version=?\n";
+            try (PreparedStatement statement = con.prepareStatement(pizzaInfoSqlDelete)) {
+                long rows = 0;
+                statement.setLong(1, menuItem.getInfo().getId());
+                statement.setInt(2, menuItem.getInfo().getVersion());
+                rows += statement.executeUpdate();
+                if (rows == 0) {
+                    throw new SQLException("pizza_info table delete failed, no rows affected");
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
