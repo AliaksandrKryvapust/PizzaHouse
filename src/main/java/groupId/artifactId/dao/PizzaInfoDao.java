@@ -60,7 +60,28 @@ public class PizzaInfoDao implements IPizzaInfoDao {
 
     @Override
     public void update(IPizzaInfo iPizzaInfo) throws SQLException {
-
+        PizzaInfo pizzaInfo = (PizzaInfo) iPizzaInfo;
+        if (this.isIdExist(pizzaInfo.getId())) {
+            try (Connection con = dataSource.getConnection()) {
+                String pizzaInfoSqlUpdate = "UPDATE pizza_manager.pizza_info\n " +
+                        "SET name=?, description=?, size=?, version=version+1\n" +
+                        "WHERE pizza_manager.pizza_info.id=? AND pizza_manager.pizza_info.version=?\n";
+                try (PreparedStatement statement = con.prepareStatement(pizzaInfoSqlUpdate)) {
+                    long rows = 0;
+                    statement.setString(1, pizzaInfo.getName());
+                    statement.setString(2, pizzaInfo.getDescription());
+                    statement.setLong(3, pizzaInfo.getSize());
+                    statement.setLong(4, pizzaInfo.getId());
+                    statement.setInt(5, pizzaInfo.getVersion());
+                    rows += statement.executeUpdate();
+                    if (rows == 0) {
+                        throw new SQLException("pizza_info table update failed, no rows affected");
+                    }
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } else throw new IllegalStateException("Error code 500. PizzaInfo id is not valid");
     }
 
     @Override
