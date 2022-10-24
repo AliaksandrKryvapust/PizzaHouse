@@ -27,8 +27,8 @@ public class MenuMapper {
         return new Menu(temp);
     }
 
-    public static groupId.artifactId.dao.entity.MenuItem menuItemWithIdMapping(MenuItemDto menuItemDto) {
-        return new groupId.artifactId.dao.entity.MenuItem(new groupId.artifactId.dao.entity.
+    public static MenuItem menuItemMapping(MenuItemDto menuItemDto) {
+        return new MenuItem(new groupId.artifactId.dao.entity.
                 PizzaInfo(menuItemDto.getInfo().getName(), menuItemDto.getInfo().getDescription(),
                 menuItemDto.getInfo().getSize()), menuItemDto.getPrice());
     }
