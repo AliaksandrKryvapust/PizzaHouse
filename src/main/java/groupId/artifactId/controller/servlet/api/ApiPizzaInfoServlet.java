@@ -1,5 +1,7 @@
 package groupId.artifactId.controller.servlet.api;
 
+import groupId.artifactId.exceptions.IncorrectEncodingException;
+import groupId.artifactId.exceptions.IncorrectServletInputStreamException;
 import groupId.artifactId.exceptions.IncorrectServletWriterException;
 import groupId.artifactId.service.PizzaInfoService;
 import groupId.artifactId.service.api.IPizzaInfoService;
@@ -10,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 //CRUD controller
 //IPizzaInfo
@@ -41,5 +44,29 @@ public class ApiPizzaInfoServlet extends HttpServlet {
             throw new IncorrectServletWriterException("Incorrect servlet state during response writer method", e);
         }
         resp.setStatus(200);
+    }
+
+    //CREATE POSITION
+    //body json
+    //to add new PizzaInfo in Storage
+//   {
+//           "name":"ITALIANO PIZZA",
+//           "description":"Mozzarella cheese, basilica, ham",
+//           "size":32
+//           }
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
+        try {
+            req.setCharacterEncoding("UTF-8");
+            resp.setContentType("application/json");
+            pizzaInfoService.save(JsonConverter.fromJsonToPizzaInfo(req.getInputStream()));
+        } catch (UnsupportedEncodingException e) {
+            resp.setStatus(500);
+            throw new IncorrectEncodingException("Failed to set character encoding UTF-8", e);
+        } catch (IOException e) {
+            resp.setStatus(500);
+            throw new IncorrectServletInputStreamException("Impossible to get input stream from request", e);
+        }
+        resp.setStatus(201);
     }
 }
