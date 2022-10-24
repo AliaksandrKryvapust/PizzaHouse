@@ -102,24 +102,36 @@ public class JsonConverter {
             throw new IncorrectJsonParseException("failed to read servletInputStream of MenuItemDto.class",e);
         }
     }
-    public static MenuItemDto fromJsonToMenuItemUpdate(ServletInputStream servletInputStream, String id, String version)  {
+
+    public static MenuItemDto fromJsonToMenuItemUpdate(ServletInputStream servletInputStream, String id, String version) {
         try {
-            MenuItemDto menuItem = new ObjectMapper().readValue(servletInputStream, new TypeReference<>() { });
+            MenuItemDto menuItem = new ObjectMapper().readValue(servletInputStream, new TypeReference<>() {
+            });
             menuItem.setId(Long.valueOf(id));
             menuItem.setVersion(Integer.valueOf(version));
             return menuItem;
         } catch (IOException e) {
-            throw new IncorrectJsonParseException("failed to read servletInputStream of MenuItem.class",e);
+            throw new IncorrectJsonParseException("failed to read servletInputStream of MenuItem.class", e);
         }
     }
-    public static OrderDto fromJsonToOrder(ServletInputStream servletInputStream)  {
+
+    public static PizzaInfoDto fromJsonToPizzaInfo(ServletInputStream servletInputStream) {
+        try {
+            return new ObjectMapper().readValue(servletInputStream, PizzaInfoDto.class);
+        } catch (IOException e) {
+            throw new IncorrectJsonParseException("failed to read servletInputStream of PizzaInfoDto.class", e);
+        }
+    }
+
+    public static OrderDto fromJsonToOrder(ServletInputStream servletInputStream) {
         try {
             return new ObjectMapper().readValue(servletInputStream, OrderDto.class);
         } catch (IOException e) {
-            throw new IncorrectJsonParseException("failed to read servletInputStream of OrderDto.class",e);
+            throw new IncorrectJsonParseException("failed to read servletInputStream of OrderDto.class", e);
         }
     }
-    public static TokenDto fromJsonToToken(ServletInputStream servletInputStream)  {
+
+    public static TokenDto fromJsonToToken(ServletInputStream servletInputStream) {
         try {
             return new ObjectMapper().readValue(servletInputStream, TokenDto.class);
         } catch (IOException e) {

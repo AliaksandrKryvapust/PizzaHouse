@@ -1,10 +1,12 @@
 package groupId.artifactId.service;
 
 import groupId.artifactId.core.dto.PizzaInfoDto;
+import groupId.artifactId.core.mapper.MenuMapper;
 import groupId.artifactId.dao.PizzaInfoDao;
 import groupId.artifactId.dao.api.IPizzaInfoDao;
 import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
+import groupId.artifactId.exceptions.IncorrectSQLConnectionException;
 import groupId.artifactId.service.api.IPizzaInfoService;
 import groupId.artifactId.service.api.IPizzaInfoValidator;
 
@@ -32,7 +34,12 @@ public class PizzaInfoService implements IPizzaInfoService {
 
     @Override
     public void save(PizzaInfoDto pizzaInfoDto) {
-
+        this.validator.validatePizzaInfo(pizzaInfoDto);
+        try {
+            this.dao.save(MenuMapper.pizzaInfoMapping(pizzaInfoDto));
+        } catch (SQLException e) {
+            throw new IncorrectSQLConnectionException("Failed to save new MenuItem", e);
+        }
     }
 
     @Override

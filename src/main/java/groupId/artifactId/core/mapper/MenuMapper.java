@@ -2,6 +2,7 @@ package groupId.artifactId.core.mapper;
 
 import groupId.artifactId.core.dto.MenuDto;
 import groupId.artifactId.core.dto.MenuItemDto;
+import groupId.artifactId.core.dto.PizzaInfoDto;
 import groupId.artifactId.dao.entity.MenuItem;
 import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.Menu;
@@ -30,5 +31,9 @@ public class MenuMapper {
     public static MenuItem menuItemMapping(MenuItemDto menuItemDto) {
         return new MenuItem(menuItemDto.getId(), new PizzaInfo(menuItemDto.getInfo().getName(), menuItemDto.getInfo().getDescription(),
                 menuItemDto.getInfo().getSize()), menuItemDto.getPrice(),  menuItemDto.getVersion());
+    }
+    public static PizzaInfo pizzaInfoMapping(PizzaInfoDto pizzaInfoDto) {
+        return new PizzaInfo(pizzaInfoDto.getId(),  pizzaInfoDto.getName(), pizzaInfoDto.getDescription(),
+                pizzaInfoDto.getSize(), pizzaInfoDto.getVersion());
     }
 }

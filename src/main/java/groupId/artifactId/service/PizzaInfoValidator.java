@@ -3,8 +3,6 @@ package groupId.artifactId.service;
 import groupId.artifactId.core.dto.PizzaInfoDto;
 import groupId.artifactId.service.api.IPizzaInfoValidator;
 
-import java.util.List;
-
 public class PizzaInfoValidator implements IPizzaInfoValidator {
 
     private static PizzaInfoValidator firstInstance = null;
@@ -17,13 +15,17 @@ public class PizzaInfoValidator implements IPizzaInfoValidator {
             return firstInstance;
         }
     }
-    @Override
-    public void validateListPizzaInfo(List<PizzaInfoDto> pizzaInfos) {
-
-    }
 
     @Override
     public void validatePizzaInfo(PizzaInfoDto pizzaInfo) {
-
+        if (pizzaInfo.getName() == null || pizzaInfo.getName().isBlank()) {
+            throw new IllegalArgumentException("Error code 400. Pizza`s name is not valid");
+        }
+        if (pizzaInfo.getDescription() == null || pizzaInfo.getDescription().isBlank()) {
+            throw new IllegalArgumentException("Error code 400. Pizza`s description is not valid");
+        }
+        if (pizzaInfo.getSize() <= 0) {
+            throw new IllegalArgumentException("Error code 400. Pizza`s size is not valid");
+        }
     }
 }
