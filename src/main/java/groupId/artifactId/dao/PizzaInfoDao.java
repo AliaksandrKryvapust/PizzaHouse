@@ -122,7 +122,24 @@ public class PizzaInfoDao implements IPizzaInfoDao {
 
     @Override
     public void delete(Long id, Integer version) throws SQLException {
-
+        if (!this.isIdExist(id)) {
+            throw new IllegalStateException("Error code 500. MenuItem id is not valid");
+        }
+        try (Connection con = dataSource.getConnection()) {
+            String pizzaInfoSqlDelete = "DELETE FROM pizza_manager.pizza_info\n " +
+                    "WHERE pizza_manager.pizza_info.id=? AND pizza_manager.pizza_info.version=?\n";
+            try (PreparedStatement statement = con.prepareStatement(pizzaInfoSqlDelete)) {
+                long rows = 0;
+                statement.setLong(1, id);
+                statement.setInt(2, version);
+                rows += statement.executeUpdate();
+                if (rows == 0) {
+                    throw new SQLException("pizza_info table delete failed, no rows affected");
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
