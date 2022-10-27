@@ -10,6 +10,11 @@ public class MenuItemDto {
     public MenuItemDto() {
     }
 
+    public MenuItemDto(PizzaInfoDto pizzaInfo, double price) {
+        this.pizzaInfo = pizzaInfo;
+        this.price = price;
+    }
+
     public MenuItemDto(PizzaInfoDto pizzaInfo, double price, Long id, Integer version) {
         this.pizzaInfo = pizzaInfo;
         this.price = price;
