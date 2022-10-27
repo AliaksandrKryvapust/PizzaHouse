@@ -349,47 +349,49 @@ public class MenuDao implements IMenuDao {
 
     @Override
     public void add(MenuItem menuItem, Long menuId) {
-        if (this.isIdExist(menuId)) {
-            try (Connection con = dataSource.getConnection()) {
-                String pizzaInfoSql = "INSERT INTO pizza_manager.pizza_info (name, description, size)\n VALUES (?, ?, ?)";
-                try (PreparedStatement statement = con.prepareStatement(pizzaInfoSql, Statement.RETURN_GENERATED_KEYS)) {
-                    long rows = 0;
-                    statement.setString(1, menuItem.getInfo().getName());
-                    statement.setString(2, menuItem.getInfo().getDescription());
-                    statement.setLong(3, menuItem.getInfo().getSize());
-                    rows += statement.executeUpdate();
-                    if (rows == 0) {
-                        throw new SQLException("pizza_info table update failed, no rows affected");
-                    }
-                    try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                        if (generatedKeys.next()) {
-                            menuItem.getInfo().setId(generatedKeys.getLong(1));
-                        } else {
-                            throw new SQLException("pizza_info table update failed, no generated id returned");
-                        }
+        if (!this.isIdExist(menuId)) {
+            throw new IllegalStateException("Error code 500. Menu id is not valid");
+        }
+        try (Connection con = dataSource.getConnection()) {
+            String pizzaInfoSql = "INSERT INTO pizza_manager.pizza_info (name, description, size)\n VALUES (?, ?, ?)";
+            try (PreparedStatement statement = con.prepareStatement(pizzaInfoSql, Statement.RETURN_GENERATED_KEYS)) {
+                long rows = 0;
+                statement.setString(1, menuItem.getInfo().getName());
+                statement.setString(2, menuItem.getInfo().getDescription());
+                statement.setLong(3, menuItem.getInfo().getSize());
+                rows += statement.executeUpdate();
+                if (rows == 0) {
+                    throw new SQLException("pizza_info table update failed, no rows affected");
+                }
+                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        menuItem.getInfo().setId(generatedKeys.getLong(1));
+                    } else {
+                        throw new SQLException("pizza_info table update failed, no generated id returned");
                     }
                 }
-                String menuItemSql = "INSERT INTO pizza_manager.menu_item (price, pizza_info_id)\n VALUES (?, ?)";
-                try (PreparedStatement statement = con.prepareStatement(menuItemSql, Statement.RETURN_GENERATED_KEYS)) {
-                    long rows = 0;
-                    statement.setDouble(1, menuItem.getPrice());
-                    statement.setLong(2, menuItem.getInfo().getId());
-                    rows += statement.executeUpdate();
-                    if (rows == 0) {
-                        throw new SQLException("menu_item table update failed, no rows affected");
-                    }
-                    try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                        if (generatedKeys.next()) {
-                            menuItem.setId(generatedKeys.getLong(1));
-                        } else {
-                            throw new SQLException("menu_item table update failed, no generated id returned");
-                        }
+            }
+            String menuItemSql = "INSERT INTO pizza_manager.menu_item (price, pizza_info_id)\n VALUES (?, ?)";
+            try (PreparedStatement statement = con.prepareStatement(menuItemSql, Statement.RETURN_GENERATED_KEYS)) {
+                long rows = 0;
+                statement.setDouble(1, menuItem.getPrice());
+                statement.setLong(2, menuItem.getInfo().getId());
+                rows += statement.executeUpdate();
+                if (rows == 0) {
+                    throw new SQLException("menu_item table update failed, no rows affected");
+                }
+                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        menuItem.setId(generatedKeys.getLong(1));
+                    } else {
+                        throw new SQLException("menu_item table update failed, no generated id returned");
                     }
                 }
-                String menuSql = "INSERT INTO pizza_manager.menu (id, menu_item_id)\n VALUES (?, ?)";
-                try (PreparedStatement statement = con.prepareStatement(menuSql)) {
-                    long rows = 0;
-                    statement.setLong(1, menuId);
+            }
+            String menuSql = "INSERT INTO pizza_manager.menu (id, menu_item_id)\n VALUES (?, ?)";
+            try (PreparedStatement statement = con.prepareStatement(menuSql)) {
+                long rows = 0;
+                statement.setLong(1, menuId);
                     statement.setLong(2, menuItem.getId());
                     rows += statement.executeUpdate();
                     if (rows == 0) {
@@ -399,7 +401,6 @@ public class MenuDao implements IMenuDao {
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-        } else throw new IllegalStateException("Error code 500. Menu id is not valid");
     }
 
     @Override
@@ -454,30 +455,30 @@ public class MenuDao implements IMenuDao {
                     throw new SQLException("menu table delete failed, no rows affected");
                 }
             }
-            for (MenuItem items : menuItems) {
-                String menuItemSqlDelete = "DELETE FROM pizza_manager.menu_item\n " +
-                        "WHERE pizza_manager.menu_item.id=? AND pizza_manager.menu_item.version=?\n";
-                try (PreparedStatement statement = con.prepareStatement(menuItemSqlDelete)) {
-                    long rows = 0;
+            String menuItemSqlDelete = "DELETE FROM pizza_manager.menu_item\n " +
+                    "WHERE pizza_manager.menu_item.id=? AND pizza_manager.menu_item.version=?\n";
+            try (PreparedStatement statement = con.prepareStatement(menuItemSqlDelete)) {
+                for (MenuItem items : menuItems) {
                     statement.setLong(1, items.getId());
                     statement.setInt(2, items.getVersion());
-                    rows += statement.executeUpdate();
-                    if (rows == 0) {
-                        throw new SQLException("menu_item table delete failed, no rows affected");
-                    }
+                    statement.addBatch();
+                }
+                int[] rows = statement.executeBatch();
+                if (rows == null) {
+                    throw new SQLException("menu_item table delete failed, no rows affected");
                 }
             }
-            for (MenuItem items : menuItems) {
-                String pizzaInfoSqlDelete = "DELETE FROM pizza_manager.pizza_info\n " +
-                        "WHERE pizza_manager.pizza_info.id=? AND pizza_manager.pizza_info.version=?\n";
-                try (PreparedStatement statement = con.prepareStatement(pizzaInfoSqlDelete)) {
-                    long rows = 0;
+            String pizzaInfoSqlDelete = "DELETE FROM pizza_manager.pizza_info\n " +
+                    "WHERE pizza_manager.pizza_info.id=? AND pizza_manager.pizza_info.version=?\n";
+            try (PreparedStatement statement = con.prepareStatement(pizzaInfoSqlDelete)) {
+                for (MenuItem items : menuItems) {
                     statement.setLong(1, items.getInfo().getId());
                     statement.setInt(2, items.getInfo().getVersion());
-                    rows += statement.executeUpdate();
-                    if (rows == 0) {
-                        throw new SQLException("pizza_info table delete failed, no rows affected");
-                    }
+                    statement.addBatch();
+                }
+                int[] rows = statement.executeBatch();
+                if (rows == null) {
+                    throw new SQLException("pizza_info table delete failed, no rows affected");
                 }
             }
         } catch (SQLException e) {
