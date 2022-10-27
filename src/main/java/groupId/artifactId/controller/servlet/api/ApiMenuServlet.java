@@ -77,8 +77,8 @@ public class ApiMenuServlet extends HttpServlet {
     }
 
     //UPDATE POSITION
-    //need param id  (id = 1)
-    //need param version/date_update - optimistic lock (version=7)
+    //need param id  (id = 2)
+    //need param version/date_update - optimistic lock (version=1)
     //body json
 //    {
 //        "items":[
