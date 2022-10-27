@@ -200,38 +200,38 @@ public class MenuDao implements IMenuDao {
         try (Connection con = dataSource.getConnection()) {
             String pizzaInfoSql = "INSERT INTO pizza_manager.pizza_info (name, description, size)\n VALUES (?, ?, ?);";
             try (PreparedStatement statement = con.prepareStatement(pizzaInfoSql, Statement.RETURN_GENERATED_KEYS)) {
-                int [] rows;
                 for (MenuItem item : menu.getItems()) {
                     statement.setString(1, item.getInfo().getName());
                     statement.setString(2, item.getInfo().getDescription());
                     statement.setLong(3, item.getInfo().getSize());
                     statement.addBatch();
                 }
-                rows = statement.executeBatch();
+                int[] rows = statement.executeBatch();
                 try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                     for (MenuItem item : menu.getItems()) {
                         generatedKeys.next();
                         item.getInfo().setId(generatedKeys.getLong(1));
                     }
                 }
-                if (rows != null) {
+                if (rows == null) {
                     throw new SQLException("pizza_info table insert failed, no rows affected");
                 }
             }
             String menuItemSql = "INSERT INTO pizza_manager.menu_item (price, pizza_info_id)\n VALUES (?, ?);";
             try (PreparedStatement statement = con.prepareStatement(menuItemSql, Statement.RETURN_GENERATED_KEYS)) {
-                long rows = 0;
                 for (MenuItem item : menu.getItems()) {
                     statement.setDouble(1, item.getPrice());
                     statement.setLong(2, item.getInfo().getId());
-                    rows += statement.executeUpdate();
-                    try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                        while (generatedKeys.next()) {
-                            item.setId(generatedKeys.getLong(1));
-                        }
+                    statement.addBatch();
+                }
+                int[] rows = statement.executeBatch();
+                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                    for (MenuItem item : menu.getItems()) {
+                        generatedKeys.next();
+                        item.setId(generatedKeys.getLong(1));
                     }
                 }
-                if (rows == 0) {
+                if (rows == null) {
                     throw new SQLException("menu_item table insert failed, no rows affected");
                 }
             }
