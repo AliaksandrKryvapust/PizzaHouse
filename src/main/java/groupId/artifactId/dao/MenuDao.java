@@ -200,19 +200,21 @@ public class MenuDao implements IMenuDao {
         try (Connection con = dataSource.getConnection()) {
             String pizzaInfoSql = "INSERT INTO pizza_manager.pizza_info (name, description, size)\n VALUES (?, ?, ?);";
             try (PreparedStatement statement = con.prepareStatement(pizzaInfoSql, Statement.RETURN_GENERATED_KEYS)) {
-                long rows = 0;
+                int [] rows;
                 for (MenuItem item : menu.getItems()) {
                     statement.setString(1, item.getInfo().getName());
                     statement.setString(2, item.getInfo().getDescription());
                     statement.setLong(3, item.getInfo().getSize());
-                    rows += statement.executeUpdate();
-                    try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                        while (generatedKeys.next()) {
-                            item.getInfo().setId(generatedKeys.getLong(1));
-                        }
+                    statement.addBatch();
+                }
+                rows = statement.executeBatch();
+                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                    for (MenuItem item : menu.getItems()) {
+                        generatedKeys.next();
+                        item.getInfo().setId(generatedKeys.getLong(1));
                     }
                 }
-                if (rows == 0) {
+                if (rows != null) {
                     throw new SQLException("pizza_info table insert failed, no rows affected");
                 }
             }
