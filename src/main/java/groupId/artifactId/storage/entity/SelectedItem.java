@@ -4,15 +4,15 @@ import groupId.artifactId.dao.entity.api.IMenuItem;
 import groupId.artifactId.storage.entity.api.ISelectedItem;
 
 public class SelectedItem implements ISelectedItem {
-    private groupId.artifactId.dao.entity.api.IMenuItem menuItem;
+    private IMenuItem menuItem;
     private Integer count;
 
-    public SelectedItem(groupId.artifactId.dao.entity.api.IMenuItem menuItem, Integer count) {
+    public SelectedItem(IMenuItem menuItem, Integer count) {
         this.menuItem = menuItem;
         this.count = count;
     }
 
-    public void setMenuItem(groupId.artifactId.dao.entity.api.IMenuItem menuItem) {
+    public void setMenuItem(IMenuItem menuItem) {
         this.menuItem = menuItem;
     }
 
