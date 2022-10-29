@@ -65,7 +65,7 @@ public class ApiMenuServlet extends HttpServlet {
         try {
             req.setCharacterEncoding("UTF-8");
             resp.setContentType("application/json");
-            menuService.save(JsonConverter.fromJsonToListMenuItem(req.getInputStream()));
+            menuService.save(JsonConverter.fromJsonToMenuRow(req.getInputStream()));
         } catch (UnsupportedEncodingException e) {
             resp.setStatus(500);
             throw new IncorrectEncodingException("Failed to set character encoding UTF-8", e);
