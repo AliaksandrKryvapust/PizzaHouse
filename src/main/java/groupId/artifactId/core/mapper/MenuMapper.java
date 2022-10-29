@@ -15,6 +15,8 @@ public class MenuMapper {
         Menu menu =  new Menu();
         menu.setId(menuDto.getId());
         menu.setVersion(menuDto.getVersion());
+        menu.setName(menuDto.getName());
+        menu.setEnable(menuDto.getEnable());
         List<MenuItem> temp = menuDto.getItems().stream().map(
                 (i) -> new MenuItem(new PizzaInfo(i.getInfo().getName(), i.getInfo().getDescription(),
                         i.getInfo().getSize()), i.getPrice())).collect(Collectors.toList());

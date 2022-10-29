@@ -8,6 +8,8 @@ public class MenuDto {
     private List<MenuItemDto> items = new ArrayList<>();
     private Long id;
     private Integer version;
+    private String name;
+    private Boolean enable;
 
     public MenuDto() {
     }
@@ -38,5 +40,21 @@ public class MenuDto {
 
     public void setVersion(Integer version) {
         this.version = version;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Boolean getEnable() {
+        return enable;
+    }
+
+    public void setEnable(Boolean enable) {
+        this.enable = enable;
     }
 }

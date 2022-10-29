@@ -5,9 +5,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import groupId.artifactId.core.dto.*;
-import groupId.artifactId.dao.entity.Menu;
-import groupId.artifactId.dao.entity.MenuItem;
-import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.api.IMenu;
 import groupId.artifactId.dao.entity.api.IMenuItem;
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
@@ -21,41 +18,46 @@ import java.io.IOException;
 import java.util.List;
 
 public class JsonConverter {
-    public static String fromMenuListToJson(List<Menu> menu) {
+    public static String fromMenuListToJson(List<IMenu> menu) {
         try {
             return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(menu);
         } catch (JsonProcessingException e) {
-            throw new IncorrectJsonParseException("failed to write List IMenu as json",e);
+            throw new IncorrectJsonParseException("failed to write List IMenu as json", e);
         }
     }
+
     public static String fromMenuToJson(IMenu menu) {
         try {
             return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(menu);
         } catch (JsonProcessingException e) {
-            throw new IncorrectJsonParseException("failed to write IMenu as json",e);
+            throw new IncorrectJsonParseException("failed to write IMenu as json", e);
         }
     }
-    public static String fromMenuItemListToJson(List<MenuItem> items) {
+
+    public static String fromMenuItemListToJson(List<IMenuItem> items) {
         try {
             return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(items);
         } catch (JsonProcessingException e) {
-            throw new IncorrectJsonParseException("failed to write List MenuItem as json",e);
+            throw new IncorrectJsonParseException("failed to write List MenuItem as json", e);
         }
     }
+
     public static String fromMenuItemToJson(IMenuItem item) {
         try {
             return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(item);
         } catch (JsonProcessingException e) {
-            throw new IncorrectJsonParseException("failed to write IMenuItem as json",e);
+            throw new IncorrectJsonParseException("failed to write IMenuItem as json", e);
         }
     }
-    public static String fromPizzaInfoListToJson(List<PizzaInfo> items) {
+
+    public static String fromPizzaInfoListToJson(List<IPizzaInfo> items) {
         try {
             return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(items);
         } catch (JsonProcessingException e) {
-            throw new IncorrectJsonParseException("failed to write List PizzaInfo as json",e);
+            throw new IncorrectJsonParseException("failed to write List PizzaInfo as json", e);
         }
     }
+
     public static String fromPizzaInfoToJson(IPizzaInfo pizzaInfo) {
         try {
             return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(pizzaInfo);
@@ -67,35 +69,49 @@ public class JsonConverter {
         try {
             return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(token);
         } catch (JsonProcessingException e) {
-            throw new IncorrectJsonParseException("failed to write IToken as json",e);
+            throw new IncorrectJsonParseException("failed to write IToken as json", e);
         }
     }
+
     public static String fromOrderDataToJson(IOrderData orderData) {
         try {
             return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(orderData);
         } catch (JsonProcessingException e) {
-            throw new IncorrectJsonParseException("failed to write IOrderData as json",e);
+            throw new IncorrectJsonParseException("failed to write IOrderData as json", e);
         }
     }
-    public static MenuDto fromJsonToMenu(ServletInputStream servletInputStream, String id, String version)  {
+
+    public static MenuDto fromJsonToMenu(ServletInputStream servletInputStream, String id, String version) {
         try {
-            MenuDto menu = new ObjectMapper().readValue(servletInputStream, new TypeReference<>() { });
+            MenuDto menu = new ObjectMapper().readValue(servletInputStream, new TypeReference<>() {
+            });
             menu.setId(Long.valueOf(id));
             menu.setVersion(Integer.valueOf(version));
             return menu;
         } catch (IOException e) {
-            throw new IncorrectJsonParseException("failed to read servletInputStream of Menu.class",e);
+            throw new IncorrectJsonParseException("failed to read servletInputStream of MenuDto.class", e);
         }
     }
-    public static List<MenuItemDto> fromJsonToListMenuItem(ServletInputStream servletInputStream)  {
+
+    public static MenuDto fromJsonToMenuRow(ServletInputStream servletInputStream) {
         try {
             return new ObjectMapper().readValue(servletInputStream, new TypeReference<>() {
             });
         } catch (IOException e) {
-            throw new IncorrectJsonParseException("failed to read servletInputStream of MenuItemDto[].class",e);
+            throw new IncorrectJsonParseException("failed to read servletInputStream of MenuDto.class", e);
         }
     }
-    public static MenuItemDto fromJsonToMenuItem(ServletInputStream servletInputStream)  {
+
+    public static List<MenuItemDto> fromJsonToListMenuItem(ServletInputStream servletInputStream) {
+        try {
+            return new ObjectMapper().readValue(servletInputStream, new TypeReference<>() {
+            });
+        } catch (IOException e) {
+            throw new IncorrectJsonParseException("failed to read servletInputStream of MenuItemDto[].class", e);
+        }
+    }
+
+    public static MenuItemDto fromJsonToMenuItem(ServletInputStream servletInputStream) {
         try {
             return new ObjectMapper().readValue(servletInputStream, MenuItemDto.class);
         } catch (IOException e) {
