@@ -4,13 +4,10 @@ import groupId.artifactId.core.dto.PizzaInfoDto;
 import groupId.artifactId.core.mapper.MenuMapper;
 import groupId.artifactId.dao.PizzaInfoDao;
 import groupId.artifactId.dao.api.IPizzaInfoDao;
-import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
-import groupId.artifactId.exceptions.IncorrectSQLConnectionException;
 import groupId.artifactId.service.api.IPizzaInfoService;
 import groupId.artifactId.service.api.IPizzaInfoValidator;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public class PizzaInfoService implements IPizzaInfoService {
@@ -35,25 +32,17 @@ public class PizzaInfoService implements IPizzaInfoService {
     @Override
     public void save(PizzaInfoDto pizzaInfoDto) {
         this.validator.validatePizzaInfo(pizzaInfoDto);
-        try {
-            this.dao.save(MenuMapper.pizzaInfoMapping(pizzaInfoDto));
-        } catch (SQLException e) {
-            throw new IncorrectSQLConnectionException("Failed to save new MenuItem", e);
-        }
+        this.dao.save(MenuMapper.pizzaInfoMapping(pizzaInfoDto));
     }
 
     @Override
-    public List<PizzaInfo> get() {
+    public List<IPizzaInfo> get() {
         return this.dao.get();
     }
 
     @Override
     public IPizzaInfo get(Long id) {
-        try {
-            return this.dao.get(id);
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to get PizzaInfo with id " + id,e);
-        }
+        return this.dao.get(id);
     }
 
     @Override
@@ -64,19 +53,11 @@ public class PizzaInfoService implements IPizzaInfoService {
     @Override
     public void update(PizzaInfoDto pizzaInfoDto) {
         this.validator.validatePizzaInfo(pizzaInfoDto);
-        try {
-            this.dao.update(MenuMapper.pizzaInfoMapping(pizzaInfoDto));
-        } catch (SQLException e) {
-            throw new IncorrectSQLConnectionException("Failed to update PizzaInfo", e);
-        }
+        this.dao.update(MenuMapper.pizzaInfoMapping(pizzaInfoDto));
     }
 
     @Override
     public void delete(String id, String version) {
-        try {
-            this.dao.delete(Long.valueOf(id),Integer.valueOf(version));
-        } catch (SQLException e) {
-            throw new IncorrectSQLConnectionException("Failed to delete PizzaInfo", e);
-        }
+        this.dao.delete(Long.valueOf(id), Integer.valueOf(version));
     }
 }

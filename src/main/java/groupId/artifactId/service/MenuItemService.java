@@ -4,13 +4,10 @@ import groupId.artifactId.core.dto.MenuItemDto;
 import groupId.artifactId.core.mapper.MenuMapper;
 import groupId.artifactId.dao.MenuItemDao;
 import groupId.artifactId.dao.api.IMenuItemDao;
-import groupId.artifactId.dao.entity.MenuItem;
 import groupId.artifactId.dao.entity.api.IMenuItem;
-import groupId.artifactId.exceptions.IncorrectSQLConnectionException;
-import groupId.artifactId.service.api.IMenuItemValidator;
 import groupId.artifactId.service.api.IMenuItemService;
+import groupId.artifactId.service.api.IMenuItemValidator;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public class MenuItemService implements IMenuItemService {
@@ -35,25 +32,17 @@ public class MenuItemService implements IMenuItemService {
     @Override
     public void save(MenuItemDto menuItemDto) {
         this.validator.validateMenuItem(menuItemDto);
-        try {
-            this.dao.save(MenuMapper.menuItemMapping(menuItemDto));
-        } catch (SQLException e) {
-            throw new IncorrectSQLConnectionException("Failed to save new MenuItem", e);
-        }
+        this.dao.save(MenuMapper.menuItemMapping(menuItemDto));
     }
 
     @Override
-    public List<MenuItem> get() {
+    public List<IMenuItem> get() {
         return this.dao.get();
     }
 
     @Override
     public IMenuItem get(Long id) {
-        try {
-            return this.dao.get(id);
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to get MenuItem with id " + id,e);
-        }
+        return this.dao.get(id);
     }
 
     @Override
@@ -64,19 +53,11 @@ public class MenuItemService implements IMenuItemService {
     @Override
     public void update(MenuItemDto menuItemDto) {
         this.validator.validateMenuItem(menuItemDto);
-        try {
-            this.dao.update(MenuMapper.menuItemMapping(menuItemDto));
-        } catch (SQLException e) {
-            throw new IncorrectSQLConnectionException("Failed to update MenuItem", e);
-        }
+        this.dao.update(MenuMapper.menuItemMapping(menuItemDto));
     }
 
     @Override
     public void delete(String id, String version) {
-        try {
-            this.dao.delete(Long.valueOf(id),Integer.valueOf(version));
-        } catch (SQLException e) {
-            throw new IncorrectSQLConnectionException("Failed to delete MenuItem", e);
-        }
+        this.dao.delete(Long.valueOf(id), Integer.valueOf(version));
     }
 }

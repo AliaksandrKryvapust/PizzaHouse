@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface IPizzaInfoService {
     void save(PizzaInfoDto pizzaInfoDto);
-    List<PizzaInfo> get();
+    List<IPizzaInfo> get();
     IPizzaInfo get(Long id);
     Boolean isIdValid(Long id);
     void update(PizzaInfoDto pizzaInfoDto);
