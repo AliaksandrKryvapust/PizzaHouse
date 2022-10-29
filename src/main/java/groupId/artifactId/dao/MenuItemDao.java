@@ -69,7 +69,7 @@ public class MenuItemDao implements IMenuItemDao {
     }
 
     @Override
-    public void update(IMenuItem iMenuItem) throws SQLException {
+    public void update(IMenuItem iMenuItem) {
         MenuItem menuItem = (MenuItem) iMenuItem;
         if (this.isIdExist(menuItem.getId())) {
             try (Connection con = dataSource.getConnection()) {
@@ -122,7 +122,7 @@ public class MenuItemDao implements IMenuItemDao {
     }
 
     @Override
-    public IMenuItem get(Long id) throws SQLException {
+    public IMenuItem get(Long id) {
         if (!this.isIdExist(id)) {
             throw new IllegalStateException("Error code 500. MenuItem id is not valid");
         }
@@ -218,9 +218,9 @@ public class MenuItemDao implements IMenuItemDao {
     }
 
     @Override
-    public List<MenuItem> get() {
+    public List<IMenuItem> get() {
         try (Connection con = dataSource.getConnection()) {
-            List<MenuItem> items = new ArrayList<>();
+            List<IMenuItem> items = new ArrayList<>();
             String sql = "SELECT COUNT(menu_item.id) AS count FROM pizza_manager.menu_item\n" + "ORDER BY count";
             try (PreparedStatement statement = con.prepareStatement(sql)) {
                 try (ResultSet resultSet = statement.executeQuery()) {
@@ -236,9 +236,10 @@ public class MenuItemDao implements IMenuItemDao {
             String sqlNew = "SELECT menu_item.id FROM pizza_manager.menu_item\n" + "ORDER BY id";
             try (PreparedStatement statement = con.prepareStatement(sqlNew)) {
                 try (ResultSet resultSet = statement.executeQuery()) {
-                    for (MenuItem item : items) {
+                    for (IMenuItem iMenuItem : items) {
+                        MenuItem menuItem = (MenuItem) iMenuItem;
                         resultSet.next();
-                        item.setId(resultSet.getLong("id"));
+                        menuItem.setId(resultSet.getLong("id"));
                     }
                 }
             }
@@ -249,7 +250,8 @@ public class MenuItemDao implements IMenuItemDao {
             try (PreparedStatement statement = con.prepareStatement(sqlSelect)) {
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        for (MenuItem item : items) {
+                        for (IMenuItem iMenuItem : items) {
+                            MenuItem item = (MenuItem) iMenuItem;
                             if (item.getId() == resultSet.getLong("miid")) {
                                 double price = resultSet.getDouble("price");
                                 if (!resultSet.wasNull()) {

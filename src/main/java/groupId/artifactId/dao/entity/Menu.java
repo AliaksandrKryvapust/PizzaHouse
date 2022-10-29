@@ -11,6 +11,8 @@ public class Menu implements IMenu {
     private Long id;
     private LocalDateTime creationDate;
     private Integer version;
+    private String name;
+    private Boolean enable;
 
     public Menu() {
     }
@@ -58,6 +60,22 @@ public class Menu implements IMenu {
         return version;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Boolean getEnable() {
+        return enable;
+    }
+
+    public void setEnable(Boolean enable) {
+        this.enable = enable;
+    }
+
     @Override
     public String toString() {
         return "Menu{" +
@@ -65,6 +83,8 @@ public class Menu implements IMenu {
                 ", id=" + id +
                 ", creationDate=" + creationDate +
                 ", version=" + version +
+                ", name='" + name + '\'' +
+                ", enable=" + enable +
                 '}';
     }
 }

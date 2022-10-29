@@ -36,7 +36,7 @@ public class PizzaInfoDao implements IPizzaInfoDao {
     }
 
     @Override
-    public void save(IPizzaInfo iPizzaInfo) throws SQLException {
+    public void save(IPizzaInfo iPizzaInfo) {
         PizzaInfo info = (PizzaInfo) iPizzaInfo;
         if (info.getId() != null) {
             throw new IllegalStateException("Error code 500. Menu id should be empty");
@@ -59,7 +59,7 @@ public class PizzaInfoDao implements IPizzaInfoDao {
     }
 
     @Override
-    public void update(IPizzaInfo iPizzaInfo) throws SQLException {
+    public void update(IPizzaInfo iPizzaInfo) {
         PizzaInfo pizzaInfo = (PizzaInfo) iPizzaInfo;
         if (this.isIdExist(pizzaInfo.getId())) {
             try (Connection con = dataSource.getConnection()) {
@@ -85,7 +85,7 @@ public class PizzaInfoDao implements IPizzaInfoDao {
     }
 
     @Override
-    public IPizzaInfo get(Long id) throws SQLException {
+    public IPizzaInfo get(Long id) {
         if (!this.isIdExist(id)) {
             throw new IllegalStateException("Error code 500. PizzaInfo id is not valid");
         }
@@ -121,7 +121,7 @@ public class PizzaInfoDao implements IPizzaInfoDao {
     }
 
     @Override
-    public void delete(Long id, Integer version) throws SQLException {
+    public void delete(Long id, Integer version) {
         if (!this.isIdExist(id)) {
             throw new IllegalStateException("Error code 500. MenuItem id is not valid");
         }
@@ -143,9 +143,9 @@ public class PizzaInfoDao implements IPizzaInfoDao {
     }
 
     @Override
-    public List<PizzaInfo> get() {
+    public List<IPizzaInfo> get() {
         try (Connection con = dataSource.getConnection()) {
-            List<PizzaInfo> infos = new ArrayList<>();
+            List<IPizzaInfo> iPizzaInfos = new ArrayList<>();
             String sqlSelect = "SELECT pizza_info.id AS id, name, description, size, pizza_info.creation_date AS picd, pizza_info.version  AS pied\n" +
                     "FROM pizza_manager.pizza_info\n" +
                     "ORDER BY id;";
@@ -165,10 +165,10 @@ public class PizzaInfoDao implements IPizzaInfoDao {
                         }
                         temp.setCreationDate(resultSet.getTimestamp("picd").toLocalDateTime());
                         temp.setVersion(resultSet.getInt("pied"));
-                        infos.add(temp);
+                        iPizzaInfos.add(temp);
                     }
                 }
-                return infos;
+                return iPizzaInfos;
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

@@ -6,7 +6,7 @@ import groupId.artifactId.dao.entity.api.IPizzaInfo;
 import java.util.List;
 
 public interface IPizzaInfoDao extends IDao<IPizzaInfo> {
-    List<PizzaInfo> get();
+    List<IPizzaInfo> get();
 
     Boolean isIdExist(Long id);
 }

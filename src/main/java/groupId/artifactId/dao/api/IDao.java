@@ -1,13 +1,14 @@
 package groupId.artifactId.dao.api;
 
-import java.sql.SQLException;
+import java.util.List;
 
 public interface IDao<TYPE> {
-    void save(TYPE type) throws SQLException;
+    void save(TYPE type);
 
-    void update(TYPE type) throws SQLException;
+    void update(TYPE type);
+    List<TYPE> get();
 
-    TYPE get(Long id) throws SQLException;
+    TYPE get(Long id);
 
-    void delete(Long id, Integer version) throws SQLException;
+    void delete(Long id, Integer version);
 }

@@ -6,7 +6,7 @@ import groupId.artifactId.dao.entity.api.IMenuItem;
 import java.util.List;
 
 public interface IMenuItemDao extends IDao<IMenuItem> {
-    List<MenuItem> get();
+    List<IMenuItem> get();
 
     Boolean isIdExist(Long id);
 }
