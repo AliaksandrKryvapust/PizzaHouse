@@ -1,7 +1,7 @@
 package groupId.artifactId.controller.validator;
 
-import groupId.artifactId.core.dto.OrderDataDto;
-import groupId.artifactId.core.dto.OrderStageDtoWithId;
+import groupId.artifactId.core.dto.input.OrderDataDto;
+import groupId.artifactId.core.dto.input.OrderStageDtoWithId;
 import groupId.artifactId.controller.validator.api.IOrderDataValidator;
 import groupId.artifactId.service.TokenService;
 import groupId.artifactId.service.api.ITokenService;

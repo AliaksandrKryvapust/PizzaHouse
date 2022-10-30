@@ -1,7 +1,7 @@
 package groupId.artifactId.controller.validator;
 
-import groupId.artifactId.core.dto.OrderDto;
-import groupId.artifactId.core.dto.SelectedItemDto;
+import groupId.artifactId.core.dto.input.OrderDto;
+import groupId.artifactId.core.dto.input.SelectedItemDto;
 import groupId.artifactId.controller.validator.api.ITokenValidator;
 import groupId.artifactId.service.MenuService;
 
