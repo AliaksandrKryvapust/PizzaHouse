@@ -1,4 +1,4 @@
-package groupId.artifactId.core.dto;
+package groupId.artifactId.core.dto.input;
 
 import groupId.artifactId.storage.entity.api.IOrder;
 

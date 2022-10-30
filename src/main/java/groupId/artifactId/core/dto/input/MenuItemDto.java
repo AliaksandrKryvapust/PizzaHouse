@@ -1,10 +1,10 @@
-package groupId.artifactId.core.dto;
+package groupId.artifactId.core.dto.input;
 
 public class MenuItemDto {
     private PizzaInfoDto pizzaInfo;
     private double price;
 
-    private Long id;
+    private Long menuId;
     private Integer version;
 
     public MenuItemDto() {
@@ -15,11 +15,10 @@ public class MenuItemDto {
         this.price = price;
     }
 
-    public MenuItemDto(PizzaInfoDto pizzaInfo, double price, Long id, Integer version) {
+    public MenuItemDto(PizzaInfoDto pizzaInfo, double price, Long menuId) {
         this.pizzaInfo = pizzaInfo;
         this.price = price;
-        this.id = id;
-        this.version = version;
+        this.menuId = menuId;
     }
 
     public void setPizzaInfo(PizzaInfoDto pizzaInfoDto) {
@@ -30,8 +29,8 @@ public class MenuItemDto {
         this.price = price;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(Long menuId) {
+        this.menuId = menuId;
     }
 
     public void setVersion(Integer version) {
@@ -48,7 +47,7 @@ public class MenuItemDto {
     }
 
     public Long getId() {
-        return id;
+        return menuId;
     }
 
     public Integer getVersion() {

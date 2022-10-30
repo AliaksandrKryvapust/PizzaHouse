@@ -1,4 +1,4 @@
-package groupId.artifactId.core.dto;
+package groupId.artifactId.core.dto.input;
 
 public class SelectedItemDto {
     private MenuItemDto menuItem;

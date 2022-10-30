@@ -1,4 +1,4 @@
-package groupId.artifactId.core.dto;
+package groupId.artifactId.core.dto.input;
 
 public class PizzaInfoDto {
     private String name;
@@ -16,12 +16,11 @@ public class PizzaInfoDto {
         this.size = size;
     }
 
-    public PizzaInfoDto(String name, String description, Integer size, Long id, Integer version) {
+    public PizzaInfoDto(String name, String description, Integer size, Long id) {
         this.name = name;
         this.description = description;
         this.size = size;
         this.id = id;
-        this.version = version;
     }
 
     public void setName(String name) {
