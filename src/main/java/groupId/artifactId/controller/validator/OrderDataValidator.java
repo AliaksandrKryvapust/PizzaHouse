@@ -1,8 +1,9 @@
-package groupId.artifactId.service;
+package groupId.artifactId.controller.validator;
 
 import groupId.artifactId.core.dto.OrderDataDto;
 import groupId.artifactId.core.dto.OrderStageDtoWithId;
-import groupId.artifactId.service.api.IOrderDataValidator;
+import groupId.artifactId.controller.validator.api.IOrderDataValidator;
+import groupId.artifactId.service.TokenService;
 import groupId.artifactId.service.api.ITokenService;
 
 import java.time.LocalTime;
