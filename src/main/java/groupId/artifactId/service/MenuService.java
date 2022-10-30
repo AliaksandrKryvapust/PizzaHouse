@@ -50,7 +50,7 @@ public class MenuService implements IMenuService {
 
     @Override
     public Boolean isIdValid(Long id) {
-        return this.dao.isIdExist(id);
+        return this.dao.exist(id);
     }
 
     @Override

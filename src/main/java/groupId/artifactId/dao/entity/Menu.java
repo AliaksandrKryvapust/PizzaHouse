@@ -21,25 +21,8 @@ public class Menu implements IMenu {
         this.items = items;
     }
 
-    public Menu(List<MenuItem> items, Long id) {
-        this.items = items;
-        this.id = id;
-    }
-
     public void setItems(List<MenuItem> items) {
         this.items = items;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setCreationDate(LocalDateTime creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
     }
 
     @Override
@@ -66,13 +49,25 @@ public class Menu implements IMenu {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     @Override
     public Boolean getEnable() {
-        return enable;
+        return null;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setEnable(Boolean enable) {

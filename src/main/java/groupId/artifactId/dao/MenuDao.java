@@ -17,6 +17,9 @@ import java.util.List;
 public class MenuDao implements IMenuDao {
     private static MenuDao firstInstance = null;
     private final DataSource dataSource;
+    private final String sqlGetById = "SELECT id, created_at, version, name, enabled " +
+            "FROM pizza_manager.menu WHERE id=? ORDER BY id;";
+    private final String sqlMenuId = "SELECT COUNT(DISTINCT id) AS id, MIN(id) AS min FROM pizza_manager.menu";
 
     public MenuDao() {
         try {
@@ -38,151 +41,42 @@ public class MenuDao implements IMenuDao {
     @Override
     public List<IMenu> get() {
         try (Connection con = dataSource.getConnection()) {
-            long id= 0;
-            String sqlId = "SELECT COUNT(DISTINCT menu_id) AS id FROM pizza_manager.menu_item\n" +
-                    "ORDER BY id";
-            try (PreparedStatement statement = con.prepareStatement(sqlId)) {
+            long id = 0;
+            long minId = 0;
+            try (PreparedStatement statement = con.prepareStatement(sqlMenuId)) {
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
                         id = (resultSet.getLong("id"));
+                        minId = (resultSet.getLong("min"));
                     }
                 }
             }
             List<IMenu> menus = new ArrayList<>();
             for (int i = 0; i < id; i++) {
-                String sql = "SELECT COUNT(id) AS count FROM pizza_manager.menu_item\n" +
-                        "WHERE menu_id=?\n GROUP BY menu_id\n ORDER BY count";
-                try (PreparedStatement statement = con.prepareStatement(sql)) {
-                    statement.setLong(1, i + 1);
-                    try (ResultSet resultSet = statement.executeQuery()) {
-                        if (resultSet.next()) {
-                            List<MenuItem> items = new ArrayList<>();
-                            for (int j = 0; j < resultSet.getLong("count"); j++) {
-                                items.add(new MenuItem(new PizzaInfo()));
-                            }
-                            menus.add(new Menu(items, (long) (i + 1)));
-                        } else {
-                            throw new SQLException("SELECT COUNT(menu_item.id) failed, no data returned");
-                        }
-                    }
-                }
-                String sqlNew = "SELECT id FROM pizza_manager.menu_item\n" +
-                        "WHERE menu_id=?\n ORDER BY id";
-                try (PreparedStatement statement = con.prepareStatement(sqlNew)) {
-                    statement.setLong(1, i + 1);
-                    try (ResultSet resultSet = statement.executeQuery()) {
-                        for (MenuItem item : menus.get(i).getItems()) {
-                            resultSet.next();
-                            item.setId(resultSet.getLong("id"));
-                        }
-                    }
-                }
+                IMenu menu = this.get(minId);
+                menus.add(menu);
+                minId++;
             }
-            String sql = "SELECT pizza_manager.menu.id, pizza_manager.menu.creation_date AS mcd, pizza_manager.menu.version AS med," +
-                    "pizza_manager.menu.name AS mn, pizza_manager.menu.enabled AS me," +
-                    "pizza_manager.menu_item.id,  pizza_manager.menu_item.creation_date AS micd, pizza_manager.menu_item.version  AS mied, " +
-                    "price, pizza_info_id, pizza_manager.pizza_info.name, description, size, pizza_manager.pizza_info.creation_date AS picd, " +
-                    "pizza_manager.pizza_info.version  AS pied\n FROM pizza_manager.menu\n" +
-                    "INNER JOIN pizza_manager.menu_item ON menu_item.menu_id=menu.id\n" +
-                    "INNER JOIN pizza_manager.pizza_info ON menu_item.pizza_info_id=pizza_info.id\n" +
-                    "ORDER BY id, menu_item_id, pizza_info_id;";
-            try (PreparedStatement statement = con.prepareStatement(sql)) {
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        for (IMenu imenu : menus) {
-                            Menu menu = (Menu) imenu;
-                            if (menu.getId() == resultSet.getLong("id")) {
-                                menu.setCreationDate(resultSet.getTimestamp("mcd").toLocalDateTime());
-                                menu.setVersion(resultSet.getInt("med"));
-                                menu.setName(resultSet.getString("mn"));
-                                menu.setEnable(resultSet.getBoolean("me"));
-                                for (MenuItem item : menu.getItems()) {
-                                    if (item.getId() == resultSet.getLong("menu_item_id")) {
-                                        double price = resultSet.getDouble("price");
-                                        if (!resultSet.wasNull()) {
-                                            item.setPrice(price);
-                                        }
-                                        item.setCreationDate(resultSet.getTimestamp("micd").toLocalDateTime());
-                                        item.setVersion(resultSet.getInt("mied"));
-                                        long pizza_info_id = resultSet.getLong("pizza_info_id");
-                                        if (!resultSet.wasNull()) {
-                                            item.getInfo().setId(pizza_info_id);
-                                        }
-                                        item.getInfo().setName(resultSet.getString("name"));
-                                        item.getInfo().setDescription(resultSet.getString("description"));
-                                        long size = resultSet.getLong("size");
-                                        if (!resultSet.wasNull()) {
-                                            item.getInfo().setSize(size);
-                                        }
-                                        item.getInfo().setCreationDate(resultSet.getTimestamp("picd").toLocalDateTime());
-                                        item.getInfo().setVersion(resultSet.getInt("pied"));
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    return menus;
-                }
-            }
+            return menus;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
-//    SELECT pizza_manager.menu.id, pizza_manager.menu.creation_date, pizza_manager.menu.edit_date,
-//    menu_item_id,  pizza_manager.menu_item.creation_date, pizza_manager.menu_item.edit_date,
-//    price, pizza_info_id, name, description, size, pizza_manager.pizza_info.creation_date, pizza_manager.pizza_info.edit_date
-//    FROM pizza_manager.menu
-//    INNER JOIN pizza_manager.menu_item ON menu.menu_item_id=menu_item.id
-//    INNER JOIN pizza_manager.pizza_info ON menu_item.pizza_info_id=pizza_info.id
-//    ORDER BY id, menu_item_id, pizza_info_id;
 
     @Override
     public IMenu get(Long id) {
-        if (!this.isIdExist(id)) {
-            throw new IllegalStateException("Error code 500. Menu id is not valid");
-        }
         try (Connection con = dataSource.getConnection()) {
             Menu menu = new Menu();
-            menu.setId(id);
-            List<MenuItem> list = new ArrayList<>();
-            String sql = "SELECT pizza_manager.menu.id,pizza_manager.menu.creation_date AS mcd, pizza_manager.menu.version AS med, " +
-                    "pizza_manager.menu.name AS mn, pizza_manager.menu.enabled AS me," +
-                    "pizza_manager.menu_item.id, price, pizza_manager.menu_item.creation_date AS micd, pizza_manager.menu_item.version AS mied," +
-                    "pizza_info_id, name, description, size, pizza_manager.pizza_info.creation_date AS picd, pizza_manager.pizza_info.version AS pied\n " +
-                    "FROM pizza_manager.menu\n INNER JOIN pizza_manager.menu_item ON menu.id=menu_item.menu_id\n" +
-                    "INNER JOIN pizza_manager.pizza_info ON menu_item.pizza_info_id=pizza_info.id\n" +
-                    "WHERE pizza_manager.menu.id=?\n ORDER BY id, pizza_manager.menu_item.id, pizza_info_id;";
-            try (PreparedStatement statement = con.prepareStatement(sql)) {
+            try (PreparedStatement statement = con.prepareStatement(sqlGetById)) {
                 statement.setLong(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        menu.setCreationDate(resultSet.getTimestamp("mcd").toLocalDateTime());
-                        menu.setVersion(resultSet.getInt("med"));
-                        menu.setName(resultSet.getString("mn"));
-                        menu.setEnable(resultSet.getBoolean("me"));
-                        MenuItem item = new MenuItem(new PizzaInfo());
-                        item.setId(resultSet.getLong("menu_item_id"));
-                        double price = resultSet.getDouble("price");
-                        if (!resultSet.wasNull()) {
-                            item.setPrice(price);
-                        }
-                        item.setCreationDate(resultSet.getTimestamp("micd").toLocalDateTime());
-                        item.setVersion(resultSet.getInt("mied"));
-                        long itemId = resultSet.getLong("pizza_info_id");
-                        if (!resultSet.wasNull()) {
-                            item.getInfo().setId(itemId);
-                        }
-                        item.getInfo().setName(resultSet.getString("name"));
-                        item.getInfo().setDescription(resultSet.getString("description"));
-                        long size = resultSet.getLong("size");
-                        if (!resultSet.wasNull()) {
-                            item.getInfo().setSize(size);
-                        }
-                        item.getInfo().setCreationDate(resultSet.getTimestamp("picd").toLocalDateTime());
-                        item.getInfo().setVersion(resultSet.getInt("pied"));
-                        list.add(item);
+                        menu.setId(resultSet.getLong("id"));
+                        menu.setCreationDate(resultSet.getTimestamp("created_at").toLocalDateTime());
+                        menu.setVersion(resultSet.getInt("version"));
+                        menu.setName(resultSet.getString("name"));
+                        menu.setEnable(resultSet.getBoolean("enabled"));
                     }
-                    menu.setItems(list);
                     return menu;
                 }
             }
@@ -190,15 +84,7 @@ public class MenuDao implements IMenuDao {
             throw new RuntimeException(e);
         }
     }
-//    SELECT pizza_manager.menu.id, menu_item_id, price, pizza_info_id, name, description, size
-//    FROM pizza_manager.menu INNER JOIN pizza_manager.menu_item ON menu.menu_item_id=menu_item.id
-//    INNER JOIN pizza_manager.pizza_info ON menu_item.pizza_info_id=pizza_info.id
-//    WHERE pizza_manager.menu.id=1 ORDER BY id, menu_item_id, pizza_info_id;
 
-    //   "SELECT menu_item_id, price, pizza_info_id, name, description, size\n FROM pizza_manager.menu\n" +
-//            "INNER JOIN pizza_manager.menu_item ON menu.menu_item_id=menu_item.id\n" +
-//            "INNER JOIN pizza_manager.pizza_info ON menu_item.pizza_info_id=pizza_info.id\n" +
-//            "WHERE pizza_manager.menu.id=?\n ORDER BY menu_item_id, pizza_info_id;";
     @Override
     public void save(IMenu imenu) {
         Menu menu = (Menu) imenu;
@@ -268,7 +154,7 @@ public class MenuDao implements IMenuDao {
     @Override
     public void update(IMenu IMenu) {
         Menu menu = (Menu) IMenu;
-        if (!this.isIdExist(menu.getId())) {
+        if (!this.exist(menu.getId())) {
             throw new IllegalStateException("Error code 500. Menu id is not valid");
         }
         try (Connection con = dataSource.getConnection()) {
@@ -356,7 +242,7 @@ public class MenuDao implements IMenuDao {
 
     @Override
     public void add(MenuItem menuItem, Long menuId) {
-        if (!this.isIdExist(menuId)) {
+        if (!this.exist(menuId)) {
             throw new IllegalStateException("Error code 500. Menu id is not valid");
         }
         try (Connection con = dataSource.getConnection()) {
@@ -403,7 +289,7 @@ public class MenuDao implements IMenuDao {
 
     @Override
     public void delete(Long id, Integer version) {
-        if (!this.isIdExist(id)) {
+        if (!this.exist(id)) {
             throw new IllegalStateException("Error code 500. Menu id is not valid");
         }
         List<MenuItem> menuItems = new ArrayList<>();
@@ -485,7 +371,7 @@ public class MenuDao implements IMenuDao {
     }
 
     @Override
-    public Boolean isIdExist(Long id) {
+    public Boolean exist(Long id) {
         try (Connection con = dataSource.getConnection()) {
             String sql = "SELECT id FROM pizza_manager.menu\n WHERE id=?\n ORDER BY id;";
             try (PreparedStatement statement = con.prepareStatement(sql)) {
