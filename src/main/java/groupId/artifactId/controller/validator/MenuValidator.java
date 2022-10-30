@@ -1,6 +1,6 @@
 package groupId.artifactId.controller.validator;
 
-import groupId.artifactId.core.dto.input.MenuDto;
+import groupId.artifactId.core.dto.input.MenuDtoInput;
 import groupId.artifactId.core.dto.input.MenuItemDto;
 import groupId.artifactId.controller.validator.api.IMenuValidator;
 import groupId.artifactId.service.MenuService;
@@ -35,20 +35,20 @@ public class MenuValidator implements IMenuValidator {
     }
 
     @Override
-    public void validateMenu(MenuDto menuDto) {
-        if (!MenuService.getInstance().isIdValid(menuDto.getId())) {
+    public void validateMenu(MenuDtoInput menuDtoInput) {
+        if (!MenuService.getInstance().isIdValid(menuDtoInput.getId())) {
             throw new IllegalArgumentException("Error code 400. Menu with such id do not exist");
         }
-        this.validateMenuRow(menuDto);
+        this.validateMenuRow(menuDtoInput);
     }
 
     @Override
-    public void validateMenuRow(MenuDto menuDto) {
-        this.validateListMenuItems(menuDto.getItems());
-        if (menuDto.getName() == null) {
+    public void validateMenuRow(MenuDtoInput menuDtoInput) {
+        this.validateListMenuItems(menuDtoInput.getItems());
+        if (menuDtoInput.getName() == null) {
             throw new IllegalArgumentException("Error code 400. Menu`s name is not valid");
         }
-        if (menuDto.getEnable() == null) {
+        if (menuDtoInput.getEnable() == null) {
             throw new IllegalArgumentException("Error code 400. Menu`s enable status is not valid");
         }
     }

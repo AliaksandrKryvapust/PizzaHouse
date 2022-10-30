@@ -1,14 +1,17 @@
 package groupId.artifactId.service;
 
-import groupId.artifactId.core.dto.MenuDto;
-import groupId.artifactId.core.dto.MenuItemDto;
+import groupId.artifactId.controller.validator.MenuValidator;
+import groupId.artifactId.core.dto.input.MenuDtoInput;
+import groupId.artifactId.core.dto.input.MenuItemDto;
+import groupId.artifactId.core.dto.output.MenuDtoOutput;
 import groupId.artifactId.core.mapper.MenuMapper;
 import groupId.artifactId.dao.MenuDao;
 import groupId.artifactId.dao.api.IMenuDao;
 import groupId.artifactId.dao.entity.api.IMenu;
 import groupId.artifactId.service.api.IMenuService;
-import groupId.artifactId.service.api.IMenuValidator;
+import groupId.artifactId.controller.validator.api.IMenuValidator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MenuService implements IMenuService {
@@ -31,13 +34,18 @@ public class MenuService implements IMenuService {
     }
 
     @Override
-    public List<IMenu> get() {
-        return this.dao.get();
+    public List<MenuDtoOutput> get() {
+        List<MenuDtoOutput> temp = new ArrayList<>();
+        for (IMenu menu: this.dao.get()) {
+            MenuDtoOutput menuDtoOutput = MenuMapper.menuOutputMapping(menu);
+            temp.add(menuDtoOutput);
+        }
+        return temp;
     }
 
     @Override
-    public IMenu get(Long id) {
-        return this.dao.get(id);
+    public MenuDtoOutput get(Long id) {
+        return MenuMapper.menuOutputMapping(this.dao.get(id));
     }
 
     @Override
@@ -51,9 +59,9 @@ public class MenuService implements IMenuService {
     }
 
     @Override
-    public void update(MenuDto menuDto) {
-        this.validator.validateMenu(menuDto);
-        this.dao.update(MenuMapper.menuMapping(menuDto));
+    public void update(MenuDtoInput menuDtoInput) {
+        this.validator.validateMenu(menuDtoInput);
+        this.dao.update(MenuMapper.menuInputMapping(menuDtoInput));
     }
 
     @Override
@@ -62,9 +70,9 @@ public class MenuService implements IMenuService {
     }
 
     @Override
-    public void save(MenuDto menuDto) {
-        this.validator.validateMenuRow(menuDto);
-        this.dao.save(MenuMapper.menuMapping(menuDto));
+    public void save(MenuDtoInput menuDtoInput) {
+        this.validator.validateMenuRow(menuDtoInput);
+        this.dao.save(MenuMapper.menuInputMapping(menuDtoInput));
     }
 
     @Override

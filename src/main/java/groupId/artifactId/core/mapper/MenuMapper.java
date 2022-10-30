@@ -4,9 +4,10 @@ import groupId.artifactId.core.dto.input.MenuDtoInput;
 import groupId.artifactId.core.dto.input.MenuItemDto;
 import groupId.artifactId.core.dto.input.PizzaInfoDto;
 import groupId.artifactId.core.dto.output.MenuDtoOutput;
+import groupId.artifactId.dao.entity.Menu;
 import groupId.artifactId.dao.entity.MenuItem;
 import groupId.artifactId.dao.entity.PizzaInfo;
-import groupId.artifactId.dao.entity.Menu;
+import groupId.artifactId.dao.entity.api.IMenu;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,9 +25,11 @@ public class MenuMapper {
         menu.setItems(temp);
         return menu;
     }
-    public static MenuDtoOutput menuOutputMapping(Menu menu) {
+
+    public static MenuDtoOutput menuOutputMapping(IMenu menu) {
         return new MenuDtoOutput(menu.getId(), menu.getCreationDate(), menu.getVersion(), menu.getName(), menu.getEnable());
     }
+
     public static Menu menuItemsMapping(List<MenuItemDto> menuItemDto) {
         List<MenuItem> temp = menuItemDto.stream().map(
                 (i) -> new MenuItem(new PizzaInfo(i.getInfo().getName(), i.getInfo().getDescription(),

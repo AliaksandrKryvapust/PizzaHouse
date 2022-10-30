@@ -51,15 +51,17 @@ public class Menu implements IMenu {
     public Long getId() {
         return this.id;
     }
-
+    @Override
     public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
+    @Override
     public Integer getVersion() {
         return version;
     }
 
+    @Override
     public String getName() {
         return name;
     }
@@ -68,6 +70,7 @@ public class Menu implements IMenu {
         this.name = name;
     }
 
+    @Override
     public Boolean getEnable() {
         return enable;
     }
