@@ -1,8 +1,9 @@
-package groupId.artifactId.service;
+package groupId.artifactId.controller.validator;
 
 import groupId.artifactId.core.dto.MenuDto;
 import groupId.artifactId.core.dto.MenuItemDto;
-import groupId.artifactId.service.api.IMenuValidator;
+import groupId.artifactId.controller.validator.api.IMenuValidator;
+import groupId.artifactId.service.MenuService;
 
 import java.util.List;
 

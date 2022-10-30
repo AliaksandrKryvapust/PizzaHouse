@@ -1,4 +1,4 @@
-package groupId.artifactId.service.api;
+package groupId.artifactId.controller.validator.api;
 
 import groupId.artifactId.core.dto.OrderDataDto;
 import groupId.artifactId.core.dto.OrderStageDtoWithId;

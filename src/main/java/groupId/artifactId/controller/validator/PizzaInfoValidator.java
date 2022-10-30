@@ -1,7 +1,7 @@
-package groupId.artifactId.service;
+package groupId.artifactId.controller.validator;
 
 import groupId.artifactId.core.dto.PizzaInfoDto;
-import groupId.artifactId.service.api.IPizzaInfoValidator;
+import groupId.artifactId.controller.validator.api.IPizzaInfoValidator;
 
 public class PizzaInfoValidator implements IPizzaInfoValidator {
 

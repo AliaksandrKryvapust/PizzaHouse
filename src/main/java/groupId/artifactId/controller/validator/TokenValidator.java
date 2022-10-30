@@ -1,8 +1,9 @@
-package groupId.artifactId.service;
+package groupId.artifactId.controller.validator;
 
 import groupId.artifactId.core.dto.OrderDto;
 import groupId.artifactId.core.dto.SelectedItemDto;
-import groupId.artifactId.service.api.ITokenValidator;
+import groupId.artifactId.controller.validator.api.ITokenValidator;
+import groupId.artifactId.service.MenuService;
 
 public class TokenValidator implements ITokenValidator {
     private static TokenValidator firstInstance = null;
