@@ -3,7 +3,7 @@ package groupId.artifactId.core.dto.input;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MenuDto {
+public class MenuDtoInput {
 
     private List<MenuItemDto> items = new ArrayList<>();
     private Long id;
@@ -11,14 +11,14 @@ public class MenuDto {
     private String name;
     private Boolean enable;
 
-    public MenuDto() {
+    public MenuDtoInput() {
     }
 
-    public MenuDto(List<MenuItemDto> items) {
+    public MenuDtoInput(List<MenuItemDto> items) {
         this.items = items;
     }
 
-    public MenuDto(List<MenuItemDto> items, Long id, String name, Boolean enable) {
+    public MenuDtoInput(List<MenuItemDto> items, Long id, String name, Boolean enable) {
         this.items = items;
         this.id = id;
         this.name = name;

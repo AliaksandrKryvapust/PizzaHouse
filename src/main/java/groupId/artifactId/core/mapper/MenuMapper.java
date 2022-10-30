@@ -1,8 +1,9 @@
 package groupId.artifactId.core.mapper;
 
-import groupId.artifactId.core.dto.MenuDto;
-import groupId.artifactId.core.dto.MenuItemDto;
-import groupId.artifactId.core.dto.PizzaInfoDto;
+import groupId.artifactId.core.dto.input.MenuDtoInput;
+import groupId.artifactId.core.dto.input.MenuItemDto;
+import groupId.artifactId.core.dto.input.PizzaInfoDto;
+import groupId.artifactId.core.dto.output.MenuDtoOutput;
 import groupId.artifactId.dao.entity.MenuItem;
 import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.Menu;
@@ -11,17 +12,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MenuMapper {
-    public static Menu menuMapping(MenuDto menuDto) {
+    public static Menu menuInputMapping(MenuDtoInput menuDtoInput) {
         Menu menu =  new Menu();
-        menu.setId(menuDto.getId());
-        menu.setVersion(menuDto.getVersion());
-        menu.setName(menuDto.getName());
-        menu.setEnable(menuDto.getEnable());
-        List<MenuItem> temp = menuDto.getItems().stream().map(
+        menu.setId(menuDtoInput.getId());
+        menu.setVersion(menuDtoInput.getVersion());
+        menu.setName(menuDtoInput.getName());
+        menu.setEnable(menuDtoInput.getEnable());
+        List<MenuItem> temp = menuDtoInput.getItems().stream().map(
                 (i) -> new MenuItem(new PizzaInfo(i.getInfo().getName(), i.getInfo().getDescription(),
                         i.getInfo().getSize()), i.getPrice())).collect(Collectors.toList());
         menu.setItems(temp);
         return menu;
+    }
+    public static MenuDtoOutput menuOutputMapping(Menu menu) {
+        return new MenuDtoOutput(menu.getId(), menu.getCreationDate(), menu.getVersion(), menu.getName(), menu.getEnable());
     }
     public static Menu menuItemsMapping(List<MenuItemDto> menuItemDto) {
         List<MenuItem> temp = menuItemDto.stream().map(

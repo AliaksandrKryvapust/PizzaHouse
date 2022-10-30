@@ -1,12 +1,13 @@
 package groupId.artifactId.service;
 
-import groupId.artifactId.core.dto.MenuItemDto;
+import groupId.artifactId.controller.validator.MenuItemValidator;
+import groupId.artifactId.core.dto.input.MenuItemDto;
 import groupId.artifactId.core.mapper.MenuMapper;
 import groupId.artifactId.dao.MenuItemDao;
 import groupId.artifactId.dao.api.IMenuItemDao;
 import groupId.artifactId.dao.entity.api.IMenuItem;
 import groupId.artifactId.service.api.IMenuItemService;
-import groupId.artifactId.service.api.IMenuItemValidator;
+import groupId.artifactId.controller.validator.api.IMenuItemValidator;
 
 import java.util.List;
 
