@@ -59,4 +59,15 @@ public class MenuDtoOutput {
     public void setEnable(Boolean enable) {
         this.enable = enable;
     }
+
+    @Override
+    public String toString() {
+        return "MenuDtoOutput{" +
+                "id=" + id +
+                ", createdAt=" + createdAt +
+                ", version=" + version +
+                ", name='" + name + '\'' +
+                ", enable=" + enable +
+                '}';
+    }
 }
