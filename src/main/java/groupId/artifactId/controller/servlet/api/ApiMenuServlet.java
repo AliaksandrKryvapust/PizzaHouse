@@ -1,5 +1,7 @@
 package groupId.artifactId.controller.servlet.api;
 
+import groupId.artifactId.controller.validator.MenuValidator;
+import groupId.artifactId.controller.validator.api.IMenuValidator;
 import groupId.artifactId.exceptions.IncorrectEncodingException;
 import groupId.artifactId.exceptions.IncorrectServletInputStreamException;
 import groupId.artifactId.exceptions.IncorrectServletWriterException;
@@ -19,6 +21,11 @@ import java.io.UnsupportedEncodingException;
 @WebServlet(name = "Menu", urlPatterns = "/api/menu")
 public class ApiMenuServlet extends HttpServlet {
     private final IMenuService menuService = MenuService.getInstance();
+    private final IMenuValidator menuValidator = MenuValidator.getInstance();
+    private final String contentType = "application/json";
+    private final String encoding = "UTF-8";
+    private final String parameterId = "id";
+    private final String parameterVersion = "version";
 
     //Read POSITION
     //1) Read list
@@ -27,24 +34,24 @@ public class ApiMenuServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            resp.setContentType("application/json");
-            resp.setCharacterEncoding("UTF-8");
-            String id = req.getParameter("id");
+            resp.setContentType(contentType);
+            resp.setCharacterEncoding(encoding);
+            String id = req.getParameter(parameterId);
             if (id != null) {
                 if (menuService.isIdValid(Long.valueOf(id))) {
                     resp.getWriter().write(JsonConverter.fromMenuToJson(menuService.get(Long.valueOf(id))));
                 } else {
-                    resp.setStatus(400);
-                    throw new IllegalArgumentException("Menu id is not exist");
+                    resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                    throw new IllegalArgumentException("Menu with id:" + id + "is not exist");
                 }
             } else {
                 resp.getWriter().write(JsonConverter.fromMenuListToJson(menuService.get()));
             }
         } catch (IOException e) {
-            resp.setStatus(500);
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             throw new IncorrectServletWriterException("Incorrect servlet state during response writer method", e);
         }
-        resp.setStatus(200);
+        resp.setStatus(HttpServletResponse.SC_OK);
     }
 
     //CREATE POSITION
@@ -63,8 +70,8 @@ public class ApiMenuServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            req.setCharacterEncoding("UTF-8");
-            resp.setContentType("application/json");
+            req.setCharacterEncoding(encoding);
+            resp.setContentType(contentType);
             menuService.save(JsonConverter.fromJsonToMenuRow(req.getInputStream()));
         } catch (UnsupportedEncodingException e) {
             resp.setStatus(500);
@@ -95,13 +102,13 @@ public class ApiMenuServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            req.setCharacterEncoding("UTF-8");
-            resp.setContentType("application/json");
-            String id = req.getParameter("id");
-            String version = req.getParameter("version");
-            if (id!=null && version!=null){
+            req.setCharacterEncoding(encoding);
+            resp.setContentType(contentType);
+            String id = req.getParameter(parameterId);
+            String version = req.getParameter(parameterVersion);
+            if (id != null && version != null) {
                 if (menuService.isIdValid(Long.valueOf(id))) {
-                    menuService.update(JsonConverter.fromJsonToMenu(req.getInputStream(),id,version));
+                    menuService.update(JsonConverter.fromJsonToMenu(req.getInputStream(), id, version));
                 } else {
                     resp.setStatus(400);
                     throw new IllegalArgumentException("Menu id is not exist");
@@ -126,13 +133,13 @@ public class ApiMenuServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            req.setCharacterEncoding("UTF-8");
-            resp.setContentType("application/json");
-            String id = req.getParameter("id");
-            String version = req.getParameter("version");
-            if (id!=null && version!=null){
+            req.setCharacterEncoding(encoding);
+            resp.setContentType(contentType);
+            String id = req.getParameter(parameterId);
+            String version = req.getParameter(parameterVersion);
+            if (id != null && version != null) {
                 if (menuService.isIdValid(Long.valueOf(id))) {
-                    menuService.delete(id,version);
+                    menuService.delete(id, version);
                 } else {
                     resp.setStatus(400);
                     throw new IllegalArgumentException("Menu id is not exist");
