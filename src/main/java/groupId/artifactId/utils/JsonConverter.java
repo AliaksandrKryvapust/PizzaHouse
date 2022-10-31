@@ -85,8 +85,8 @@ public class JsonConverter {
         try {
             MenuDtoInput menu = new ObjectMapper().readValue(servletInputStream, new TypeReference<>() {
             });
-            menu.setId(Long.valueOf(id));
-            menu.setVersion(Integer.valueOf(version));
+//            menu.setId(Long.valueOf(id));
+//            menu.setVersion(Integer.valueOf(version));
             return menu;
         } catch (IOException e) {
             throw new IncorrectJsonParseException("failed to read servletInputStream of MenuDtoOutput.class", e);

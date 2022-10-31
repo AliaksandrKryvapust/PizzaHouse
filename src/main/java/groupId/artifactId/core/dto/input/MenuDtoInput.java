@@ -1,52 +1,16 @@
 package groupId.artifactId.core.dto.input;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MenuDtoInput {
 
-    private List<MenuItemDto> items = new ArrayList<>();
-    private Long id;
-    private Integer version;
     private String name;
     private Boolean enable;
 
     public MenuDtoInput() {
     }
 
-    public MenuDtoInput(List<MenuItemDto> items) {
-        this.items = items;
-    }
-
-    public MenuDtoInput(List<MenuItemDto> items, Long id, String name, Boolean enable) {
-        this.items = items;
-        this.id = id;
+    public MenuDtoInput(String name, Boolean enable) {
         this.name = name;
         this.enable = enable;
-    }
-
-    public List<MenuItemDto> getItems() {
-        return items;
-    }
-
-    public void setItems(List<MenuItemDto> items) {
-        this.items = items;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
     }
 
     public String getName() {
@@ -63,5 +27,13 @@ public class MenuDtoInput {
 
     public void setEnable(Boolean enable) {
         this.enable = enable;
+    }
+
+    @Override
+    public String toString() {
+        return "MenuDtoInput{" +
+                "name='" + name + '\'' +
+                ", enable=" + enable +
+                '}';
     }
 }
