@@ -14,16 +14,7 @@ import java.util.stream.Collectors;
 
 public class MenuMapper {
     public static Menu menuInputMapping(MenuDtoInput menuDtoInput) {
-        Menu menu =  new Menu();
-        menu.setId(menuDtoInput.getId());
-        menu.setVersion(menuDtoInput.getVersion());
-        menu.setName(menuDtoInput.getName());
-        menu.setEnable(menuDtoInput.getEnable());
-        List<MenuItem> temp = menuDtoInput.getItems().stream().map(
-                (i) -> new MenuItem(new PizzaInfo(i.getInfo().getName(), i.getInfo().getDescription(),
-                        i.getInfo().getSize()), i.getPrice())).collect(Collectors.toList());
-        menu.setItems(temp);
-        return menu;
+        return new Menu(menuDtoInput.getName(), menuDtoInput.getEnable());
     }
 
     public static MenuDtoOutput menuOutputMapping(IMenu menu) {

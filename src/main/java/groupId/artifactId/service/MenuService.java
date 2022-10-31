@@ -71,7 +71,6 @@ public class MenuService implements IMenuService {
 
     @Override
     public void save(MenuDtoInput menuDtoInput) {
-        this.validator.validateMenuRow(menuDtoInput);
         this.dao.save(MenuMapper.menuInputMapping(menuDtoInput));
     }
 
