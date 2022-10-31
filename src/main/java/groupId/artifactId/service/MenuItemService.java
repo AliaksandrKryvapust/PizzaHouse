@@ -52,9 +52,9 @@ public class MenuItemService implements IMenuItemService {
     }
 
     @Override
-    public void update(MenuItemDto menuItemDto) {
+    public void update(MenuItemDto menuItemDto,  String id, String version) {
         this.validator.validateMenuItem(menuItemDto);
-        this.dao.update(MenuMapper.menuItemMapping(menuItemDto));
+        this.dao.update(MenuMapper.menuItemMapping(menuItemDto), Long.valueOf(id), Integer.valueOf(version));
     }
 
     @Override

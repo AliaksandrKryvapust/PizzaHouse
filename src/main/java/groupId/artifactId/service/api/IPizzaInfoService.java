@@ -10,6 +10,6 @@ public interface IPizzaInfoService {
     List<IPizzaInfo> get();
     IPizzaInfo get(Long id);
     Boolean isIdValid(Long id);
-    void update(PizzaInfoDto pizzaInfoDto);
+    void update(PizzaInfoDto pizzaInfoDto, String id, String version);
     void delete(String id, String version);
 }

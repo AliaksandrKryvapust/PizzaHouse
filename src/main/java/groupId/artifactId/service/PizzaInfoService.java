@@ -52,9 +52,9 @@ public class PizzaInfoService implements IPizzaInfoService {
     }
 
     @Override
-    public void update(PizzaInfoDto pizzaInfoDto) {
+    public void update(PizzaInfoDto pizzaInfoDto, String id, String version) {
         this.validator.validatePizzaInfo(pizzaInfoDto);
-        this.dao.update(MenuMapper.pizzaInfoMapping(pizzaInfoDto));
+        this.dao.update(MenuMapper.pizzaInfoMapping(pizzaInfoDto), Long.valueOf(id), Integer.valueOf(version));
     }
 
     @Override

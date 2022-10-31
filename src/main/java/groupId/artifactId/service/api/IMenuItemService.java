@@ -10,6 +10,6 @@ public interface IMenuItemService {
     List<IMenuItem> get();
     IMenuItem get(Long id);
     Boolean isIdValid(Long id);
-    void update(MenuItemDto menuItemDto);
+    void update(MenuItemDto menuItemDto,  String id, String version);
     void delete(String id, String version);
 }

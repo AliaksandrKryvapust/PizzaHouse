@@ -59,9 +59,8 @@ public class MenuService implements IMenuService {
     }
 
     @Override
-    public void update(MenuDtoInput menuDtoInput) {
-        this.validator.validateMenu(menuDtoInput);
-        this.dao.update(MenuMapper.menuInputMapping(menuDtoInput));
+    public void update(MenuDtoInput menuDtoInput, String id, String version) {
+        this.dao.update(MenuMapper.menuInputMapping(menuDtoInput), Long.valueOf(id), Integer.valueOf(version));
     }
 
     @Override
