@@ -1,4 +1,4 @@
-package groupId.artifactId.dao;
+package groupId.artifactId.dao.api;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 
