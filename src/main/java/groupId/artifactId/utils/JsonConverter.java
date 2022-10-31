@@ -81,19 +81,7 @@ public class JsonConverter {
         }
     }
 
-    public static MenuDtoInput fromJsonToMenu(ServletInputStream servletInputStream, String id, String version) {
-        try {
-            MenuDtoInput menu = new ObjectMapper().readValue(servletInputStream, new TypeReference<>() {
-            });
-//            menu.setId(Long.valueOf(id));
-//            menu.setVersion(Integer.valueOf(version));
-            return menu;
-        } catch (IOException e) {
-            throw new IncorrectJsonParseException("failed to read servletInputStream of MenuDtoOutput.class", e);
-        }
-    }
-
-    public static MenuDtoInput fromJsonToMenuRow(ServletInputStream servletInputStream) {
+    public static MenuDtoInput fromJsonToMenu(ServletInputStream servletInputStream) {
         try {
             return new ObjectMapper().readValue(servletInputStream, new TypeReference<>() {
             });
@@ -119,12 +107,10 @@ public class JsonConverter {
         }
     }
 
-    public static MenuItemDto fromJsonToMenuItemUpdate(ServletInputStream servletInputStream, String id, String version) {
+    public static MenuItemDto fromJsonToMenuItemUpdate(ServletInputStream servletInputStream) {
         try {
             MenuItemDto menuItem = new ObjectMapper().readValue(servletInputStream, new TypeReference<>() {
             });
-            menuItem.setId(Long.valueOf(id));
-            menuItem.setVersion(Integer.valueOf(version));
             return menuItem;
         } catch (IOException e) {
             throw new IncorrectJsonParseException("failed to read servletInputStream of MenuItem.class", e);
@@ -139,12 +125,10 @@ public class JsonConverter {
         }
     }
 
-    public static PizzaInfoDto fromJsonToPizzaInfoUpdate(ServletInputStream servletInputStream, String id, String version) {
+    public static PizzaInfoDto fromJsonToPizzaInfoUpdate(ServletInputStream servletInputStream) {
         try {
             PizzaInfoDto dto = new ObjectMapper().readValue(servletInputStream, new TypeReference<>() {
             });
-            dto.setId(Long.valueOf(id));
-            dto.setVersion(Integer.valueOf(version));
             return dto;
         } catch (IOException e) {
             throw new IncorrectJsonParseException("failed to read servletInputStream of PizzaInfoDto.class", e);
