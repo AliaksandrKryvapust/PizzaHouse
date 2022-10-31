@@ -1,12 +1,13 @@
 package groupId.artifactId.service;
 
-import groupId.artifactId.core.dto.PizzaInfoDto;
+import groupId.artifactId.controller.validator.PizzaInfoValidator;
+import groupId.artifactId.core.dto.input.PizzaInfoDto;
 import groupId.artifactId.core.mapper.MenuMapper;
 import groupId.artifactId.dao.PizzaInfoDao;
 import groupId.artifactId.dao.api.IPizzaInfoDao;
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
 import groupId.artifactId.service.api.IPizzaInfoService;
-import groupId.artifactId.service.api.IPizzaInfoValidator;
+import groupId.artifactId.controller.validator.api.IPizzaInfoValidator;
 
 import java.util.List;
 

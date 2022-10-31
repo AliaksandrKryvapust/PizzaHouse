@@ -1,8 +1,8 @@
 package groupId.artifactId.service;
 
 import groupId.artifactId.controller.validator.OrderDataValidator;
-import groupId.artifactId.core.dto.OrderDataDto;
-import groupId.artifactId.core.dto.OrderStageDtoWithId;
+import groupId.artifactId.core.dto.input.OrderDataDto;
+import groupId.artifactId.core.dto.input.OrderStageDtoWithId;
 import groupId.artifactId.core.mapper.OrderDataMapper;
 import groupId.artifactId.service.api.ICompletedOrderService;
 import groupId.artifactId.service.api.IOrderDataService;

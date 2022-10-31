@@ -1,7 +1,7 @@
 package groupId.artifactId.core.mapper;
 
-import groupId.artifactId.core.dto.OrderDataDto;
-import groupId.artifactId.core.dto.OrderStageDtoWithId;
+import groupId.artifactId.core.dto.input.OrderDataDto;
+import groupId.artifactId.core.dto.input.OrderStageDtoWithId;
 import groupId.artifactId.storage.entity.OrderData;
 import groupId.artifactId.storage.entity.OrderStage;
 import groupId.artifactId.storage.entity.api.IOrderData;

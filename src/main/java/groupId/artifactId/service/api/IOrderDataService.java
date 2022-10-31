@@ -1,7 +1,7 @@
 package groupId.artifactId.service.api;
 
-import groupId.artifactId.core.dto.OrderDataDto;
-import groupId.artifactId.core.dto.OrderStageDtoWithId;
+import groupId.artifactId.core.dto.input.OrderDataDto;
+import groupId.artifactId.core.dto.input.OrderStageDtoWithId;
 import groupId.artifactId.storage.entity.api.IOrderData;
 import groupId.artifactId.storage.entity.api.IToken;
 

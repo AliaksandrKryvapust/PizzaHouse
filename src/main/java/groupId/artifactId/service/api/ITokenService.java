@@ -1,7 +1,7 @@
 package groupId.artifactId.service.api;
 
-import groupId.artifactId.core.dto.OrderDto;
-import groupId.artifactId.core.dto.TokenDto;
+import groupId.artifactId.core.dto.input.OrderDto;
+import groupId.artifactId.core.dto.input.TokenDto;
 import groupId.artifactId.storage.entity.api.IToken;
 
 import java.util.List;

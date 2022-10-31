@@ -1,7 +1,7 @@
 package groupId.artifactId.core.mapper;
 
-import groupId.artifactId.core.dto.OrderDto;
-import groupId.artifactId.core.dto.SelectedItemDto;
+import groupId.artifactId.core.dto.input.OrderDto;
+import groupId.artifactId.core.dto.input.SelectedItemDto;
 import groupId.artifactId.dao.entity.MenuItem;
 import groupId.artifactId.storage.entity.*;
 import groupId.artifactId.storage.entity.api.ISelectedItem;

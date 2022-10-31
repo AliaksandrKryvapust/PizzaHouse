@@ -1,11 +1,12 @@
 package groupId.artifactId.service;
 
-import groupId.artifactId.core.dto.OrderDto;
-import groupId.artifactId.core.dto.TokenDto;
+import groupId.artifactId.controller.validator.TokenValidator;
+import groupId.artifactId.core.dto.input.OrderDto;
+import groupId.artifactId.core.dto.input.TokenDto;
 import groupId.artifactId.core.mapper.TokenMapper;
 import groupId.artifactId.service.api.IOrderDataService;
 import groupId.artifactId.service.api.ITokenService;
-import groupId.artifactId.service.api.ITokenValidator;
+import groupId.artifactId.controller.validator.api.ITokenValidator;
 import groupId.artifactId.storage.api.ITokenStorage;
 import groupId.artifactId.storage.api.StorageFactory;
 import groupId.artifactId.storage.entity.api.IToken;

@@ -1,7 +1,6 @@
 package groupId.artifactId.service.api;
 
-import groupId.artifactId.core.dto.PizzaInfoDto;
-import groupId.artifactId.dao.entity.PizzaInfo;
+import groupId.artifactId.core.dto.input.PizzaInfoDto;
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
 
 import java.util.List;

@@ -1,7 +1,6 @@
 package groupId.artifactId.service.api;
 
-import groupId.artifactId.core.dto.MenuItemDto;
-import groupId.artifactId.dao.entity.MenuItem;
+import groupId.artifactId.core.dto.input.MenuItemDto;
 import groupId.artifactId.dao.entity.api.IMenuItem;
 
 import java.util.List;
