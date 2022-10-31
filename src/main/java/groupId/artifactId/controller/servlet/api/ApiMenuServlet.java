@@ -93,7 +93,7 @@ public class ApiMenuServlet extends HttpServlet {
     }
 
     //UPDATE POSITION
-    //need param id  (id = 2)
+    //need param id  (id = 3)
     //need param version/date_update - optimistic lock (version=1)
     //body json
 //    {
@@ -137,7 +137,7 @@ public class ApiMenuServlet extends HttpServlet {
     }
 
     //DELETE POSITION
-    //need param id  (id = 2)
+    //need param id  (id = 3)
     //need param version/date_update - optimistic lock (version=2)
     //param delete - true/false completely delete (delete=false)
     @Override

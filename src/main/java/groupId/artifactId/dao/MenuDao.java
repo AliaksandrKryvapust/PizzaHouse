@@ -117,6 +117,9 @@ public class MenuDao implements IMenuDao {
         if (menu.getId() != null || menu.getVersion() != null) {
             throw new IllegalStateException("Menu id & version should be empty");
         }
+        if (!this.getVersion(id, version).equals(version)) {
+            throw new IllegalArgumentException("Version " + version + "does not match. Update denied");
+        }
         try (Connection con = dataSource.getConnection()) {
             try (PreparedStatement statement = con.prepareStatement(UPDATE_MENU_SQL)) {
                 long rows = 0;
@@ -136,19 +139,10 @@ public class MenuDao implements IMenuDao {
 
     @Override
     public void delete(Long id, Integer version, Boolean delete) {
-        Integer menuVersion = 0;
+        if (!this.getVersion(id, version).equals(version) && !delete) {
+            throw new IncorrectDeleteConditionsException("Version " + version + "does not match. Delete anyway?");
+        }
         try (Connection con = dataSource.getConnection()) {
-            try (PreparedStatement statement = con.prepareStatement(SELECT_MENU_BY_ID_SQL)) {
-                statement.setLong(1, id);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()){
-                        menuVersion=resultSet.getInt("version");
-                    }
-                }
-            }
-            if (!menuVersion.equals(version) && !delete){
-            throw new IncorrectDeleteConditionsException("Version "+ version + "does not match. Delete anyway?");
-            }
             try (PreparedStatement statement = con.prepareStatement(DELETE_MENU_SQL)) {
                 long rows = 0;
                 statement.setLong(1, id);
@@ -166,8 +160,7 @@ public class MenuDao implements IMenuDao {
     @Override
     public Boolean exist(Long id) {
         try (Connection con = dataSource.getConnection()) {
-            String sql = "SELECT id FROM pizza_manager.menu\n WHERE id=?\n ORDER BY id;";
-            try (PreparedStatement statement = con.prepareStatement(sql)) {
+            try (PreparedStatement statement = con.prepareStatement(SELECT_MENU_BY_ID_SQL)) {
                 statement.setLong(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     return resultSet.next();
@@ -175,6 +168,24 @@ public class MenuDao implements IMenuDao {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Integer getVersion(Long id, Integer version) {
+        int menuVersion = 0;
+        try (Connection con = dataSource.getConnection()) {
+            try (PreparedStatement statement = con.prepareStatement(SELECT_MENU_BY_ID_SQL)) {
+                statement.setLong(1, id);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    while (resultSet.next()) {
+                        menuVersion = resultSet.getInt("version");
+                    }
+                }
+            }
+            return menuVersion;
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
         }
     }
 
