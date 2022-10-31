@@ -2,14 +2,16 @@ package groupId.artifactId.dao;
 
 import groupId.artifactId.dao.api.IMenuDao;
 import groupId.artifactId.dao.entity.Menu;
-import groupId.artifactId.dao.entity.MenuItem;
 import groupId.artifactId.dao.entity.api.IMenu;
 import groupId.artifactId.exceptions.IncorrectDataSourceException;
 import groupId.artifactId.exceptions.IncorrectDeleteConditionsException;
 
 import javax.sql.DataSource;
 import java.beans.PropertyVetoException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -125,53 +127,6 @@ public class MenuDao implements IMenuDao {
                 rows += statement.executeUpdate();
                 if (rows == 0) {
                     throw new SQLException("menu table update failed, no rows affected");
-                }
-            }
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-    }
-
-    @Override
-    public void add(MenuItem menuItem, Long menuId) {
-        if (!this.exist(menuId)) {
-            throw new IllegalStateException("Error code 500. Menu id is not valid");
-        }
-        try (Connection con = dataSource.getConnection()) {
-            String pizzaInfoSql = "INSERT INTO pizza_manager.pizza_info (name, description, size)\n VALUES (?, ?, ?)";
-            try (PreparedStatement statement = con.prepareStatement(pizzaInfoSql, Statement.RETURN_GENERATED_KEYS)) {
-                long rows = 0;
-                statement.setString(1, menuItem.getInfo().getName());
-                statement.setString(2, menuItem.getInfo().getDescription());
-                statement.setLong(3, menuItem.getInfo().getSize());
-                rows += statement.executeUpdate();
-                if (rows == 0) {
-                    throw new SQLException("pizza_info table update failed, no rows affected");
-                }
-                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        menuItem.getInfo().setId(generatedKeys.getLong(1));
-                    } else {
-                        throw new SQLException("pizza_info table update failed, no generated id returned");
-                    }
-                }
-            }
-            String menuItemSql = "INSERT INTO pizza_manager.menu_item (price, pizza_info_id, menu_id)\n VALUES (?, ?, ?)";
-            try (PreparedStatement statement = con.prepareStatement(menuItemSql, Statement.RETURN_GENERATED_KEYS)) {
-                long rows = 0;
-                statement.setDouble(1, menuItem.getPrice());
-                statement.setLong(2, menuItem.getInfo().getId());
-                statement.setLong(3, menuId);
-                rows += statement.executeUpdate();
-                if (rows == 0) {
-                    throw new SQLException("menu_item table update failed, no rows affected");
-                }
-                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        menuItem.setId(generatedKeys.getLong(1));
-                    } else {
-                        throw new SQLException("menu_item table update failed, no generated id returned");
-                    }
                 }
             }
             } catch (SQLException e) {
