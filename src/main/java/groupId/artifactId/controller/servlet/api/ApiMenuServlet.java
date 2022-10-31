@@ -2,6 +2,7 @@ package groupId.artifactId.controller.servlet.api;
 
 import groupId.artifactId.controller.validator.MenuValidator;
 import groupId.artifactId.controller.validator.api.IMenuValidator;
+import groupId.artifactId.core.dto.input.MenuDtoInput;
 import groupId.artifactId.exceptions.IncorrectEncodingException;
 import groupId.artifactId.exceptions.IncorrectServletInputStreamException;
 import groupId.artifactId.exceptions.IncorrectServletWriterException;
@@ -57,30 +58,38 @@ public class ApiMenuServlet extends HttpServlet {
     //CREATE POSITION
     //body json
     //to add new Menu in Storage
-//[
-//   {
-//           "price":20.0,
-//           "pizzaInfo":{
-//           "name":"ITALIANO PIZZA",
-//           "description":"Mozzarella cheese, basilica, ham",
-//           "size":32
-//           }
-//           }
-//           ]
+//    {
+//            "name": "Optional Menu",
+//            "enable": false
+//    }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         try {
             req.setCharacterEncoding(encoding);
             resp.setContentType(contentType);
-            menuService.save(JsonConverter.fromJsonToMenuRow(req.getInputStream()));
+            MenuDtoInput menu = JsonConverter.fromJsonToMenuRow(req.getInputStream());
+            if (!menuService.exist(menu.getName())){
+                try {
+                    menuValidator.validateMenuRow(menu);
+                }
+                catch (IllegalArgumentException e){
+                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    throw new IllegalArgumentException(e.getMessage(), e);
+                }
+                menuService.save(menu);
+            } else {
+                resp.setStatus(HttpServletResponse.SC_CONFLICT);
+                throw new IllegalArgumentException("Menu with such name:" + menu.getName() + "is already exist");
+            }
+
         } catch (UnsupportedEncodingException e) {
-            resp.setStatus(500);
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             throw new IncorrectEncodingException("Failed to set character encoding UTF-8", e);
         } catch (IOException e) {
-            resp.setStatus(500);
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             throw new IncorrectServletInputStreamException("Impossible to get input stream from request", e);
         }
-        resp.setStatus(201);
+        resp.setStatus(HttpServletResponse.SC_CREATED);
     }
 
     //UPDATE POSITION
