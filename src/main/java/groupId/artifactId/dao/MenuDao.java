@@ -5,7 +5,6 @@ import groupId.artifactId.dao.api.IMenuDao;
 import groupId.artifactId.dao.entity.Menu;
 import groupId.artifactId.dao.entity.api.IMenu;
 import groupId.artifactId.exceptions.IncorrectDataSourceException;
-import groupId.artifactId.exceptions.IncorrectDeleteConditionsException;
 
 import javax.sql.DataSource;
 import java.beans.PropertyVetoException;
@@ -108,9 +107,6 @@ public class MenuDao implements IMenuDao {
         if (menu.getId() != null || menu.getVersion() != null) {
             throw new IllegalStateException("Menu id & version should be empty");
         }
-        if (!this.getVersion(id, version).equals(version)) {
-            throw new IllegalArgumentException("Version " + version + "does not match. Update denied");
-        }
         try (Connection con = dataSource.getConnection()) {
             try (PreparedStatement statement = con.prepareStatement(UPDATE_MENU_SQL)) {
                 long rows = 0;
@@ -120,7 +116,7 @@ public class MenuDao implements IMenuDao {
                 statement.setInt(4, version);
                 rows += statement.executeUpdate();
                 if (rows == 0) {
-                    throw new IllegalArgumentException("menu table update failed, no rows affected");
+                    throw new IllegalArgumentException("menu table update failed, version does not match update denied");
                 }
                 if (rows > 1) {
                     throw new IllegalStateException("Incorrect menu table update, more than 1 row affected");
@@ -133,9 +129,6 @@ public class MenuDao implements IMenuDao {
 
     @Override
     public void delete(Long id, Integer version, Boolean delete) {
-        if (!this.getVersion(id, version).equals(version) && !delete) {
-            throw new IncorrectDeleteConditionsException("Version " + version + "does not match. Delete anyway?");
-        }
         try (Connection con = dataSource.getConnection()) {
             try (PreparedStatement statement = con.prepareStatement(DELETE_MENU_SQL)) {
                 long rows = 0;
@@ -143,7 +136,7 @@ public class MenuDao implements IMenuDao {
                 statement.setInt(2, version);
                 rows += statement.executeUpdate();
                 if (rows == 0) {
-                    throw new SQLException("menu table delete failed, no rows affected");
+                    throw new SQLException("menu table delete failed,version does not match update denied");
                 }
                 if (rows > 1) {
                     throw new IllegalStateException("Incorrect menu table update, more than 1 row affected");
@@ -165,24 +158,6 @@ public class MenuDao implements IMenuDao {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public Integer getVersion(Long id, Integer version) {
-        int menuVersion = 0;
-        try (Connection con = dataSource.getConnection()) {
-            try (PreparedStatement statement = con.prepareStatement(SELECT_MENU_BY_ID_SQL)) {
-                statement.setLong(1, id);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        menuVersion = resultSet.getInt("version");
-                    }
-                }
-            }
-            return menuVersion;
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex);
         }
     }
 
