@@ -22,10 +22,10 @@ import java.io.UnsupportedEncodingException;
 public class ApiMenuServlet extends HttpServlet {
     private final IMenuService menuService = MenuService.getInstance();
     private final IMenuValidator menuValidator = MenuValidator.getInstance();
-    private final String contentType = "application/json";
-    private final String encoding = "UTF-8";
-    private final String parameterId = "id";
-    private final String parameterVersion = "version";
+    private static final String contentType = "application/json";
+    private static final String encoding = "UTF-8";
+    private static final String parameterId = "id";
+    private static final String parameterVersion = "version";
 
     //Read POSITION
     //1) Read list

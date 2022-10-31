@@ -51,7 +51,7 @@ public class Menu implements IMenu {
 
     @Override
     public Boolean getEnable() {
-        return null;
+        return enable;
     }
 
     public void setId(Long id) {

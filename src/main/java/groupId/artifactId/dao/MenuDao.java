@@ -17,11 +17,13 @@ import java.util.List;
 public class MenuDao implements IMenuDao {
     private static MenuDao firstInstance = null;
     private final DataSource dataSource;
-    private final String sqlGetById = "SELECT id, created_at, version, name, enabled " +
-            "FROM pizza_manager.menu WHERE id=? ORDER BY id;";
-    private final String sqlMenuId = "SELECT COUNT(DISTINCT id) AS id, MIN(id) AS min FROM pizza_manager.menu";
+    private static final String SELECT_MENU_BY_ID_SQL = "SELECT id, created_at, version, name, enabled " +
+            "FROM pizza_manager.menu WHERE id=?;";
+    private static final String SELECT_MENU_SQL = "SELECT id, created_at, version, name, enabled " +
+            "FROM pizza_manager.menu ORDER BY id;";
 
     public MenuDao() {
+
         try {
             this.dataSource = DataSourceCreator.getInstance();
         } catch (PropertyVetoException e) {
@@ -41,21 +43,19 @@ public class MenuDao implements IMenuDao {
     @Override
     public List<IMenu> get() {
         try (Connection con = dataSource.getConnection()) {
-            long id = 0;
-            long minId = 0;
-            try (PreparedStatement statement = con.prepareStatement(sqlMenuId)) {
+            List<IMenu> menus = new ArrayList<>();
+            try (PreparedStatement statement = con.prepareStatement(SELECT_MENU_SQL)) {
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        id = (resultSet.getLong("id"));
-                        minId = (resultSet.getLong("min"));
+                        Menu menu = new Menu();
+                        menu.setId(resultSet.getLong("id"));
+                        menu.setCreationDate(resultSet.getTimestamp("created_at").toLocalDateTime());
+                        menu.setVersion(resultSet.getInt("version"));
+                        menu.setName(resultSet.getString("name"));
+                        menu.setEnable(resultSet.getBoolean("enabled"));
+                        menus.add(menu);
                     }
                 }
-            }
-            List<IMenu> menus = new ArrayList<>();
-            for (int i = 0; i < id; i++) {
-                IMenu menu = this.get(minId);
-                menus.add(menu);
-                minId++;
             }
             return menus;
         } catch (SQLException e) {
@@ -67,7 +67,7 @@ public class MenuDao implements IMenuDao {
     public IMenu get(Long id) {
         try (Connection con = dataSource.getConnection()) {
             Menu menu = new Menu();
-            try (PreparedStatement statement = con.prepareStatement(sqlGetById)) {
+            try (PreparedStatement statement = con.prepareStatement(SELECT_MENU_BY_ID_SQL)) {
                 statement.setLong(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
