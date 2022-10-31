@@ -10,5 +10,5 @@ public interface IDao<TYPE> {
 
     TYPE get(Long id);
 
-    void delete(Long id, Integer version);
+    void delete(Long id, Integer version, Boolean delete);
 }

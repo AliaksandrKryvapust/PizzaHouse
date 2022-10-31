@@ -121,7 +121,7 @@ public class PizzaInfoDao implements IPizzaInfoDao {
     }
 
     @Override
-    public void delete(Long id, Integer version) {
+    public void delete(Long id, Integer version, Boolean delete) {
         if (!this.isIdExist(id)) {
             throw new IllegalStateException("Error code 500. MenuItem id is not valid");
         }

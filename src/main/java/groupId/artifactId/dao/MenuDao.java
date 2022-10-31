@@ -3,9 +3,9 @@ package groupId.artifactId.dao;
 import groupId.artifactId.dao.api.IMenuDao;
 import groupId.artifactId.dao.entity.Menu;
 import groupId.artifactId.dao.entity.MenuItem;
-import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.api.IMenu;
 import groupId.artifactId.exceptions.IncorrectDataSourceException;
+import groupId.artifactId.exceptions.IncorrectDeleteConditionsException;
 
 import javax.sql.DataSource;
 import java.beans.PropertyVetoException;
@@ -25,6 +25,7 @@ public class MenuDao implements IMenuDao {
     private static final String INSERT_MENU_SQL = "INSERT INTO pizza_manager.menu (name, enabled)\n VALUES (?, ?)";
     private static final String UPDATE_MENU_SQL = "UPDATE pizza_manager.menu SET version=version+1, name=?, enabled=? " +
             "WHERE id=? AND version=?";
+    private static final String DELETE_MENU_SQL = "DELETE FROM pizza_manager.menu WHERE id=? AND version=?;";
 
     public MenuDao() {
 
@@ -179,81 +180,27 @@ public class MenuDao implements IMenuDao {
     }
 
     @Override
-    public void delete(Long id, Integer version) {
-        if (!this.exist(id)) {
-            throw new IllegalStateException("Error code 500. Menu id is not valid");
-        }
-        List<MenuItem> menuItems = new ArrayList<>();
+    public void delete(Long id, Integer version, Boolean delete) {
+        Integer menuVersion = 0;
         try (Connection con = dataSource.getConnection()) {
-            String pizzaInfoSql = "SELECT pizza_info.version, pizza_info.id\n FROM pizza_manager.pizza_info\n" +
-                    "INNER JOIN pizza_manager.menu_item ON menu_item.pizza_info_id=pizza_info.id\n" +
-                    "INNER JOIN pizza_manager.menu ON menu.id=menu_item.menu_id\n" +
-                    "WHERE pizza_manager.menu.id=? AND pizza_manager.menu.version=?\n " +
-                    "ORDER BY pizza_info.id;";
-            try (PreparedStatement statement = con.prepareStatement(pizzaInfoSql)) {
+            try (PreparedStatement statement = con.prepareStatement(SELECT_MENU_BY_ID_SQL)) {
                 statement.setLong(1, id);
-                statement.setInt(2, version);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()){
-                        PizzaInfo pizzaInfo = new PizzaInfo();
-                        pizzaInfo.setVersion(resultSet.getInt("version"));
-                        pizzaInfo.setId(resultSet.getLong("id"));
-                        MenuItem menuItem = new MenuItem();
-                        menuItem.setPizzaInfo(pizzaInfo);
-                        menuItems.add(menuItem);
+                        menuVersion=resultSet.getInt("version");
                     }
                 }
             }
-            String menuItemSql = "SELECT menu_item.version, menu_item.id\n FROM pizza_manager.menu_item\n" +
-                    "INNER JOIN pizza_manager.menu ON menu.id=menu_item.menu_id\n" +
-                    "WHERE pizza_manager.menu.id=? AND pizza_manager.menu.version=?\n " +
-                    "ORDER BY menu_item.id;";
-            try (PreparedStatement statement = con.prepareStatement(menuItemSql)) {
-                statement.setLong(1, id);
-                statement.setInt(2, version);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    for (MenuItem item : menuItems) {
-                        resultSet.next();
-                        item.setVersion(resultSet.getInt("version"));
-                        item.setId(resultSet.getLong("id"));
-                    }
-                }
+            if (!menuVersion.equals(version) && !delete){
+            throw new IncorrectDeleteConditionsException("Version "+ version + "does not match. Delete anyway?");
             }
-            String menuSql = "DELETE FROM pizza_manager.menu\n " +
-                    "WHERE pizza_manager.menu.id=? AND pizza_manager.menu.version=?\n";
-            try (PreparedStatement statement = con.prepareStatement(menuSql)) {
+            try (PreparedStatement statement = con.prepareStatement(DELETE_MENU_SQL)) {
                 long rows = 0;
                 statement.setLong(1, id);
                 statement.setInt(2, version);
                 rows += statement.executeUpdate();
                 if (rows == 0) {
                     throw new SQLException("menu table delete failed, no rows affected");
-                }
-            }
-            String menuItemSqlDelete = "DELETE FROM pizza_manager.menu_item\n " +
-                    "WHERE pizza_manager.menu_item.id=? AND pizza_manager.menu_item.version=?\n";
-            try (PreparedStatement statement = con.prepareStatement(menuItemSqlDelete)) {
-                for (MenuItem items : menuItems) {
-                    statement.setLong(1, items.getId());
-                    statement.setInt(2, items.getVersion());
-                    statement.addBatch();
-                }
-                int[] rows = statement.executeBatch();
-                if (rows == null) {
-                    throw new SQLException("menu_item table delete failed, no rows affected");
-                }
-            }
-            String pizzaInfoSqlDelete = "DELETE FROM pizza_manager.pizza_info\n " +
-                    "WHERE pizza_manager.pizza_info.id=? AND pizza_manager.pizza_info.version=?\n";
-            try (PreparedStatement statement = con.prepareStatement(pizzaInfoSqlDelete)) {
-                for (MenuItem items : menuItems) {
-                    statement.setLong(1, items.getInfo().getId());
-                    statement.setInt(2, items.getInfo().getVersion());
-                    statement.addBatch();
-                }
-                int[] rows = statement.executeBatch();
-                if (rows == null) {
-                    throw new SQLException("pizza_info table delete failed, no rows affected");
                 }
             }
         } catch (SQLException e) {
