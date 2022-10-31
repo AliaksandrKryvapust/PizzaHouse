@@ -64,8 +64,8 @@ public class MenuService implements IMenuService {
     }
 
     @Override
-    public void delete(String id, String version) {
-        this.dao.delete(Long.valueOf(id), Integer.valueOf(version));
+    public void delete(String id, String version, String delete) {
+        this.dao.delete(Long.valueOf(id), Integer.valueOf(version), Boolean.valueOf(delete));
     }
 
     @Override

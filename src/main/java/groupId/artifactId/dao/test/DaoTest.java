@@ -13,7 +13,7 @@ public class DaoTest {
         System.out.println();
         System.out.println();
         System.out.println(menuDao.get(1L));
-        menuDao.delete(1L,6);
+        menuDao.delete(1L,6, false);
     }
 
 }

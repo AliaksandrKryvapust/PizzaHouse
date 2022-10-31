@@ -11,5 +11,5 @@ public interface IService<TYPE,TYPE2> {
 
     TYPE get(Long id);
 
-    void delete(String id, String version);
+    void delete(String id, String version, String delete);
 }
