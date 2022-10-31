@@ -57,7 +57,6 @@ public class ApiMenuServlet extends HttpServlet {
 
     //CREATE POSITION
     //body json
-    //to add new Menu in Storage
 //    {
 //            "name": "Optional Menu",
 //            "enable": false
@@ -67,10 +66,10 @@ public class ApiMenuServlet extends HttpServlet {
         try {
             req.setCharacterEncoding(encoding);
             resp.setContentType(contentType);
-            MenuDtoInput menu = JsonConverter.fromJsonToMenuRow(req.getInputStream());
+            MenuDtoInput menu = JsonConverter.fromJsonToMenu(req.getInputStream());
             if (!menuService.exist(menu.getName())){
                 try {
-                    menuValidator.validateMenuRow(menu);
+                    menuValidator.validateMenu(menu);
                 }
                 catch (IllegalArgumentException e){
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -97,16 +96,8 @@ public class ApiMenuServlet extends HttpServlet {
     //need param version/date_update - optimistic lock (version=1)
     //body json
 //    {
-//        "items":[
-//        {
-//            "price":20.0,
-//                "pizzaInfo":{
-//            "name":"MARGHERITA PIZZA",
-//                    "description":"Mozzarella cheese, herb tomato sauce",
-//                    "size":48
-//        }
-//        }
-//   ]
+//            "name": "Optional Menu",
+//            "enable": true
 //    }
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) {
@@ -117,23 +108,31 @@ public class ApiMenuServlet extends HttpServlet {
             String version = req.getParameter(parameterVersion);
             if (id != null && version != null) {
                 if (menuService.isIdValid(Long.valueOf(id))) {
-                    menuService.update(JsonConverter.fromJsonToMenu(req.getInputStream(), id, version));
+                    MenuDtoInput menu = JsonConverter.fromJsonToMenu(req.getInputStream());
+                    try {
+                        menuValidator.validateMenu(menu);
+                    }
+                    catch (IllegalArgumentException e){
+                        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                        throw new IllegalArgumentException(e.getMessage(), e);
+                    }
+                    menuService.update(menu, id, version);
                 } else {
-                    resp.setStatus(400);
-                    throw new IllegalArgumentException("Menu id is not exist");
+                    resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                    throw new IllegalArgumentException("Menu with id:" + id + "is not exist");
                 }
             } else {
-                resp.setStatus(400);
-                throw new IllegalArgumentException("Field Menu id or Menu version is empty");
+                resp.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
+                throw new IllegalArgumentException("Field Menu id:" + id + "or Menu version:" + version + "is empty");
             }
         } catch (UnsupportedEncodingException e) {
-            resp.setStatus(500);
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             throw new IncorrectEncodingException("Failed to set character encoding UTF-8", e);
         } catch (IOException e) {
-            resp.setStatus(500);
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             throw new IncorrectServletInputStreamException("Impossible to get input stream from request", e);
         }
-        resp.setStatus(201);
+        resp.setStatus(HttpServletResponse.SC_CREATED);
     }
 
     //DELETE POSITION

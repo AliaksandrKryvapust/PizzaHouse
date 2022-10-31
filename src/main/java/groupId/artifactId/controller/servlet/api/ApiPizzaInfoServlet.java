@@ -87,7 +87,7 @@ public class ApiPizzaInfoServlet extends HttpServlet {
             String version = req.getParameter("version");
             if (id!=null && version!=null){
                 if (pizzaInfoService.isIdValid(Long.valueOf(id))) {
-                    pizzaInfoService.update(JsonConverter.fromJsonToPizzaInfoUpdate(req.getInputStream(),id,version));
+                    pizzaInfoService.update(JsonConverter.fromJsonToPizzaInfoUpdate(req.getInputStream()), id, version);
                 } else {
                     resp.setStatus(400);
                     throw new IllegalArgumentException("PizzaInfo id is not exist");

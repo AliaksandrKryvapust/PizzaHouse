@@ -93,7 +93,7 @@ public class ApiMenuItemServlet extends HttpServlet {
             String version = req.getParameter("version");
             if (id!=null && version!=null){
                 if (menuItemService.isIdValid(Long.valueOf(id))) {
-                   menuItemService.update(JsonConverter.fromJsonToMenuItemUpdate(req.getInputStream(),id,version));
+                   menuItemService.update(JsonConverter.fromJsonToMenuItemUpdate(req.getInputStream()),id,version);
                 } else {
                     resp.setStatus(400);
                     throw new IllegalArgumentException("MenuItem id is not exist");
