@@ -59,7 +59,7 @@ public class PizzaInfoDao implements IPizzaInfoDao {
     }
 
     @Override
-    public void update(IPizzaInfo iPizzaInfo) {
+    public void update(IPizzaInfo iPizzaInfo, Long id, Integer version) {
         PizzaInfo pizzaInfo = (PizzaInfo) iPizzaInfo;
         if (this.isIdExist(pizzaInfo.getId())) {
             try (Connection con = dataSource.getConnection()) {

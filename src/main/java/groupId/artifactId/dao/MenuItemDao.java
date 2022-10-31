@@ -69,7 +69,7 @@ public class MenuItemDao implements IMenuItemDao {
     }
 
     @Override
-    public void update(IMenuItem iMenuItem) {
+    public void update(IMenuItem iMenuItem, Long id, Integer version) {
         MenuItem menuItem = (MenuItem) iMenuItem;
         if (this.isIdExist(menuItem.getId())) {
             try (Connection con = dataSource.getConnection()) {
