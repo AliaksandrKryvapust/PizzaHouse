@@ -36,14 +36,6 @@ public class MenuValidator implements IMenuValidator {
 
     @Override
     public void validateMenu(MenuDtoInput menuDtoInput) {
-//        if (!MenuService.getInstance().isIdValid(menuDtoInput.getId())) {
-//            throw new IllegalArgumentException("Error code 400. Menu with such id do not exist");
-//        }
-        this.validateMenuRow(menuDtoInput);
-    }
-
-    @Override
-    public void validateMenuRow(MenuDtoInput menuDtoInput) {
         if (menuDtoInput.getName() == null || menuDtoInput.getName().isBlank()) {
             throw new IllegalArgumentException("Menu`s name is not valid");
         }

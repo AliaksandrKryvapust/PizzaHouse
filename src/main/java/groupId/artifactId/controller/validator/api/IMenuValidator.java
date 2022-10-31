@@ -9,5 +9,4 @@ public interface IMenuValidator {
     void validateListMenuItems(List<MenuItemDto> menuItemDto);
     void validateMenuItem(MenuItemDto menuItemDto);
     void validateMenu(MenuDtoInput menuDtoInput);
-    void validateMenuRow(MenuDtoInput menuDtoInput);
 }
