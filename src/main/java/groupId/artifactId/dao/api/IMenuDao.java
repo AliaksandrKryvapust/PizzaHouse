@@ -9,5 +9,6 @@ public interface IMenuDao extends IDao<IMenu> {
 
     Boolean exist(Long id);
 
-    Boolean isDishExist(String name);
+    Boolean doesMenuExist(String name);
 }
+

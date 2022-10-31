@@ -21,6 +21,7 @@ public class MenuDao implements IMenuDao {
             "FROM pizza_manager.menu WHERE id=?;";
     private static final String SELECT_MENU_SQL = "SELECT id, created_at, version, name, enabled " +
             "FROM pizza_manager.menu ORDER BY id;";
+    private static final String SELECT_MENU_NAME_SQL = "SELECT name FROM pizza_manager.pizza_info WHERE name=?;";
 
     public MenuDao() {
 
@@ -386,10 +387,9 @@ public class MenuDao implements IMenuDao {
     }
 
     @Override
-    public Boolean isDishExist(String name) {
+    public Boolean doesMenuExist(String name) {
         try (Connection con = dataSource.getConnection()) {
-            String sql = "SELECT name FROM pizza_manager.pizza_info\n WHERE name=?\n ORDER BY name;";
-            try (PreparedStatement statement = con.prepareStatement(sql)) {
+            try (PreparedStatement statement = con.prepareStatement(SELECT_MENU_NAME_SQL)) {
                 statement.setString(1, name);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     return resultSet.next();

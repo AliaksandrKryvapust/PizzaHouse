@@ -9,5 +9,5 @@ public interface IMenuService extends IService<MenuDtoOutput, MenuDtoInput> {
 
     Boolean isIdValid(Long id);
 
-    Boolean isDishExist(String name);
+    Boolean exist(String name);
 }

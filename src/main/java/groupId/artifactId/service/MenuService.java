@@ -54,8 +54,8 @@ public class MenuService implements IMenuService {
     }
 
     @Override
-    public Boolean isDishExist(String name) {
-        return this.dao.isDishExist(name);
+    public Boolean exist(String name) {
+        return this.dao.doesMenuExist(name);
     }
 
     @Override
