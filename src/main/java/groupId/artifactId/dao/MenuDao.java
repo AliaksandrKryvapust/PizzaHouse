@@ -22,6 +22,7 @@ public class MenuDao implements IMenuDao {
     private static final String SELECT_MENU_SQL = "SELECT id, created_at, version, name, enabled " +
             "FROM pizza_manager.menu ORDER BY id;";
     private static final String SELECT_MENU_NAME_SQL = "SELECT name FROM pizza_manager.pizza_info WHERE name=?;";
+    private static final String INSERT_MENU_SQL = "INSERT INTO pizza_manager.menu (name, enabled)\n VALUES (?, ?)";
 
     public MenuDao() {
 
@@ -87,66 +88,20 @@ public class MenuDao implements IMenuDao {
     }
 
     @Override
-    public void save(IMenu imenu) {
-        Menu menu = (Menu) imenu;
-        if (menu.getId() != null) {
-            throw new IllegalStateException("Error code 500. Menu id should be empty");
+    public void save(IMenu menu) {
+        if (menu.getId() != null || menu.getVersion() != null) {
+            throw new IllegalStateException("Menu id & version should be empty");
         }
         try (Connection con = dataSource.getConnection()) {
-            String pizzaInfoSql = "INSERT INTO pizza_manager.pizza_info (name, description, size)\n VALUES (?, ?, ?);";
-            try (PreparedStatement statement = con.prepareStatement(pizzaInfoSql, Statement.RETURN_GENERATED_KEYS)) {
-                for (MenuItem item : menu.getItems()) {
-                    statement.setString(1, item.getInfo().getName());
-                    statement.setString(2, item.getInfo().getDescription());
-                    statement.setLong(3, item.getInfo().getSize());
-                    statement.addBatch();
-                }
-                int[] rows = statement.executeBatch();
-                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                    for (MenuItem item : menu.getItems()) {
-                        generatedKeys.next();
-                        item.getInfo().setId(generatedKeys.getLong(1));
-                    }
-                }
-                if (rows == null) {
-                    throw new SQLException("pizza_info table insert failed, no rows affected");
-                }
-            }
-            String menuSql = "INSERT INTO pizza_manager.menu (name, enabled)\n VALUES (?, ?)";
-            try (PreparedStatement statement = con.prepareStatement(menuSql, Statement.RETURN_GENERATED_KEYS)) {
+            try (PreparedStatement statement = con.prepareStatement(INSERT_MENU_SQL)) {
                 long rows = 0;
-                    statement.setString(1, menu.getName());
-                    statement.setBoolean(2, menu.getEnable());
-                    rows += statement.executeUpdate();
-                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                    while (generatedKeys.next()) {
-                        menu.setId(generatedKeys.getLong(1));
-                    }
-                }
+                statement.setString(1, menu.getName());
+                statement.setBoolean(2, menu.getEnable());
+                rows += statement.executeUpdate();
                 if (rows == 0) {
                     throw new SQLException("menu table insert failed, no rows affected");
                 }
             }
-            String menuItemSql = "INSERT INTO pizza_manager.menu_item (price, pizza_info_id, menu_id)\n VALUES (?, ?, ?);";
-            try (PreparedStatement statement = con.prepareStatement(menuItemSql, Statement.RETURN_GENERATED_KEYS)) {
-                for (MenuItem item : menu.getItems()) {
-                    statement.setDouble(1, item.getPrice());
-                    statement.setLong(2, item.getInfo().getId());
-                    statement.setLong(3,menu.getId());
-                    statement.addBatch();
-                }
-                int[] rows = statement.executeBatch();
-                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                    for (MenuItem item : menu.getItems()) {
-                        generatedKeys.next();
-                        item.setId(generatedKeys.getLong(1));
-                    }
-                }
-                if (rows == null) {
-                    throw new SQLException("menu_item table insert failed, no rows affected");
-                }
-            }
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

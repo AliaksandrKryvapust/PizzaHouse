@@ -21,6 +21,11 @@ public class Menu implements IMenu {
         this.items = items;
     }
 
+    public Menu(String name, Boolean enable) {
+        this.name = name;
+        this.enable = enable;
+    }
+
     public void setItems(List<MenuItem> items) {
         this.items = items;
     }
