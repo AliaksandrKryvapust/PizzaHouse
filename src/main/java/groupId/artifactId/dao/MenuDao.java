@@ -107,6 +107,9 @@ public class MenuDao implements IMenuDao {
                 if (rows == 0) {
                     throw new SQLException("menu table insert failed, no rows affected");
                 }
+                if (rows > 1) {
+                    throw new IllegalStateException("Incorrect menu table update, more than 1 row affected");
+                }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -130,7 +133,10 @@ public class MenuDao implements IMenuDao {
                 statement.setInt(4, version);
                 rows += statement.executeUpdate();
                 if (rows == 0) {
-                    throw new SQLException("menu table update failed, no rows affected");
+                    throw new IllegalArgumentException("menu table update failed, no rows affected");
+                }
+                if (rows > 1) {
+                    throw new IllegalStateException("Incorrect menu table update, more than 1 row affected");
                 }
             }
             } catch (SQLException e) {
@@ -151,6 +157,9 @@ public class MenuDao implements IMenuDao {
                 rows += statement.executeUpdate();
                 if (rows == 0) {
                     throw new SQLException("menu table delete failed, no rows affected");
+                }
+                if (rows > 1) {
+                    throw new IllegalStateException("Incorrect menu table update, more than 1 row affected");
                 }
             }
         } catch (SQLException e) {
