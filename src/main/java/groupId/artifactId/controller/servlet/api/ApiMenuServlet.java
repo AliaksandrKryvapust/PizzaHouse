@@ -27,6 +27,7 @@ public class ApiMenuServlet extends HttpServlet {
     private static final String encoding = "UTF-8";
     private static final String parameterId = "id";
     private static final String parameterVersion = "version";
+    private static final String parameterDelete = "delete";
 
     //Read POSITION
     //1) Read list
@@ -136,8 +137,9 @@ public class ApiMenuServlet extends HttpServlet {
     }
 
     //DELETE POSITION
-    //need param id  (id = 1)
-    //need param version/date_update - optimistic lock (version=7)
+    //need param id  (id = 2)
+    //need param version/date_update - optimistic lock (version=2)
+    //param delete - true/false completely delete (delete=false)
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
         try {
@@ -145,21 +147,23 @@ public class ApiMenuServlet extends HttpServlet {
             resp.setContentType(contentType);
             String id = req.getParameter(parameterId);
             String version = req.getParameter(parameterVersion);
-            if (id != null && version != null) {
+            String delete = req.getParameter(parameterDelete);
+            if (id != null && version != null && delete!=null) {
                 if (menuService.isIdValid(Long.valueOf(id))) {
-                    menuService.delete(id, version);
+                    menuService.delete(id, version, delete);
                 } else {
-                    resp.setStatus(400);
-                    throw new IllegalArgumentException("Menu id is not exist");
+                    resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                    throw new IllegalArgumentException("Menu with id:" + id + "is not exist");
                 }
             } else {
-                resp.setStatus(400);
-                throw new IllegalArgumentException("Field Menu id or Menu version is empty");
+                resp.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
+                throw new IllegalArgumentException("Field Menu id:" + id + "or Menu version:" + version +
+                        "or Menu delete status" + delete + "is empty");
             }
         } catch (UnsupportedEncodingException e) {
-            resp.setStatus(500);
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             throw new IncorrectEncodingException("Failed to set character encoding UTF-8", e);
         }
-        resp.setStatus(200);
+        resp.setStatus(HttpServletResponse.SC_OK);
     }
 }
