@@ -55,13 +55,7 @@ public class MenuDao implements IMenuDao {
             try (PreparedStatement statement = con.prepareStatement(SELECT_MENU_SQL)) {
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        Menu menu = new Menu();
-                        menu.setId(resultSet.getLong("id"));
-                        menu.setCreationDate(resultSet.getTimestamp("created_at").toLocalDateTime());
-                        menu.setVersion(resultSet.getInt("version"));
-                        menu.setName(resultSet.getString("name"));
-                        menu.setEnable(resultSet.getBoolean("enabled"));
-                        menus.add(menu);
+                        menus.add(mapper(resultSet));
                     }
                 }
             }
@@ -74,18 +68,11 @@ public class MenuDao implements IMenuDao {
     @Override
     public IMenu get(Long id) {
         try (Connection con = dataSource.getConnection()) {
-            Menu menu = new Menu();
             try (PreparedStatement statement = con.prepareStatement(SELECT_MENU_BY_ID_SQL)) {
                 statement.setLong(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        menu.setId(resultSet.getLong("id"));
-                        menu.setCreationDate(resultSet.getTimestamp("created_at").toLocalDateTime());
-                        menu.setVersion(resultSet.getInt("version"));
-                        menu.setName(resultSet.getString("name"));
-                        menu.setEnable(resultSet.getBoolean("enabled"));
-                    }
-                    return menu;
+                    resultSet.next();
+                    return this.mapper(resultSet);
                 }
             }
         } catch (SQLException e) {
@@ -211,5 +198,11 @@ public class MenuDao implements IMenuDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private IMenu mapper(ResultSet resultSet) throws SQLException {
+        return new Menu(resultSet.getLong("id"), resultSet.getTimestamp("created_at").toLocalDateTime(),
+                resultSet.getInt("version"), resultSet.getString("name"),
+                resultSet.getBoolean("enabled"));
     }
 }

@@ -26,6 +26,15 @@ public class Menu implements IMenu {
         this.enable = enable;
     }
 
+    public Menu(Long id, LocalDateTime creationDate, Integer version, String name, Boolean enable) {
+        this.items = items;
+        this.id = id;
+        this.creationDate = creationDate;
+        this.version = version;
+        this.name = name;
+        this.enable = enable;
+    }
+
     public void setItems(List<MenuItem> items) {
         this.items = items;
     }
