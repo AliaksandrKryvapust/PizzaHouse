@@ -44,7 +44,7 @@ public class MenuDao implements IMenuDao {
             }
             return menus;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to get List of Menu");
         }
     }
 
@@ -59,7 +59,7 @@ public class MenuDao implements IMenuDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to get Menu");
         }
     }
 
@@ -86,7 +86,7 @@ public class MenuDao implements IMenuDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to save Menu");
         }
 
     }
@@ -113,7 +113,7 @@ public class MenuDao implements IMenuDao {
                 return new Menu(id, menu.getName(), menu.getEnable());
             }
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+            throw new RuntimeException("Failed to update Menu");
             }
     }
 
@@ -133,7 +133,7 @@ public class MenuDao implements IMenuDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to delete Menu");
         }
     }
 
