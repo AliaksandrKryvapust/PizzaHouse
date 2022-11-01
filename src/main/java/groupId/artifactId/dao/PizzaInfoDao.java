@@ -1,50 +1,35 @@
 package groupId.artifactId.dao;
 
-import groupId.artifactId.dao.api.DataSourceCreator;
 import groupId.artifactId.dao.api.IPizzaInfoDao;
 import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
-import groupId.artifactId.exceptions.IncorrectDataSourceException;
 
 import javax.sql.DataSource;
-import java.beans.PropertyVetoException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PizzaInfoDao implements IPizzaInfoDao {
-    private static PizzaInfoDao firstInstance = null;
     private final DataSource dataSource;
+    private static final String INSERT_PIZZA_INFO_SQL = "INSERT INTO pizza_manager.pizza_info (name, description, size) " +
+            "VALUES (?, ?, ?);";
+    private static final String UPDATE_PIZZA_INFO_SQL = "UPDATE pizza_manager.pizza_info SET name=?, description=?, size=?, " +
+            "version=version+1 WHERE id=? AND version=?;";
+    private static final String SELECT_PIZZA_INFO_BY_ID_SQL = "SELECT id, name, description, size, creation_date, " +
+            "version FROM pizza_manager.pizza_info WHERE id=?;";
+    private static final String DELETE_PIZZA_INFO_SQL = "DELETE FROM pizza_manager.pizza_info WHERE id=? AND version=?;";
 
-    public PizzaInfoDao() {
-        try {
-            this.dataSource = DataSourceCreator.getInstance();
-        } catch (PropertyVetoException e) {
-            throw new IncorrectDataSourceException("Unable to get Data Source class at PizzaInfoDao", e);
-        }
-    }
-
-    public static PizzaInfoDao getInstance() {
-        synchronized (PizzaInfoDao.class) {
-            if (firstInstance == null) {
-                firstInstance = new PizzaInfoDao();
-            }
-        }
-        return firstInstance;
+    public PizzaInfoDao(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
     @Override
-    public IPizzaInfo save(IPizzaInfo iPizzaInfo) {
-        PizzaInfo info = (PizzaInfo) iPizzaInfo;
-        if (info.getId() != null) {
-            throw new IllegalStateException("Error code 500. Menu id should be empty");
+    public IPizzaInfo save(IPizzaInfo info) {
+        if (info.getId() != null || info.getVersion() != null) {
+            throw new IllegalStateException("PizzaInfo id & version should be empty");
         }
         try (Connection con = dataSource.getConnection()) {
-            String pizzaInfoSql = "INSERT INTO pizza_manager.pizza_info (name, description, size)\n VALUES (?, ?, ?);";
-            try (PreparedStatement statement = con.prepareStatement(pizzaInfoSql)) {
+            try (PreparedStatement statement = con.prepareStatement(INSERT_PIZZA_INFO_SQL, Statement.RETURN_GENERATED_KEYS)) {
                 long rows = 0;
                 statement.setString(1, info.getName());
                 statement.setString(2, info.getDescription());
@@ -53,95 +38,79 @@ public class PizzaInfoDao implements IPizzaInfoDao {
                 if (rows == 0) {
                     throw new SQLException("pizza_info table insert failed, no rows affected");
                 }
+                if (rows > 1) {
+                    throw new IllegalStateException("Incorrect pizza_info table update, more than 1 row affected");
+                }
+                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                    generatedKeys.next();
+                    return new PizzaInfo(Long.valueOf(generatedKeys.getString(1)), info.getName(),
+                            info.getDescription(), info.getSize());
+                }
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to save PizzaInfo");
         }
-        return iPizzaInfo;
     }
 
     @Override
-    public IPizzaInfo update(IPizzaInfo iPizzaInfo, Long id, Integer version) {
-        PizzaInfo pizzaInfo = (PizzaInfo) iPizzaInfo;
-        if (this.isIdExist(pizzaInfo.getId())) {
-            try (Connection con = dataSource.getConnection()) {
-                String pizzaInfoSqlUpdate = "UPDATE pizza_manager.pizza_info\n " +
-                        "SET name=?, description=?, size=?, version=version+1\n" +
-                        "WHERE pizza_manager.pizza_info.id=? AND pizza_manager.pizza_info.version=?\n";
-                try (PreparedStatement statement = con.prepareStatement(pizzaInfoSqlUpdate)) {
-                    long rows = 0;
-                    statement.setString(1, pizzaInfo.getName());
-                    statement.setString(2, pizzaInfo.getDescription());
-                    statement.setLong(3, pizzaInfo.getSize());
-                    statement.setLong(4, pizzaInfo.getId());
-                    statement.setInt(5, pizzaInfo.getVersion());
-                    rows += statement.executeUpdate();
-                    if (rows == 0) {
-                        throw new SQLException("pizza_info table update failed, no rows affected");
-                    }
+    public IPizzaInfo update(IPizzaInfo info, Long id, Integer version) {
+        if (info.getId() != null || info.getVersion() != null) {
+            throw new IllegalStateException("PizzaInfo id & version should be empty");
+        }
+        try (Connection con = dataSource.getConnection()) {
+            try (PreparedStatement statement = con.prepareStatement(UPDATE_PIZZA_INFO_SQL)) {
+                long rows = 0;
+                statement.setString(1, info.getName());
+                statement.setString(2, info.getDescription());
+                statement.setLong(3, info.getSize());
+                statement.setLong(4, id);
+                statement.setInt(5, version);
+                rows += statement.executeUpdate();
+                if (rows == 0) {
+                    throw new IllegalArgumentException("pizza_info table update failed, version does not match update denied");
                 }
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+                if (rows > 1) {
+                    throw new IllegalStateException("Incorrect pizza_info table update, more than 1 row affected");
+                }
+                return new PizzaInfo(id, info.getName(), info.getDescription(), info.getSize());
             }
-        } else throw new IllegalStateException("Error code 500. PizzaInfo id is not valid");
-        return iPizzaInfo;
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to update pizza_info");
+        }
     }
 
     @Override
     public IPizzaInfo get(Long id) {
-        if (!this.isIdExist(id)) {
-            throw new IllegalStateException("Error code 500. PizzaInfo id is not valid");
-        }
         try (Connection con = dataSource.getConnection()) {
-            PizzaInfo info = new PizzaInfo();
-            info.setId(id);
-            String sql = "SELECT pizza_info.id AS id, name, description, size, pizza_info.creation_date AS picd, pizza_info.version AS pied\n " +
-                    "FROM pizza_manager.pizza_info\n" +
-                    "WHERE pizza_manager.pizza_info.id=?\n ORDER BY id;";
-            try (PreparedStatement statement = con.prepareStatement(sql)) {
+            try (PreparedStatement statement = con.prepareStatement(SELECT_PIZZA_INFO_BY_ID_SQL)) {
                 statement.setLong(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        long itemId = resultSet.getLong("id");
-                        if (!resultSet.wasNull()) {
-                            info.setId(itemId);
-                        }
-                        info.setName(resultSet.getString("name"));
-                        info.setDescription(resultSet.getString("description"));
-                        long size = resultSet.getLong("size");
-                        if (!resultSet.wasNull()) {
-                            info.setSize(size);
-                        }
-                        info.setCreationDate(resultSet.getTimestamp("picd").toLocalDateTime());
-                        info.setVersion(resultSet.getInt("pied"));
-                    }
-                    return info;
+                    resultSet.next();
+                    return this.mapper(resultSet);
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to get Menu");
         }
     }
 
     @Override
     public void delete(Long id, Integer version, Boolean delete) {
-        if (!this.isIdExist(id)) {
-            throw new IllegalStateException("Error code 500. MenuItem id is not valid");
-        }
         try (Connection con = dataSource.getConnection()) {
-            String pizzaInfoSqlDelete = "DELETE FROM pizza_manager.pizza_info\n " +
-                    "WHERE pizza_manager.pizza_info.id=? AND pizza_manager.pizza_info.version=?\n";
-            try (PreparedStatement statement = con.prepareStatement(pizzaInfoSqlDelete)) {
+            try (PreparedStatement statement = con.prepareStatement(DELETE_PIZZA_INFO_SQL)) {
                 long rows = 0;
                 statement.setLong(1, id);
                 statement.setInt(2, version);
                 rows += statement.executeUpdate();
                 if (rows == 0) {
-                    throw new SQLException("pizza_info table delete failed, no rows affected");
+                    throw new SQLException("pizza_info table delete failed,version does not match update denied");
+                }
+                if (rows > 1) {
+                    throw new IllegalStateException("Incorrect pizza_info table update, more than 1 row affected");
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to delete pizza_info");
         }
     }
 
@@ -179,7 +148,7 @@ public class PizzaInfoDao implements IPizzaInfoDao {
     }
 
     @Override
-    public Boolean isIdExist(Long id) {
+    public Boolean exist(Long id) {
         try (Connection con = dataSource.getConnection()) {
             String sql = "SELECT id FROM pizza_manager.pizza_info\n WHERE id=?\n ORDER BY id;";
             try (PreparedStatement statement = con.prepareStatement(sql)) {
@@ -191,5 +160,16 @@ public class PizzaInfoDao implements IPizzaInfoDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public Boolean doesPizzaExist(String name) {
+        return null;
+    }
+
+    private IPizzaInfo mapper(ResultSet resultSet) throws SQLException {
+        return new PizzaInfo(resultSet.getLong("id"), resultSet.getString("name"),
+                resultSet.getString("description"), resultSet.getLong("size"),
+                resultSet.getTimestamp("creation_date").toLocalDateTime(), resultSet.getInt("version"));
     }
 }
