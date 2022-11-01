@@ -1,13 +1,10 @@
 package groupId.artifactId.dao;
 
-import groupId.artifactId.dao.api.DataSourceCreator;
 import groupId.artifactId.dao.api.IMenuDao;
 import groupId.artifactId.dao.entity.Menu;
 import groupId.artifactId.dao.entity.api.IMenu;
-import groupId.artifactId.exceptions.IncorrectDataSourceException;
 
 import javax.sql.DataSource;
-import java.beans.PropertyVetoException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,7 +16,6 @@ import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
 
 public class MenuDao implements IMenuDao {
-    private static MenuDao firstInstance = null;
     private final DataSource dataSource;
     private static final String SELECT_MENU_BY_ID_SQL = "SELECT id, created_at, version, name, enabled " +
             "FROM pizza_manager.menu WHERE id=?;";
@@ -31,22 +27,8 @@ public class MenuDao implements IMenuDao {
             "WHERE id=? AND version=?";
     private static final String DELETE_MENU_SQL = "DELETE FROM pizza_manager.menu WHERE id=? AND version=?;";
 
-    public MenuDao() {
-
-        try {
-            this.dataSource = DataSourceCreator.getInstance();
-        } catch (PropertyVetoException e) {
-            throw new IncorrectDataSourceException("Unable to get Data Source class at MenuDao", e);
-        }
-    }
-
-    public static MenuDao getInstance() {
-        synchronized (MenuDao.class) {
-            if (firstInstance == null) {
-                firstInstance = new MenuDao();
-            }
-        }
-        return firstInstance;
+    public MenuDao(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
     @Override

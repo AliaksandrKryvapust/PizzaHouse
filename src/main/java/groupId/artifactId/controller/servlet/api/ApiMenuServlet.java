@@ -1,13 +1,13 @@
 package groupId.artifactId.controller.servlet.api;
 
-import groupId.artifactId.controller.validator.MenuValidator;
+import groupId.artifactId.controller.validator.IoC.MenuValidatorSingleton;
 import groupId.artifactId.controller.validator.api.IMenuValidator;
 import groupId.artifactId.core.dto.input.MenuDtoInput;
 import groupId.artifactId.core.dto.output.MenuDtoOutput;
 import groupId.artifactId.exceptions.IncorrectEncodingException;
 import groupId.artifactId.exceptions.IncorrectServletInputStreamException;
 import groupId.artifactId.exceptions.IncorrectServletWriterException;
-import groupId.artifactId.service.MenuService;
+import groupId.artifactId.service.IoC.MenuServiceSingleton;
 import groupId.artifactId.service.api.IMenuService;
 import groupId.artifactId.utils.JsonConverter;
 
@@ -22,8 +22,8 @@ import java.io.UnsupportedEncodingException;
 //IMenu
 @WebServlet(name = "Menu", urlPatterns = "/api/menu")
 public class ApiMenuServlet extends HttpServlet {
-    private final IMenuService menuService = MenuService.getInstance();
-    private final IMenuValidator menuValidator = MenuValidator.getInstance();
+    private final IMenuService menuService = MenuServiceSingleton.getInstance();
+    private final IMenuValidator menuValidator = MenuValidatorSingleton.getInstance();
     private static final String CONTENT_TYPE = "application/json";
     private static final String ENCODING = "UTF-8";
     private static final String PARAMETER_ID = "id";

@@ -1,9 +1,10 @@
 package groupId.artifactId.controller.validator;
 
+import groupId.artifactId.controller.validator.api.ITokenValidator;
 import groupId.artifactId.core.dto.input.OrderDto;
 import groupId.artifactId.core.dto.input.SelectedItemDto;
-import groupId.artifactId.controller.validator.api.ITokenValidator;
-import groupId.artifactId.service.MenuService;
+import groupId.artifactId.service.IoC.MenuServiceSingleton;
+import groupId.artifactId.service.api.IMenuService;
 
 public class TokenValidator implements ITokenValidator {
     private static TokenValidator firstInstance = null;
@@ -35,7 +36,7 @@ public class TokenValidator implements ITokenValidator {
             if (dto.getMenuItem().getInfo().getName() == null || dto.getMenuItem().getInfo().getName().isBlank()) {
                 throw new IllegalArgumentException("Error code 400. Pizza`s name is not valid");
             }
-            MenuService menuService = MenuService.getInstance();
+            IMenuService menuService = MenuServiceSingleton.getInstance();
             if (!menuService.exist(dto.getMenuItem().getInfo().getName())){
                 throw new IllegalArgumentException("Error code 400. There is no such dish at the menu");
             }

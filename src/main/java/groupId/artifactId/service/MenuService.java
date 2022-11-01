@@ -3,7 +3,6 @@ package groupId.artifactId.service;
 import groupId.artifactId.core.dto.input.MenuDtoInput;
 import groupId.artifactId.core.dto.output.MenuDtoOutput;
 import groupId.artifactId.core.mapper.MenuMapper;
-import groupId.artifactId.dao.MenuDao;
 import groupId.artifactId.dao.api.IMenuDao;
 import groupId.artifactId.dao.entity.api.IMenu;
 import groupId.artifactId.service.api.IMenuService;
@@ -12,26 +11,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MenuService implements IMenuService {
-    private static MenuService firstInstance = null;
     private final IMenuDao dao;
 
-    private MenuService() {
-        this.dao = MenuDao.getInstance();
-    }
-
-    public static MenuService getInstance() {
-        synchronized (MenuService.class) {
-            if (firstInstance == null) {
-                firstInstance = new MenuService();
-            }
-        }
-        return firstInstance;
+    public MenuService(IMenuDao dao) {
+        this.dao = dao;
     }
 
     @Override
     public List<MenuDtoOutput> get() {
         List<MenuDtoOutput> temp = new ArrayList<>();
-        for (IMenu menu: this.dao.get()) {
+        for (IMenu menu : this.dao.get()) {
             MenuDtoOutput menuDtoOutput = MenuMapper.menuOutputMapping(menu);
             temp.add(menuDtoOutput);
         }
