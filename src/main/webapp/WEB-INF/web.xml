@@ -3,8 +3,4 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
          http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
     <display-name>it_acad_HW_Interfaces</display-name>
-    <error-page>
-        <exception-type>java.lang.Throwable</exception-type >
-        <location>/exception</location>
-    </error-page>
 </web-app>
