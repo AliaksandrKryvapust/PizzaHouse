@@ -32,7 +32,7 @@ public class MenuItemDao implements IMenuItemDao {
         return firstInstance;
     }
     @Override
-    public void save(IMenuItem iMenuItem){
+    public IMenuItem save(IMenuItem iMenuItem){
         MenuItem menuItem = (MenuItem) iMenuItem;
         if (menuItem.getId() != null) {
             throw new IllegalStateException("Error code 500. Menu id should be empty");
@@ -67,10 +67,11 @@ public class MenuItemDao implements IMenuItemDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        return iMenuItem;
     }
 
     @Override
-    public void update(IMenuItem iMenuItem, Long id, Integer version) {
+    public IMenuItem update(IMenuItem iMenuItem, Long id, Integer version) {
         MenuItem menuItem = (MenuItem) iMenuItem;
         if (this.isIdExist(menuItem.getId())) {
             try (Connection con = dataSource.getConnection()) {
@@ -120,6 +121,7 @@ public class MenuItemDao implements IMenuItemDao {
                 throw new RuntimeException(e);
             }
         } else throw new IllegalStateException("Error code 500. MenuItem id is not valid");
+        return iMenuItem;
     }
 
     @Override

@@ -37,7 +37,7 @@ public class PizzaInfoDao implements IPizzaInfoDao {
     }
 
     @Override
-    public void save(IPizzaInfo iPizzaInfo) {
+    public IPizzaInfo save(IPizzaInfo iPizzaInfo) {
         PizzaInfo info = (PizzaInfo) iPizzaInfo;
         if (info.getId() != null) {
             throw new IllegalStateException("Error code 500. Menu id should be empty");
@@ -57,10 +57,11 @@ public class PizzaInfoDao implements IPizzaInfoDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        return iPizzaInfo;
     }
 
     @Override
-    public void update(IPizzaInfo iPizzaInfo, Long id, Integer version) {
+    public IPizzaInfo update(IPizzaInfo iPizzaInfo, Long id, Integer version) {
         PizzaInfo pizzaInfo = (PizzaInfo) iPizzaInfo;
         if (this.isIdExist(pizzaInfo.getId())) {
             try (Connection con = dataSource.getConnection()) {
@@ -83,6 +84,7 @@ public class PizzaInfoDao implements IPizzaInfoDao {
                 throw new RuntimeException(e);
             }
         } else throw new IllegalStateException("Error code 500. PizzaInfo id is not valid");
+        return iPizzaInfo;
     }
 
     @Override

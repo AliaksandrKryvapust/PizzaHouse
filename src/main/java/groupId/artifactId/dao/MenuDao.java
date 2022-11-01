@@ -15,6 +15,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
+
 
 public class MenuDao implements IMenuDao {
     private static MenuDao firstInstance = null;
@@ -80,12 +82,12 @@ public class MenuDao implements IMenuDao {
     }
 
     @Override
-    public void save(IMenu menu) {
+    public IMenu save(IMenu menu) {
         if (menu.getId() != null || menu.getVersion() != null) {
             throw new IllegalStateException("Menu id & version should be empty");
         }
         try (Connection con = dataSource.getConnection()) {
-            try (PreparedStatement statement = con.prepareStatement(INSERT_MENU_SQL)) {
+            try (PreparedStatement statement = con.prepareStatement(INSERT_MENU_SQL, RETURN_GENERATED_KEYS)) {
                 long rows = 0;
                 statement.setString(1, menu.getName());
                 statement.setBoolean(2, menu.getEnable());
@@ -96,14 +98,19 @@ public class MenuDao implements IMenuDao {
                 if (rows > 1) {
                     throw new IllegalStateException("Incorrect menu table update, more than 1 row affected");
                 }
+                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                    generatedKeys.next();
+                    return new Menu(Long.valueOf(generatedKeys.getString(1)), menu.getName(), menu.getEnable());
+                }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
     }
 
     @Override
-    public void update(IMenu menu, Long id, Integer version) {
+    public IMenu update(IMenu menu, Long id, Integer version) {
         if (menu.getId() != null || menu.getVersion() != null) {
             throw new IllegalStateException("Menu id & version should be empty");
         }
@@ -121,6 +128,7 @@ public class MenuDao implements IMenuDao {
                 if (rows > 1) {
                     throw new IllegalStateException("Incorrect menu table update, more than 1 row affected");
                 }
+                return new Menu(id, menu.getName(), menu.getEnable());
             }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
