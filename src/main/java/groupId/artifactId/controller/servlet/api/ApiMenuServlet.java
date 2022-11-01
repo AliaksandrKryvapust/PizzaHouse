@@ -4,9 +4,6 @@ import groupId.artifactId.controller.validator.IoC.MenuValidatorSingleton;
 import groupId.artifactId.controller.validator.api.IMenuValidator;
 import groupId.artifactId.core.dto.input.MenuDtoInput;
 import groupId.artifactId.core.dto.output.MenuDtoOutput;
-import groupId.artifactId.exceptions.IncorrectEncodingException;
-import groupId.artifactId.exceptions.IncorrectServletInputStreamException;
-import groupId.artifactId.exceptions.IncorrectServletWriterException;
 import groupId.artifactId.service.IoC.MenuServiceSingleton;
 import groupId.artifactId.service.api.IMenuService;
 import groupId.artifactId.utils.JsonConverter;
@@ -15,8 +12,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 //CRUD controller
 //IMenu
@@ -44,15 +39,13 @@ public class ApiMenuServlet extends HttpServlet {
                 if (menuService.isIdValid(Long.valueOf(id))) {
                     resp.getWriter().write(JsonConverter.fromMenuToJson(menuService.get(Long.valueOf(id))));
                 } else {
-                    resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                    throw new IllegalArgumentException("Menu with id:" + id + "is not exist");
+                    resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
                 }
             } else {
                 resp.getWriter().write(JsonConverter.fromMenuListToJson(menuService.get()));
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new IncorrectServletWriterException("Incorrect servlet state during response writer method", e);
         }
         resp.setStatus(HttpServletResponse.SC_OK);
     }
@@ -74,21 +67,14 @@ public class ApiMenuServlet extends HttpServlet {
                     menuValidator.validateMenu(menu);
                 } catch (IllegalArgumentException e) {
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    throw new IllegalArgumentException(e.getMessage(), e);
                 }
                 MenuDtoOutput menuDto = menuService.save(menu);
                 resp.getWriter().write(JsonConverter.fromMenuToJson(menuDto));
             } else {
-                resp.setStatus(HttpServletResponse.SC_CONFLICT);
-                throw new IllegalArgumentException("Menu with such name:" + menu.getName() + "is already exist");
+                resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
             }
-
-        } catch (UnsupportedEncodingException e) {
+        } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new IncorrectEncodingException("Failed to set character encoding UTF-8", e);
-        } catch (IOException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new IncorrectServletInputStreamException("Impossible to get input stream from request", e);
         }
         resp.setStatus(HttpServletResponse.SC_CREATED);
     }
@@ -115,24 +101,17 @@ public class ApiMenuServlet extends HttpServlet {
                         menuValidator.validateMenu(menu);
                     } catch (IllegalArgumentException e) {
                         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                        throw new IllegalArgumentException(e.getMessage(), e);
                     }
                     MenuDtoOutput menuDto = menuService.update(menu, id, version);
                     resp.getWriter().write(JsonConverter.fromMenuToJson(menuDto));
                 } else {
-                    resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                    throw new IllegalArgumentException("Menu with id:" + id + "is not exist");
+                    resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
                 }
             } else {
                 resp.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
-                throw new IllegalArgumentException("Field Menu id:" + id + "or Menu version:" + version + "is empty");
             }
-        } catch (UnsupportedEncodingException e) {
+        } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new IncorrectEncodingException("Failed to set character encoding UTF-8", e);
-        } catch (IOException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new IncorrectServletInputStreamException("Impossible to get input stream from request", e);
         }
         resp.setStatus(HttpServletResponse.SC_CREATED);
     }
@@ -149,21 +128,17 @@ public class ApiMenuServlet extends HttpServlet {
             String id = req.getParameter(PARAMETER_ID);
             String version = req.getParameter(PARAMETER_VERSION);
             String delete = req.getParameter(PARAMETER_DELETE);
-            if (id != null && version != null && delete!=null) {
+            if (id != null && version != null && delete != null) {
                 if (menuService.isIdValid(Long.valueOf(id))) {
                     menuService.delete(id, version, delete);
                 } else {
-                    resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                    throw new IllegalArgumentException("Menu with id:" + id + "is not exist");
+                    resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
                 }
             } else {
                 resp.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
-                throw new IllegalArgumentException("Field Menu id:" + id + "or Menu version:" + version +
-                        "or Menu delete status" + delete + "is empty");
             }
-        } catch (UnsupportedEncodingException e) {
+        } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new IncorrectEncodingException("Failed to set character encoding UTF-8", e);
         }
         resp.setStatus(HttpServletResponse.SC_OK);
     }
