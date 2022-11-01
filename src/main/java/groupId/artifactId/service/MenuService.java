@@ -54,8 +54,9 @@ public class MenuService implements IMenuService {
     }
 
     @Override
-    public void update(MenuDtoInput menuDtoInput, String id, String version) {
-        this.dao.update(MenuMapper.menuInputMapping(menuDtoInput), Long.valueOf(id), Integer.valueOf(version));
+    public MenuDtoOutput update(MenuDtoInput menuDtoInput, String id, String version) {
+        IMenu menu = this.dao.update(MenuMapper.menuInputMapping(menuDtoInput), Long.valueOf(id), Integer.valueOf(version));
+        return MenuMapper.menuOutputMapping(menu);
     }
 
     @Override
@@ -64,8 +65,9 @@ public class MenuService implements IMenuService {
     }
 
     @Override
-    public void save(MenuDtoInput menuDtoInput) {
-        this.dao.save(MenuMapper.menuInputMapping(menuDtoInput));
+    public MenuDtoOutput save(MenuDtoInput menuDtoInput) {
+        IMenu menu = this.dao.save(MenuMapper.menuInputMapping(menuDtoInput));
+        return MenuMapper.menuOutputMapping(menu);
     }
 
 }
