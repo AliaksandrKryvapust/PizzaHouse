@@ -59,7 +59,7 @@ public class ApiMenuServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            req.setCharacterEncoding(ENCODING);
+            resp.setCharacterEncoding(ENCODING);
             resp.setContentType(CONTENT_TYPE);
             MenuDtoInput menu = JsonConverter.fromJsonToMenu(req.getInputStream());
             if (!menuService.exist(menu.getName())) {
@@ -90,7 +90,7 @@ public class ApiMenuServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            req.setCharacterEncoding(ENCODING);
+            resp.setCharacterEncoding(ENCODING);
             resp.setContentType(CONTENT_TYPE);
             String id = req.getParameter(PARAMETER_ID);
             String version = req.getParameter(PARAMETER_VERSION);
@@ -123,7 +123,7 @@ public class ApiMenuServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            req.setCharacterEncoding(ENCODING);
+            resp.setCharacterEncoding(ENCODING);
             resp.setContentType(CONTENT_TYPE);
             String id = req.getParameter(PARAMETER_ID);
             String version = req.getParameter(PARAMETER_VERSION);
