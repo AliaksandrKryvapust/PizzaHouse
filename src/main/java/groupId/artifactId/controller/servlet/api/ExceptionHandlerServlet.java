@@ -13,27 +13,27 @@ import java.io.UnsupportedEncodingException;
 
 @WebServlet(name = "ExceptionHandler", urlPatterns = "/exception")
 public class ExceptionHandlerServlet extends HttpServlet {
-//    @Override
-//    protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
-//        this.handle(req, resp);
-//    }
-//
-//    @Override
-//    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
-//        this.handle(req, resp);
-//    }
-//
-//    private void handle(HttpServletRequest req, HttpServletResponse resp) {
-//        try {
-//            req.setCharacterEncoding("UTF-8");
-//            resp.setContentType("text/html; charset=UTF-8");
-//            Throwable throwable = (Throwable) req.getAttribute("javax.servlet.error.exception");
-//            PrintWriter writer = resp.getWriter();
-//            writer.write("<p> Error: " + throwable.getMessage() + "</p>");
-//        } catch (UnsupportedEncodingException e) {
-//            throw new IncorrectEncodingException("Failed to set character encoding UTF-8", e);
-//        } catch (IOException e) {
-//            throw new IncorrectServletWriterException("Incorrect servlet state during response writer method", e);
-//        }
-//    }
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
+        this.handle(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
+        this.handle(req, resp);
+    }
+
+    private void handle(HttpServletRequest req, HttpServletResponse resp) {
+        try {
+            req.setCharacterEncoding("UTF-8");
+            resp.setContentType("text/html; charset=UTF-8");
+            Throwable throwable = (Throwable) req.getAttribute("javax.servlet.error.exception");
+            PrintWriter writer = resp.getWriter();
+            writer.write("<p> Error: " + throwable.getMessage() + "</p>");
+        } catch (UnsupportedEncodingException e) {
+            throw new IncorrectEncodingException("Failed to set character encoding UTF-8", e);
+        } catch (IOException e) {
+            throw new IncorrectServletWriterException("Incorrect servlet state during response writer method", e);
+        }
+    }
 }
