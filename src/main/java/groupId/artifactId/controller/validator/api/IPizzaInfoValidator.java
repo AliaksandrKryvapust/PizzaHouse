@@ -1,7 +1,7 @@
 package groupId.artifactId.controller.validator.api;
 
-import groupId.artifactId.core.dto.input.PizzaInfoDto;
+import groupId.artifactId.core.dto.input.PizzaInfoDtoInput;
 
-public interface IPizzaInfoValidator {
-    void validatePizzaInfo(PizzaInfoDto pizzaInfo);
+public interface IPizzaInfoValidator extends IValidator<PizzaInfoDtoInput> {
+
 }
