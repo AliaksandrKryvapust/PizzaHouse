@@ -1,171 +1,96 @@
 package groupId.artifactId.dao;
 
-import groupId.artifactId.dao.api.DataSourceCreator;
 import groupId.artifactId.dao.api.IMenuItemDao;
 import groupId.artifactId.dao.entity.MenuItem;
 import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.api.IMenuItem;
-import groupId.artifactId.exceptions.IncorrectDataSourceException;
 
 import javax.sql.DataSource;
-import java.beans.PropertyVetoException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MenuItemDao implements IMenuItemDao {
-    private static MenuItemDao firstInstance = null;
     private final DataSource dataSource;
-    public MenuItemDao() {
-        try {
-            this.dataSource = DataSourceCreator.getInstance();
-        } catch (PropertyVetoException e) {
-            throw new IncorrectDataSourceException("Unable to get Data Source class at MenuItemDao", e);
-        }
-    }
-    public static MenuItemDao getInstance() {
-        synchronized (MenuItemDao.class) {
-            if (firstInstance == null) {
-                firstInstance = new MenuItemDao();
-            }
-        }
-        return firstInstance;
-    }
-    @Override
-    public IMenuItem save(IMenuItem iMenuItem){
-        MenuItem menuItem = (MenuItem) iMenuItem;
-        if (menuItem.getId() != null) {
-            throw new IllegalStateException("Error code 500. Menu id should be empty");
-        }
-        try (Connection con = dataSource.getConnection()) {
-            String pizzaInfoSql = "INSERT INTO pizza_manager.pizza_info (name, description, size)\n VALUES (?, ?, ?);";
-            try (PreparedStatement statement = con.prepareStatement(pizzaInfoSql, Statement.RETURN_GENERATED_KEYS)) {
-                long rows = 0;
-                    statement.setString(1, menuItem.getInfo().getName());
-                    statement.setString(2, menuItem.getInfo().getDescription());
-                    statement.setLong(3, menuItem.getInfo().getSize());
-                    rows += statement.executeUpdate();
-                    try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                        while (generatedKeys.next()) {
-                            menuItem.getInfo().setId(generatedKeys.getLong(1));
-                        }
-                    }
-                if (rows == 0) {
-                    throw new SQLException("pizza_info table insert failed, no rows affected");
-                }
-            }
-            String menuItemSql = "INSERT INTO pizza_manager.menu_item (price, pizza_info_id)\n VALUES (?, ?);";
-            try (PreparedStatement statement = con.prepareStatement(menuItemSql)) {
-                long rows = 0;
-                    statement.setDouble(1, menuItem.getPrice());
-                    statement.setLong(2, menuItem.getInfo().getId());
-                    rows += statement.executeUpdate();
-                if (rows == 0) {
-                    throw new SQLException("menu_item table insert failed, no rows affected");
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return iMenuItem;
+    private static final String INSERT_MENU_ITEM_SQL = "INSERT INTO pizza_manager.menu_item (price, pizza_info_id, menu_id)" +
+            " VALUES (?, ?, ?);";
+    private static final String UPDATE_MENU_ITEM_SQL = "UPDATE pizza_manager.menu_item SET price=?, pizza_info_id=?, " +
+            "menu_id=?, version=version+1 WHERE id=? AND version=?;";
+    private static final String SELECT_MENU_ITEM_BY_ID_SQL = "SELECT id, price, pizza_info_id, creation_date, version," +
+            " menu_id FROM pizza_manager.menu_item WHERE id=?;";
+
+    public MenuItemDao(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
     @Override
-    public IMenuItem update(IMenuItem iMenuItem, Long id, Integer version) {
-        MenuItem menuItem = (MenuItem) iMenuItem;
-        if (this.isIdExist(menuItem.getId())) {
-            try (Connection con = dataSource.getConnection()) {
-                String pizzaInfoSql = "SELECT pizza_info.version, pizza_info.id\n FROM pizza_manager.pizza_info\n" +
-                        "INNER JOIN pizza_manager.menu_item ON menu_item.pizza_info_id=pizza_info.id\n" +
-                        "WHERE pizza_manager.menu_item.id=? AND pizza_manager.menu_item.version=?\n " +
-                        "ORDER BY pizza_info.id;";
-                try (PreparedStatement statement = con.prepareStatement(pizzaInfoSql)) {
-                    statement.setLong(1, menuItem.getId());
-                    statement.setInt(2, menuItem.getVersion());
-                    try (ResultSet resultSet = statement.executeQuery()) {
-                        while (resultSet.next()) {
-                            menuItem.getInfo().setVersion(resultSet.getInt("version"));
-                            menuItem.getInfo().setId(resultSet.getLong("id"));
-                        }
-                    }
+    public IMenuItem save(IMenuItem menuItem) {
+        if (menuItem.getId() != null || menuItem.getVersion() != null) {
+            throw new IllegalStateException("MenuItem id & version should be empty");
+        }
+        try (Connection con = dataSource.getConnection()) {
+            try (PreparedStatement statement = con.prepareStatement(INSERT_MENU_ITEM_SQL, Statement.RETURN_GENERATED_KEYS)) {
+                long rows = 0;
+                statement.setDouble(1, menuItem.getPrice());
+                statement.setLong(2, menuItem.getPizzaInfoId());
+                statement.setLong(3, menuItem.getMenuId());
+                rows += statement.executeUpdate();
+                if (rows == 0) {
+                    throw new SQLException("menu_item table insert failed, no rows affected");
                 }
-                String menuItemSqlUpdate = "UPDATE pizza_manager.menu_item\n " +
-                        "SET price=?, version=version+1\n" +
-                        "WHERE pizza_manager.menu_item.id=? AND pizza_manager.menu_item.version=?\n";
-                try (PreparedStatement statement = con.prepareStatement(menuItemSqlUpdate)) {
-                    long rows = 0;
-                    statement.setDouble(1, menuItem.getPrice());
-                    statement.setLong(2, menuItem.getId());
-                    statement.setInt(3, menuItem.getVersion());
-                    rows += statement.executeUpdate();
-                    if (rows == 0) {
-                        throw new SQLException("menu_item table update failed, no rows affected");
-                    }
+                if (rows > 1) {
+                    throw new IllegalStateException("Incorrect menu_item table update, more than 1 row affected");
                 }
-                String pizzaInfoSqlUpdate = "UPDATE pizza_manager.pizza_info\n " +
-                        "SET name=?, description=?, size=?, version=version+1\n" +
-                        "WHERE pizza_manager.pizza_info.id=? AND pizza_manager.pizza_info.version=?\n";
-                try (PreparedStatement statement = con.prepareStatement(pizzaInfoSqlUpdate)) {
-                    long rows = 0;
-                    statement.setString(1, menuItem.getInfo().getName());
-                    statement.setString(2, menuItem.getInfo().getDescription());
-                    statement.setLong(3, menuItem.getInfo().getSize());
-                    statement.setLong(4, menuItem.getInfo().getId());
-                    statement.setInt(5, menuItem.getInfo().getVersion());
-                    rows += statement.executeUpdate();
-                    if (rows == 0) {
-                        throw new SQLException("pizza_info table update failed, no rows affected");
-                    }
+                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                    generatedKeys.next();
+                    return new MenuItem(generatedKeys.getLong(1), menuItem.getPrice(),
+                            menuItem.getPizzaInfoId(), menuItem.getMenuId());
                 }
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
             }
-        } else throw new IllegalStateException("Error code 500. MenuItem id is not valid");
-        return iMenuItem;
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to save new MenuItem");
+        }
+    }
+
+    @Override
+    public IMenuItem update(IMenuItem menuItem, Long id, Integer version) {
+        if (menuItem.getId() != null || menuItem.getVersion() != null) {
+            throw new IllegalStateException("MenuItem id & version should be empty");
+        }
+        try (Connection con = dataSource.getConnection()) {
+            try (PreparedStatement statement = con.prepareStatement(UPDATE_MENU_ITEM_SQL)) {
+                long rows = 0;
+                statement.setDouble(1, menuItem.getPrice());
+                statement.setLong(2, menuItem.getPizzaInfoId());
+                statement.setLong(3, menuItem.getMenuId());
+                statement.setLong(4, id);
+                statement.setInt(5, version);
+                rows += statement.executeUpdate();
+                if (rows == 0) {
+                    throw new IllegalArgumentException("menu_item table update failed, version does not match update denied");
+                }
+                if (rows > 1) {
+                    throw new IllegalStateException("Incorrect menu_item table update, more than 1 row affected");
+                }
+                return new MenuItem(id, menuItem.getPrice(), menuItem.getPizzaInfoId(), menuItem.getMenuId());
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to update menu_item by id:" + id);
+        }
     }
 
     @Override
     public IMenuItem get(Long id) {
-        if (!this.isIdExist(id)) {
-            throw new IllegalStateException("Error code 500. MenuItem id is not valid");
-        }
         try (Connection con = dataSource.getConnection()) {
-            MenuItem item = new MenuItem(new PizzaInfo());
-            item.setId(id);
-            String sql = "SELECT pizza_manager.menu_item.id AS miid, price, pizza_manager.menu_item.creation_date AS micd, pizza_manager.menu_item.version AS mied," +
-                    "pizza_info_id, name, description, size, pizza_manager.pizza_info.creation_date AS picd, pizza_manager.pizza_info.version AS pied\n " +
-                    "FROM pizza_manager.menu_item\n" +
-                    "INNER JOIN pizza_manager.pizza_info ON menu_item.pizza_info_id=pizza_info.id\n" +
-                    "WHERE pizza_manager.menu_item.id=?\n ORDER BY menu_item.id, pizza_info_id;";
-            try (PreparedStatement statement = con.prepareStatement(sql)) {
+            try (PreparedStatement statement = con.prepareStatement(SELECT_MENU_ITEM_BY_ID_SQL)) {
                 statement.setLong(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        item.setId(resultSet.getLong("miid"));
-                        double price = resultSet.getDouble("price");
-                        if (!resultSet.wasNull()) {
-                            item.setPrice(price);
-                        }
-                        item.setCreationDate(resultSet.getTimestamp("micd").toLocalDateTime());
-                        item.setVersion(resultSet.getInt("mied"));
-                        long itemId = resultSet.getLong("pizza_info_id");
-                        if (!resultSet.wasNull()) {
-                            item.getInfo().setId(itemId);
-                        }
-                        item.getInfo().setName(resultSet.getString("name"));
-                        item.getInfo().setDescription(resultSet.getString("description"));
-                        int size = resultSet.getInt("size");
-                        if (!resultSet.wasNull()) {
-                            item.getInfo().setSize(size);
-                        }
-                        item.getInfo().setCreationDate(resultSet.getTimestamp("picd").toLocalDateTime());
-                        item.getInfo().setVersion(resultSet.getInt("pied"));
-                    }
-                    return item;
+                    resultSet.next();
+                    return this.mapper(resultSet);
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to get Menu Item by id:" + id);
         }
     }
 
@@ -298,5 +223,11 @@ public class MenuItemDao implements IMenuItemDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private IMenuItem mapper(ResultSet resultSet) throws SQLException {
+        return new MenuItem(resultSet.getLong("id"), resultSet.getDouble("price"),
+                resultSet.getLong("pizza_info_id"), resultSet.getTimestamp("creation_date").toLocalDateTime(),
+                resultSet.getInt("version"), resultSet.getLong("menu_id"));
     }
 }

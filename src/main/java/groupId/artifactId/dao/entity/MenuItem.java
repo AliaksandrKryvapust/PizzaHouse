@@ -17,32 +17,21 @@ public class MenuItem implements IMenuItem {
     public MenuItem() {
     }
 
-    public MenuItem(IPizzaInfo pizzaInfo) {
-        this.pizzaInfo = pizzaInfo;
-    }
-
-    public MenuItem(IPizzaInfo pizzaInfo, Double price) {
-        this.pizzaInfo = pizzaInfo;
-        this.price = price;
-    }
-
     public MenuItem(Double price, Long pizzaInfoId, Long menuId) {
         this.price = price;
         this.pizzaInfoId = pizzaInfoId;
         this.menuId = menuId;
     }
 
-    public MenuItem(Long id, IPizzaInfo pizzaInfo, Double price, Integer version) {
+    public MenuItem(Long id, Double price, Long pizzaInfoId, Long menuId) {
         this.id = id;
-        this.pizzaInfo = pizzaInfo;
         this.price = price;
-        this.version = version;
+        this.pizzaInfoId = pizzaInfoId;
+        this.menuId = menuId;
     }
 
-    public MenuItem(Long id, IPizzaInfo pizzaInfo, Double price, Long pizzaInfoId, LocalDateTime creationDate,
-                    Integer version, Long menuId) {
+    public MenuItem(Long id, Double price, Long pizzaInfoId, LocalDateTime creationDate, Integer version, Long menuId) {
         this.id = id;
-        this.pizzaInfo = pizzaInfo;
         this.price = price;
         this.pizzaInfoId = pizzaInfoId;
         this.creationDate = creationDate;
