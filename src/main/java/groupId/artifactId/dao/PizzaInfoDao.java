@@ -15,8 +15,11 @@ public class PizzaInfoDao implements IPizzaInfoDao {
             "VALUES (?, ?, ?);";
     private static final String UPDATE_PIZZA_INFO_SQL = "UPDATE pizza_manager.pizza_info SET name=?, description=?, size=?, " +
             "version=version+1 WHERE id=? AND version=?;";
+    private static final String SELECT_PIZZA_INFO_SQL = "SELECT id, name, description, size, creation_date, version " +
+            "FROM pizza_manager.pizza_info ORDER BY id;";
     private static final String SELECT_PIZZA_INFO_BY_ID_SQL = "SELECT id, name, description, size, creation_date, " +
             "version FROM pizza_manager.pizza_info WHERE id=?;";
+    private static final String SELECT_PIZZA_INFO_BY_NAME_SQL = "SELECT name FROM pizza_manager.pizza_info WHERE name=?;";
     private static final String DELETE_PIZZA_INFO_SQL = "DELETE FROM pizza_manager.pizza_info WHERE id=? AND version=?;";
 
     public PizzaInfoDao(DataSource dataSource) {
@@ -48,7 +51,7 @@ public class PizzaInfoDao implements IPizzaInfoDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to save PizzaInfo");
+            throw new RuntimeException("Failed to save new PizzaInfo");
         }
     }
 
@@ -75,7 +78,7 @@ public class PizzaInfoDao implements IPizzaInfoDao {
                 return new PizzaInfo(id, info.getName(), info.getDescription(), info.getSize());
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to update pizza_info");
+            throw new RuntimeException("Failed to update pizza_info by id:" + id);
         }
     }
 
@@ -90,7 +93,7 @@ public class PizzaInfoDao implements IPizzaInfoDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to get Menu");
+            throw new RuntimeException("Failed to get Pizza Info by id:" + id);
         }
     }
 
@@ -110,7 +113,7 @@ public class PizzaInfoDao implements IPizzaInfoDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to delete pizza_info");
+            throw new RuntimeException("Failed to delete pizza info with id:" + id);
         }
     }
 
@@ -118,53 +121,45 @@ public class PizzaInfoDao implements IPizzaInfoDao {
     public List<IPizzaInfo> get() {
         try (Connection con = dataSource.getConnection()) {
             List<IPizzaInfo> iPizzaInfos = new ArrayList<>();
-            String sqlSelect = "SELECT pizza_info.id AS id, name, description, size, pizza_info.creation_date AS picd, pizza_info.version  AS pied\n" +
-                    "FROM pizza_manager.pizza_info\n" +
-                    "ORDER BY id;";
-            try (PreparedStatement statement = con.prepareStatement(sqlSelect)) {
+            try (PreparedStatement statement = con.prepareStatement(SELECT_PIZZA_INFO_SQL)) {
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        PizzaInfo temp = new PizzaInfo();
-                        long id = resultSet.getLong("id");
-                        if (!resultSet.wasNull()) {
-                            temp.setId(id);
-                        }
-                        temp.setName(resultSet.getString("name"));
-                        temp.setDescription(resultSet.getString("description"));
-                        long size = resultSet.getLong("size");
-                        if (!resultSet.wasNull()) {
-                            temp.setSize(size);
-                        }
-                        temp.setCreationDate(resultSet.getTimestamp("picd").toLocalDateTime());
-                        temp.setVersion(resultSet.getInt("pied"));
-                        iPizzaInfos.add(temp);
+                        iPizzaInfos.add(this.mapper(resultSet));
                     }
                 }
                 return iPizzaInfos;
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to get List of pizza Info");
         }
     }
 
     @Override
     public Boolean exist(Long id) {
         try (Connection con = dataSource.getConnection()) {
-            String sql = "SELECT id FROM pizza_manager.pizza_info\n WHERE id=?\n ORDER BY id;";
-            try (PreparedStatement statement = con.prepareStatement(sql)) {
+            try (PreparedStatement statement = con.prepareStatement(SELECT_PIZZA_INFO_BY_ID_SQL)) {
                 statement.setLong(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     return resultSet.next();
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to select Pizza Info with id:"+ id);
         }
     }
 
     @Override
     public Boolean doesPizzaExist(String name) {
-        return null;
+        try (Connection con = dataSource.getConnection()) {
+            try (PreparedStatement statement = con.prepareStatement(SELECT_PIZZA_INFO_BY_NAME_SQL)) {
+                statement.setString(1, name);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    return resultSet.next();
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to select Pizza Info with name:"+ name);
+        }
     }
 
     private IPizzaInfo mapper(ResultSet resultSet) throws SQLException {
