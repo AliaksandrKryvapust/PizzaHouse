@@ -1,5 +1,7 @@
 package groupId.artifactId.dao.entity.api;
 
+import java.time.LocalDateTime;
+
 public interface IPizzaInfo {
     Long getId();
 
@@ -7,7 +9,9 @@ public interface IPizzaInfo {
 
     String getDescription();
 
-    Long getSize();
+    Integer getSize();
+
+    LocalDateTime getCreationDate();
 
     Integer getVersion();
 

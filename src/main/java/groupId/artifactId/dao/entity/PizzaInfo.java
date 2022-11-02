@@ -79,11 +79,12 @@ public class PizzaInfo implements IPizzaInfo {
     public Integer getSize() {
         return size;
     }
-
+    @Override
     public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
+    @Override
     public Integer getVersion() {
         return version;
     }

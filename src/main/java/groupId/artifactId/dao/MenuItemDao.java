@@ -154,7 +154,7 @@ public class MenuItemDao implements IMenuItemDao {
                         }
                         item.getInfo().setName(resultSet.getString("name"));
                         item.getInfo().setDescription(resultSet.getString("description"));
-                        long size = resultSet.getLong("size");
+                        int size = resultSet.getInt("size");
                         if (!resultSet.wasNull()) {
                             item.getInfo().setSize(size);
                         }
@@ -268,7 +268,7 @@ public class MenuItemDao implements IMenuItemDao {
                                 }
                                 item.getInfo().setName(resultSet.getString("name"));
                                 item.getInfo().setDescription(resultSet.getString("description"));
-                                long size = resultSet.getLong("size");
+                                int size = resultSet.getInt("size");
                                 if (!resultSet.wasNull()) {
                                     item.getInfo().setSize(size);
                                 }
