@@ -8,27 +8,27 @@ public class PizzaInfo implements IPizzaInfo {
     private Long id;
     private String name;
     private String description;
-    private Long size;
+    private Integer size;
     private LocalDateTime creationDate;
     private Integer version;
 
     public PizzaInfo() {
     }
 
-    public PizzaInfo(String name, String description, Long size) {
+    public PizzaInfo(String name, String description, Integer size) {
         this.name = name;
         this.description = description;
         this.size = size;
     }
 
-    public PizzaInfo(Long id, String name, String description, Long size) {
+    public PizzaInfo(Long id, String name, String description, Integer size) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.size = size;
     }
 
-    public PizzaInfo(Long id, String name, String description, Long size, LocalDateTime creationDate, Integer version) {
+    public PizzaInfo(Long id, String name, String description, Integer size, LocalDateTime creationDate, Integer version) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -53,7 +53,7 @@ public class PizzaInfo implements IPizzaInfo {
         this.description = description;
     }
 
-    public void setSize(Long size) {
+    public void setSize(Integer size) {
         this.size = size;
     }
 
@@ -76,7 +76,7 @@ public class PizzaInfo implements IPizzaInfo {
     }
 
     @Override
-    public Long getSize() {
+    public Integer getSize() {
         return size;
     }
 
