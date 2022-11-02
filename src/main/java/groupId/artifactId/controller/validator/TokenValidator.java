@@ -31,7 +31,7 @@ public class TokenValidator implements ITokenValidator {
                 throw new IllegalStateException("Error code 500. None of MenuItem have been sent as an input");
             }
             if (dto.getMenuItem().getInfo() == null) {
-                throw new IllegalStateException("Error code 500. None of PizzaInfoDto have been sent as an input");
+                throw new IllegalStateException("Error code 500. None of PizzaInfoDtoInput have been sent as an input");
             }
             if (dto.getMenuItem().getInfo().getName() == null || dto.getMenuItem().getInfo().getName().isBlank()) {
                 throw new IllegalArgumentException("Error code 400. Pizza`s name is not valid");

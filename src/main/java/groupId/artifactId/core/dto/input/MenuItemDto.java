@@ -1,7 +1,7 @@
 package groupId.artifactId.core.dto.input;
 
 public class MenuItemDto {
-    private PizzaInfoDto pizzaInfo;
+    private PizzaInfoDtoInput pizzaInfo;
     private double price;
 
     private Long menuId;
@@ -10,19 +10,19 @@ public class MenuItemDto {
     public MenuItemDto() {
     }
 
-    public MenuItemDto(PizzaInfoDto pizzaInfo, double price) {
+    public MenuItemDto(PizzaInfoDtoInput pizzaInfo, double price) {
         this.pizzaInfo = pizzaInfo;
         this.price = price;
     }
 
-    public MenuItemDto(PizzaInfoDto pizzaInfo, double price, Long menuId) {
+    public MenuItemDto(PizzaInfoDtoInput pizzaInfo, double price, Long menuId) {
         this.pizzaInfo = pizzaInfo;
         this.price = price;
         this.menuId = menuId;
     }
 
-    public void setPizzaInfo(PizzaInfoDto pizzaInfoDto) {
-        this.pizzaInfo = pizzaInfoDto;
+    public void setPizzaInfo(PizzaInfoDtoInput pizzaInfoDtoInput) {
+        this.pizzaInfo = pizzaInfoDtoInput;
     }
 
     public void setPrice(double price) {
@@ -37,7 +37,7 @@ public class MenuItemDto {
         this.version = version;
     }
 
-    public PizzaInfoDto getInfo() {
+    public PizzaInfoDtoInput getInfo() {
         return this.pizzaInfo;
     }
 

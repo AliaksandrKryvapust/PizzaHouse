@@ -117,21 +117,21 @@ public class JsonConverter {
         }
     }
 
-    public static PizzaInfoDto fromJsonToPizzaInfo(ServletInputStream servletInputStream) {
+    public static PizzaInfoDtoInput fromJsonToPizzaInfo(ServletInputStream servletInputStream) {
         try {
-            return new ObjectMapper().readValue(servletInputStream, PizzaInfoDto.class);
+            return new ObjectMapper().readValue(servletInputStream, PizzaInfoDtoInput.class);
         } catch (IOException e) {
-            throw new IncorrectJsonParseException("failed to read servletInputStream of PizzaInfoDto.class", e);
+            throw new IncorrectJsonParseException("failed to read servletInputStream of PizzaInfoDtoInput.class", e);
         }
     }
 
-    public static PizzaInfoDto fromJsonToPizzaInfoUpdate(ServletInputStream servletInputStream) {
+    public static PizzaInfoDtoInput fromJsonToPizzaInfoUpdate(ServletInputStream servletInputStream) {
         try {
-            PizzaInfoDto dto = new ObjectMapper().readValue(servletInputStream, new TypeReference<>() {
+            PizzaInfoDtoInput dto = new ObjectMapper().readValue(servletInputStream, new TypeReference<>() {
             });
             return dto;
         } catch (IOException e) {
-            throw new IncorrectJsonParseException("failed to read servletInputStream of PizzaInfoDto.class", e);
+            throw new IncorrectJsonParseException("failed to read servletInputStream of PizzaInfoDtoInput.class", e);
         }
     }
     public static OrderDto fromJsonToOrder(ServletInputStream servletInputStream) {
