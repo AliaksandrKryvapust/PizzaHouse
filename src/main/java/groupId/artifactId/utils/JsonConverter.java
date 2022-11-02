@@ -6,8 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import groupId.artifactId.core.dto.input.*;
 import groupId.artifactId.core.dto.output.MenuDtoOutput;
+import groupId.artifactId.core.dto.output.PizzaInfoDtoOutput;
 import groupId.artifactId.dao.entity.api.IMenuItem;
-import groupId.artifactId.dao.entity.api.IPizzaInfo;
 import groupId.artifactId.exceptions.IncorrectJsonParseException;
 import groupId.artifactId.storage.entity.api.ICompletedOrder;
 import groupId.artifactId.storage.entity.api.IOrderData;
@@ -50,7 +50,7 @@ public class JsonConverter {
         }
     }
 
-    public static String fromPizzaInfoListToJson(List<IPizzaInfo> items) {
+    public static String fromPizzaInfoListToJson(List<PizzaInfoDtoOutput> items) {
         try {
             return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(items);
         } catch (JsonProcessingException e) {
@@ -58,13 +58,14 @@ public class JsonConverter {
         }
     }
 
-    public static String fromPizzaInfoToJson(IPizzaInfo pizzaInfo) {
+    public static String fromPizzaInfoToJson(PizzaInfoDtoOutput pizzaInfo) {
         try {
             return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(pizzaInfo);
         } catch (JsonProcessingException e) {
-            throw new IncorrectJsonParseException("failed to write IPizzaInfo as json",e);
+            throw new IncorrectJsonParseException("failed to write IPizzaInfo as json", e);
         }
     }
+
     public static String fromTokenToJson(IToken token) {
         try {
             return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(token);
@@ -125,15 +126,6 @@ public class JsonConverter {
         }
     }
 
-    public static PizzaInfoDtoInput fromJsonToPizzaInfoUpdate(ServletInputStream servletInputStream) {
-        try {
-            PizzaInfoDtoInput dto = new ObjectMapper().readValue(servletInputStream, new TypeReference<>() {
-            });
-            return dto;
-        } catch (IOException e) {
-            throw new IncorrectJsonParseException("failed to read servletInputStream of PizzaInfoDtoInput.class", e);
-        }
-    }
     public static OrderDto fromJsonToOrder(ServletInputStream servletInputStream) {
         try {
             return new ObjectMapper().readValue(servletInputStream, OrderDto.class);
