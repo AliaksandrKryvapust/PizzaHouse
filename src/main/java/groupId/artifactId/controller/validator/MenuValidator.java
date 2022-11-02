@@ -28,7 +28,7 @@ public class MenuValidator implements IMenuValidator {
     }
 
     @Override
-    public void validateMenu(MenuDtoInput menuDtoInput) {
+    public void validate(MenuDtoInput menuDtoInput) {
         if (menuDtoInput.getName() == null || menuDtoInput.getName().isBlank()) {
             throw new IllegalArgumentException("Menu`s name is not valid");
         }

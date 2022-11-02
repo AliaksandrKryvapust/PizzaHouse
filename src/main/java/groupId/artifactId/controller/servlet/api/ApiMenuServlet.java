@@ -64,7 +64,7 @@ public class ApiMenuServlet extends HttpServlet {
             MenuDtoInput menu = JsonConverter.fromJsonToMenu(req.getInputStream());
             if (!menuService.exist(menu.getName())) {
                 try {
-                    menuValidator.validateMenu(menu);
+                    menuValidator.validate(menu);
                 } catch (IllegalArgumentException e) {
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 }
@@ -98,7 +98,7 @@ public class ApiMenuServlet extends HttpServlet {
                 if (menuService.isIdValid(Long.valueOf(id))) {
                     MenuDtoInput menu = JsonConverter.fromJsonToMenu(req.getInputStream());
                     try {
-                        menuValidator.validateMenu(menu);
+                        menuValidator.validate(menu);
                     } catch (IllegalArgumentException e) {
                         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                     }
