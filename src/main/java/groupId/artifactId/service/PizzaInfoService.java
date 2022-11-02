@@ -1,64 +1,63 @@
 package groupId.artifactId.service;
 
-import groupId.artifactId.controller.validator.PizzaInfoValidator;
-import groupId.artifactId.core.dto.input.PizzaInfoDto;
-import groupId.artifactId.core.mapper.MenuMapper;
-import groupId.artifactId.dao.PizzaInfoDao;
+import groupId.artifactId.core.dto.input.PizzaInfoDtoInput;
+import groupId.artifactId.core.dto.output.PizzaInfoDtoOutput;
+import groupId.artifactId.core.mapper.PizzaInfoMapper;
 import groupId.artifactId.dao.api.IPizzaInfoDao;
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
 import groupId.artifactId.service.api.IPizzaInfoService;
-import groupId.artifactId.controller.validator.api.IPizzaInfoValidator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PizzaInfoService implements IPizzaInfoService {
-    private static PizzaInfoService firstInstance = null;
+
     private final IPizzaInfoDao dao;
-    private final IPizzaInfoValidator validator;
 
-    private PizzaInfoService() {
-        this.dao = PizzaInfoDao.getInstance();
-        this.validator = PizzaInfoValidator.getInstance();
+    public PizzaInfoService(IPizzaInfoDao dao) {
+        this.dao = dao;
     }
 
-    public static PizzaInfoService getInstance() {
-        synchronized (PizzaInfoService.class) {
-            if (firstInstance == null) {
-                firstInstance = new PizzaInfoService();
-            }
+    @Override
+    public PizzaInfoDtoOutput save(PizzaInfoDtoInput pizzaInfoDtoInput) {
+        IPizzaInfo pizzaInfo = this.dao.save(PizzaInfoMapper.pizzaInfoInputMapping(pizzaInfoDtoInput));
+        return PizzaInfoMapper.pizzaInfoOutputMapping(pizzaInfo);
+    }
+
+    @Override
+    public List<PizzaInfoDtoOutput> get() {
+        List<PizzaInfoDtoOutput> temp = new ArrayList<>();
+        for (IPizzaInfo pizzaInfo : this.dao.get()) {
+            PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoMapper.pizzaInfoOutputMapping(pizzaInfo);
+            temp.add(pizzaInfoDtoOutput);
         }
-        return firstInstance;
+        return temp;
     }
 
     @Override
-    public void save(PizzaInfoDto pizzaInfoDto) {
-        this.validator.validatePizzaInfo(pizzaInfoDto);
-        this.dao.save(MenuMapper.pizzaInfoMapping(pizzaInfoDto));
-    }
-
-    @Override
-    public List<IPizzaInfo> get() {
-        return this.dao.get();
-    }
-
-    @Override
-    public IPizzaInfo get(Long id) {
-        return this.dao.get(id);
+    public PizzaInfoDtoOutput get(Long id) {
+        return PizzaInfoMapper.pizzaInfoOutputMapping(this.dao.get(id));
     }
 
     @Override
     public Boolean isIdValid(Long id) {
-        return this.dao.isIdExist(id);
+        return this.dao.exist(id);
     }
 
     @Override
-    public void update(PizzaInfoDto pizzaInfoDto, String id, String version) {
-        this.validator.validatePizzaInfo(pizzaInfoDto);
-        this.dao.update(MenuMapper.pizzaInfoMapping(pizzaInfoDto), Long.valueOf(id), Integer.valueOf(version));
+    public Boolean exist(String name) {
+        return this.dao.doesPizzaExist(name);
     }
 
     @Override
-    public void delete(String id, String version) {
-        this.dao.delete(Long.valueOf(id), Integer.valueOf(version), false);
+    public PizzaInfoDtoOutput update(PizzaInfoDtoInput pizzaInfoDtoInput, String id, String version) {
+        IPizzaInfo pizzaInfo = this.dao.update(PizzaInfoMapper.pizzaInfoInputMapping(pizzaInfoDtoInput),
+                Long.valueOf(id), Integer.valueOf(version));
+        return PizzaInfoMapper.pizzaInfoOutputMapping(pizzaInfo);
+    }
+
+    @Override
+    public void delete(String id, String version, String delete) {
+        this.dao.delete(Long.valueOf(id), Integer.valueOf(version), Boolean.valueOf(delete));
     }
 }
