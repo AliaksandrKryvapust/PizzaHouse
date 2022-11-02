@@ -82,7 +82,7 @@ public class MenuDao implements IMenuDao {
                 }
                 try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                     generatedKeys.next();
-                    return new Menu(Long.valueOf(generatedKeys.getString(1)), menu.getName(), menu.getEnable());
+                    return new Menu(generatedKeys.getLong(1), menu.getName(), menu.getEnable());
                 }
             }
         } catch (SQLException e) {

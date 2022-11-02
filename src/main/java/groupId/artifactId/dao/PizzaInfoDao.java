@@ -46,7 +46,7 @@ public class PizzaInfoDao implements IPizzaInfoDao {
                 }
                 try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                     generatedKeys.next();
-                    return new PizzaInfo(Long.valueOf(generatedKeys.getString(1)), info.getName(),
+                    return new PizzaInfo(generatedKeys.getLong(1), info.getName(),
                             info.getDescription(), info.getSize());
                 }
             }
