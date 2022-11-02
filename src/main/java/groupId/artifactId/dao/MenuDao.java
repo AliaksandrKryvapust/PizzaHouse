@@ -38,7 +38,7 @@ public class MenuDao implements IMenuDao {
             try (PreparedStatement statement = con.prepareStatement(SELECT_MENU_SQL)) {
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        menus.add(mapper(resultSet));
+                        menus.add(this.mapper(resultSet));
                     }
                 }
             }
@@ -59,7 +59,7 @@ public class MenuDao implements IMenuDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to get Menu");
+            throw new RuntimeException("Failed to get Menu by id:" + id);
         }
     }
 
@@ -86,7 +86,7 @@ public class MenuDao implements IMenuDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to save Menu");
+            throw new RuntimeException("Failed to save new Menu");
         }
 
     }
@@ -113,7 +113,7 @@ public class MenuDao implements IMenuDao {
                 return new Menu(id, menu.getName(), menu.getEnable());
             }
             } catch (SQLException e) {
-            throw new RuntimeException("Failed to update Menu");
+            throw new RuntimeException("Failed to update Menu with id:" + id);
             }
     }
 
@@ -133,7 +133,7 @@ public class MenuDao implements IMenuDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to delete Menu");
+            throw new RuntimeException("Failed to delete Menu with id:" +id);
         }
     }
 
@@ -147,7 +147,7 @@ public class MenuDao implements IMenuDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to select Menu with id:"+ id);
         }
     }
 
@@ -161,7 +161,7 @@ public class MenuDao implements IMenuDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to select Menu with name:"+ name);
         }
     }
 
