@@ -9,8 +9,10 @@ public class MenuItem implements IMenuItem {
     private Long id;
     private IPizzaInfo pizzaInfo;
     private Double price;
+    private Long pizzaInfoId;
     private LocalDateTime creationDate;
     private Integer version;
+    private Long menuId;
 
     public MenuItem() {
     }
@@ -24,6 +26,12 @@ public class MenuItem implements IMenuItem {
         this.price = price;
     }
 
+    public MenuItem(Double price, Long pizzaInfoId, Long menuId) {
+        this.price = price;
+        this.pizzaInfoId = pizzaInfoId;
+        this.menuId = menuId;
+    }
+
     public MenuItem(Long id, IPizzaInfo pizzaInfo, Double price, Integer version) {
         this.id = id;
         this.pizzaInfo = pizzaInfo;
@@ -31,33 +39,33 @@ public class MenuItem implements IMenuItem {
         this.version = version;
     }
 
-    public void setId(Long id) {
+    public MenuItem(Long id, IPizzaInfo pizzaInfo, Double price, Long pizzaInfoId, LocalDateTime creationDate,
+                    Integer version, Long menuId) {
         this.id = id;
-    }
-
-    public void setPizzaInfo(PizzaInfo pizzaInfo) {
         this.pizzaInfo = pizzaInfo;
-    }
-
-    public void setPrice(double price) {
         this.price = price;
-    }
-
-    public void setCreationDate(LocalDateTime creationDate) {
+        this.pizzaInfoId = pizzaInfoId;
         this.creationDate = creationDate;
+        this.version = version;
+        this.menuId = menuId;
     }
 
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
     @Override
     public Long getId() {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @Override
-    public PizzaInfo getInfo() {
-        return (PizzaInfo) this.pizzaInfo;
+    public IPizzaInfo getInfo() {
+        return pizzaInfo;
+    }
+
+    public void setPizzaInfo(IPizzaInfo pizzaInfo) {
+        this.pizzaInfo = pizzaInfo;
     }
 
     @Override
@@ -65,12 +73,44 @@ public class MenuItem implements IMenuItem {
         return price;
     }
 
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    @Override
+    public Long getPizzaInfoId() {
+        return pizzaInfoId;
+    }
+
+    public void setPizzaInfoId(Long pizzaInfoId) {
+        this.pizzaInfoId = pizzaInfoId;
+    }
+
+    @Override
     public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    @Override
     public Integer getVersion() {
         return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
+    @Override
+    public Long getMenuId() {
+        return menuId;
+    }
+
+    public void setMenuId(Long menuId) {
+        this.menuId = menuId;
     }
 
     @Override
@@ -79,8 +119,10 @@ public class MenuItem implements IMenuItem {
                 "id=" + id +
                 ", pizzaInfo=" + pizzaInfo +
                 ", price=" + price +
+                ", pizzaInfoId=" + pizzaInfoId +
                 ", creationDate=" + creationDate +
                 ", version=" + version +
+                ", menuId=" + menuId +
                 '}';
     }
 }
