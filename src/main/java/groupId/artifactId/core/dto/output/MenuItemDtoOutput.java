@@ -9,6 +9,7 @@ public class MenuItemDtoOutput {
     private LocalDateTime creation_date;
     private Integer version;
     private Long menuId;
+    private PizzaInfoDtoOutput pizzaInfo;
 
     public MenuItemDtoOutput() {
     }
@@ -27,6 +28,16 @@ public class MenuItemDtoOutput {
         this.creation_date = creation_date;
         this.version = version;
         this.menuId = menuId;
+    }
+
+    public MenuItemDtoOutput(Long id, Double price, Long pizzaInfoId, LocalDateTime creation_date, Integer version, Long menuId, PizzaInfoDtoOutput pizzaInfo) {
+        this.id = id;
+        this.price = price;
+        this.pizzaInfoId = pizzaInfoId;
+        this.creation_date = creation_date;
+        this.version = version;
+        this.menuId = menuId;
+        this.pizzaInfo = pizzaInfo;
     }
 
     public Long getId() {
@@ -77,15 +88,11 @@ public class MenuItemDtoOutput {
         this.menuId = menuId;
     }
 
-    @Override
-    public String toString() {
-        return "MenuItemDtoOutput{" +
-                "id=" + id +
-                ", price=" + price +
-                ", pizzaInfoId=" + pizzaInfoId +
-                ", creation_date=" + creation_date +
-                ", version=" + version +
-                ", menuId=" + menuId +
-                '}';
+    public PizzaInfoDtoOutput getPizzaInfo() {
+        return pizzaInfo;
+    }
+
+    public void setPizzaInfo(PizzaInfoDtoOutput pizzaInfo) {
+        this.pizzaInfo = pizzaInfo;
     }
 }
