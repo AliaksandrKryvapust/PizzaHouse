@@ -39,6 +39,11 @@ public class MenuItemService implements IMenuItemService {
     }
 
     @Override
+    public MenuItemDtoOutput getAllData(Long id) {
+        return MenuItemMapper.menuItemOutputMapping(this.dao.getAllData(id));
+    }
+
+    @Override
     public Boolean isIdValid(Long id) {
         return this.dao.exist(id);
     }
