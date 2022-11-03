@@ -1,64 +1,56 @@
 package groupId.artifactId.service;
 
-import groupId.artifactId.controller.validator.MenuItemValidator;
-import groupId.artifactId.core.dto.input.MenuItemDto;
-import groupId.artifactId.core.mapper.MenuMapper;
-import groupId.artifactId.dao.MenuItemDao;
+import groupId.artifactId.core.dto.input.MenuItemDtoInput;
+import groupId.artifactId.core.dto.output.MenuItemDtoOutput;
+import groupId.artifactId.core.mapper.MenuItemMapper;
 import groupId.artifactId.dao.api.IMenuItemDao;
 import groupId.artifactId.dao.entity.api.IMenuItem;
 import groupId.artifactId.service.api.IMenuItemService;
-import groupId.artifactId.controller.validator.api.IMenuItemValidator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MenuItemService implements IMenuItemService {
-    private static MenuItemService firstInstance = null;
     private final IMenuItemDao dao;
-    private final IMenuItemValidator validator;
 
-    private MenuItemService() {
-        this.dao = MenuItemDao.getInstance();
-        this.validator = MenuItemValidator.getInstance();
+    public MenuItemService(IMenuItemDao dao) {
+        this.dao = dao;
     }
 
-    public static MenuItemService getInstance() {
-        synchronized (MenuItemService.class) {
-            if (firstInstance == null) {
-                firstInstance = new MenuItemService();
-            }
+    @Override
+    public MenuItemDtoOutput save(MenuItemDtoInput menuItemDtoInput) {
+        IMenuItem menuItem = this.dao.save(MenuItemMapper.menuItemInputMapping(menuItemDtoInput));
+        return MenuItemMapper.menuItemOutputMapping(menuItem);
+    }
+
+    @Override
+    public List<MenuItemDtoOutput> get() {
+        List<MenuItemDtoOutput> temp = new ArrayList<>();
+        for (IMenuItem menuItem : this.dao.get()) {
+            MenuItemDtoOutput menuItemDtoOutput = MenuItemMapper.menuItemOutputMapping(menuItem);
+            temp.add(menuItemDtoOutput);
         }
-        return firstInstance;
+        return temp;
     }
 
     @Override
-    public void save(MenuItemDto menuItemDto) {
-        this.validator.validateMenuItem(menuItemDto);
-        this.dao.save(MenuMapper.menuItemMapping(menuItemDto));
-    }
-
-    @Override
-    public List<IMenuItem> get() {
-        return this.dao.get();
-    }
-
-    @Override
-    public IMenuItem get(Long id) {
-        return this.dao.get(id);
+    public MenuItemDtoOutput get(Long id) {
+        return MenuItemMapper.menuItemOutputMapping(this.dao.get(id));
     }
 
     @Override
     public Boolean isIdValid(Long id) {
-        return this.dao.isIdExist(id);
+        return this.dao.exist(id);
     }
 
     @Override
-    public void update(MenuItemDto menuItemDto,  String id, String version) {
-        this.validator.validateMenuItem(menuItemDto);
-        this.dao.update(MenuMapper.menuItemMapping(menuItemDto), Long.valueOf(id), Integer.valueOf(version));
+    public MenuItemDtoOutput update(MenuItemDtoInput menuItemDtoInput, String id, String version) {
+        IMenuItem menuItem = this.dao.update(MenuItemMapper.menuItemInputMapping(menuItemDtoInput), Long.valueOf(id), Integer.valueOf(version));
+        return MenuItemMapper.menuItemOutputMapping(menuItem);
     }
 
     @Override
-    public void delete(String id, String version) {
-        this.dao.delete(Long.valueOf(id), Integer.valueOf(version), false);
+    public void delete(String id, String version, String delete) {
+        this.dao.delete(Long.valueOf(id), Integer.valueOf(version), Boolean.valueOf(delete));
     }
 }
