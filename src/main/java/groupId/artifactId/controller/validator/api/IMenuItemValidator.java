@@ -1,10 +1,7 @@
 package groupId.artifactId.controller.validator.api;
 
-import groupId.artifactId.core.dto.input.MenuItemDto;
+import groupId.artifactId.core.dto.input.MenuItemDtoInput;
 
-import java.util.List;
+public interface IMenuItemValidator extends IValidator<MenuItemDtoInput> {
 
-public interface IMenuItemValidator {
-    void validateListMenuItems(List<MenuItemDto> menuItemDto);
-    void validateMenuItem(MenuItemDto menuItemDto);
 }
