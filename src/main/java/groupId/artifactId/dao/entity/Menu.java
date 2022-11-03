@@ -1,13 +1,14 @@
 package groupId.artifactId.dao.entity;
 
 import groupId.artifactId.dao.entity.api.IMenu;
+import groupId.artifactId.dao.entity.api.IMenuItem;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Menu implements IMenu {
-    private List<MenuItem> items = new ArrayList<>();
+    private List<IMenuItem> items = new ArrayList<>();
     private Long id;
     private LocalDateTime creationDate;
     private Integer version;
@@ -15,10 +16,6 @@ public class Menu implements IMenu {
     private Boolean enable;
 
     public Menu() {
-    }
-
-    public Menu(List<MenuItem> items) {
-        this.items = items;
     }
 
     public Menu(String name, Boolean enable) {
@@ -40,12 +37,21 @@ public class Menu implements IMenu {
         this.enable = enable;
     }
 
-    public void setItems(List<MenuItem> items) {
+    public Menu(List<IMenuItem> items, Long id, LocalDateTime creationDate, Integer version, String name, Boolean enable) {
+        this.items = items;
+        this.id = id;
+        this.creationDate = creationDate;
+        this.version = version;
+        this.name = name;
+        this.enable = enable;
+    }
+
+    public void setItems(List<IMenuItem> items) {
         this.items = items;
     }
 
     @Override
-    public List<MenuItem> getItems() {
+    public List<IMenuItem> getItems() {
         return this.items;
     }
 

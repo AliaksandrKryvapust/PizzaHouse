@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface IMenu {
-    List<MenuItem> getItems();
+    List<IMenuItem> getItems();
 
     Long getId();
 

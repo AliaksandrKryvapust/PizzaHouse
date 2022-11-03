@@ -2,7 +2,11 @@ package groupId.artifactId.dao;
 
 import groupId.artifactId.dao.api.IMenuDao;
 import groupId.artifactId.dao.entity.Menu;
+import groupId.artifactId.dao.entity.MenuItem;
+import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.api.IMenu;
+import groupId.artifactId.dao.entity.api.IMenuItem;
+import groupId.artifactId.dao.entity.api.IPizzaInfo;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -22,6 +26,11 @@ public class MenuDao implements IMenuDao {
     private static final String SELECT_MENU_SQL = "SELECT id, created_at, version, name, enabled " +
             "FROM pizza_manager.menu ORDER BY id;";
     private static final String SELECT_MENU_BY_NAME_SQL = "SELECT name FROM pizza_manager.pizza_info WHERE name=?;";
+    private static final String SELECT_MENU_ALL_DATA_SQL = "SELECT m.id AS mid, m.created_at AS cr, m.version AS ver, m.name AS name," +
+            "enabled, menu_item.id AS miid, price, pizza_info_id, menu_item.creation_date AS micd, menu_item.version AS miv, " +
+            "menu_id, pi.name AS pin, description, size, pi.creation_date AS picd, pi.version AS piv, menu_id " +
+            "FROM pizza_manager.menu_item INNER JOIN pizza_manager.menu m on menu_item.menu_id = m.id " +
+            "INNER JOIN pizza_manager.pizza_info pi on menu_item.pizza_info_id = pi.id WHERE m.id=? ORDER BY miid;";
     private static final String INSERT_MENU_SQL = "INSERT INTO pizza_manager.menu (name, enabled)\n VALUES (?, ?)";
     private static final String UPDATE_MENU_SQL = "UPDATE pizza_manager.menu SET version=version+1, name=?, enabled=? " +
             "WHERE id=? AND version=?";
@@ -133,7 +142,21 @@ public class MenuDao implements IMenuDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to delete Menu with id:" +id);
+            throw new RuntimeException("Failed to delete Menu with id:" + id);
+        }
+    }
+
+    @Override
+    public IMenu getAllData(Long id) {
+        try (Connection con = dataSource.getConnection()) {
+            try (PreparedStatement statement = con.prepareStatement(SELECT_MENU_ALL_DATA_SQL)) {
+                statement.setLong(1, id);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    return this.menuItemMapper(resultSet);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to get Menu by id:" + id);
         }
     }
 
@@ -147,7 +170,7 @@ public class MenuDao implements IMenuDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to select Menu with id:"+ id);
+            throw new RuntimeException("Failed to select Menu with id:" + id);
         }
     }
 
@@ -161,13 +184,34 @@ public class MenuDao implements IMenuDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to select Menu with name:"+ name);
+            throw new RuntimeException("Failed to select Menu with name:" + name);
         }
     }
 
     private IMenu mapper(ResultSet resultSet) throws SQLException {
-        return new Menu(resultSet.getLong("id"), resultSet.getTimestamp("created_at").toLocalDateTime(),
+        List<IMenuItem> items = new ArrayList<>();
+        return new Menu(items, resultSet.getLong("id"), resultSet.getTimestamp("created_at").toLocalDateTime(),
                 resultSet.getInt("version"), resultSet.getString("name"),
                 resultSet.getBoolean("enabled"));
+    }
+
+    private IMenu menuItemMapper(ResultSet resultSet) throws SQLException {
+        List<IMenuItem> items = new ArrayList<>();
+        IMenu menu = new Menu();
+        while (resultSet.next()) {
+            IPizzaInfo pizzaInfo = new PizzaInfo(resultSet.getLong("pizza_info_id"), resultSet.getString("pin"),
+                    resultSet.getString("description"), resultSet.getInt("size"),
+                    resultSet.getTimestamp("picd").toLocalDateTime(), resultSet.getInt("piv"));
+            IMenuItem item = new MenuItem(resultSet.getLong("miid"), pizzaInfo, resultSet.getDouble("price"),
+                    resultSet.getLong("pizza_info_id"), resultSet.getTimestamp("micd").toLocalDateTime(),
+                    resultSet.getInt("miv"), resultSet.getLong("menu_id"));
+            items.add(item);
+            if (!resultSet.isLast()) {
+                menu = new Menu(items, resultSet.getLong("mid"), resultSet.getTimestamp("cr").toLocalDateTime(),
+                        resultSet.getInt("ver"), resultSet.getString("name"),
+                        resultSet.getBoolean("enabled"));
+            }
+        }
+        return menu;
     }
 }
