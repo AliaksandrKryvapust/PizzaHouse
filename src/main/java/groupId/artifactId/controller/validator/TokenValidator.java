@@ -30,22 +30,22 @@ public class TokenValidator implements ITokenValidator {
             if (dto.getMenuItem() == null) {
                 throw new IllegalStateException("Error code 500. None of MenuItem have been sent as an input");
             }
-            if (dto.getMenuItem().getInfo() == null) {
-                throw new IllegalStateException("Error code 500. None of PizzaInfoDtoInput have been sent as an input");
-            }
-            if (dto.getMenuItem().getInfo().getName() == null || dto.getMenuItem().getInfo().getName().isBlank()) {
-                throw new IllegalArgumentException("Error code 400. Pizza`s name is not valid");
-            }
-            IMenuService menuService = MenuServiceSingleton.getInstance();
-            if (!menuService.exist(dto.getMenuItem().getInfo().getName())){
-                throw new IllegalArgumentException("Error code 400. There is no such dish at the menu");
-            }
-            if (dto.getMenuItem().getInfo().getDescription() == null || dto.getMenuItem().getInfo().getDescription().isBlank()) {
-                throw new IllegalArgumentException("Error code 400. Pizza`s description is not valid");
-            }
-            if (dto.getMenuItem().getInfo().getSize() <= 0) {
-                throw new IllegalArgumentException("Error code 400. Pizza`s size is not valid");
-            }
+//            if (dto.getMenuItem().getInfo() == null) {
+//                throw new IllegalStateException("Error code 500. None of PizzaInfoDtoInput have been sent as an input");
+//            }
+//            if (dto.getMenuItem().getInfo().getName() == null || dto.getMenuItem().getInfo().getName().isBlank()) {
+//                throw new IllegalArgumentException("Error code 400. Pizza`s name is not valid");
+//            }
+//            IMenuService menuService = MenuServiceSingleton.getInstance();
+//            if (!menuService.exist(dto.getMenuItem().getInfo().getName())){
+//                throw new IllegalArgumentException("Error code 400. There is no such dish at the menu");
+//            }
+//            if (dto.getMenuItem().getInfo().getDescription() == null || dto.getMenuItem().getInfo().getDescription().isBlank()) {
+//                throw new IllegalArgumentException("Error code 400. Pizza`s description is not valid");
+//            }
+//            if (dto.getMenuItem().getInfo().getSize() <= 0) {
+//                throw new IllegalArgumentException("Error code 400. Pizza`s size is not valid");
+//            }
             if (dto.getMenuItem().getPrice() <= 0) {
                 throw new IllegalArgumentException("Error code 400. Pizza`s price is not valid");
             }
