@@ -39,6 +39,17 @@ public class MenuItem implements IMenuItem {
         this.menuId = menuId;
     }
 
+    public MenuItem(Long id, IPizzaInfo pizzaInfo, Double price, Long pizzaInfoId, LocalDateTime creationDate,
+                    Integer version, Long menuId) {
+        this.id = id;
+        this.pizzaInfo = pizzaInfo;
+        this.price = price;
+        this.pizzaInfoId = pizzaInfoId;
+        this.creationDate = creationDate;
+        this.version = version;
+        this.menuId = menuId;
+    }
+
     @Override
     public Long getId() {
         return id;

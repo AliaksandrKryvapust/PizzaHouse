@@ -2,7 +2,9 @@ package groupId.artifactId.dao;
 
 import groupId.artifactId.dao.api.IMenuItemDao;
 import groupId.artifactId.dao.entity.MenuItem;
+import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.api.IMenuItem;
+import groupId.artifactId.dao.entity.api.IPizzaInfo;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -19,6 +21,10 @@ public class MenuItemDao implements IMenuItemDao {
             "FROM pizza_manager.menu_item ORDER BY id;";
     private static final String SELECT_MENU_ITEM_BY_ID_SQL = "SELECT id, price, pizza_info_id, creation_date, version," +
             " menu_id FROM pizza_manager.menu_item WHERE id=?;";
+    private static final String SELECT_MENU_ITEM_ALL_DATA_SQL = "SELECT menu_item.id AS id, price, pizza_info_id, " +
+            "menu_item.creation_date AS cd, menu_item.version AS ver, menu_id, name, description, size," +
+            "pi.creation_date AS picd, pi.version AS piv, menu_id FROM pizza_manager.menu_item " +
+            "INNER JOIN pizza_manager.pizza_info pi on menu_item.pizza_info_id = pi.id WHERE menu_item.id=?;";
     private static final String DELETE_MENU_ITEM_SQL = "DELETE FROM pizza_manager.menu_item WHERE id=? AND version=?;";
 
     public MenuItemDao(DataSource dataSource) {
@@ -134,6 +140,21 @@ public class MenuItemDao implements IMenuItemDao {
     }
 
     @Override
+    public IMenuItem getAllData(Long id) {
+        try (Connection con = dataSource.getConnection()) {
+            try (PreparedStatement statement = con.prepareStatement(SELECT_MENU_ITEM_ALL_DATA_SQL)) {
+                statement.setLong(1, id);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    resultSet.next();
+                    return this.menuItemMapper(resultSet);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to get Menu Item with pizza info by id:" + id);
+        }
+    }
+
+    @Override
     public Boolean exist(Long id) {
         try (Connection con = dataSource.getConnection()) {
             try (PreparedStatement statement = con.prepareStatement(SELECT_MENU_ITEM_BY_ID_SQL)) {
@@ -148,8 +169,16 @@ public class MenuItemDao implements IMenuItemDao {
     }
 
     private IMenuItem mapper(ResultSet resultSet) throws SQLException {
-        return new MenuItem(resultSet.getLong("id"), resultSet.getDouble("price"),
+        return new MenuItem(resultSet.getLong("id"), new PizzaInfo(), resultSet.getDouble("price"),
                 resultSet.getLong("pizza_info_id"), resultSet.getTimestamp("creation_date").toLocalDateTime(),
                 resultSet.getInt("version"), resultSet.getLong("menu_id"));
+    }
+    private IMenuItem menuItemMapper(ResultSet resultSet) throws SQLException {
+        IPizzaInfo pizzaInfo =  new PizzaInfo(resultSet.getLong("pizza_info_id"), resultSet.getString("name"),
+                resultSet.getString("description"), resultSet.getInt("size"),
+                resultSet.getTimestamp("picd").toLocalDateTime(), resultSet.getInt("piv"));
+        return new MenuItem(resultSet.getLong("id"), pizzaInfo, resultSet.getDouble("price"),
+                resultSet.getLong("pizza_info_id"), resultSet.getTimestamp("cd").toLocalDateTime(),
+                resultSet.getInt("ver"), resultSet.getLong("menu_id"));
     }
 }
