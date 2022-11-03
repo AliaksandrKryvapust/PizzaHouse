@@ -33,6 +33,11 @@ public class MenuService implements IMenuService {
     }
 
     @Override
+    public MenuDtoOutput getAllData(Long id) {
+        return MenuMapper.menuOutputMapping(this.dao.getAllData(id));
+    }
+
+    @Override
     public Boolean isIdValid(Long id) {
         return this.dao.exist(id);
     }
