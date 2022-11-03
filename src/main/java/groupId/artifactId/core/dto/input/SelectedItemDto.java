@@ -1,22 +1,22 @@
 package groupId.artifactId.core.dto.input;
 
 public class SelectedItemDto {
-    private MenuItemDto menuItem;
+    private MenuItemDtoInput menuItem;
     private Integer count;
 
     public SelectedItemDto() {
     }
 
-    public SelectedItemDto(MenuItemDto menuItem, Integer count) {
+    public SelectedItemDto(MenuItemDtoInput menuItem, Integer count) {
         this.menuItem = menuItem;
         this.count = count;
     }
 
-    public MenuItemDto getMenuItem() {
+    public MenuItemDtoInput getMenuItem() {
         return menuItem;
     }
 
-    public void setMenuItem(MenuItemDto menuItem) {
+    public void setMenuItem(MenuItemDtoInput menuItem) {
         this.menuItem = menuItem;
     }
 
