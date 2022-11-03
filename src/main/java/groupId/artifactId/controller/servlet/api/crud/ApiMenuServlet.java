@@ -38,16 +38,17 @@ public class ApiMenuServlet extends HttpServlet {
             if (id != null) {
                 if (menuService.isIdValid(Long.valueOf(id))) {
                     resp.getWriter().write(JsonConverter.fromMenuToJson(menuService.get(Long.valueOf(id))));
+                    resp.setStatus(HttpServletResponse.SC_OK);
                 } else {
                     resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
                 }
             } else {
                 resp.getWriter().write(JsonConverter.fromMenuListToJson(menuService.get()));
+                resp.setStatus(HttpServletResponse.SC_OK);
             }
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
-        resp.setStatus(HttpServletResponse.SC_OK);
     }
 
     //CREATE POSITION
@@ -70,13 +71,13 @@ public class ApiMenuServlet extends HttpServlet {
                 }
                 MenuDtoOutput menuDto = menuService.save(menu);
                 resp.getWriter().write(JsonConverter.fromMenuToJson(menuDto));
+                resp.setStatus(HttpServletResponse.SC_CREATED);
             } else {
                 resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
             }
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
-        resp.setStatus(HttpServletResponse.SC_CREATED);
     }
 
     //UPDATE POSITION
@@ -104,6 +105,7 @@ public class ApiMenuServlet extends HttpServlet {
                     }
                     MenuDtoOutput menuDto = menuService.update(menu, id, version);
                     resp.getWriter().write(JsonConverter.fromMenuToJson(menuDto));
+                    resp.setStatus(HttpServletResponse.SC_CREATED);
                 } else {
                     resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
                 }
@@ -113,7 +115,6 @@ public class ApiMenuServlet extends HttpServlet {
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
-        resp.setStatus(HttpServletResponse.SC_CREATED);
     }
 
     //DELETE POSITION
@@ -131,6 +132,7 @@ public class ApiMenuServlet extends HttpServlet {
             if (id != null && version != null && delete != null) {
                 if (menuService.isIdValid(Long.valueOf(id))) {
                     menuService.delete(id, version, delete);
+                    resp.setStatus(HttpServletResponse.SC_OK);
                 } else {
                     resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
                 }
@@ -140,6 +142,5 @@ public class ApiMenuServlet extends HttpServlet {
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
-        resp.setStatus(HttpServletResponse.SC_OK);
     }
 }

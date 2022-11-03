@@ -37,16 +37,17 @@ public class ApiPizzaInfoServlet extends HttpServlet {
             if (id != null) {
                 if (pizzaInfoService.isIdValid(Long.valueOf(id))) {
                     resp.getWriter().write(JsonConverter.fromPizzaInfoToJson(pizzaInfoService.get(Long.valueOf(id))));
+                    resp.setStatus(HttpServletResponse.SC_OK);
                 } else {
                     resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
                 }
             } else {
                 resp.getWriter().write(JsonConverter.fromPizzaInfoListToJson(pizzaInfoService.get()));
+                resp.setStatus(HttpServletResponse.SC_OK);
             }
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
-        resp.setStatus(HttpServletResponse.SC_OK);
     }
 
     //CREATE POSITION
@@ -70,13 +71,13 @@ public class ApiPizzaInfoServlet extends HttpServlet {
                 }
                 PizzaInfoDtoOutput pizzaInfoDto = pizzaInfoService.save(pizzaInfo);
                 resp.getWriter().write(JsonConverter.fromPizzaInfoToJson(pizzaInfoDto));
+                resp.setStatus(HttpServletResponse.SC_CREATED);
             } else {
                 resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
             }
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
-        resp.setStatus(HttpServletResponse.SC_CREATED);
     }
     //UPDATE POSITION
     //need param id  (id = 97)
@@ -104,6 +105,7 @@ public class ApiPizzaInfoServlet extends HttpServlet {
                     }
                     PizzaInfoDtoOutput pizzaInfoDto = pizzaInfoService.update(pizzaInfo, id, version);
                     resp.getWriter().write(JsonConverter.fromPizzaInfoToJson(pizzaInfoDto));
+                    resp.setStatus(HttpServletResponse.SC_CREATED);
                 } else {
                     resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
                 }
@@ -113,7 +115,6 @@ public class ApiPizzaInfoServlet extends HttpServlet {
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
-        resp.setStatus(HttpServletResponse.SC_CREATED);
     }
     //DELETE POSITION
     //need param id  (id = 97)
@@ -130,6 +131,7 @@ public class ApiPizzaInfoServlet extends HttpServlet {
             if (id != null && version != null && delete != null) {
                 if (pizzaInfoService.isIdValid(Long.valueOf(id))) {
                     pizzaInfoService.delete(id, version, delete);
+                    resp.setStatus(HttpServletResponse.SC_OK);
                 } else {
                     resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
                 }
@@ -139,6 +141,5 @@ public class ApiPizzaInfoServlet extends HttpServlet {
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
-        resp.setStatus(HttpServletResponse.SC_OK);
     }
 }
