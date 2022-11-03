@@ -1,6 +1,7 @@
 package groupId.artifactId.core.dto.output;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class MenuDtoOutput {
     private Long id;
@@ -8,16 +9,19 @@ public class MenuDtoOutput {
     private Integer version;
     private String name;
     private Boolean enable;
+    private List<MenuItemDtoOutput> items;
 
     public MenuDtoOutput() {
     }
 
-    public MenuDtoOutput(Long id, LocalDateTime createdAt, Integer version, String name, Boolean enable) {
+    public MenuDtoOutput(Long id, LocalDateTime createdAt, Integer version, String name, Boolean enable,
+                         List<MenuItemDtoOutput> items) {
         this.id = id;
         this.createdAt = createdAt;
         this.version = version;
         this.name = name;
         this.enable = enable;
+        this.items = items;
     }
 
     public Long getId() {
@@ -58,6 +62,14 @@ public class MenuDtoOutput {
 
     public void setEnable(Boolean enable) {
         this.enable = enable;
+    }
+
+    public List<MenuItemDtoOutput> getItems() {
+        return items;
+    }
+
+    public void setItems(List<MenuItemDtoOutput> items) {
+        this.items = items;
     }
 
     @Override
