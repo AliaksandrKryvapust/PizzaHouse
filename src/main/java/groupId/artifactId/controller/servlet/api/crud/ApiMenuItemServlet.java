@@ -1,4 +1,4 @@
-package groupId.artifactId.controller.servlet.api;
+package groupId.artifactId.controller.servlet.api.crud;
 
 import groupId.artifactId.exceptions.IncorrectEncodingException;
 import groupId.artifactId.exceptions.IncorrectServletInputStreamException;
