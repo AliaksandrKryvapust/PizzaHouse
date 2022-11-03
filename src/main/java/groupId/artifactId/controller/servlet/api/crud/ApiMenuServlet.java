@@ -17,13 +17,13 @@ import javax.servlet.http.HttpServletResponse;
 //IMenu
 @WebServlet(name = "Menu", urlPatterns = "/api/menu")
 public class ApiMenuServlet extends HttpServlet {
-    private final IMenuService menuService = MenuServiceSingleton.getInstance();
-    private final IMenuValidator menuValidator = MenuValidatorSingleton.getInstance();
     private static final String CONTENT_TYPE = "application/json";
     private static final String ENCODING = "UTF-8";
     private static final String PARAMETER_ID = "id";
     private static final String PARAMETER_VERSION = "version";
     private static final String PARAMETER_DELETE = "delete";
+    private final IMenuService menuService = MenuServiceSingleton.getInstance();
+    private final IMenuValidator menuValidator = MenuValidatorSingleton.getInstance();
 
     //Read POSITION
     //1) Read list

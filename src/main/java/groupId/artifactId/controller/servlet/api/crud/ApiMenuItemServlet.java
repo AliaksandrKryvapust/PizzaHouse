@@ -1,141 +1,152 @@
 package groupId.artifactId.controller.servlet.api.crud;
 
-import groupId.artifactId.exceptions.IncorrectEncodingException;
-import groupId.artifactId.exceptions.IncorrectServletInputStreamException;
-import groupId.artifactId.exceptions.IncorrectServletWriterException;
-import groupId.artifactId.service.MenuItemService;
+import groupId.artifactId.controller.validator.IoC.MenuItemValidatorSingleton;
+import groupId.artifactId.controller.validator.api.IMenuItemValidator;
+import groupId.artifactId.core.dto.input.MenuItemDtoInput;
+import groupId.artifactId.core.dto.output.MenuItemDtoOutput;
+import groupId.artifactId.service.IoC.MenuItemServiceSingleton;
+import groupId.artifactId.service.IoC.MenuServiceSingleton;
+import groupId.artifactId.service.IoC.PizzaInfoServiceSingleton;
 import groupId.artifactId.service.api.IMenuItemService;
+import groupId.artifactId.service.api.IMenuService;
+import groupId.artifactId.service.api.IPizzaInfoService;
 import groupId.artifactId.utils.JsonConverter;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 //CRUD controller
 //IMenuItem
-@WebServlet(name = "MenuItem", urlPatterns = "/api/menu/item")
+@WebServlet(name = "MenuItem", urlPatterns = "/api/menu_item")
 public class ApiMenuItemServlet extends HttpServlet {
-    private final IMenuItemService menuItemService = MenuItemService.getInstance();
+    private final IMenuItemService menuItemService = MenuItemServiceSingleton.getInstance();
+    private final IMenuService menuService = MenuServiceSingleton.getInstance();
+    private final IPizzaInfoService pizzaInfoService = PizzaInfoServiceSingleton.getInstance();
+    private final IMenuItemValidator menuItemValidator = MenuItemValidatorSingleton.getInstance();
+    private static final String CONTENT_TYPE = "application/json";
+    private static final String ENCODING = "UTF-8";
+    private static final String PARAMETER_ID = "id";
+    private static final String PARAMETER_VERSION = "version";
+    private static final String PARAMETER_DELETE = "delete";
+
     //Read POSITION
     //1) Read list
-    //2) Read item need id param  (id = 75)
-
+    //2) Read item need id param  (id = 93)
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            resp.setContentType("application/json");
-            resp.setCharacterEncoding("UTF-8");
-            String id = req.getParameter("id");
+            resp.setContentType(CONTENT_TYPE);
+            resp.setCharacterEncoding(ENCODING);
+            String id = req.getParameter(PARAMETER_ID);
             if (id != null) {
                 if (menuItemService.isIdValid(Long.valueOf(id))) {
                     resp.getWriter().write(JsonConverter.fromMenuItemToJson(menuItemService.get(Long.valueOf(id))));
                 } else {
-                    resp.setStatus(400);
-                    throw new IllegalArgumentException("MenuItem id is not exist");
+                    resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
                 }
             } else {
                 resp.getWriter().write(JsonConverter.fromMenuItemListToJson(menuItemService.get()));
             }
-        } catch (IOException e) {
-            resp.setStatus(500);
-            throw new IncorrectServletWriterException("Incorrect servlet state during response writer method", e);
+        } catch (Exception e) {
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
-        resp.setStatus(200);
+        resp.setStatus(HttpServletResponse.SC_OK);
     }
 
     //CREATE POSITION
     //body json
-    //to add new MenuItem in Storage
 //   {
 //           "price":20.0,
-//           "pizzaInfo":{
-//           "name":"ITALIANO PIZZA",
-//           "description":"Mozzarella cheese, basilica, ham",
-//           "size":32
-//           }
+//           "pizzaInfoId":123,
+//           "menuId":1
 //           }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            req.setCharacterEncoding("UTF-8");
-            resp.setContentType("application/json");
-            menuItemService.save(JsonConverter.fromJsonToMenuItem(req.getInputStream()));
-        } catch (UnsupportedEncodingException e) {
-            resp.setStatus(500);
-            throw new IncorrectEncodingException("Failed to set character encoding UTF-8", e);
-        } catch (IOException e) {
-            resp.setStatus(500);
-            throw new IncorrectServletInputStreamException("Impossible to get input stream from request", e);
+            resp.setCharacterEncoding(ENCODING);
+            resp.setContentType(CONTENT_TYPE);
+            MenuItemDtoInput menuItem = JsonConverter.fromJsonToMenuItem(req.getInputStream());
+            if (menuService.isIdValid(menuItem.getMenuId()) && pizzaInfoService.isIdValid(menuItem.getPizzaInfoId())) {
+                try {
+                    menuItemValidator.validate(menuItem);
+                } catch (IllegalArgumentException e) {
+                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                }
+                MenuItemDtoOutput menuItemDto = menuItemService.save(menuItem);
+                resp.getWriter().write(JsonConverter.fromMenuItemToJson(menuItemDto));
+            } else {
+                resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            }
+        } catch (Exception e) {
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
-        resp.setStatus(201);
+        resp.setStatus(HttpServletResponse.SC_CREATED);
     }
+
     //UPDATE POSITION
-    //need param id  (id = 76)
+    //need param id  (id = 93)
     //need param version/date_update - optimistic lock (version=1)
     //body json
 //   {
 //           "price":25.0,
-//           "pizzaInfo":{
-//           "name":"ITALIANO PIZZA",
-//           "description":"Mozzarella cheese, basilica, ham",
-//           "size":48
-//           }
+//           "pizzaInfoId":123,
+//           "menuId":1
 //           }
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            req.setCharacterEncoding("UTF-8");
-            resp.setContentType("application/json");
-            String id = req.getParameter("id");
-            String version = req.getParameter("version");
-            if (id!=null && version!=null){
+            resp.setCharacterEncoding(ENCODING);
+            resp.setContentType(CONTENT_TYPE);
+            String id = req.getParameter(PARAMETER_ID);
+            String version = req.getParameter(PARAMETER_VERSION);
+            if (id != null && version != null) {
                 if (menuItemService.isIdValid(Long.valueOf(id))) {
-                   menuItemService.update(JsonConverter.fromJsonToMenuItemUpdate(req.getInputStream()),id,version);
+                    MenuItemDtoInput menuItem = JsonConverter.fromJsonToMenuItem(req.getInputStream());
+                    try {
+                        menuItemValidator.validate(menuItem);
+                    } catch (IllegalArgumentException e) {
+                        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    }
+                    MenuItemDtoOutput menuItemDto = menuItemService.update(menuItem, id, version);
+                    resp.getWriter().write(JsonConverter.fromMenuItemToJson(menuItemDto));
                 } else {
-                    resp.setStatus(400);
-                    throw new IllegalArgumentException("MenuItem id is not exist");
+                    resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
                 }
             } else {
-                resp.setStatus(400);
-                throw new IllegalArgumentException("Field MenuItem id or MenuItem version is empty");
+                resp.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
             }
-        } catch (UnsupportedEncodingException e) {
-            resp.setStatus(500);
-            throw new IncorrectEncodingException("Failed to set character encoding UTF-8", e);
-        } catch (IOException e) {
-            resp.setStatus(500);
-            throw new IncorrectServletInputStreamException("Impossible to get input stream from request", e);
+        } catch (Exception e) {
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
-        resp.setStatus(201);
+        resp.setStatus(HttpServletResponse.SC_CREATED);
     }
+
     //DELETE POSITION
     //need param id  (id = 76)
     //need param version/date_update - optimistic lock (version=2)
+    //param delete - true/false completely delete (delete=false)
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            req.setCharacterEncoding("UTF-8");
-            resp.setContentType("application/json");
-            String id = req.getParameter("id");
-            String version = req.getParameter("version");
-            if (id!=null && version!=null){
+            resp.setCharacterEncoding(ENCODING);
+            resp.setContentType(CONTENT_TYPE);
+            String id = req.getParameter(PARAMETER_ID);
+            String version = req.getParameter(PARAMETER_VERSION);
+            String delete = req.getParameter(PARAMETER_DELETE);
+            if (id != null && version != null && delete != null) {
                 if (menuItemService.isIdValid(Long.valueOf(id))) {
-                    menuItemService.delete(id,version);
+                    menuItemService.delete(id, version, delete);
                 } else {
-                    resp.setStatus(400);
-                    throw new IllegalArgumentException("MenuItem id is not exist");
+                    resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
                 }
             } else {
-                resp.setStatus(400);
-                throw new IllegalArgumentException("Field MenuItem id or MenuItem version is empty");
+                resp.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
             }
-        } catch (UnsupportedEncodingException e) {
-            resp.setStatus(500);
-            throw new IncorrectEncodingException("Failed to set character encoding UTF-8", e);
+        } catch (Exception e) {
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
-        resp.setStatus(200);
+        resp.setStatus(HttpServletResponse.SC_OK);
     }
 }
