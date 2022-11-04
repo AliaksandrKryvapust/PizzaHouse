@@ -17,6 +17,11 @@ public class SelectedItem implements ISelectedItem {
     public SelectedItem() {
     }
 
+    public SelectedItem(Long menuItemId, Integer count) {
+        this.menuItemId = menuItemId;
+        this.count = count;
+    }
+
     public SelectedItem(Long id, Long menuItemId, Long orderId, Integer count) {
         this.id = id;
         this.menuItemId = menuItemId;
