@@ -104,11 +104,11 @@ public class OrderDao implements IOrderDao {
                     throw new SQLException("order table delete failed,version does not match update denied");
                 }
                 if (rows > 1) {
-                    throw new IllegalStateException("Incorrect order table update, more than 1 row affected");
+                    throw new IllegalStateException("Incorrect order table delete, more than 1 row affected");
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to delete pizza info with id:" + id);
+            throw new RuntimeException("Failed to delete order with id:" + id);
         }
     }
 
