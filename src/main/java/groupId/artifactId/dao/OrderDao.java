@@ -17,18 +17,18 @@ import java.util.List;
 
 public class OrderDao implements IOrderDao {
 
-    private static final String INSERT_ORDER_SQL = "INSERT INTO pizza_manager.order DEFAULT VALUES;";
+    private static final String INSERT_ORDER_SQL = "INSERT INTO pizza_manager.order_table DEFAULT VALUES;";
     private static final String SELECT_ORDER_SQL = "SELECT id, creation_date, version " +
-            "FROM pizza_manager.order ORDER BY id;";
+            "FROM pizza_manager.order_table ORDER BY id;";
     private static final String SELECT_ORDER_BY_ID_SQL = "SELECT id, creation_date, version " +
-            "FROM pizza_manager.order WHERE id=?;";
-    private static final String SELECT_ORDER_ALL_DATA_SQL = "SELECT order.id AS id, order.creation_date AS cd, " +
-            "order.version AS ver, si.id AS siid, menu_item_id, count ,si.creation_date AS sicd, si.version AS siiv," +
+            "FROM pizza_manager.order_table WHERE id=?;";
+    private static final String SELECT_ORDER_ALL_DATA_SQL = "SELECT ord.id AS id, ord.creation_date AS cd, " +
+            "ord.version AS ver, si.id AS siid, menu_item_id, count ,si.creation_date AS sicd, si.version AS siiv," +
             "mi.id AS miid, price, pizza_info_id, mi.creation_date AS micd, mi.version AS miver, mi.menu_id AS meid, name, description, size, " +
-            "pi.creation_date AS picd, pi.version AS piv FROM pizza_manager.order " +
-            "INNER JOIN pizza_manager.selected_item si on order.id = si.order_id INNER JOIN menu_item mi on mi.id = si.menu_item_id" +
-            " JOIN pizza_info pi on pi.id = mi.pizza_info_id WHERE order.id=? ORDER BY siid, miid, pizza_info_id;";
-    private static final String DELETE_ORDER_SQL = "DELETE FROM pizza_manager.order WHERE id=? AND version=?;";
+            "pi.creation_date AS picd, pi.version AS piv FROM pizza_manager.order_table AS ord " +
+            "INNER JOIN pizza_manager.selected_item si on ord.id = si.order_id INNER JOIN menu_item mi on mi.id = si.menu_item_id" +
+            " JOIN pizza_info pi on pi.id = mi.pizza_info_id WHERE ord.id=? ORDER BY siid, miid, pizza_info_id;";
+    private static final String DELETE_ORDER_SQL = "DELETE FROM pizza_manager.order_table WHERE id=? AND version=?;";
     private final DataSource dataSource;
 
     public OrderDao(DataSource dataSource) {
