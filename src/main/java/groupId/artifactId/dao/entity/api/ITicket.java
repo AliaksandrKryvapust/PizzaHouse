@@ -2,7 +2,7 @@ package groupId.artifactId.dao.entity.api;
 
 import java.time.LocalDateTime;
 
-public interface IToken {
+public interface ITicket {
     Long getId();
 
     Long getOrderId();

@@ -1,11 +1,11 @@
 package groupId.artifactId.dao.entity;
 
 import groupId.artifactId.dao.entity.api.IOrder;
-import groupId.artifactId.dao.entity.api.IToken;
+import groupId.artifactId.dao.entity.api.ITicket;
 
 import java.time.LocalDateTime;
 
-public class Token implements IToken {
+public class Ticket implements ITicket {
     private IOrder order;
     private Long id;
     private Long orderId;
@@ -13,14 +13,14 @@ public class Token implements IToken {
     private Integer version;
 
 
-    public Token() {
+    public Ticket() {
     }
 
-    public Token(Long orderId) {
+    public Ticket(Long orderId) {
         this.orderId = orderId;
     }
 
-    public Token(IOrder order, Long id, Long orderId, LocalDateTime createAt, Integer version) {
+    public Ticket(IOrder order, Long id, Long orderId, LocalDateTime createAt, Integer version) {
         this.order = order;
         this.id = id;
         this.orderId = orderId;
