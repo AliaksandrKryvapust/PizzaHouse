@@ -33,7 +33,7 @@ public class ApiOrderDataFromServlet extends HttpServlet {
         resp.setStatus(201);
     }
 }
-//to add new Order stage by Token/Order id
+//to add new Order stage by Ticket/Order id
 //   {
 //           "done":true,
 //           "token":{

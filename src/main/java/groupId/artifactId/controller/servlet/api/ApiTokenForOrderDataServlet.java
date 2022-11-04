@@ -5,9 +5,9 @@ import groupId.artifactId.exceptions.IncorrectServletInputStreamException;
 import groupId.artifactId.exceptions.IncorrectServletRedirectException;
 import groupId.artifactId.exceptions.IncorrectServletWriterException;
 import groupId.artifactId.service.OrderDataService;
-import groupId.artifactId.service.TokenService;
+import groupId.artifactId.service.OrderService;
 import groupId.artifactId.service.api.IOrderDataService;
-import groupId.artifactId.service.api.ITokenService;
+import groupId.artifactId.service.api.IOrderService;
 import groupId.artifactId.utils.JsonConverter;
 
 import javax.servlet.annotation.WebServlet;
@@ -19,20 +19,20 @@ import java.io.UnsupportedEncodingException;
 
 @WebServlet(name = "TokenForm", urlPatterns = "/api/token_order_data")
 public class ApiTokenForOrderDataServlet extends HttpServlet {
-    private final ITokenService tokenService = TokenService.getInstance();
+//    private final IOrderService tokenService = OrderService.getInstance();
     private final IOrderDataService orderDataService = OrderDataService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
-        try {
-            resp.getWriter().write(JsonConverter.fromOrderDataToJson(orderDataService.
-                    getById(tokenService.getTokenIdForResponse().get()).orElse(null)));
-        } catch (IOException e) {
-            resp.setStatus(500);
-            throw new IncorrectServletWriterException("Incorrect servlet state during response writer method", e);
-        }
+//        try {
+////            resp.getWriter().write(JsonConverter.fromOrderDataToJson(orderDataService.
+////                    getById(tokenService.getTokenIdForResponse().get()).orElse(null)));
+//        } catch (IOException e) {
+//            resp.setStatus(500);
+//            throw new IncorrectServletWriterException("Incorrect servlet state during response writer method", e);
+//        }
         resp.setStatus(200);
     }
 
@@ -41,7 +41,7 @@ public class ApiTokenForOrderDataServlet extends HttpServlet {
         try {
             req.setCharacterEncoding("UTF-8");
             resp.setContentType("application/json");
-            tokenService.setTokenIdForResponse(JsonConverter.fromJsonToToken(req.getInputStream()));
+//            tokenService.setTokenIdForResponse(JsonConverter.fromJsonToToken(req.getInputStream()));
         } catch (UnsupportedEncodingException e) {
             resp.setStatus(500);
             throw new IncorrectEncodingException("Failed to set character encoding UTF-8", e);
@@ -58,7 +58,7 @@ public class ApiTokenForOrderDataServlet extends HttpServlet {
         }
     }
 }
-// To get Order data by Token
+// To get Order data by Ticket
 //{
 //        "id": 1
 //        }

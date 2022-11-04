@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @WebServlet(name = "MenuItemPizzaInfo", urlPatterns = "/api/menu_item/pizza_info")
-public class MenuItemPizzaInfoServlet extends HttpServlet {
+public class ApiMenuItemPizzaInfoServlet extends HttpServlet {
     private final IMenuItemService menuItemService = MenuItemServiceSingleton.getInstance();
     private static final String CONTENT_TYPE = "application/json";
     private static final String ENCODING = "UTF-8";
