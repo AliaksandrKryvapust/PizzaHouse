@@ -12,14 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderMapper {
-    public static IOrder orderInputMapping(OrderDtoInput input) {
+    public static IOrder orderInputMapping(OrderDtoInput input, Long orderId) {
         List<ISelectedItem> items = new ArrayList<>();
         List<SelectedItemDtoInput> temp = input.getSelectedItems();
         for (SelectedItemDtoInput selectedItem : temp) {
-            ISelectedItem item = SelectedItemMapper.selectedItemInputMapping(selectedItem);
+            ISelectedItem item = SelectedItemMapper.selectedItemInputMapping(selectedItem, orderId);
             items.add(item);
         }
-        return new Order(items);
+        return new Order(items, orderId);
     }
 
     public static OrderDtoOutput orderOutputMapping(IOrder order) {

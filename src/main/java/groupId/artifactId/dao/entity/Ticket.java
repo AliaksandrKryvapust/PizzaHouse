@@ -16,7 +16,17 @@ public class Ticket implements ITicket {
     public Ticket() {
     }
 
+    public Ticket(Long orderId) {
+        this.orderId = orderId;
+    }
+
     public Ticket(Long id, Long orderId) {
+        this.id = id;
+        this.orderId = orderId;
+    }
+
+    public Ticket(IOrder order, Long id, Long orderId) {
+        this.order = order;
         this.id = id;
         this.orderId = orderId;
     }

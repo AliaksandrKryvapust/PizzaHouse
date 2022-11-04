@@ -7,8 +7,8 @@ import groupId.artifactId.dao.entity.SelectedItem;
 import groupId.artifactId.dao.entity.api.ISelectedItem;
 
 public class SelectedItemMapper {
-    public static ISelectedItem selectedItemInputMapping(SelectedItemDtoInput input) {
-        return new SelectedItem(input.getMenuItemId(), input.getCount());
+    public static ISelectedItem selectedItemInputMapping(SelectedItemDtoInput input, Long orderId) {
+        return new SelectedItem(input.getMenuItemId(), orderId, input.getCount());
     }
 
     public static SelectedItemDtoOutput selectedItemOutputMapping(ISelectedItem item) {

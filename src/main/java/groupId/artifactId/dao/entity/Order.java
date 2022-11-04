@@ -23,6 +23,11 @@ public class Order implements IOrder {
         this.selectedItems = selectedItems;
     }
 
+    public Order(List<ISelectedItem> selectedItems, Long id) {
+        this.selectedItems = selectedItems;
+        this.id = id;
+    }
+
     public Order(Long id, LocalDateTime creationDate, Integer version) {
         this.id = id;
         this.creationDate = creationDate;
