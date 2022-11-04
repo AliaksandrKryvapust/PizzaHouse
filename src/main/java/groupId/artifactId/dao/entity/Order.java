@@ -15,6 +15,16 @@ public class Order implements IOrder {
     public Order() {
     }
 
+    public Order(Long id) {
+        this.id = id;
+    }
+
+    public Order(Long id, LocalDateTime creationDate, Integer version) {
+        this.id = id;
+        this.creationDate = creationDate;
+        this.version = version;
+    }
+
     public Order(List<ISelectedItem> selectedItems, Long id, LocalDateTime creationDate, Integer version) {
         this.selectedItems = selectedItems;
         this.id = id;
