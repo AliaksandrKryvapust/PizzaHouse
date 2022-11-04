@@ -3,8 +3,8 @@ package groupId.artifactId.controller.validator;
 import groupId.artifactId.core.dto.input.OrderDataDto;
 import groupId.artifactId.core.dto.input.OrderStageDtoWithId;
 import groupId.artifactId.controller.validator.api.IOrderDataValidator;
-import groupId.artifactId.service.TokenService;
-import groupId.artifactId.service.api.ITokenService;
+import groupId.artifactId.service.OrderService;
+import groupId.artifactId.service.api.IOrderService;
 
 import java.time.LocalTime;
 
@@ -26,10 +26,10 @@ public class OrderDataValidator implements IOrderDataValidator {
             throw new IllegalStateException("Error code 500. None of OrderDataDto have been sent as an input");
         }
         if (orderDataDto.getToken() == null) {
-            throw new IllegalStateException("Error code 500. None of Token in OrderDataDto have been sent as an input");
+            throw new IllegalStateException("Error code 500. None of Ticket in OrderDataDto have been sent as an input");
         }
         if (orderDataDto.getToken().getId() == null) {
-            throw new IllegalStateException("Error code 500. None of Token id have been sent as an input");
+            throw new IllegalStateException("Error code 500. None of Ticket id have been sent as an input");
         }
         if (orderDataDto.getDone() == null) {
             throw new IllegalStateException("Error code 500. None of OrderData done state have been sent as an input");
@@ -47,9 +47,9 @@ public class OrderDataValidator implements IOrderDataValidator {
         if (LocalTime.now().isBefore(orderStage.getTime())) {
             throw new IllegalArgumentException("Error code 400. The time is not valid");
         }
-        ITokenService tokenService = TokenService.getInstance();
-        if (!tokenService.isIdValid(orderStage.getId())) {
-            throw new IllegalArgumentException("Error code 400. There is no order with such id");
-        }
+//        IOrderService tokenService = OrderService.getInstance();
+//        if (!tokenService.isIdValid(orderStage.getId())) {
+//            throw new IllegalArgumentException("Error code 400. There is no order with such id");
+//        }
     }
 }
