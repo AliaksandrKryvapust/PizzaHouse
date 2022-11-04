@@ -31,10 +31,10 @@ public class TokenMemoryStorage implements ITokenStorage {
     @Override
     public void add(IToken token) {
         if (token.getId() != null) {
-            throw new IllegalStateException("Error code 500. Token id should be empty");
+            throw new IllegalStateException("Error code 500. Ticket id should be empty");
         }
         if (token.getCreatAt() != null) {
-            throw new IllegalStateException("Error code 500. Token create date should be empty");
+            throw new IllegalStateException("Error code 500. Ticket create date should be empty");
         }
         Token temp = (Token) token;
         temp.setId(tokenList.size() + 1);
