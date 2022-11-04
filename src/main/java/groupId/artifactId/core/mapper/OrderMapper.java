@@ -14,8 +14,7 @@ import java.util.List;
 public class OrderMapper {
     public static IOrder orderInputMapping(OrderDtoInput input, Long orderId) {
         List<ISelectedItem> items = new ArrayList<>();
-        List<SelectedItemDtoInput> temp = input.getSelectedItems();
-        for (SelectedItemDtoInput selectedItem : temp) {
+        for (SelectedItemDtoInput selectedItem : input.getSelectedItems()) {
             ISelectedItem item = SelectedItemMapper.selectedItemInputMapping(selectedItem, orderId);
             items.add(item);
         }
@@ -24,8 +23,7 @@ public class OrderMapper {
 
     public static OrderDtoOutput orderOutputMapping(IOrder order) {
         List<SelectedItemDtoOutput> items = new ArrayList<>();
-        List<ISelectedItem> temp = order.getSelectedItems();
-        for (ISelectedItem selectedItem : temp) {
+        for (ISelectedItem selectedItem : order.getSelectedItems()) {
             SelectedItemDtoOutput item = SelectedItemMapper.selectedItemOutputMapping(selectedItem);
             items.add(item);
         }
