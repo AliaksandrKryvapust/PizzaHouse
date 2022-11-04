@@ -8,10 +8,10 @@ import groupId.artifactId.core.dto.input.*;
 import groupId.artifactId.core.dto.output.MenuDtoOutput;
 import groupId.artifactId.core.dto.output.MenuItemDtoOutput;
 import groupId.artifactId.core.dto.output.PizzaInfoDtoOutput;
+import groupId.artifactId.core.dto.output.TicketDtoOutPut;
 import groupId.artifactId.exceptions.IncorrectJsonParseException;
 import groupId.artifactId.storage.entity.api.ICompletedOrder;
 import groupId.artifactId.storage.entity.api.IOrderData;
-import groupId.artifactId.storage.entity.api.IToken;
 
 import javax.servlet.ServletInputStream;
 import java.io.IOException;
@@ -54,7 +54,7 @@ public class JsonConverter {
         try {
             return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(items);
         } catch (JsonProcessingException e) {
-            throw new IncorrectJsonParseException("failed to write List PizzaInfo as json", e);
+            throw new IncorrectJsonParseException("failed to write List PizzaInfoDtoOutput as json", e);
         }
     }
 
@@ -62,18 +62,25 @@ public class JsonConverter {
         try {
             return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(pizzaInfo);
         } catch (JsonProcessingException e) {
-            throw new IncorrectJsonParseException("failed to write IPizzaInfo as json", e);
+            throw new IncorrectJsonParseException("failed to write PizzaInfoDtoOutput as json", e);
         }
     }
 
-    public static String fromTokenToJson(IToken token) {
+    public static String fromTicketToJson(TicketDtoOutPut ticket) {
         try {
-            return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(token);
+            return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(ticket);
         } catch (JsonProcessingException e) {
-            throw new IncorrectJsonParseException("failed to write IToken as json", e);
+            throw new IncorrectJsonParseException("failed to write TicketDtoOutPut as json", e);
         }
     }
 
+    public static String fromTicketListToJson(List<TicketDtoOutPut> ticket) {
+        try {
+            return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(ticket);
+        } catch (JsonProcessingException e) {
+            throw new IncorrectJsonParseException("failed to write List of TicketDtoOutPut as json", e);
+        }
+    }
     public static String fromOrderDataToJson(IOrderData orderData) {
         try {
             return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(orderData);
@@ -107,29 +114,30 @@ public class JsonConverter {
         }
     }
 
-    public static OrderDto fromJsonToOrder(ServletInputStream servletInputStream) {
+    public static OrderDtoInput fromJsonToOrder(ServletInputStream servletInputStream) {
         try {
-            return new ObjectMapper().readValue(servletInputStream, OrderDto.class);
+            return new ObjectMapper().readValue(servletInputStream, OrderDtoInput.class);
         } catch (IOException e) {
-            throw new IncorrectJsonParseException("failed to read servletInputStream of OrderDto.class", e);
+            throw new IncorrectJsonParseException("failed to read servletInputStream of OrderDtoInput.class", e);
         }
     }
 
-    public static TokenDto fromJsonToToken(ServletInputStream servletInputStream) {
-        try {
-            return new ObjectMapper().readValue(servletInputStream, TokenDto.class);
-        } catch (IOException e) {
-            throw new IncorrectJsonParseException("failed to read servletInputStream of TokenDto.class",e);
-        }
-    }
-    public static OrderStageDtoWithId fromJsonToOrderStageWithId(ServletInputStream servletInputStream)  {
+    //    public static TokenDto fromJsonToToken(ServletInputStream servletInputStream) {
+//        try {
+//            return new ObjectMapper().readValue(servletInputStream, TokenDto.class);
+//        } catch (IOException e) {
+//            throw new IncorrectJsonParseException("failed to read servletInputStream of TokenDto.class",e);
+//        }
+//    }
+    public static OrderStageDtoWithId fromJsonToOrderStageWithId(ServletInputStream servletInputStream) {
         try {
             return new ObjectMapper().registerModule(new JavaTimeModule()).readValue(servletInputStream, OrderStageDtoWithId.class);
         } catch (IOException e) {
-            throw new IncorrectJsonParseException("failed to read servletInputStream of OrderStageDtoWithId.class",e);
+            throw new IncorrectJsonParseException("failed to read servletInputStream of OrderStageDtoWithId.class", e);
         }
     }
-    public static OrderDataDto fromJsonToOrderData(ServletInputStream servletInputStream)  {
+
+    public static OrderDataDto fromJsonToOrderData(ServletInputStream servletInputStream) {
         try {
             return new ObjectMapper().registerModule(new JavaTimeModule()).readValue(servletInputStream, OrderDataDto.class);
         } catch (IOException e) {
