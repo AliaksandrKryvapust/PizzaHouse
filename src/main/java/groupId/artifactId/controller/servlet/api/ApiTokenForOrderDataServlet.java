@@ -3,12 +3,8 @@ package groupId.artifactId.controller.servlet.api;
 import groupId.artifactId.exceptions.IncorrectEncodingException;
 import groupId.artifactId.exceptions.IncorrectServletInputStreamException;
 import groupId.artifactId.exceptions.IncorrectServletRedirectException;
-import groupId.artifactId.exceptions.IncorrectServletWriterException;
 import groupId.artifactId.service.OrderDataService;
-import groupId.artifactId.service.OrderService;
 import groupId.artifactId.service.api.IOrderDataService;
-import groupId.artifactId.service.api.IOrderService;
-import groupId.artifactId.utils.JsonConverter;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -31,7 +27,7 @@ public class ApiTokenForOrderDataServlet extends HttpServlet {
 ////                    getById(tokenService.getTokenIdForResponse().get()).orElse(null)));
 //        } catch (IOException e) {
 //            resp.setStatus(500);
-//            throw new IncorrectServletWriterException("Incorrect servlet state during response writer method", e);
+//            throw new IncorrectOrderInputException("Incorrect servlet state during response writer method", e);
 //        }
         resp.setStatus(200);
     }

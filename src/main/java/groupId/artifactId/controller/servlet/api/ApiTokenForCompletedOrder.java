@@ -1,14 +1,9 @@
 package groupId.artifactId.controller.servlet.api;
 
 import groupId.artifactId.exceptions.IncorrectEncodingException;
-import groupId.artifactId.exceptions.IncorrectServletInputStreamException;
 import groupId.artifactId.exceptions.IncorrectServletRedirectException;
-import groupId.artifactId.exceptions.IncorrectServletWriterException;
 import groupId.artifactId.service.CompletedOrderService;
-import groupId.artifactId.service.OrderService;
 import groupId.artifactId.service.api.ICompletedOrderService;
-import groupId.artifactId.service.api.IOrderService;
-import groupId.artifactId.utils.JsonConverter;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -32,7 +27,7 @@ public class ApiTokenForCompletedOrder extends HttpServlet {
 //        } catch (
 //                IOException e) {
 //            resp.setStatus(500);
-//            throw new IncorrectServletWriterException("Incorrect servlet state during response writer method", e);
+//            throw new IncorrectOrderInputException("Incorrect servlet state during response writer method", e);
 //        }
         resp.setStatus(200);
     }
