@@ -17,10 +17,20 @@ public class SelectedItem implements ISelectedItem {
     public SelectedItem() {
     }
 
-    public SelectedItem(Long menuItemId, Long orderId, Integer count) {
+    public SelectedItem(Long id, Long menuItemId, Long orderId, Integer count) {
+        this.id = id;
         this.menuItemId = menuItemId;
         this.orderId = orderId;
         this.count = count;
+    }
+
+    public SelectedItem(Long id, Long menuItemId, Long orderId, Integer count, LocalDateTime createAt, Integer version) {
+        this.id = id;
+        this.menuItemId = menuItemId;
+        this.orderId = orderId;
+        this.count = count;
+        this.createAt = createAt;
+        this.version = version;
     }
 
     public SelectedItem(IMenuItem menuItem, Long id, Long menuItemId, Long orderId, Integer count,
