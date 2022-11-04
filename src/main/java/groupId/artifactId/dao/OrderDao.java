@@ -48,7 +48,7 @@ public class OrderDao implements IOrderDao {
                     throw new SQLException("order table insert failed, no rows affected");
                 }
                 if (rows > 1) {
-                    throw new IllegalStateException("order pizza_info table update, more than 1 row affected");
+                    throw new IllegalStateException("Incorrect order table update, more than 1 row affected");
                 }
                 try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                     generatedKeys.next();
