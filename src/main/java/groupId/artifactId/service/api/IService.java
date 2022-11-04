@@ -5,8 +5,6 @@ import java.util.List;
 public interface IService<TYPE,TYPE2> {
     TYPE save(TYPE2 type);
 
-    TYPE update(TYPE2 type, String id, String version);
-
     List<TYPE> get();
 
     TYPE get(Long id);
