@@ -20,9 +20,10 @@ public class TicketDao implements ITicketDao {
             "ord.version AS ver, t.id AS tid, t.creation_date AS tcd, t.version AS tver,si.id AS siid, menu_item_id, " +
             "count ,si.creation_date AS sicd, si.version AS siiv, mi.id AS miid, price, pizza_info_id, mi.creation_date AS micd, " +
             "mi.version AS miver, mi.menu_id AS meid, name, description, size, pi.creation_date AS picd, pi.version AS piv " +
-            "FROM pizza_manager.order_table AS ord INNER JOIN ticket t on ord.id = t.order_id " +
-            "INNER JOIN pizza_manager.selected_item si on ord.id = si.order_id INNER JOIN menu_item mi on mi.id = si.menu_item_id" +
-            " JOIN pizza_info pi on pi.id = mi.pizza_info_id WHERE ord.id=? ORDER BY siid, miid, pizza_info_id;";
+            "FROM pizza_manager.order_table AS ord INNER JOIN pizza_manager.ticket t on ord.id = t.order_id " +
+            "INNER JOIN pizza_manager.selected_item si on ord.id = si.order_id " +
+            "INNER JOIN pizza_manager.menu_item mi on mi.id = si.menu_item_id " +
+            "INNER JOIN pizza_manager.pizza_info pi on pi.id = mi.pizza_info_id WHERE ord.id=? ORDER BY siid, miid, pizza_info_id;";
     private static final String DELETE_TICKET_SQL = "DELETE FROM pizza_manager.ticket WHERE id=? AND version=?;";
     private final DataSource dataSource;
 
@@ -143,7 +144,6 @@ public class TicketDao implements ITicketDao {
 
     private ITicket menuItemMapper(ResultSet resultSet) throws SQLException {
         List<ISelectedItem> items = new ArrayList<>();
-        new Order();
         IOrder order;
         ITicket ticket = new Ticket();
         while (resultSet.next()) {
@@ -157,7 +157,7 @@ public class TicketDao implements ITicketDao {
                     resultSet.getLong("menu_item_id"), resultSet.getLong("id"), resultSet.getInt("count"),
                     resultSet.getTimestamp("sicd").toLocalDateTime(), resultSet.getInt("siiv"));
             items.add(selectedItem);
-            if (!resultSet.isLast()) {
+            if (resultSet.isLast()) {
                 order = new Order(items, resultSet.getLong("id"), resultSet.getTimestamp("cd").toLocalDateTime(),
                         resultSet.getInt("ver"));
                 ticket = new Ticket(order, resultSet.getLong("tid"), resultSet.getLong("id"),

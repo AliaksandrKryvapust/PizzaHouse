@@ -206,7 +206,7 @@ public class MenuDao implements IMenuDao {
                     resultSet.getLong("pizza_info_id"), resultSet.getTimestamp("micd").toLocalDateTime(),
                     resultSet.getInt("miv"), resultSet.getLong("menu_id"));
             items.add(item);
-            if (!resultSet.isLast()) {
+            if (resultSet.isLast()) {
                 menu = new Menu(items, resultSet.getLong("mid"), resultSet.getTimestamp("cr").toLocalDateTime(),
                         resultSet.getInt("ver"), resultSet.getString("name"),
                         resultSet.getBoolean("enabled"));
