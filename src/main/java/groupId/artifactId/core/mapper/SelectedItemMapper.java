@@ -12,12 +12,13 @@ public class SelectedItemMapper {
     }
 
     public static SelectedItemDtoOutput selectedItemOutputMapping(ISelectedItem item) {
-        MenuItemDtoOutput menuItem = MenuItemMapper.menuItemOutputMapping(item.getItem());
-        return new SelectedItemDtoOutput(menuItem, item.getId(), item.getMenuItemId(), item.getOrderId(),
-                item.getCount(), item.getCreateAt(), item.getVersion());
-    }
-    public static SelectedItemDtoOutput selectedItemForOrderOutputMapping(ISelectedItem item) {
-        return new SelectedItemDtoOutput(new MenuItemDtoOutput(), item.getId(), item.getMenuItemId(), item.getOrderId(),
-                item.getCount(), item.getCreateAt(), item.getVersion());
+        if (item.getItem() == null) {
+            return new SelectedItemDtoOutput(new MenuItemDtoOutput(), item.getId(), item.getMenuItemId(), item.getOrderId(),
+                    item.getCount(), item.getCreateAt(), item.getVersion());
+        } else {
+            MenuItemDtoOutput menuItem = MenuItemMapper.menuItemOutputMapping(item.getItem());
+            return new SelectedItemDtoOutput(menuItem, item.getId(), item.getMenuItemId(), item.getOrderId(),
+                    item.getCount(), item.getCreateAt(), item.getVersion());
+        }
     }
 }

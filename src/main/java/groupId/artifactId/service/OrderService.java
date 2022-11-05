@@ -30,7 +30,7 @@ public class OrderService implements IOrderService {
 
     @Override
     public TicketDtoOutPut getAllData(Long id) {
-        return TicketMapper.ticketOutputForAllDataMapping(this.ticketDao.getAllData(id));
+        return TicketMapper.ticketOutputMapping(this.ticketDao.getAllData(id));
     }
 
     @Override
