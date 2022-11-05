@@ -55,14 +55,14 @@ public class ApiOrderServlet extends HttpServlet {
 
     //CREATE POSITION
     //body json
-//{
-//        "selectedItems":[
+//    {
+//        "selectedItems": [
 //        {
-//        "menuItemId": 90,
-//        "count":2
+//            "menuItemId": 90,
+//                "count": 2
 //        }
-//        ]
-//        }
+//    ]
+//    }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         try {

@@ -16,4 +16,8 @@ public class SelectedItemMapper {
         return new SelectedItemDtoOutput(menuItem, item.getId(), item.getMenuItemId(), item.getOrderId(),
                 item.getCount(), item.getCreateAt(), item.getVersion());
     }
+    public static SelectedItemDtoOutput selectedItemForOrderOutputMapping(ISelectedItem item) {
+        return new SelectedItemDtoOutput(new MenuItemDtoOutput(), item.getId(), item.getMenuItemId(), item.getOrderId(),
+                item.getCount(), item.getCreateAt(), item.getVersion());
+    }
 }

@@ -24,7 +24,7 @@ public class OrderMapper {
     public static OrderDtoOutput orderOutputMapping(IOrder order) {
         List<SelectedItemDtoOutput> items = new ArrayList<>();
         for (ISelectedItem selectedItem : order.getSelectedItems()) {
-            SelectedItemDtoOutput item = SelectedItemMapper.selectedItemOutputMapping(selectedItem);
+            SelectedItemDtoOutput item = SelectedItemMapper.selectedItemForOrderOutputMapping(selectedItem);
             items.add(item);
         }
         return new OrderDtoOutput(items, order.getId(), order.getCreationDate(), order.getVersion());
