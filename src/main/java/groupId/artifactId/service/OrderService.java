@@ -79,7 +79,7 @@ public class OrderService implements IOrderService {
     @Override
     public void delete(String id, String version, String delete) {
         this.selectedItemDao.delete(Long.valueOf(id), Integer.valueOf(version), Boolean.valueOf(delete));
-        this.orderDao.delete(Long.valueOf(id), Integer.valueOf(version), Boolean.valueOf(delete));
         this.ticketDao.delete(Long.valueOf(id), Integer.valueOf(version), Boolean.valueOf(delete));
+        this.orderDao.delete(Long.valueOf(id), Integer.valueOf(version), Boolean.valueOf(delete));
     }
 }
