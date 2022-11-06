@@ -19,6 +19,17 @@ public class OrderData implements IOrderData {
     public OrderData() {
     }
 
+    public OrderData(Long id, Boolean done) {
+        this.id = id;
+        this.done = done;
+    }
+
+    public OrderData(Long id, Long ticketId, Boolean done) {
+        this.id = id;
+        this.ticketId = ticketId;
+        this.done = done;
+    }
+
     public OrderData(List<IOrderStage> orderHistory, Long ticketId, Boolean done) {
         this.orderHistory = orderHistory;
         this.ticketId = ticketId;

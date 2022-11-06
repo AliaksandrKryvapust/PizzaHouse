@@ -20,6 +20,8 @@ public class OrderDataDao implements IOrderDataDao {
             "FROM pizza_manager.order_data ORDER BY id;";
     private static final String SELECT_ORDER_DATA_BY_ID_SQL = "SELECT id, ticket_id, done, creation_date, version " +
             "FROM pizza_manager.order_data WHERE id=?;";
+    private static final String SELECT_ORDER_DATA_BY_TICKET_ID_SQL = "SELECT id, ticket_id, done, creation_date, version " +
+            "FROM pizza_manager.order_data WHERE ticket_id=?;";
     private static final String SELECT_ORDER_DATA_ALL_DATA_SQL = "SELECT order_data.id AS id, order_data.ticket_id AS odti, " +
             "done, order_data.creation_date AS odcd , order_data.version AS ver, os.id AS osid, os.description AS osd, " +
             "os.creation_date AS oscd, os.version AS osver, t.order_id AS tid, t.creation_date AS tcd, t.version AS tver, " +
@@ -148,6 +150,20 @@ public class OrderDataDao implements IOrderDataDao {
             }
         } catch (SQLException e) {
             throw new RuntimeException("Failed to select Order Data with id:" + id);
+        }
+    }
+
+    @Override
+    public Boolean doesTicketExist(Long id) {
+        try (Connection con = dataSource.getConnection()) {
+            try (PreparedStatement statement = con.prepareStatement(SELECT_ORDER_DATA_BY_TICKET_ID_SQL)) {
+                statement.setLong(1, id);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    return resultSet.next();
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to select Order Data with ticket id:" + id);
         }
     }
 
