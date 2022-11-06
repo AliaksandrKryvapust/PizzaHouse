@@ -8,6 +8,4 @@ public interface IService<TYPE,TYPE2> {
     List<TYPE> get();
 
     TYPE get(Long id);
-
-    void delete(String id, String version, String delete);
 }
