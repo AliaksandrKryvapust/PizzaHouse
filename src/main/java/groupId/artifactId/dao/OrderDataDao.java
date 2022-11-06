@@ -64,7 +64,7 @@ public class OrderDataDao implements IOrderDataDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to save new Menu");
+            throw new RuntimeException("Failed to save new Order data");
         }
     }
 
@@ -136,6 +136,21 @@ public class OrderDataDao implements IOrderDataDao {
             }
         } catch (SQLException e) {
             throw new RuntimeException("Failed to get Order Stage by Ticket id:" + id);
+        }
+    }
+
+    @Override
+    public IOrderData getDataByTicket(Long id) {
+        try (Connection con = dataSource.getConnection()) {
+            try (PreparedStatement statement = con.prepareStatement(SELECT_ORDER_DATA_BY_TICKET_ID_SQL)) {
+                statement.setLong(1, id);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    resultSet.next();
+                    return this.mapper(resultSet);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to get Order Data by ticket id:" + id);
         }
     }
 
