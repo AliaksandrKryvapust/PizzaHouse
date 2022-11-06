@@ -20,13 +20,15 @@ public class OrderData implements IOrderData {
     public OrderData() {
     }
 
-    public OrderData(Long ticketId) {
-        this.ticketId = ticketId;
+    public OrderData(Long id, Boolean done) {
+        this.id = id;
+        this.done = done;
     }
 
-    public OrderData(Long id, Long ticketId) {
+    public OrderData(Long id, Long ticketId, Boolean done) {
         this.id = id;
         this.ticketId = ticketId;
+        this.done = done;
     }
 
     public OrderData(Long id, Long ticketId, Boolean done, LocalDateTime creationDate, Integer version) {
