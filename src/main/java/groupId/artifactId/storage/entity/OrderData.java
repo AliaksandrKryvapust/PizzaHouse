@@ -4,12 +4,11 @@ import groupId.artifactId.storage.entity.api.IOrderData;
 import groupId.artifactId.storage.entity.api.IOrderStage;
 import groupId.artifactId.storage.entity.api.IToken;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class OrderData implements IOrderData {
     private IToken token;
-    private List<IOrderStage> orderHistory = new ArrayList<>();
+    private List<IOrderStage> orderHistory;
     private Boolean done;
 
     public OrderData(IToken token, Boolean done) {
@@ -27,10 +26,6 @@ public class OrderData implements IOrderData {
         this.token = token;
     }
 
-    public void setOrderHistory(List<IOrderStage> orderHistory) {
-        this.orderHistory = orderHistory;
-    }
-
     public void setDone(Boolean done) {
         this.done = done;
     }
@@ -41,17 +36,16 @@ public class OrderData implements IOrderData {
     }
 
     @Override
-    public List<IOrderStage> getHistory() {
+    public List<IOrderStage> getOrderHistory() {
         return orderHistory;
     }
 
-    @Override
-    public void addOrderStage(IOrderStage orderStage) {
-        this.orderHistory.add(orderStage);
+    public void setOrderHistory(List<IOrderStage> orderHistory) {
+        this.orderHistory = orderHistory;
     }
 
     @Override
-    public boolean isDone() {
+    public Boolean isDone() {
         return done;
     }
 }
