@@ -14,6 +14,10 @@ public class OrderStage implements IOrderStage {
     public OrderStage() {
     }
 
+    public OrderStage(String description) {
+        this.description = description;
+    }
+
     public OrderStage(Long orderDataId, String description) {
         this.orderDataId = orderDataId;
         this.description = description;
