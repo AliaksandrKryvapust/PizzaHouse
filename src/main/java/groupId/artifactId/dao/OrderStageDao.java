@@ -102,8 +102,8 @@ public class OrderStageDao implements IOrderStageDao {
     public Boolean doesStageExist(Long orderDataId, String description) {
         try (Connection con = dataSource.getConnection()) {
             try (PreparedStatement statement = con.prepareStatement(SELECT_DISTINCT_ORDER_STAGE_SQL)) {
-                statement.setLong(2, orderDataId);
-                statement.setString(1, description);
+                statement.setLong(1, orderDataId);
+                statement.setString(2, description);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     return resultSet.next();
                 }
