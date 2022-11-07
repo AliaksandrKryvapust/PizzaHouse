@@ -1,73 +1,95 @@
 package groupId.artifactId.service;
 
-import groupId.artifactId.controller.validator.OrderDataValidator;
-import groupId.artifactId.core.dto.input.OrderDataDto;
-import groupId.artifactId.core.dto.input.OrderStageDtoWithId;
+import groupId.artifactId.core.dto.input.OrderDataDtoInput;
+import groupId.artifactId.core.dto.output.OrderDataDtoOutput;
 import groupId.artifactId.core.mapper.OrderDataMapper;
-import groupId.artifactId.service.api.ICompletedOrderService;
+import groupId.artifactId.dao.api.IOrderDataDao;
+import groupId.artifactId.dao.api.IOrderStageDao;
+import groupId.artifactId.dao.entity.OrderData;
+import groupId.artifactId.dao.entity.OrderStage;
+import groupId.artifactId.dao.entity.api.IOrderData;
+import groupId.artifactId.dao.entity.api.IOrderStage;
 import groupId.artifactId.service.api.IOrderDataService;
-import groupId.artifactId.controller.validator.api.IOrderDataValidator;
-import groupId.artifactId.storage.api.IOrderDataStorage;
-import groupId.artifactId.storage.api.StorageFactory;
-import groupId.artifactId.storage.entity.OrderData;
-import groupId.artifactId.storage.entity.api.IOrderData;
-import groupId.artifactId.storage.entity.api.IToken;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 public class OrderDataService implements IOrderDataService {
-    private static OrderDataService firstInstance = null;
-    private final IOrderDataStorage storage;
-    private final IOrderDataValidator validator;
+    private final IOrderDataDao orderDataDao;
+    private final IOrderStageDao orderStageDao;
 
-    private OrderDataService() {
-        this.storage = StorageFactory.getInstance().getOrderDataStorage();
-        this.validator = OrderDataValidator.getInstance();
+    public OrderDataService(IOrderDataDao orderDataDao, IOrderStageDao orderStageDao) {
+        this.orderDataDao = orderDataDao;
+        this.orderStageDao = orderStageDao;
     }
 
-    public static OrderDataService getInstance() {
-        synchronized (OrderDataService.class) {
-            if (firstInstance == null) {
-                firstInstance = new OrderDataService();
-            }
+    @Override
+    public OrderDataDtoOutput getAllData(Long id) {
+        return OrderDataMapper.orderDataOutputMapping(this.orderDataDao.getAllData(id));
+    }
+
+    @Override
+    public Boolean isIdValid(Long id) {
+        return this.orderDataDao.exist(id);
+    }
+
+    @Override
+    public Boolean isOrderStageIdValid(Long id) {
+        return this.orderStageDao.exist(id);
+    }
+
+    @Override
+    public Boolean exist(String description) {
+        return this.orderStageDao.doesStageExist(description);
+    }
+
+    @Override
+    public OrderDataDtoOutput save(OrderDataDtoInput type) {
+        IOrderData input = OrderDataMapper.orderDataInputMapping(type);
+        IOrderData id;
+        if (!this.orderDataDao.doesTicketExist(type.getTicketId())) {
+            id = this.orderDataDao.save(input);
+        } else {
+            id = this.orderDataDao.getDataByTicket(type.getTicketId());
         }
-        return firstInstance;
+        IOrderStage stage = this.orderStageDao.save(new OrderStage(id.getId(), input.getOrderHistory().get(0).getDescription()));
+        return OrderDataMapper.orderDataOutputMapping(new OrderData(Collections.singletonList(stage),
+                id.getId(), id.getTicketId(), id.isDone()));
     }
 
     @Override
-    public void addToken(IToken token) {
-        this.storage.add(new OrderData(token, false));
-    }
-
-    @Override
-    public void update(OrderDataDto orderDataDto) {
-        this.validator.validate(orderDataDto);
-        this.storage.updateOrderData(OrderDataMapper.orderDataMapping(orderDataDto));
-        ICompletedOrderService completedOrderService = CompletedOrderService.getInstance();
-        if (orderDataDto.getDone()) {
-            completedOrderService.add(this.storage.getById(orderDataDto.getToken().getId()).orElse(null));
+    public List<OrderDataDtoOutput> get() {
+        List<OrderDataDtoOutput> temp = new ArrayList<>();
+        for (IOrderData orderData : this.orderDataDao.get()) {
+            OrderDataDtoOutput output = OrderDataMapper.orderDataOutputMapping(orderData);
+            temp.add(output);
         }
+        return temp;
     }
 
     @Override
-    public void addOrderStage(OrderStageDtoWithId orderStageDtoWithId) {
-        this.validator.validateOrderStage(orderStageDtoWithId);
-        this.storage.addOrderStage(OrderDataMapper.orderStageWithIdMapping(orderStageDtoWithId), orderStageDtoWithId.getId());
+    public OrderDataDtoOutput get(Long id) {
+        return OrderDataMapper.orderDataOutputMapping(this.orderDataDao.get(id));
     }
 
     @Override
-    public List<IOrderData> get() {
-        return this.storage.get();
-    }
-
-    @Override
-    public Optional<IOrderData> getById(int id) {
-        return this.storage.getById(id);
-    }
-
-    @Override
-    public Boolean isIdValid(int id) {
-        return this.storage.isIdExist(id);
+    public OrderDataDtoOutput update(OrderDataDtoInput type, String id, String version) {
+        IOrderData input = OrderDataMapper.orderDataInputMapping(type);
+        IOrderData orderData;
+        IOrderStage stage;
+        if (input.isDone()) {
+            orderData = this.orderDataDao.update(input, Long.valueOf(id), Integer.valueOf(version));
+        } else {
+            orderData = input;
+        }
+        if (!this.orderStageDao.doesStageExist(input.getOrderHistory().get(0).getDescription())) {
+            stage = this.orderStageDao.save(new OrderStage(Long.valueOf(id),
+                    input.getOrderHistory().get(0).getDescription()));
+        } else {
+            stage = input.getOrderHistory().get(0);
+        }
+        return OrderDataMapper.orderDataOutputMapping(new OrderData(Collections.singletonList(stage),
+                orderData.getId(), orderData.getTicketId(), orderData.isDone()));
     }
 }

@@ -1,22 +1,15 @@
 package groupId.artifactId.service.api;
 
-import groupId.artifactId.core.dto.input.OrderDataDto;
-import groupId.artifactId.core.dto.input.OrderStageDtoWithId;
-import groupId.artifactId.storage.entity.api.IOrderData;
-import groupId.artifactId.storage.entity.api.IToken;
+import groupId.artifactId.core.dto.input.OrderDataDtoInput;
+import groupId.artifactId.core.dto.output.OrderDataDtoOutput;
 
-import java.util.List;
-import java.util.Optional;
+public interface IOrderDataService extends IService<OrderDataDtoOutput, OrderDataDtoInput>,
+        IServiceUpdate<OrderDataDtoOutput, OrderDataDtoInput> {
+    OrderDataDtoOutput getAllData(Long id);
 
-public interface IOrderDataService {
-    void addToken(IToken token);
-    void update(OrderDataDto orderDataDto);
+    Boolean isIdValid(Long id);
 
-    void addOrderStage(OrderStageDtoWithId orderStageDtoWithId);
+    Boolean isOrderStageIdValid(Long id);
 
-    List<IOrderData> get();
-
-    Optional<IOrderData> getById(int id);
-
-    Boolean isIdValid(int id);
+    Boolean exist(String description);
 }
