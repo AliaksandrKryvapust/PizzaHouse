@@ -1,9 +1,7 @@
 package groupId.artifactId.controller.validator.api;
 
-import groupId.artifactId.core.dto.input.OrderDataDto;
-import groupId.artifactId.core.dto.input.OrderStageDtoWithId;
+import groupId.artifactId.core.dto.input.OrderDataDtoInput;
 
-public interface IOrderDataValidator {
-    void validate(OrderDataDto orderDataDto);
-    void validateOrderStage(OrderStageDtoWithId orderStage);
+public interface IOrderDataValidator extends IValidator<OrderDataDtoInput> {
+
 }
