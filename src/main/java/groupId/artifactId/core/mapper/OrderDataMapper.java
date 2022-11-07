@@ -13,12 +13,12 @@ import java.util.Collections;
 import java.util.List;
 
 public class OrderDataMapper {
-    public static IOrderData orderStageInputMapping(OrderDataDtoInput dtoInput) {
+    public static IOrderData orderDataInputMapping(OrderDataDtoInput dtoInput) {
         List<IOrderStage> orderStage = Collections.singletonList(OrderStageMapper.orderStageInputMapping(dtoInput.getDescription()));
         return new OrderData(orderStage, dtoInput.getTicketId(), dtoInput.getDone());
     }
 
-    public static OrderDataDtoOutput orderStageOutputMapping(IOrderData orderData) {
+    public static OrderDataDtoOutput orderDataOutputMapping(IOrderData orderData) {
         List<OrderStageDtoOutput> stageDtoOutputs = new ArrayList<>();
         for (IOrderStage stage : orderData.getOrderHistory()) {
             OrderStageDtoOutput output = OrderStageMapper.orderStageOutputMapping(stage);
