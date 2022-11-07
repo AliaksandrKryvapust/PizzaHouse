@@ -24,7 +24,7 @@ public class ApiOrderDataServlet extends HttpServlet {
 
     //Read POSITION
     //1) Read list
-    //2) Read item need ticket id param  (id = 1)
+    //2) Read item need id param  (id = 1)
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         try {
@@ -32,7 +32,7 @@ public class ApiOrderDataServlet extends HttpServlet {
             resp.setCharacterEncoding(ENCODING);
             String id = req.getParameter(PARAMETER_ID);
             if (id != null) {
-                if (orderDataService.isTicketIdValid(Long.valueOf(id))) {
+                if (orderDataService.isIdValid(Long.valueOf(id))) {
                     resp.getWriter().write(JsonConverter.fromOrderDataToJson(orderDataService.get(Long.valueOf(id))));
                     resp.setStatus(HttpServletResponse.SC_OK);
                 } else {
@@ -75,7 +75,7 @@ public class ApiOrderDataServlet extends HttpServlet {
 
     //UPDATE POSITION
     //need param id  (id = 3)
-    //need param version/date_update - optimistic lock (version=1)
+    //need param version/date_update - optimistic lock (version=4)
     //body json
 //   {
 //           "done":true,
