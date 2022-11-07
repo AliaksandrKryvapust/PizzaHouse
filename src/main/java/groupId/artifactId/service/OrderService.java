@@ -1,5 +1,6 @@
 package groupId.artifactId.service;
 
+import groupId.artifactId.core.dto.input.OrderDataDtoInput;
 import groupId.artifactId.core.dto.input.OrderDtoInput;
 import groupId.artifactId.core.dto.output.TicketDtoOutPut;
 import groupId.artifactId.core.mapper.OrderMapper;
@@ -12,6 +13,8 @@ import groupId.artifactId.dao.entity.Ticket;
 import groupId.artifactId.dao.entity.api.IOrder;
 import groupId.artifactId.dao.entity.api.ISelectedItem;
 import groupId.artifactId.dao.entity.api.ITicket;
+import groupId.artifactId.service.IoC.OrderDataServiceSingleton;
+import groupId.artifactId.service.api.IOrderDataService;
 import groupId.artifactId.service.api.IOrderService;
 
 import java.util.ArrayList;
@@ -58,6 +61,8 @@ public class OrderService implements IOrderService {
             items.add(output);
         }
         ITicket ticket = this.ticketDao.save(new Ticket(orderId.getId()));
+        IOrderDataService orderDataService = OrderDataServiceSingleton.getInstance();
+        orderDataService.save(new OrderDataDtoInput(ticket.getId(),false,"Order accepted"));
         return TicketMapper.ticketOutputMapping(new Ticket(new Order(items, orderId.getId()), ticket.getId(), ticket.getOrderId()));
     }
 
