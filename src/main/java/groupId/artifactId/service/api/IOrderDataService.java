@@ -10,6 +10,7 @@ public interface IOrderDataService extends IService<OrderDataDtoOutput, OrderDat
     Boolean isIdValid(Long id);
 
     Boolean isOrderStageIdValid(Long id);
+    Boolean isTicketIdValid(Long id);
 
     Boolean exist(String description);
 }

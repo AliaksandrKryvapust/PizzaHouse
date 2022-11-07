@@ -40,6 +40,11 @@ public class OrderDataService implements IOrderDataService {
     }
 
     @Override
+    public Boolean isTicketIdValid(Long id) {
+        return this.orderDataDao.doesTicketExist(id);
+    }
+
+    @Override
     public Boolean exist(String description) {
         return this.orderStageDao.doesStageExist(description);
     }
