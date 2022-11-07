@@ -16,7 +16,7 @@ import java.io.UnsupportedEncodingException;
 @WebServlet(name = "TokenForm", urlPatterns = "/api/token_order_data")
 public class ApiTokenForOrderDataServlet extends HttpServlet {
 //    private final IOrderService tokenService = OrderService.getInstance();
-    private final IOrderDataService orderDataService = OrderDataService.getInstance();
+//    private final IOrderDataService orderDataService = OrderDataService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {

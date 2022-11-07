@@ -16,8 +16,8 @@ public class OrderStageDao implements IOrderStageDao {
             "FROM pizza_manager.order_stage ORDER BY id;";
     private static final String SELECT_ORDER_STAGE_BY_ID_SQL = "SELECT id, order_data_id, description, creation_date, " +
             "version FROM pizza_manager.order_stage WHERE id=?;";
-    private static final String SELECT_ORDER_STAGE_BY_DESCRIPTION_SQL = "SELECT description FROM pizza_manager.order_stage " +
-            "WHERE description=?;";
+    private static final String SELECT_DISTINCT_ORDER_STAGE_SQL = "SELECT order_data_id, description FROM pizza_manager.order_stage " +
+            "WHERE order_data_id=? AND description=?;";
     private final DataSource dataSource;
 
     public OrderStageDao(DataSource dataSource) {
@@ -99,16 +99,18 @@ public class OrderStageDao implements IOrderStageDao {
     }
 
     @Override
-    public Boolean doesStageExist(String description) {
+    public Boolean doesStageExist(Long orderDataId, String description) {
         try (Connection con = dataSource.getConnection()) {
-            try (PreparedStatement statement = con.prepareStatement(SELECT_ORDER_STAGE_BY_DESCRIPTION_SQL)) {
+            try (PreparedStatement statement = con.prepareStatement(SELECT_DISTINCT_ORDER_STAGE_SQL)) {
+                statement.setLong(2, orderDataId);
                 statement.setString(1, description);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     return resultSet.next();
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to select Order Stage with name:" + description);
+            throw new RuntimeException("Failed to select Order Stage with orderDataId:" + orderDataId + "\tdescription:"
+                    + description);
         }
     }
 

@@ -49,29 +49,25 @@ public class ApiOrderDataServlet extends HttpServlet {
 
     //CREATE POSITION
     //body json
-//   {
-//           "done":false,
-//           "ticketId":1,
-//           "description":"cooking"
-//           }
+//    {
+//        "done": false,
+//            "ticketId": 1,
+//            "description": "cooking"
+//    }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         try {
             resp.setCharacterEncoding(ENCODING);
             resp.setContentType(CONTENT_TYPE);
             OrderDataDtoInput orderData = JsonConverter.fromJsonToOrderData(req.getInputStream());
-            if (!orderDataService.exist(orderData.getDescription())) {
-                try {
-                    orderDataValidator.validate(orderData);
-                } catch (IllegalArgumentException e) {
-                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                }
-                OrderDataDtoOutput output = orderDataService.save(orderData);
-                resp.getWriter().write(JsonConverter.fromOrderDataToJson(output));
-                resp.setStatus(HttpServletResponse.SC_CREATED);
-            } else {
-                resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            try {
+                orderDataValidator.validate(orderData);
+            } catch (IllegalArgumentException e) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             }
+            OrderDataDtoOutput output = orderDataService.save(orderData);
+            resp.getWriter().write(JsonConverter.fromOrderDataToJson(output));
+            resp.setStatus(HttpServletResponse.SC_CREATED);
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }

@@ -6,5 +6,5 @@ public interface IOrderStageDao extends IDao<IOrderStage> {
 
     Boolean exist(Long id);
 
-    Boolean doesStageExist(String name);
+    Boolean doesStageExist(Long orderDataId, String name);
 }

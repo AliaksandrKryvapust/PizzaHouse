@@ -45,8 +45,8 @@ public class OrderDataService implements IOrderDataService {
     }
 
     @Override
-    public Boolean exist(String description) {
-        return this.orderStageDao.doesStageExist(description);
+    public Boolean exist(Long orderDataId, String description) {
+        return this.orderStageDao.doesStageExist(orderDataId, description);
     }
 
     @Override
@@ -88,7 +88,7 @@ public class OrderDataService implements IOrderDataService {
         } else {
             orderData = input;
         }
-        if (!this.orderStageDao.doesStageExist(input.getOrderHistory().get(0).getDescription())) {
+        if (!this.orderStageDao.doesStageExist(orderData.getId(), input.getOrderHistory().get(0).getDescription())) {
             stage = this.orderStageDao.save(new OrderStage(Long.valueOf(id),
                     input.getOrderHistory().get(0).getDescription()));
         } else {

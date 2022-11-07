@@ -29,7 +29,7 @@ public class OrderDataMemoryStorage implements IOrderDataStorage {
 
     @Override
     public void addOrderStage(IOrderStage orderStage, int tokenId) {
-    Objects.requireNonNull(this.getById(tokenId).orElse(null)).addOrderStage(orderStage);
+//    Objects.requireNonNull(this.getById(tokenId).orElse(null)).addOrderStage(orderStage);
     }
 
     @Override
