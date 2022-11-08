@@ -3,14 +3,14 @@ package groupId.artifactId.dao.entity;
 import groupId.artifactId.dao.entity.api.IMenuItem;
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public class MenuItem implements IMenuItem {
     private Long id;
     private IPizzaInfo pizzaInfo;
     private Double price;
     private Long pizzaInfoId;
-    private LocalDateTime creationDate;
+    private Instant creationDate;
     private Integer version;
     private Long menuId;
 
@@ -30,7 +30,7 @@ public class MenuItem implements IMenuItem {
         this.menuId = menuId;
     }
 
-    public MenuItem(Long id, IPizzaInfo pizzaInfo, Double price, Long pizzaInfoId, LocalDateTime creationDate,
+    public MenuItem(Long id, IPizzaInfo pizzaInfo, Double price, Long pizzaInfoId, Instant creationDate,
                     Integer version, Long menuId) {
         this.id = id;
         this.pizzaInfo = pizzaInfo;
@@ -78,11 +78,11 @@ public class MenuItem implements IMenuItem {
     }
 
     @Override
-    public LocalDateTime getCreationDate() {
+    public Instant getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(LocalDateTime creationDate) {
+    public void setCreationDate(Instant creationDate) {
         this.creationDate = creationDate;
     }
 

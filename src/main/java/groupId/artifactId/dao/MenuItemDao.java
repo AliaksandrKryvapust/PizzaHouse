@@ -170,7 +170,7 @@ public class MenuItemDao implements IMenuItemDao {
 
     private IMenuItem mapper(ResultSet resultSet) throws SQLException {
         return new MenuItem(resultSet.getLong("id"), new PizzaInfo(), resultSet.getDouble("price"),
-                resultSet.getLong("pizza_info_id"), resultSet.getTimestamp("creation_date").toLocalDateTime(),
+                resultSet.getLong("pizza_info_id"), resultSet.getTimestamp("creation_date").toInstant(),
                 resultSet.getInt("version"), resultSet.getLong("menu_id"));
     }
     private IMenuItem menuItemMapper(ResultSet resultSet) throws SQLException {
@@ -178,7 +178,7 @@ public class MenuItemDao implements IMenuItemDao {
                 resultSet.getString("description"), resultSet.getInt("size"),
                 resultSet.getTimestamp("picd").toLocalDateTime(), resultSet.getInt("piv"));
         return new MenuItem(resultSet.getLong("id"), pizzaInfo, resultSet.getDouble("price"),
-                resultSet.getLong("pizza_info_id"), resultSet.getTimestamp("cd").toLocalDateTime(),
+                resultSet.getLong("pizza_info_id"), resultSet.getTimestamp("cd").toInstant(),
                 resultSet.getInt("ver"), resultSet.getLong("menu_id"));
     }
 }

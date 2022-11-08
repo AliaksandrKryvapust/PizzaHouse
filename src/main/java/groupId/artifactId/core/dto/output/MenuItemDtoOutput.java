@@ -1,12 +1,12 @@
 package groupId.artifactId.core.dto.output;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public class MenuItemDtoOutput {
     private Long id;
     private Double price;
     private Long pizzaInfoId;
-    private LocalDateTime creation_date;
+    private Instant creation_date;
     private Integer version;
     private Long menuId;
     private PizzaInfoDtoOutput pizzaInfo;
@@ -21,7 +21,7 @@ public class MenuItemDtoOutput {
         this.menuId = menuId;
     }
 
-    public MenuItemDtoOutput(Long id, Double price, Long pizzaInfoId, LocalDateTime creation_date, Integer version, Long menuId) {
+    public MenuItemDtoOutput(Long id, Double price, Long pizzaInfoId, Instant creation_date, Integer version, Long menuId) {
         this.id = id;
         this.price = price;
         this.pizzaInfoId = pizzaInfoId;
@@ -30,7 +30,7 @@ public class MenuItemDtoOutput {
         this.menuId = menuId;
     }
 
-    public MenuItemDtoOutput(Long id, Double price, Long pizzaInfoId, LocalDateTime creation_date, Integer version, Long menuId, PizzaInfoDtoOutput pizzaInfo) {
+    public MenuItemDtoOutput(Long id, Double price, Long pizzaInfoId, Instant creation_date, Integer version, Long menuId, PizzaInfoDtoOutput pizzaInfo) {
         this.id = id;
         this.price = price;
         this.pizzaInfoId = pizzaInfoId;
@@ -64,11 +64,11 @@ public class MenuItemDtoOutput {
         this.pizzaInfoId = pizzaInfoId;
     }
 
-    public LocalDateTime getCreation_date() {
+    public Instant getCreation_date() {
         return creation_date;
     }
 
-    public void setCreation_date(LocalDateTime creation_date) {
+    public void setCreation_date(Instant creation_date) {
         this.creation_date = creation_date;
     }
 
