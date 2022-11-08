@@ -13,17 +13,19 @@ import java.io.IOException;
 import java.util.List;
 
 public class JsonConverter {
+    private static final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule()); // findAndRegisterModules()
     public static String fromMenuListToJson(List<MenuDtoOutput> menu) {
         try {
-            return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(menu);
+            return mapper.writeValueAsString(menu);
         } catch (JsonProcessingException e) {
             throw new IncorrectJsonParseException("Failed to write MenuDtoOutput:"+ menu.toString() + "as json", e);
         }
+
     }
 
     public static String fromMenuToJson(MenuDtoOutput menu) {
         try {
-            return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(menu);
+            return mapper.writeValueAsString(menu);
         } catch (JsonProcessingException e) {
             throw new IncorrectJsonParseException("Failed to write MenuDtoOutput:"+ menu.toString() + "as json", e);
         }
@@ -31,7 +33,7 @@ public class JsonConverter {
 
     public static String fromMenuItemListToJson(List<MenuItemDtoOutput> items) {
         try {
-            return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(items);
+            return mapper.writeValueAsString(items);
         } catch (JsonProcessingException e) {
             throw new IncorrectJsonParseException("failed to write List MenuItemDtoOutput as json", e);
         }
@@ -39,7 +41,7 @@ public class JsonConverter {
 
     public static String fromMenuItemToJson(MenuItemDtoOutput item) {
         try {
-            return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(item);
+            return mapper.writeValueAsString(item);
         } catch (JsonProcessingException e) {
             throw new IncorrectJsonParseException("failed to write MenuItemDtoOutput as json", e);
         }
@@ -47,7 +49,7 @@ public class JsonConverter {
 
     public static String fromPizzaInfoListToJson(List<PizzaInfoDtoOutput> items) {
         try {
-            return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(items);
+            return mapper.writeValueAsString(items);
         } catch (JsonProcessingException e) {
             throw new IncorrectJsonParseException("failed to write List PizzaInfoDtoOutput as json", e);
         }
@@ -55,7 +57,7 @@ public class JsonConverter {
 
     public static String fromPizzaInfoToJson(PizzaInfoDtoOutput pizzaInfo) {
         try {
-            return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(pizzaInfo);
+            return mapper.writeValueAsString(pizzaInfo);
         } catch (JsonProcessingException e) {
             throw new IncorrectJsonParseException("failed to write PizzaInfoDtoOutput as json", e);
         }
@@ -63,7 +65,7 @@ public class JsonConverter {
 
     public static String fromTicketToJson(TicketDtoOutPut ticket) {
         try {
-            return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(ticket);
+            return mapper.writeValueAsString(ticket);
         } catch (JsonProcessingException e) {
             throw new IncorrectJsonParseException("failed to write TicketDtoOutPut as json", e);
         }
@@ -71,14 +73,14 @@ public class JsonConverter {
 
     public static String fromTicketListToJson(List<TicketDtoOutPut> ticket) {
         try {
-            return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(ticket);
+            return mapper.writeValueAsString(ticket);
         } catch (JsonProcessingException e) {
             throw new IncorrectJsonParseException("failed to write List of TicketDtoOutPut as json", e);
         }
     }
     public static String fromOrderDataToJson(OrderDataDtoOutput output) {
         try {
-            return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(output);
+            return mapper.writeValueAsString(output);
         } catch (JsonProcessingException e) {
             throw new IncorrectJsonParseException("failed to write OrderDataDtoOutput as json", e);
         }
@@ -86,7 +88,7 @@ public class JsonConverter {
 
     public static String fromOrderDataListToJson(List<OrderDataDtoOutput> output) {
         try {
-            return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(output);
+            return mapper.writeValueAsString(output);
         } catch (JsonProcessingException e) {
             throw new IncorrectJsonParseException("failed to write List of OrderDataDtoOutput as json", e);
         }
@@ -94,7 +96,7 @@ public class JsonConverter {
 
     public static String fromCompletedOrderToJson(CompletedOrderDtoOutput output) {
         try {
-            return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(output);
+            return mapper.writeValueAsString(output);
         } catch (JsonProcessingException e) {
             throw new IncorrectJsonParseException("failed to write CompletedOrderDtoOutput as json", e);
         }
@@ -102,7 +104,7 @@ public class JsonConverter {
 
     public static String fromCompletedOrderListToJson(List<CompletedOrderDtoOutput> output) {
         try {
-            return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(output);
+            return mapper.writeValueAsString(output);
         } catch (JsonProcessingException e) {
             throw new IncorrectJsonParseException("failed to write List of CompletedOrderDtoOutput as json", e);
         }
@@ -110,7 +112,7 @@ public class JsonConverter {
 
     public static MenuDtoInput fromJsonToMenu(ServletInputStream servletInputStream) {
         try {
-            return new ObjectMapper().readValue(servletInputStream, new TypeReference<>() {
+            return mapper.readValue(servletInputStream, new TypeReference<>() {
             });
         } catch (IOException e) {
             throw new IncorrectJsonParseException("failed to read servletInputStream of MenuDtoOutput.class", e);
@@ -119,7 +121,7 @@ public class JsonConverter {
 
     public static MenuItemDtoInput fromJsonToMenuItem(ServletInputStream servletInputStream) {
         try {
-            return new ObjectMapper().readValue(servletInputStream, MenuItemDtoInput.class);
+            return mapper.readValue(servletInputStream, MenuItemDtoInput.class);
         } catch (IOException e) {
             throw new IncorrectJsonParseException("failed to read servletInputStream of MenuItemDtoOutput.class", e);
         }
@@ -127,7 +129,7 @@ public class JsonConverter {
 
     public static PizzaInfoDtoInput fromJsonToPizzaInfo(ServletInputStream servletInputStream) {
         try {
-            return new ObjectMapper().readValue(servletInputStream, PizzaInfoDtoInput.class);
+            return mapper.readValue(servletInputStream, PizzaInfoDtoInput.class);
         } catch (IOException e) {
             throw new IncorrectJsonParseException("failed to read servletInputStream of PizzaInfoDtoInput.class", e);
         }
@@ -135,7 +137,7 @@ public class JsonConverter {
 
     public static OrderDtoInput fromJsonToOrder(ServletInputStream servletInputStream) {
         try {
-            return new ObjectMapper().readValue(servletInputStream, OrderDtoInput.class);
+            return mapper.readValue(servletInputStream, OrderDtoInput.class);
         } catch (IOException e) {
             throw new IncorrectJsonParseException("failed to read servletInputStream of OrderDtoInput.class", e);
         }
@@ -143,7 +145,7 @@ public class JsonConverter {
 
     public static OrderDataDtoInput fromJsonToOrderData(ServletInputStream servletInputStream) {
         try {
-            return new ObjectMapper().registerModule(new JavaTimeModule()).readValue(servletInputStream, OrderDataDtoInput.class);
+            return mapper.readValue(servletInputStream, OrderDataDtoInput.class);
         } catch (IOException e) {
             throw new IncorrectJsonParseException("failed to read servletInputStream of OrderDataDtoInput.class",e);
         }
