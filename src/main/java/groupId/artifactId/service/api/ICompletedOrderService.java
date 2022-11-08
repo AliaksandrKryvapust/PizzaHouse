@@ -5,6 +5,7 @@ import groupId.artifactId.dao.entity.api.ICompletedOrder;
 
 public interface ICompletedOrderService extends IService<CompletedOrderDtoOutput, ICompletedOrder> {
     CompletedOrderDtoOutput getAllData(Long id);
+    ICompletedOrder getAllDataRow(Long id);
 
     Boolean isOrderIdValid(Long id);
 

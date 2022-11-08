@@ -27,6 +27,11 @@ public class CompletedOrderService implements ICompletedOrderService {
     }
 
     @Override
+    public ICompletedOrder getAllDataRow(Long id) {
+        return this.completedOrderDao.getAllData(id);
+    }
+
+    @Override
     public Boolean isOrderIdValid(Long id) {
         return this.completedOrderDao.exist(id);
     }

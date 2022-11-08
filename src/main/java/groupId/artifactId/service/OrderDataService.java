@@ -7,8 +7,11 @@ import groupId.artifactId.dao.api.IOrderDataDao;
 import groupId.artifactId.dao.api.IOrderStageDao;
 import groupId.artifactId.dao.entity.OrderData;
 import groupId.artifactId.dao.entity.OrderStage;
+import groupId.artifactId.dao.entity.api.ICompletedOrder;
 import groupId.artifactId.dao.entity.api.IOrderData;
 import groupId.artifactId.dao.entity.api.IOrderStage;
+import groupId.artifactId.service.IoC.CompletedOrderServiceSingleton;
+import groupId.artifactId.service.api.ICompletedOrderService;
 import groupId.artifactId.service.api.IOrderDataService;
 
 import java.util.ArrayList;
@@ -85,6 +88,9 @@ public class OrderDataService implements IOrderDataService {
         IOrderStage stage;
         if (input.isDone()) {
             orderData = this.orderDataDao.update(input, Long.valueOf(id), Integer.valueOf(version));
+            ICompletedOrderService completedOrderService = CompletedOrderServiceSingleton.getInstance();
+            ICompletedOrder completedOrder = completedOrderService.getAllDataRow(type.getTicketId());
+            completedOrderService.save(completedOrder);
         } else {
             orderData = input;
         }
