@@ -100,6 +100,6 @@ public class PizzaDao implements IPizzaDao {
     private IPizza mapper(ResultSet resultSet) throws SQLException {
         return new Pizza(resultSet.getLong("id"), resultSet.getLong("completed_order_id"),
                 resultSet.getString("name"), resultSet.getInt("size"),
-                resultSet.getTimestamp("creation_date").toLocalDateTime(), resultSet.getInt("version"));
+                resultSet.getTimestamp("creation_date").toInstant(), resultSet.getInt("version"));
     }
 }

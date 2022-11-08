@@ -1,19 +1,19 @@
 package groupId.artifactId.core.dto.output;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public class PizzaDtoOutput {
     private Long id;
     private Long completedOrderId;
     private String name;
     private Integer size;
-    private LocalDateTime creationDate;
+    private Instant creationDate;
     private Integer version;
 
     public PizzaDtoOutput() {
     }
 
-    public PizzaDtoOutput(Long id, Long completedOrderId, String name, Integer size, LocalDateTime creationDate, Integer version) {
+    public PizzaDtoOutput(Long id, Long completedOrderId, String name, Integer size, Instant creationDate, Integer version) {
         this.id = id;
         this.completedOrderId = completedOrderId;
         this.name = name;
@@ -54,11 +54,11 @@ public class PizzaDtoOutput {
         this.size = size;
     }
 
-    public LocalDateTime getCreationDate() {
+    public Instant getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(LocalDateTime creationDate) {
+    public void setCreationDate(Instant creationDate) {
         this.creationDate = creationDate;
     }
 

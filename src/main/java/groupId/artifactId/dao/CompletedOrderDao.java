@@ -148,7 +148,7 @@ public class CompletedOrderDao implements ICompletedOrderDao {
             items.add(selectedItem);
             IPizza pizza = new Pizza(resultSet.getLong("pizzaid"), resultSet.getLong("id"),
                     resultSet.getString("pn"), resultSet.getInt("ps"),
-                    resultSet.getTimestamp("pcd").toLocalDateTime(), resultSet.getInt("pver"));
+                    resultSet.getTimestamp("pcd").toInstant(), resultSet.getInt("pver"));
             pizzas.add(pizza);
             if (resultSet.isLast()) {
                 order = new Order(items, resultSet.getLong("tid"), resultSet.getTimestamp("ocd").toLocalDateTime(),
