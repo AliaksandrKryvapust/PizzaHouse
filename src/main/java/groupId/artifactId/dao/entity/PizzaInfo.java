@@ -2,14 +2,14 @@ package groupId.artifactId.dao.entity;
 
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public class PizzaInfo implements IPizzaInfo {
     private Long id;
     private String name;
     private String description;
     private Integer size;
-    private LocalDateTime creationDate;
+    private Instant creationDate;
     private Integer version;
 
     public PizzaInfo() {
@@ -28,7 +28,7 @@ public class PizzaInfo implements IPizzaInfo {
         this.size = size;
     }
 
-    public PizzaInfo(Long id, String name, String description, Integer size, LocalDateTime creationDate, Integer version) {
+    public PizzaInfo(Long id, String name, String description, Integer size, Instant creationDate, Integer version) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -37,7 +37,7 @@ public class PizzaInfo implements IPizzaInfo {
         this.version = version;
     }
 
-    public void setCreationDate(LocalDateTime creationDate) {
+    public void setCreationDate(Instant creationDate) {
         this.creationDate = creationDate;
     }
 
@@ -79,8 +79,9 @@ public class PizzaInfo implements IPizzaInfo {
     public Integer getSize() {
         return size;
     }
+
     @Override
-    public LocalDateTime getCreationDate() {
+    public Instant getCreationDate() {
         return creationDate;
     }
 

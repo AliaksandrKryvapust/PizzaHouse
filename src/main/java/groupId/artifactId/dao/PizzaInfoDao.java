@@ -165,6 +165,6 @@ public class PizzaInfoDao implements IPizzaInfoDao {
     private IPizzaInfo mapper(ResultSet resultSet) throws SQLException {
         return new PizzaInfo(resultSet.getLong("id"), resultSet.getString("name"),
                 resultSet.getString("description"), resultSet.getInt("size"),
-                resultSet.getTimestamp("creation_date").toLocalDateTime(), resultSet.getInt("version"));
+                resultSet.getTimestamp("creation_date").toInstant(), resultSet.getInt("version"));
     }
 }

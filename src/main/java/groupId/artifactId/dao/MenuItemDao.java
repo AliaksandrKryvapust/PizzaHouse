@@ -176,7 +176,7 @@ public class MenuItemDao implements IMenuItemDao {
     private IMenuItem menuItemMapper(ResultSet resultSet) throws SQLException {
         IPizzaInfo pizzaInfo =  new PizzaInfo(resultSet.getLong("pizza_info_id"), resultSet.getString("name"),
                 resultSet.getString("description"), resultSet.getInt("size"),
-                resultSet.getTimestamp("picd").toLocalDateTime(), resultSet.getInt("piv"));
+                resultSet.getTimestamp("picd").toInstant(), resultSet.getInt("piv"));
         return new MenuItem(resultSet.getLong("id"), pizzaInfo, resultSet.getDouble("price"),
                 resultSet.getLong("pizza_info_id"), resultSet.getTimestamp("cd").toInstant(),
                 resultSet.getInt("ver"), resultSet.getLong("menu_id"));

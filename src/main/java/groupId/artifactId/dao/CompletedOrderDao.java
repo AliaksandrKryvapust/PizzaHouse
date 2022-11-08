@@ -138,7 +138,7 @@ public class CompletedOrderDao implements ICompletedOrderDao {
         while (resultSet.next()) {
             IPizzaInfo pizzaInfo = new PizzaInfo(resultSet.getLong("pizza_info_id"), resultSet.getString("pin"),
                     resultSet.getString("pid"), resultSet.getInt("pis"),
-                    resultSet.getTimestamp("picd").toLocalDateTime(), resultSet.getInt("piver"));
+                    resultSet.getTimestamp("picd").toInstant(), resultSet.getInt("piver"));
             IMenuItem menuItem = new MenuItem(resultSet.getLong("menu_item_id"), pizzaInfo, resultSet.getDouble("price"),
                     resultSet.getLong("pizza_info_id"), resultSet.getTimestamp("micd").toInstant(),
                     resultSet.getInt("miver"), resultSet.getLong("menu_id"));
