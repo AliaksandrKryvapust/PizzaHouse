@@ -18,7 +18,7 @@ public class ApiCompletedOrderServlet extends HttpServlet {
 
     //Read POSITION
     //1) Read list
-    //2) Read item need id param  (id = 1)
+    //2) Read item need id param  (id = 5)
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         try {
