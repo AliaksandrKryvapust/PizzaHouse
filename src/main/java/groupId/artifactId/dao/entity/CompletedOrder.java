@@ -27,6 +27,12 @@ public class CompletedOrder implements ICompletedOrder {
         this.ticketId = ticketId;
     }
 
+    public CompletedOrder(ITicket ticket, List<IPizza> items, Long ticketId) {
+        this.ticket = ticket;
+        this.items = items;
+        this.ticketId = ticketId;
+    }
+
     public CompletedOrder(Long id, Long ticketId, LocalDateTime creationDate, Integer version) {
         this.id = id;
         this.ticketId = ticketId;

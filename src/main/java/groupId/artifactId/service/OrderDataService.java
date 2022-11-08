@@ -2,6 +2,7 @@ package groupId.artifactId.service;
 
 import groupId.artifactId.core.dto.input.OrderDataDtoInput;
 import groupId.artifactId.core.dto.output.OrderDataDtoOutput;
+import groupId.artifactId.core.mapper.CompletedOrderMapper;
 import groupId.artifactId.core.mapper.OrderDataMapper;
 import groupId.artifactId.dao.api.IOrderDataDao;
 import groupId.artifactId.dao.api.IOrderStageDao;
@@ -89,7 +90,9 @@ public class OrderDataService implements IOrderDataService {
         if (input.isDone()) {
             orderData = this.orderDataDao.update(input, Long.valueOf(id), Integer.valueOf(version));
             ICompletedOrderService completedOrderService = CompletedOrderServiceSingleton.getInstance();
-            ICompletedOrder completedOrder = completedOrderService.getAllDataRow(type.getTicketId());
+
+            ICompletedOrder completedOrder = CompletedOrderMapper.completedOrderInputMapping(
+                    this.orderDataDao.getAllData(type.getTicketId()));
             completedOrderService.save(completedOrder);
         } else {
             orderData = input;

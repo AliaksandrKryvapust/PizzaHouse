@@ -15,6 +15,11 @@ public class Pizza implements IPizza {
     public Pizza() {
     }
 
+    public Pizza(String name, Integer size) {
+        this.name = name;
+        this.size = size;
+    }
+
     public Pizza(Long completedOrderId, String name, Integer size) {
         this.completedOrderId = completedOrderId;
         this.name = name;

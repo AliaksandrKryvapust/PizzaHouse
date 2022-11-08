@@ -3,14 +3,24 @@ package groupId.artifactId.core.mapper;
 import groupId.artifactId.core.dto.output.CompletedOrderDtoOutput;
 import groupId.artifactId.core.dto.output.PizzaDtoOutput;
 import groupId.artifactId.core.dto.output.TicketDtoOutPut;
-import groupId.artifactId.dao.entity.api.ICompletedOrder;
-import groupId.artifactId.dao.entity.api.IPizza;
+import groupId.artifactId.dao.entity.CompletedOrder;
+import groupId.artifactId.dao.entity.Pizza;
+import groupId.artifactId.dao.entity.api.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class CompletedOrderMapper {
+    public static ICompletedOrder completedOrderInputMapping(IOrderData orderData) {
+        ITicket ticket = orderData.getTicket();
+        List<IPizza> temp = new ArrayList<>();
+        for (ISelectedItem selectedItem : ticket.getOrder().getSelectedItems()) {
+            IPizza pizza = new Pizza(selectedItem.getItem().getInfo().getName(), selectedItem.getItem().getInfo().getSize());
+            temp.add(pizza);
+        }
+        return new CompletedOrder(ticket, temp, orderData.getTicketId());
+    }
 
     public static CompletedOrderDtoOutput completedOrderOutputMapping(ICompletedOrder completedOrder) {
         List<PizzaDtoOutput> temp = new ArrayList<>();
@@ -27,6 +37,5 @@ public class CompletedOrderMapper {
                     completedOrder.getId(), completedOrder.getTicketId(),
                     completedOrder.getCreationDate(), completedOrder.getVersion());
         }
-
     }
 }

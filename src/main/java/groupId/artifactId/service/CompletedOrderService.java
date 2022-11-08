@@ -5,6 +5,7 @@ import groupId.artifactId.core.mapper.CompletedOrderMapper;
 import groupId.artifactId.dao.api.ICompletedOrderDao;
 import groupId.artifactId.dao.api.IPizzaDao;
 import groupId.artifactId.dao.entity.CompletedOrder;
+import groupId.artifactId.dao.entity.Pizza;
 import groupId.artifactId.dao.entity.api.ICompletedOrder;
 import groupId.artifactId.dao.entity.api.IPizza;
 import groupId.artifactId.service.api.ICompletedOrderService;
@@ -44,9 +45,9 @@ public class CompletedOrderService implements ICompletedOrderService {
     @Override
     public CompletedOrderDtoOutput save(ICompletedOrder type) {
         ICompletedOrder completedOrder = this.completedOrderDao.save(type);
-        List<IPizza> pizzas = new ArrayList<>();
+        List<IPizza> pizzas = new ArrayList<>();// completedOrderId needed
         for (IPizza pizza : type.getItems()) {
-            IPizza output = this.pizzaDao.save(pizza);
+            IPizza output = this.pizzaDao.save(new Pizza(completedOrder.getId(),pizza.getName(), pizza.getSize()));
             pizzas.add(output);
         }
         return CompletedOrderMapper.completedOrderOutputMapping(new CompletedOrder(completedOrder.getTicket(), pizzas,
