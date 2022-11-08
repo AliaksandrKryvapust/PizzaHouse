@@ -142,7 +142,7 @@ public class OrderDao implements IOrderDao {
 
     private IOrder mapper(ResultSet resultSet) throws SQLException {
         return new Order(resultSet.getLong("id"),
-                resultSet.getTimestamp("creation_date").toLocalDateTime(), resultSet.getInt("version"));
+                resultSet.getTimestamp("creation_date").toInstant(), resultSet.getInt("version"));
     }
 
     private IOrder menuItemMapper(ResultSet resultSet) throws SQLException {
@@ -160,7 +160,7 @@ public class OrderDao implements IOrderDao {
                     resultSet.getTimestamp("sicd").toLocalDateTime(), resultSet.getInt("siiv"));
             items.add(selectedItem);
             if (!resultSet.isLast()) {
-                order = new Order(items, resultSet.getLong("id"), resultSet.getTimestamp("cd").toLocalDateTime(),
+                order = new Order(items, resultSet.getLong("id"), resultSet.getTimestamp("cd").toInstant(),
                         resultSet.getInt("ver"));
             }
         }

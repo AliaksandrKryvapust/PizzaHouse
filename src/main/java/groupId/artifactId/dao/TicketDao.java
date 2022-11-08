@@ -158,7 +158,7 @@ public class TicketDao implements ITicketDao {
                     resultSet.getTimestamp("sicd").toLocalDateTime(), resultSet.getInt("siiv"));
             items.add(selectedItem);
             if (resultSet.isLast()) {
-                order = new Order(items, resultSet.getLong("id"), resultSet.getTimestamp("cd").toLocalDateTime(),
+                order = new Order(items, resultSet.getLong("id"), resultSet.getTimestamp("cd").toInstant(),
                         resultSet.getInt("ver"));
                 ticket = new Ticket(order, resultSet.getLong("tid"), resultSet.getLong("id"),
                         resultSet.getTimestamp("tcd").toInstant(), resultSet.getInt("tver"));

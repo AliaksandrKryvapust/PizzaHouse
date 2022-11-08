@@ -3,13 +3,13 @@ package groupId.artifactId.dao.entity;
 import groupId.artifactId.dao.entity.api.IOrder;
 import groupId.artifactId.dao.entity.api.ISelectedItem;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 public class Order implements IOrder {
     private List<ISelectedItem> selectedItems;
     private Long id;
-    private LocalDateTime creationDate;
+    private Instant creationDate;
     private Integer version;
 
     public Order() {
@@ -28,13 +28,13 @@ public class Order implements IOrder {
         this.id = id;
     }
 
-    public Order(Long id, LocalDateTime creationDate, Integer version) {
+    public Order(Long id, Instant creationDate, Integer version) {
         this.id = id;
         this.creationDate = creationDate;
         this.version = version;
     }
 
-    public Order(List<ISelectedItem> selectedItems, Long id, LocalDateTime creationDate, Integer version) {
+    public Order(List<ISelectedItem> selectedItems, Long id, Instant creationDate, Integer version) {
         this.selectedItems = selectedItems;
         this.id = id;
         this.creationDate = creationDate;
@@ -60,11 +60,11 @@ public class Order implements IOrder {
     }
 
     @Override
-    public LocalDateTime getCreationDate() {
+    public Instant getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(LocalDateTime creationDate) {
+    public void setCreationDate(Instant creationDate) {
         this.creationDate = creationDate;
     }
 

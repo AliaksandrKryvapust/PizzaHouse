@@ -211,7 +211,7 @@ public class OrderDataDao implements IOrderDataDao {
                     resultSet.getInt("osver"));
             stages.add(orderStage);
             if (resultSet.isLast()) {
-                order = new Order(items, resultSet.getLong("tid"), resultSet.getTimestamp("ocd").toLocalDateTime(),
+                order = new Order(items, resultSet.getLong("tid"), resultSet.getTimestamp("ocd").toInstant(),
                         resultSet.getInt("over"));
                 ticket = new Ticket(order, resultSet.getLong("odti"), resultSet.getLong("tid"),
                         resultSet.getTimestamp("tcd").toInstant(), resultSet.getInt("tver"));

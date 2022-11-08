@@ -1,18 +1,18 @@
 package groupId.artifactId.core.dto.output;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 public class OrderDtoOutput {
     private List<SelectedItemDtoOutput> selectedItems;
     private Long id;
-    private LocalDateTime creationDate;
+    private Instant creationDate;
     private Integer version;
 
     public OrderDtoOutput() {
     }
 
-    public OrderDtoOutput(List<SelectedItemDtoOutput> selectedItems, Long id, LocalDateTime creationDate, Integer version) {
+    public OrderDtoOutput(List<SelectedItemDtoOutput> selectedItems, Long id, Instant creationDate, Integer version) {
         this.selectedItems = selectedItems;
         this.id = id;
         this.creationDate = creationDate;
@@ -35,11 +35,11 @@ public class OrderDtoOutput {
         this.id = id;
     }
 
-    public LocalDateTime getCreationDate() {
+    public Instant getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(LocalDateTime creationDate) {
+    public void setCreationDate(Instant creationDate) {
         this.creationDate = creationDate;
     }
 

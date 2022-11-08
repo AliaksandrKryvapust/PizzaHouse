@@ -1,6 +1,6 @@
 package groupId.artifactId.dao.entity.api;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 public interface IOrder {
@@ -8,7 +8,7 @@ public interface IOrder {
 
     Long getId();
 
-    LocalDateTime getCreationDate();
+    Instant getCreationDate();
 
     Integer getVersion();
 }
