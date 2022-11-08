@@ -1,12 +1,12 @@
 package groupId.artifactId.core.dto.output;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public class OrderStageDtoOutput {
     private Long id;
     private Long orderDataId;
     private String description;
-    private LocalDateTime creationDate;
+    private Instant creationDate;
     private Integer version;
 
     public OrderStageDtoOutput() {
@@ -17,7 +17,7 @@ public class OrderStageDtoOutput {
         this.description = description;
     }
 
-    public OrderStageDtoOutput(Long id, Long orderDataId, String description, LocalDateTime creationDate, Integer version) {
+    public OrderStageDtoOutput(Long id, Long orderDataId, String description, Instant creationDate, Integer version) {
         this.id = id;
         this.orderDataId = orderDataId;
         this.description = description;
@@ -49,11 +49,11 @@ public class OrderStageDtoOutput {
         this.description = description;
     }
 
-    public LocalDateTime getCreationDate() {
+    public Instant getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(LocalDateTime creationDate) {
+    public void setCreationDate(Instant creationDate) {
         this.creationDate = creationDate;
     }
 

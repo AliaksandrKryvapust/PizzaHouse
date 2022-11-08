@@ -117,7 +117,7 @@ public class OrderStageDao implements IOrderStageDao {
     private IOrderStage mapper(ResultSet resultSet) throws SQLException {
         return new OrderStage(resultSet.getLong("id"), resultSet.getLong("order_data_id"),
                 resultSet.getString("description"),
-                resultSet.getTimestamp("creation_date").toLocalDateTime(), resultSet.getInt("version"));
+                resultSet.getTimestamp("creation_date").toInstant(), resultSet.getInt("version"));
     }
 }
 
