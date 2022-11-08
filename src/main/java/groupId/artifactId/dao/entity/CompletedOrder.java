@@ -4,7 +4,7 @@ import groupId.artifactId.dao.entity.api.ICompletedOrder;
 import groupId.artifactId.dao.entity.api.IPizza;
 import groupId.artifactId.dao.entity.api.ITicket;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 public class CompletedOrder implements ICompletedOrder {
@@ -12,7 +12,7 @@ public class CompletedOrder implements ICompletedOrder {
     private List<IPizza> items;
     private Long id;
     private Long ticketId;
-    private LocalDateTime creationDate;
+    private Instant creationDate;
     private Integer version;
 
     public CompletedOrder() {
@@ -33,14 +33,14 @@ public class CompletedOrder implements ICompletedOrder {
         this.ticketId = ticketId;
     }
 
-    public CompletedOrder(Long id, Long ticketId, LocalDateTime creationDate, Integer version) {
+    public CompletedOrder(Long id, Long ticketId, Instant creationDate, Integer version) {
         this.id = id;
         this.ticketId = ticketId;
         this.creationDate = creationDate;
         this.version = version;
     }
 
-    public CompletedOrder(ITicket ticket, List<IPizza> items, Long id, Long ticketId, LocalDateTime creationDate, Integer version) {
+    public CompletedOrder(ITicket ticket, List<IPizza> items, Long id, Long ticketId, Instant creationDate, Integer version) {
         this.ticket = ticket;
         this.items = items;
         this.id = id;
@@ -83,11 +83,11 @@ public class CompletedOrder implements ICompletedOrder {
         this.ticketId = ticketId;
     }
 
-    public LocalDateTime getCreationDate() {
+    public Instant getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(LocalDateTime creationDate) {
+    public void setCreationDate(Instant creationDate) {
         this.creationDate = creationDate;
     }
 

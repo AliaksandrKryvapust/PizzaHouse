@@ -126,7 +126,7 @@ public class CompletedOrderDao implements ICompletedOrderDao {
     private ICompletedOrder mapper(ResultSet resultSet) throws SQLException {
         List<IPizza> stages = new ArrayList<>();
         return new CompletedOrder(new Ticket(), stages, resultSet.getLong("id"), resultSet.getLong("ticket_id"),
-                resultSet.getTimestamp("creation_date").toLocalDateTime(), resultSet.getInt("version"));
+                resultSet.getTimestamp("creation_date").toInstant(), resultSet.getInt("version"));
     }
 
     private ICompletedOrder menuItemMapper(ResultSet resultSet) throws SQLException {
@@ -156,7 +156,7 @@ public class CompletedOrderDao implements ICompletedOrderDao {
                 ticket = new Ticket(order, resultSet.getLong("coti"), resultSet.getLong("tid"),
                         resultSet.getTimestamp("tcd").toLocalDateTime(), resultSet.getInt("tver"));
                 completedOrder = new CompletedOrder(ticket, pizzas, resultSet.getLong("id"), resultSet.getLong("coti"),
-                        resultSet.getTimestamp("cocd").toLocalDateTime(),
+                        resultSet.getTimestamp("cocd").toInstant(),
                         resultSet.getInt("ver"));
             }
         }
