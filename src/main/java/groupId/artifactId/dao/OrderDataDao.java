@@ -185,7 +185,7 @@ public class OrderDataDao implements IOrderDataDao {
     private IOrderData mapper(ResultSet resultSet) throws SQLException {
         List<IOrderStage> stages = new ArrayList<>();
         return new OrderData(new Ticket(), stages, resultSet.getLong("id"), resultSet.getLong("ticket_id"),
-                resultSet.getBoolean("done"), resultSet.getTimestamp("creation_date").toLocalDateTime(),
+                resultSet.getBoolean("done"), resultSet.getTimestamp("creation_date").toInstant(),
                 resultSet.getInt("version"));
     }
 
@@ -216,7 +216,7 @@ public class OrderDataDao implements IOrderDataDao {
                 ticket = new Ticket(order, resultSet.getLong("odti"), resultSet.getLong("tid"),
                         resultSet.getTimestamp("tcd").toLocalDateTime(), resultSet.getInt("tver"));
                 orderData = new OrderData(ticket, stages, resultSet.getLong("id"), resultSet.getLong("odti"),
-                        resultSet.getBoolean("done"), resultSet.getTimestamp("odcd").toLocalDateTime(),
+                        resultSet.getBoolean("done"), resultSet.getTimestamp("odcd").toInstant(),
                         resultSet.getInt("ver"));
             }
         }

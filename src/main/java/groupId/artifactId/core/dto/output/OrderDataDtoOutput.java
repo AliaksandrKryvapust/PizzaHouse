@@ -1,6 +1,6 @@
 package groupId.artifactId.core.dto.output;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 public class OrderDataDtoOutput {
@@ -9,7 +9,7 @@ public class OrderDataDtoOutput {
     private Long id;
     private Long ticketId;
     private Boolean done;
-    private LocalDateTime creationDate;
+    private Instant creationDate;
     private Integer version;
 
     public OrderDataDtoOutput() {
@@ -21,7 +21,7 @@ public class OrderDataDtoOutput {
         this.done = done;
     }
 
-    public OrderDataDtoOutput(Long id, Long ticketId, Boolean done, LocalDateTime creationDate, Integer version) {
+    public OrderDataDtoOutput(Long id, Long ticketId, Boolean done, Instant creationDate, Integer version) {
         this.id = id;
         this.ticketId = ticketId;
         this.done = done;
@@ -29,7 +29,8 @@ public class OrderDataDtoOutput {
         this.version = version;
     }
 
-    public OrderDataDtoOutput(TicketDtoOutPut ticket, List<OrderStageDtoOutput> orderHistory, Long id, Long ticketId, Boolean done, LocalDateTime creationDate, Integer version) {
+    public OrderDataDtoOutput(TicketDtoOutPut ticket, List<OrderStageDtoOutput> orderHistory, Long id, Long ticketId,
+                              Boolean done, Instant creationDate, Integer version) {
         this.ticket = ticket;
         this.orderHistory = orderHistory;
         this.id = id;
@@ -79,11 +80,11 @@ public class OrderDataDtoOutput {
         this.done = done;
     }
 
-    public LocalDateTime getCreationDate() {
+    public Instant getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(LocalDateTime creationDate) {
+    public void setCreationDate(Instant creationDate) {
         this.creationDate = creationDate;
     }
 

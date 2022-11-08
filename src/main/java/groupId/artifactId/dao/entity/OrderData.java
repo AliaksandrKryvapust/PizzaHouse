@@ -4,7 +4,7 @@ import groupId.artifactId.dao.entity.api.IOrderData;
 import groupId.artifactId.dao.entity.api.IOrderStage;
 import groupId.artifactId.dao.entity.api.ITicket;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 public class OrderData implements IOrderData {
@@ -13,7 +13,7 @@ public class OrderData implements IOrderData {
     private Long id;
     private Long ticketId;
     private Boolean done;
-    private LocalDateTime creationDate;
+    private Instant creationDate;
     private Integer version;
 
     public OrderData() {
@@ -43,7 +43,7 @@ public class OrderData implements IOrderData {
         this.done = done;
     }
 
-    public OrderData(Long id, Long ticketId, Boolean done, LocalDateTime creationDate, Integer version) {
+    public OrderData(Long id, Long ticketId, Boolean done, Instant creationDate, Integer version) {
         this.id = id;
         this.ticketId = ticketId;
         this.done = done;
@@ -52,7 +52,7 @@ public class OrderData implements IOrderData {
     }
 
     public OrderData(ITicket ticket, List<IOrderStage> orderHistory, Long id, Long ticketId, Boolean done,
-                     LocalDateTime creationDate, Integer version) {
+                     Instant creationDate, Integer version) {
         this.ticket = ticket;
         this.orderHistory = orderHistory;
         this.id = id;
@@ -108,11 +108,11 @@ public class OrderData implements IOrderData {
     }
 
     @Override
-    public LocalDateTime getCreationDate() {
+    public Instant getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(LocalDateTime creationDate) {
+    public void setCreationDate(Instant creationDate) {
         this.creationDate = creationDate;
     }
 
