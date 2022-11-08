@@ -1,18 +1,18 @@
 package groupId.artifactId.core.dto.output;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public class TicketDtoOutPut {
     private OrderDtoOutput order;
     private Long id;
     private Long orderId;
-    private LocalDateTime createAt;
+    private Instant createAt;
     private Integer version;
 
     public TicketDtoOutPut() {
     }
 
-    public TicketDtoOutPut(OrderDtoOutput order, Long id, Long orderId, LocalDateTime createAt, Integer version) {
+    public TicketDtoOutPut(OrderDtoOutput order, Long id, Long orderId, Instant createAt, Integer version) {
         this.order = order;
         this.id = id;
         this.orderId = orderId;
@@ -44,11 +44,11 @@ public class TicketDtoOutPut {
         this.orderId = orderId;
     }
 
-    public LocalDateTime getCreateAt() {
+    public Instant getCreateAt() {
         return createAt;
     }
 
-    public void setCreateAt(LocalDateTime createAt) {
+    public void setCreateAt(Instant createAt) {
         this.createAt = createAt;
     }
 

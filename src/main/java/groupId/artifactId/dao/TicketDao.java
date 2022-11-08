@@ -139,7 +139,7 @@ public class TicketDao implements ITicketDao {
 
     private ITicket mapper(ResultSet resultSet) throws SQLException {
         return new Ticket(resultSet.getLong("id"), resultSet.getLong("order_id"),
-                resultSet.getTimestamp("creation_date").toLocalDateTime(), resultSet.getInt("version"));
+                resultSet.getTimestamp("creation_date").toInstant(), resultSet.getInt("version"));
     }
 
     private ITicket menuItemMapper(ResultSet resultSet) throws SQLException {
@@ -161,7 +161,7 @@ public class TicketDao implements ITicketDao {
                 order = new Order(items, resultSet.getLong("id"), resultSet.getTimestamp("cd").toLocalDateTime(),
                         resultSet.getInt("ver"));
                 ticket = new Ticket(order, resultSet.getLong("tid"), resultSet.getLong("id"),
-                        resultSet.getTimestamp("tcd").toLocalDateTime(), resultSet.getInt("tver"));
+                        resultSet.getTimestamp("tcd").toInstant(), resultSet.getInt("tver"));
             }
         }
         return ticket;

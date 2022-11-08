@@ -154,7 +154,7 @@ public class CompletedOrderDao implements ICompletedOrderDao {
                 order = new Order(items, resultSet.getLong("tid"), resultSet.getTimestamp("ocd").toLocalDateTime(),
                         resultSet.getInt("over"));
                 ticket = new Ticket(order, resultSet.getLong("coti"), resultSet.getLong("tid"),
-                        resultSet.getTimestamp("tcd").toLocalDateTime(), resultSet.getInt("tver"));
+                        resultSet.getTimestamp("tcd").toInstant(), resultSet.getInt("tver"));
                 completedOrder = new CompletedOrder(ticket, pizzas, resultSet.getLong("id"), resultSet.getLong("coti"),
                         resultSet.getTimestamp("cocd").toInstant(),
                         resultSet.getInt("ver"));

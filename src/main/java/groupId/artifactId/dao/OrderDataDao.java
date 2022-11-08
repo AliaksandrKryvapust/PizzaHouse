@@ -214,7 +214,7 @@ public class OrderDataDao implements IOrderDataDao {
                 order = new Order(items, resultSet.getLong("tid"), resultSet.getTimestamp("ocd").toLocalDateTime(),
                         resultSet.getInt("over"));
                 ticket = new Ticket(order, resultSet.getLong("odti"), resultSet.getLong("tid"),
-                        resultSet.getTimestamp("tcd").toLocalDateTime(), resultSet.getInt("tver"));
+                        resultSet.getTimestamp("tcd").toInstant(), resultSet.getInt("tver"));
                 orderData = new OrderData(ticket, stages, resultSet.getLong("id"), resultSet.getLong("odti"),
                         resultSet.getBoolean("done"), resultSet.getTimestamp("odcd").toInstant(),
                         resultSet.getInt("ver"));

@@ -3,13 +3,13 @@ package groupId.artifactId.dao.entity;
 import groupId.artifactId.dao.entity.api.IOrder;
 import groupId.artifactId.dao.entity.api.ITicket;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public class Ticket implements ITicket {
     private IOrder order;
     private Long id;
     private Long orderId;
-    private LocalDateTime createAt;
+    private Instant createAt;
     private Integer version;
 
 
@@ -31,14 +31,14 @@ public class Ticket implements ITicket {
         this.orderId = orderId;
     }
 
-    public Ticket(Long id, Long orderId, LocalDateTime createAt, Integer version) {
+    public Ticket(Long id, Long orderId, Instant createAt, Integer version) {
         this.id = id;
         this.orderId = orderId;
         this.createAt = createAt;
         this.version = version;
     }
 
-    public Ticket(IOrder order, Long id, Long orderId, LocalDateTime createAt, Integer version) {
+    public Ticket(IOrder order, Long id, Long orderId, Instant createAt, Integer version) {
         this.order = order;
         this.id = id;
         this.orderId = orderId;
@@ -74,11 +74,11 @@ public class Ticket implements ITicket {
     }
 
     @Override
-    public LocalDateTime getCreateAt() {
+    public Instant getCreateAt() {
         return createAt;
     }
 
-    public void setCreateAt(LocalDateTime createAt) {
+    public void setCreateAt(Instant createAt) {
         this.createAt = createAt;
     }
 

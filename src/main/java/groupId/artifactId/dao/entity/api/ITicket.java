@@ -1,13 +1,13 @@
 package groupId.artifactId.dao.entity.api;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public interface ITicket {
     Long getId();
 
     Long getOrderId();
 
-    LocalDateTime getCreateAt();
+    Instant getCreateAt();
 
     Integer getVersion();
 
