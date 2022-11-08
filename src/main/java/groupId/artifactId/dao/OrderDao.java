@@ -157,7 +157,7 @@ public class OrderDao implements IOrderDao {
                     resultSet.getInt("miver"), resultSet.getLong("meid"));
             ISelectedItem selectedItem = new SelectedItem(menuItem, resultSet.getLong("siid"),
                     resultSet.getLong("menu_item_id"), resultSet.getLong("id"), resultSet.getInt("count"),
-                    resultSet.getTimestamp("sicd").toLocalDateTime(), resultSet.getInt("siiv"));
+                    resultSet.getTimestamp("sicd").toInstant(), resultSet.getInt("siiv"));
             items.add(selectedItem);
             if (!resultSet.isLast()) {
                 order = new Order(items, resultSet.getLong("id"), resultSet.getTimestamp("cd").toInstant(),

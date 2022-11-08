@@ -204,7 +204,7 @@ public class OrderDataDao implements IOrderDataDao {
                     resultSet.getInt("miver"), resultSet.getLong("menu_id"));
             ISelectedItem selectedItem = new SelectedItem(menuItem, resultSet.getLong("siid"),
                     resultSet.getLong("menu_item_id"), resultSet.getLong("tid"), resultSet.getInt("count"),
-                    resultSet.getTimestamp("sicd").toLocalDateTime(), resultSet.getInt("siver"));
+                    resultSet.getTimestamp("sicd").toInstant(), resultSet.getInt("siver"));
             items.add(selectedItem);
             IOrderStage orderStage = new OrderStage(resultSet.getLong("osid"), resultSet.getLong("id"),
                     resultSet.getString("osd"), resultSet.getTimestamp("oscd").toInstant(),

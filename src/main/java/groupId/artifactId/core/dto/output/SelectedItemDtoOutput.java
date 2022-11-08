@@ -1,6 +1,6 @@
 package groupId.artifactId.core.dto.output;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public class SelectedItemDtoOutput {
     private MenuItemDtoOutput menuItem;
@@ -8,14 +8,14 @@ public class SelectedItemDtoOutput {
     private Long menuItemId;
     private Long orderId;
     private Integer count;
-    private LocalDateTime createAt;
+    private Instant createAt;
     private Integer version;
 
     public SelectedItemDtoOutput() {
     }
 
     public SelectedItemDtoOutput(MenuItemDtoOutput menuItem, Long id, Long menuItemId, Long orderId, Integer count,
-                                 LocalDateTime createAt, Integer version) {
+                                 Instant createAt, Integer version) {
         this.menuItem = menuItem;
         this.id = id;
         this.menuItemId = menuItemId;
@@ -65,11 +65,11 @@ public class SelectedItemDtoOutput {
         this.count = count;
     }
 
-    public LocalDateTime getCreateAt() {
+    public Instant getCreateAt() {
         return createAt;
     }
 
-    public void setCreateAt(LocalDateTime createAt) {
+    public void setCreateAt(Instant createAt) {
         this.createAt = createAt;
     }
 

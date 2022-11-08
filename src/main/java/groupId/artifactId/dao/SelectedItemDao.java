@@ -143,7 +143,7 @@ public class SelectedItemDao implements ISelectedItemDao {
     private ISelectedItem mapper(ResultSet resultSet) throws SQLException {
         return new SelectedItem(resultSet.getLong("id"), resultSet.getLong("menu_item_id"),
                 resultSet.getLong("order_id"), resultSet.getInt("count"),
-                resultSet.getTimestamp("creation_date").toLocalDateTime(), resultSet.getInt("version"));
+                resultSet.getTimestamp("creation_date").toInstant(), resultSet.getInt("version"));
     }
 
     private ISelectedItem menuItemMapper(ResultSet resultSet) throws SQLException {
@@ -155,6 +155,6 @@ public class SelectedItemDao implements ISelectedItemDao {
                 resultSet.getInt("miver"), resultSet.getLong("meid"));
         return new SelectedItem(menuItem, resultSet.getLong("siid"),
                 resultSet.getLong("menu_item_id"), resultSet.getLong("order_id"), resultSet.getInt("count"),
-                resultSet.getTimestamp("sicd").toLocalDateTime(), resultSet.getInt("siiv"));
+                resultSet.getTimestamp("sicd").toInstant(), resultSet.getInt("siiv"));
     }
 }

@@ -3,7 +3,7 @@ package groupId.artifactId.dao.entity;
 import groupId.artifactId.dao.entity.api.IMenuItem;
 import groupId.artifactId.dao.entity.api.ISelectedItem;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public class SelectedItem implements ISelectedItem {
     private IMenuItem menuItem;
@@ -11,7 +11,7 @@ public class SelectedItem implements ISelectedItem {
     private Long menuItemId;
     private Long orderId;
     private Integer count;
-    private LocalDateTime createAt;
+    private Instant createAt;
     private Integer version;
 
     public SelectedItem() {
@@ -30,7 +30,7 @@ public class SelectedItem implements ISelectedItem {
         this.count = count;
     }
 
-    public SelectedItem(Long id, Long menuItemId, Long orderId, Integer count, LocalDateTime createAt, Integer version) {
+    public SelectedItem(Long id, Long menuItemId, Long orderId, Integer count, Instant createAt, Integer version) {
         this.id = id;
         this.menuItemId = menuItemId;
         this.orderId = orderId;
@@ -40,7 +40,7 @@ public class SelectedItem implements ISelectedItem {
     }
 
     public SelectedItem(IMenuItem menuItem, Long id, Long menuItemId, Long orderId, Integer count,
-                        LocalDateTime createAt, Integer version) {
+                        Instant createAt, Integer version) {
         this.menuItem = menuItem;
         this.id = id;
         this.menuItemId = menuItemId;
@@ -96,11 +96,11 @@ public class SelectedItem implements ISelectedItem {
     }
 
     @Override
-    public LocalDateTime getCreateAt() {
+    public Instant getCreateAt() {
         return createAt;
     }
 
-    public void setCreateAt(LocalDateTime createAt) {
+    public void setCreateAt(Instant createAt) {
         this.createAt = createAt;
     }
 
