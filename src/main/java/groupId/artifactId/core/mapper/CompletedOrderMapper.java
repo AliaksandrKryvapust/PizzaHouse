@@ -24,7 +24,7 @@ public class CompletedOrderMapper {
 
     public static CompletedOrderDtoOutput completedOrderOutputMapping(ICompletedOrder completedOrder) {
         List<PizzaDtoOutput> temp = new ArrayList<>();
-        if (completedOrder.getItems() != null || completedOrder.getTicket() != null) {
+        if (completedOrder.getItems() != null && completedOrder.getTicket() != null) {
             for (IPizza pizza : completedOrder.getItems()) {
                 PizzaDtoOutput output = PizzaMapper.pizzaOutputMapper(pizza);
                 temp.add(output);
