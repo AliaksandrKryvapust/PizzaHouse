@@ -1,49 +1,66 @@
 package groupId.artifactId.service;
 
+import groupId.artifactId.core.dto.output.CompletedOrderDtoOutput;
 import groupId.artifactId.core.mapper.CompletedOrderMapper;
+import groupId.artifactId.dao.api.ICompletedOrderDao;
+import groupId.artifactId.dao.api.IPizzaDao;
+import groupId.artifactId.dao.entity.CompletedOrder;
+import groupId.artifactId.dao.entity.api.ICompletedOrder;
+import groupId.artifactId.dao.entity.api.IPizza;
 import groupId.artifactId.service.api.ICompletedOrderService;
-import groupId.artifactId.storage.api.ICompletedOrderStorage;
-import groupId.artifactId.storage.api.StorageFactory;
-import groupId.artifactId.storage.entity.api.ICompletedOrder;
-import groupId.artifactId.storage.entity.api.IOrderData;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class CompletedOrderService implements ICompletedOrderService {
-    private static CompletedOrderService firstInstance = null;
-    private final ICompletedOrderStorage storage;
+    private final ICompletedOrderDao completedOrderDao;
+    private final IPizzaDao pizzaDao;
 
-    private CompletedOrderService() {
-        this.storage = StorageFactory.getInstance().getCompletedOrderStorage();
+    public CompletedOrderService(ICompletedOrderDao completedOrderDao, IPizzaDao pizzaDao) {
+        this.completedOrderDao = completedOrderDao;
+        this.pizzaDao = pizzaDao;
     }
 
-    public static CompletedOrderService getInstance() {
-        synchronized (CompletedOrderService.class) {
-            if (firstInstance == null) {
-                firstInstance = new CompletedOrderService();
-            }
+    @Override
+    public CompletedOrderDtoOutput getAllData(Long id) {
+        return CompletedOrderMapper.completedOrderOutputMapping(this.completedOrderDao.getAllData(id));
+    }
+
+    @Override
+    public Boolean isOrderIdValid(Long id) {
+        return this.completedOrderDao.exist(id);
+    }
+
+    @Override
+    public Boolean isPizzaIdValid(Long id) {
+        return this.pizzaDao.exist(id);
+    }
+
+    @Override
+    public CompletedOrderDtoOutput save(ICompletedOrder type) {
+        ICompletedOrder completedOrder = this.completedOrderDao.save(type);
+        List<IPizza> pizzas = new ArrayList<>();
+        for (IPizza pizza : type.getItems()) {
+            IPizza output = this.pizzaDao.save(pizza);
+            pizzas.add(output);
         }
-        return firstInstance;
+        return CompletedOrderMapper.completedOrderOutputMapping(new CompletedOrder(completedOrder.getTicket(), pizzas,
+                completedOrder.getId(), completedOrder.getTicketId(), completedOrder.getCreationDate(),
+                completedOrder.getVersion()));
     }
 
     @Override
-    public void add(IOrderData orderData) {
-        this.storage.add(CompletedOrderMapper.orderDataMapping(orderData));
+    public List<CompletedOrderDtoOutput> get() {
+        List<CompletedOrderDtoOutput> outputs = new ArrayList<>();
+        for (ICompletedOrder order : this.completedOrderDao.get()) {
+            CompletedOrderDtoOutput output = CompletedOrderMapper.completedOrderOutputMapping(order);
+            outputs.add(output);
+        }
+        return outputs;
     }
 
     @Override
-    public List<ICompletedOrder> get() {
-        return this.storage.get();
-    }
-
-    @Override
-    public Optional<ICompletedOrder> getById(int id) {
-        return this.storage.getById(id);
-    }
-
-    @Override
-    public Boolean isIdValid(int id) {
-        return this.storage.isIdExist(id);
+    public CompletedOrderDtoOutput get(Long id) {
+        return CompletedOrderMapper.completedOrderOutputMapping(this.completedOrderDao.get(id));
     }
 }
