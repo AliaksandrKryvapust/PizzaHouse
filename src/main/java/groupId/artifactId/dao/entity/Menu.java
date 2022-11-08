@@ -3,14 +3,14 @@ package groupId.artifactId.dao.entity;
 import groupId.artifactId.dao.entity.api.IMenu;
 import groupId.artifactId.dao.entity.api.IMenuItem;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Menu implements IMenu {
     private List<IMenuItem> items = new ArrayList<>();
     private Long id;
-    private LocalDateTime creationDate;
+    private Instant creationDate;
     private Integer version;
     private String name;
     private Boolean enable;
@@ -29,7 +29,7 @@ public class Menu implements IMenu {
         this.enable = enable;
     }
 
-    public Menu(Long id, LocalDateTime creationDate, Integer version, String name, Boolean enable) {
+    public Menu(Long id, Instant creationDate, Integer version, String name, Boolean enable) {
         this.id = id;
         this.creationDate = creationDate;
         this.version = version;
@@ -37,7 +37,7 @@ public class Menu implements IMenu {
         this.enable = enable;
     }
 
-    public Menu(List<IMenuItem> items, Long id, LocalDateTime creationDate, Integer version, String name, Boolean enable) {
+    public Menu(List<IMenuItem> items, Long id, Instant creationDate, Integer version, String name, Boolean enable) {
         this.items = items;
         this.id = id;
         this.creationDate = creationDate;
@@ -59,8 +59,9 @@ public class Menu implements IMenu {
     public Long getId() {
         return this.id;
     }
+
     @Override
-    public LocalDateTime getCreationDate() {
+    public Instant getCreationDate() {
         return creationDate;
     }
 
@@ -83,7 +84,7 @@ public class Menu implements IMenu {
         this.id = id;
     }
 
-    public void setCreationDate(LocalDateTime creationDate) {
+    public void setCreationDate(Instant creationDate) {
         this.creationDate = creationDate;
     }
 

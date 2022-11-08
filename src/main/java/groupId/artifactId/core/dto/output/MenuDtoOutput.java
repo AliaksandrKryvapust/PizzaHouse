@@ -1,11 +1,11 @@
 package groupId.artifactId.core.dto.output;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 public class MenuDtoOutput {
     private Long id;
-    private LocalDateTime createdAt;
+    private Instant createdAt;
     private Integer version;
     private String name;
     private Boolean enable;
@@ -14,7 +14,7 @@ public class MenuDtoOutput {
     public MenuDtoOutput() {
     }
 
-    public MenuDtoOutput(Long id, LocalDateTime createdAt, Integer version, String name, Boolean enable,
+    public MenuDtoOutput(Long id, Instant createdAt, Integer version, String name, Boolean enable,
                          List<MenuItemDtoOutput> items) {
         this.id = id;
         this.createdAt = createdAt;
@@ -32,11 +32,11 @@ public class MenuDtoOutput {
         this.id = id;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
 

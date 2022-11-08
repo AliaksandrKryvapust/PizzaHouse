@@ -190,7 +190,7 @@ public class MenuDao implements IMenuDao {
 
     private IMenu mapper(ResultSet resultSet) throws SQLException {
         List<IMenuItem> items = new ArrayList<>();
-        return new Menu(items, resultSet.getLong("id"), resultSet.getTimestamp("created_at").toLocalDateTime(),
+        return new Menu(items, resultSet.getLong("id"), resultSet.getTimestamp("created_at").toInstant(),
                 resultSet.getInt("version"), resultSet.getString("name"),
                 resultSet.getBoolean("enabled"));
     }
@@ -207,7 +207,7 @@ public class MenuDao implements IMenuDao {
                     resultSet.getInt("miv"), resultSet.getLong("menu_id"));
             items.add(item);
             if (resultSet.isLast()) {
-                menu = new Menu(items, resultSet.getLong("mid"), resultSet.getTimestamp("cr").toLocalDateTime(),
+                menu = new Menu(items, resultSet.getLong("mid"), resultSet.getTimestamp("cr").toInstant(),
                         resultSet.getInt("ver"), resultSet.getString("name"),
                         resultSet.getBoolean("enabled"));
             }

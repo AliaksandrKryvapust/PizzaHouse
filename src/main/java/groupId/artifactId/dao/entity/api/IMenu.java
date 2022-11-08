@@ -1,8 +1,6 @@
 package groupId.artifactId.dao.entity.api;
 
-import groupId.artifactId.dao.entity.MenuItem;
-
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 public interface IMenu {
@@ -10,7 +8,7 @@ public interface IMenu {
 
     Long getId();
 
-    LocalDateTime getCreationDate();
+    Instant getCreationDate();
 
     Integer getVersion();
 
