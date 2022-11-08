@@ -7,7 +7,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import groupId.artifactId.core.dto.input.*;
 import groupId.artifactId.core.dto.output.*;
 import groupId.artifactId.exceptions.IncorrectJsonParseException;
-import groupId.artifactId.storage.entity.api.ICompletedOrder;
 
 import javax.servlet.ServletInputStream;
 import java.io.IOException;
@@ -84,11 +83,28 @@ public class JsonConverter {
             throw new IncorrectJsonParseException("failed to write OrderDataDtoOutput as json", e);
         }
     }
+
     public static String fromOrderDataListToJson(List<OrderDataDtoOutput> output) {
         try {
             return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(output);
         } catch (JsonProcessingException e) {
             throw new IncorrectJsonParseException("failed to write List of OrderDataDtoOutput as json", e);
+        }
+    }
+
+    public static String fromCompletedOrderToJson(CompletedOrderDtoOutput output) {
+        try {
+            return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(output);
+        } catch (JsonProcessingException e) {
+            throw new IncorrectJsonParseException("failed to write CompletedOrderDtoOutput as json", e);
+        }
+    }
+
+    public static String fromCompletedOrderListToJson(List<CompletedOrderDtoOutput> output) {
+        try {
+            return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(output);
+        } catch (JsonProcessingException e) {
+            throw new IncorrectJsonParseException("failed to write List of CompletedOrderDtoOutput as json", e);
         }
     }
 
@@ -125,26 +141,11 @@ public class JsonConverter {
         }
     }
 
-    //    public static TokenDto fromJsonToToken(ServletInputStream servletInputStream) {
-//        try {
-//            return new ObjectMapper().readValue(servletInputStream, TokenDto.class);
-//        } catch (IOException e) {
-//            throw new IncorrectJsonParseException("failed to read servletInputStream of TokenDto.class",e);
-//        }
-//    }
-
     public static OrderDataDtoInput fromJsonToOrderData(ServletInputStream servletInputStream) {
         try {
             return new ObjectMapper().registerModule(new JavaTimeModule()).readValue(servletInputStream, OrderDataDtoInput.class);
         } catch (IOException e) {
             throw new IncorrectJsonParseException("failed to read servletInputStream of OrderDataDtoInput.class",e);
-        }
-    }
-    public static String fromCompletedOrderToJson(ICompletedOrder completedOrder) {
-        try {
-            return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(completedOrder);
-        } catch (JsonProcessingException e) {
-            throw new IncorrectJsonParseException("failed to write IOrderData as json",e);
         }
     }
 }
