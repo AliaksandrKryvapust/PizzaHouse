@@ -3,6 +3,7 @@ package groupId.artifactId.dao;
 import groupId.artifactId.dao.api.IOrderDataDao;
 import groupId.artifactId.dao.entity.*;
 import groupId.artifactId.dao.entity.api.*;
+import groupId.artifactId.exceptions.OptimisticLockException;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -113,7 +114,7 @@ public class OrderDataDao implements IOrderDataDao {
                 statement.setInt(3, version);
                 rows += statement.executeUpdate();
                 if (rows == 0) {
-                    throw new IllegalArgumentException("order data table update failed, version does not match update denied");
+                    throw new OptimisticLockException("order data table update failed, version does not match update denied");
                 }
                 if (rows > 1) {
                     throw new IllegalStateException("Incorrect order data table update, more than 1 row affected");

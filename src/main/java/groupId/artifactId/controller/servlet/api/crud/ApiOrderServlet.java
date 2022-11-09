@@ -6,6 +6,7 @@ import groupId.artifactId.core.dto.input.OrderDtoInput;
 import groupId.artifactId.core.dto.input.SelectedItemDtoInput;
 import groupId.artifactId.core.dto.output.TicketDtoOutPut;
 import groupId.artifactId.exceptions.IncorrectOrderInputException;
+import groupId.artifactId.exceptions.OptimisticLockException;
 import groupId.artifactId.service.IoC.MenuItemServiceSingleton;
 import groupId.artifactId.service.IoC.OrderServiceSingleton;
 import groupId.artifactId.service.api.IMenuItemService;
@@ -111,6 +112,8 @@ public class ApiOrderServlet extends HttpServlet {
             } else {
                 resp.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
             }
+        } catch (OptimisticLockException e) {
+            resp.setStatus(HttpServletResponse.SC_CONFLICT);
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }

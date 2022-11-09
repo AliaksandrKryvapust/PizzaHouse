@@ -9,6 +9,7 @@ import groupId.artifactId.dao.entity.api.IMenuItem;
 import groupId.artifactId.dao.entity.api.IOrder;
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
 import groupId.artifactId.dao.entity.api.ISelectedItem;
+import groupId.artifactId.exceptions.OptimisticLockException;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -101,7 +102,7 @@ public class OrderDao implements IOrderDao {
                 statement.setInt(2, version);
                 rows += statement.executeUpdate();
                 if (rows == 0) {
-                    throw new SQLException("order table delete failed,version does not match update denied");
+                    throw new OptimisticLockException("order table delete failed,version does not match update denied");
                 }
                 if (rows > 1) {
                     throw new IllegalStateException("Incorrect order table delete, more than 1 row affected");

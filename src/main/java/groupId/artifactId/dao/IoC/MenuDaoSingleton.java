@@ -3,7 +3,6 @@ package groupId.artifactId.dao.IoC;
 import groupId.artifactId.dao.MenuDao;
 import groupId.artifactId.dao.api.DataSourceCreator;
 import groupId.artifactId.dao.api.IMenuDao;
-import groupId.artifactId.exceptions.IncorrectDataSourceException;
 
 import java.beans.PropertyVetoException;
 
@@ -15,7 +14,7 @@ public class MenuDaoSingleton {
         try {
             this.menuDao = new MenuDao(DataSourceCreator.getInstance());
         } catch (PropertyVetoException e) {
-            throw new IncorrectDataSourceException("Unable to get Data Source class for MenuDao", e);
+            throw new RuntimeException("Unable to get Data Source class for MenuDao", e);
         }
     }
 

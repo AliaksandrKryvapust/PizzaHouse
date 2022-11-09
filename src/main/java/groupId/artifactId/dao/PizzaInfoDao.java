@@ -3,6 +3,7 @@ package groupId.artifactId.dao;
 import groupId.artifactId.dao.api.IPizzaInfoDao;
 import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
+import groupId.artifactId.exceptions.OptimisticLockException;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -70,7 +71,7 @@ public class PizzaInfoDao implements IPizzaInfoDao {
                 statement.setInt(5, version);
                 rows += statement.executeUpdate();
                 if (rows == 0) {
-                    throw new IllegalArgumentException("pizza_info table update failed, version does not match update denied");
+                    throw new OptimisticLockException("pizza_info table update failed, version does not match update denied");
                 }
                 if (rows > 1) {
                     throw new IllegalStateException("Incorrect pizza_info table update, more than 1 row affected");
@@ -106,10 +107,10 @@ public class PizzaInfoDao implements IPizzaInfoDao {
                 statement.setInt(2, version);
                 rows += statement.executeUpdate();
                 if (rows == 0) {
-                    throw new SQLException("pizza_info table delete failed,version does not match update denied");
+                    throw new OptimisticLockException("pizza_info table delete failed,version does not match update denied");
                 }
                 if (rows > 1) {
-                    throw new IllegalStateException("Incorrect pizza_info table update, more than 1 row affected");
+                    throw new IllegalStateException("Incorrect pizza_info table delete, more than 1 row affected");
                 }
             }
         } catch (SQLException e) {

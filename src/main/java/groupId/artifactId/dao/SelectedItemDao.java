@@ -7,6 +7,7 @@ import groupId.artifactId.dao.entity.SelectedItem;
 import groupId.artifactId.dao.entity.api.IMenuItem;
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
 import groupId.artifactId.dao.entity.api.ISelectedItem;
+import groupId.artifactId.exceptions.OptimisticLockException;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -103,7 +104,7 @@ public class SelectedItemDao implements ISelectedItemDao {
                 statement.setInt(2, version);
                 rows += statement.executeUpdate();
                 if (rows == 0) {
-                    throw new SQLException("selected item table delete failed,version does not match update denied");
+                    throw new OptimisticLockException("selected item table delete failed,version does not match update denied");
                 }
             }
         } catch (SQLException e) {

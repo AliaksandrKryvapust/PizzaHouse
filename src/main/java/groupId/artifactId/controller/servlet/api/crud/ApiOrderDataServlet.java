@@ -4,6 +4,7 @@ import groupId.artifactId.controller.validator.IoC.OrderDataValidatorSingleton;
 import groupId.artifactId.controller.validator.api.IOrderDataValidator;
 import groupId.artifactId.core.dto.input.OrderDataDtoInput;
 import groupId.artifactId.core.dto.output.OrderDataDtoOutput;
+import groupId.artifactId.exceptions.OptimisticLockException;
 import groupId.artifactId.service.IoC.OrderDataServiceSingleton;
 import groupId.artifactId.service.api.IOrderDataService;
 import groupId.artifactId.utils.JsonConverter;
@@ -106,6 +107,8 @@ public class ApiOrderDataServlet extends HttpServlet {
             } else {
                 resp.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
             }
+        } catch (OptimisticLockException e) {
+            resp.setStatus(HttpServletResponse.SC_CONFLICT);
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }

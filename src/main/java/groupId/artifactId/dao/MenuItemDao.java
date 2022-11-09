@@ -5,6 +5,7 @@ import groupId.artifactId.dao.entity.MenuItem;
 import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.api.IMenuItem;
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
+import groupId.artifactId.exceptions.OptimisticLockException;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -75,7 +76,7 @@ public class MenuItemDao implements IMenuItemDao {
                 statement.setInt(5, version);
                 rows += statement.executeUpdate();
                 if (rows == 0) {
-                    throw new IllegalArgumentException("menu_item table update failed, version does not match update denied");
+                    throw new OptimisticLockException("menu_item table update failed, version does not match update denied");
                 }
                 if (rows > 1) {
                     throw new IllegalStateException("Incorrect menu_item table update, more than 1 row affected");
@@ -111,10 +112,10 @@ public class MenuItemDao implements IMenuItemDao {
                 statement.setInt(2, version);
                 rows += statement.executeUpdate();
                 if (rows == 0) {
-                    throw new SQLException("menu_item table delete failed,version does not match update denied");
+                    throw new OptimisticLockException("menu_item table delete failed,version does not match update denied");
                 }
                 if (rows > 1) {
-                    throw new IllegalStateException("Incorrect pizza_info table update, more than 1 row affected");
+                    throw new IllegalStateException("Incorrect pizza_info table delete, more than 1 row affected");
                 }
             }
         } catch (SQLException e) {

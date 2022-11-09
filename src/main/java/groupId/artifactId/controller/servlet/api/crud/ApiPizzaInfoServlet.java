@@ -4,6 +4,7 @@ import groupId.artifactId.controller.validator.IoC.PizzaInfoValidatorSingleton;
 import groupId.artifactId.controller.validator.api.IPizzaInfoValidator;
 import groupId.artifactId.core.dto.input.PizzaInfoDtoInput;
 import groupId.artifactId.core.dto.output.PizzaInfoDtoOutput;
+import groupId.artifactId.exceptions.OptimisticLockException;
 import groupId.artifactId.service.IoC.PizzaInfoServiceSingleton;
 import groupId.artifactId.service.api.IPizzaInfoService;
 import groupId.artifactId.utils.JsonConverter;
@@ -112,6 +113,8 @@ public class ApiPizzaInfoServlet extends HttpServlet {
             } else {
                 resp.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
             }
+        } catch (OptimisticLockException e) {
+            resp.setStatus(HttpServletResponse.SC_CONFLICT);
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
@@ -138,6 +141,8 @@ public class ApiPizzaInfoServlet extends HttpServlet {
             } else {
                 resp.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
             }
+        } catch (OptimisticLockException e) {
+            resp.setStatus(HttpServletResponse.SC_CONFLICT);
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }

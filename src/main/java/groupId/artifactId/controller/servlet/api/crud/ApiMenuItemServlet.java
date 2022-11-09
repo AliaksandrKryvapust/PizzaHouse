@@ -4,6 +4,7 @@ import groupId.artifactId.controller.validator.IoC.MenuItemValidatorSingleton;
 import groupId.artifactId.controller.validator.api.IMenuItemValidator;
 import groupId.artifactId.core.dto.input.MenuItemDtoInput;
 import groupId.artifactId.core.dto.output.MenuItemDtoOutput;
+import groupId.artifactId.exceptions.OptimisticLockException;
 import groupId.artifactId.service.IoC.MenuItemServiceSingleton;
 import groupId.artifactId.service.IoC.MenuServiceSingleton;
 import groupId.artifactId.service.IoC.PizzaInfoServiceSingleton;
@@ -119,6 +120,8 @@ public class ApiMenuItemServlet extends HttpServlet {
             } else {
                 resp.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
             }
+        } catch (OptimisticLockException e) {
+            resp.setStatus(HttpServletResponse.SC_CONFLICT);
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
@@ -146,6 +149,8 @@ public class ApiMenuItemServlet extends HttpServlet {
             } else {
                 resp.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
             }
+        } catch (OptimisticLockException e) {
+            resp.setStatus(HttpServletResponse.SC_CONFLICT);
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }

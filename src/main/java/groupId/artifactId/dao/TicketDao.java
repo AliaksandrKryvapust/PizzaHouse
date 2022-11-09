@@ -3,6 +3,7 @@ package groupId.artifactId.dao;
 import groupId.artifactId.dao.api.ITicketDao;
 import groupId.artifactId.dao.entity.*;
 import groupId.artifactId.dao.entity.api.*;
+import groupId.artifactId.exceptions.OptimisticLockException;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -98,7 +99,7 @@ public class TicketDao implements ITicketDao {
                 statement.setInt(2, version);
                 rows += statement.executeUpdate();
                 if (rows == 0) {
-                    throw new SQLException("ticket table delete failed,version does not match update denied");
+                    throw new OptimisticLockException("ticket table delete failed,version does not match update denied");
                 }
                 if (rows > 1) {
                     throw new IllegalStateException("Incorrect ticket table delete, more than 1 row affected");

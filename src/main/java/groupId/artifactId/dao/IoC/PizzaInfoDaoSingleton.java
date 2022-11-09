@@ -3,7 +3,6 @@ package groupId.artifactId.dao.IoC;
 import groupId.artifactId.dao.PizzaInfoDao;
 import groupId.artifactId.dao.api.DataSourceCreator;
 import groupId.artifactId.dao.api.IPizzaInfoDao;
-import groupId.artifactId.exceptions.IncorrectDataSourceException;
 
 import java.beans.PropertyVetoException;
 
@@ -15,7 +14,7 @@ public class PizzaInfoDaoSingleton {
         try {
             this.pizzaInfoDao = new PizzaInfoDao(DataSourceCreator.getInstance());
         } catch (PropertyVetoException e) {
-            throw new IncorrectDataSourceException("Unable to get Data Source class for PizzaInfoDao", e);
+            throw new RuntimeException("Unable to get Data Source class for PizzaInfoDao", e);
         }
     }
 
