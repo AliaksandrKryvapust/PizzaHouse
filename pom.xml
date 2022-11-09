@@ -46,6 +46,18 @@
             <artifactId>c3p0</artifactId>
             <version>0.9.5.5</version>
         </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>4.8.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>4.8.1</version>
+            <scope>test</scope>
+        </dependency>
         <!--        &lt;!&ndash; Hibernate 5.2.6 Final &ndash;&gt;-->
         <!--        <dependency>-->
         <!--            <groupId>org.hibernate</groupId>-->
