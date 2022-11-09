@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.Instant;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
@@ -61,7 +62,9 @@ class PizzaInfoServiceTest {
         final String description = "Mozzarella cheese, basilica, ham";
         final int size = 32;
         final long id = 1L;
-        List<IPizzaInfo> pizzaInfos = singletonList(new PizzaInfo(id, name, description, size));
+        final int version =1;
+        final Instant creationDate = Instant.now();
+        List<IPizzaInfo> pizzaInfos = singletonList(new PizzaInfo(id, name, description, size, creationDate, version));
         Mockito.when(pizzaInfoDao.get()).thenReturn(pizzaInfos);
 
         //test
@@ -75,6 +78,8 @@ class PizzaInfoServiceTest {
             Assertions.assertEquals(name, output.getName());
             Assertions.assertEquals(description, output.getDescription());
             Assertions.assertEquals(size, output.getSize());
+            Assertions.assertEquals(version, output.getVersion());
+            Assertions.assertEquals(creationDate, output.getCreatedAt());
         }
     }
 
@@ -85,7 +90,9 @@ class PizzaInfoServiceTest {
         final String description = "Mozzarella cheese, basilica, ham";
         final int size = 32;
         final long id = 1L;
-        final IPizzaInfo pizzaInfo = new PizzaInfo(id, name, description, size);
+        final int version =1;
+        final Instant creationDate = Instant.now();
+        final IPizzaInfo pizzaInfo = new PizzaInfo(id, name, description, size, creationDate, version);
         Mockito.when(pizzaInfoDao.get(id)).thenReturn(pizzaInfo);
 
         //test
@@ -97,6 +104,8 @@ class PizzaInfoServiceTest {
         Assertions.assertEquals(name, test.getName());
         Assertions.assertEquals(description, test.getDescription());
         Assertions.assertEquals(size, test.getSize());
+        Assertions.assertEquals(version, test.getVersion());
+        Assertions.assertEquals(creationDate, test.getCreatedAt());
     }
 
     @Test
