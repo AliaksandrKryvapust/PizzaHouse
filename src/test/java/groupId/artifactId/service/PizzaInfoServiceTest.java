@@ -21,6 +21,7 @@ import java.util.List;
 import static java.util.Collections.singletonList;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 class PizzaInfoServiceTest {
@@ -168,10 +169,10 @@ class PizzaInfoServiceTest {
         ArgumentCaptor<Long> valueId = ArgumentCaptor.forClass(Long.class);
         ArgumentCaptor<Integer> valueVersion = ArgumentCaptor.forClass(Integer.class);
         ArgumentCaptor<Boolean> valueDelete = ArgumentCaptor.forClass(Boolean.class);
-        Mockito.doNothing().when(pizzaInfoDao).delete(valueId.capture(), valueVersion.capture(), valueDelete.capture());
 
         //test
-       pizzaInfoService.delete(inputId, version, delete);
+        pizzaInfoService.delete(inputId, version, delete);
+        Mockito.verify(pizzaInfoDao, times(1)).delete(valueId.capture(), valueVersion.capture(), valueDelete.capture());
 
         // assert
         Assertions.assertEquals(Long.valueOf(inputId), valueId.getValue());
