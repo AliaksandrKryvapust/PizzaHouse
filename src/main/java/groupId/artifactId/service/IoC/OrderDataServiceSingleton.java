@@ -10,7 +10,8 @@ public class OrderDataServiceSingleton {
     private volatile static OrderDataServiceSingleton firstInstance = null;
 
     public OrderDataServiceSingleton() {
-        this.orderDataService = new OrderDataService(OrderDataDaoSingleton.getInstance(), OrderStageDaoSingleton.getInstance());
+        this.orderDataService = new OrderDataService(OrderDataDaoSingleton.getInstance(), OrderStageDaoSingleton.getInstance(),
+                CompletedOrderServiceSingleton.getInstance());
     }
 
     public static IOrderDataService getInstance() {

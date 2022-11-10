@@ -11,7 +11,6 @@ import groupId.artifactId.dao.entity.OrderStage;
 import groupId.artifactId.dao.entity.api.ICompletedOrder;
 import groupId.artifactId.dao.entity.api.IOrderData;
 import groupId.artifactId.dao.entity.api.IOrderStage;
-import groupId.artifactId.service.IoC.CompletedOrderServiceSingleton;
 import groupId.artifactId.service.api.ICompletedOrderService;
 import groupId.artifactId.service.api.IOrderDataService;
 
@@ -22,10 +21,12 @@ import java.util.List;
 public class OrderDataService implements IOrderDataService {
     private final IOrderDataDao orderDataDao;
     private final IOrderStageDao orderStageDao;
+    private final ICompletedOrderService completedOrderService;
 
-    public OrderDataService(IOrderDataDao orderDataDao, IOrderStageDao orderStageDao) {
+    public OrderDataService(IOrderDataDao orderDataDao, IOrderStageDao orderStageDao, ICompletedOrderService completedOrderService) {
         this.orderDataDao = orderDataDao;
         this.orderStageDao = orderStageDao;
+        this.completedOrderService = completedOrderService;
     }
 
     @Override
@@ -89,13 +90,10 @@ public class OrderDataService implements IOrderDataService {
         IOrderStage stage;
         if (input.isDone()) {
             orderData = this.orderDataDao.update(input, Long.valueOf(id), Integer.valueOf(version));
-            ICompletedOrderService completedOrderService = CompletedOrderServiceSingleton.getInstance();
-
-            ICompletedOrder completedOrder = CompletedOrderMapper.completedOrderInputMapping(
-                    this.orderDataDao.getAllData(type.getTicketId()));
+            ICompletedOrder completedOrder = CompletedOrderMapper.completedOrderInputMapping(this.orderDataDao.getAllData(type.getTicketId()));
             completedOrderService.save(completedOrder);
         } else {
-            orderData = input;
+            orderData = new OrderData(Long.valueOf(id),input.getTicketId(), input.isDone());
         }
         if (!this.orderStageDao.doesStageExist(orderData.getId(), input.getOrderHistory().get(0).getDescription())) {
             stage = this.orderStageDao.save(new OrderStage(Long.valueOf(id),
