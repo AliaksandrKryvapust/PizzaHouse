@@ -12,7 +12,7 @@ public class OrderServiceSingleton {
 
     public OrderServiceSingleton() {
         this.orderService = new OrderService(SelectedItemDaoSingleton.getInstance(), OrderDaoSingleton.getInstance(),
-                TicketDaoSingleton.getInstance());
+                TicketDaoSingleton.getInstance(), OrderDataServiceSingleton.getInstance());
     }
 
     public static IOrderService getInstance() {

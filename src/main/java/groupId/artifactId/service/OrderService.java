@@ -13,7 +13,6 @@ import groupId.artifactId.dao.entity.Ticket;
 import groupId.artifactId.dao.entity.api.IOrder;
 import groupId.artifactId.dao.entity.api.ISelectedItem;
 import groupId.artifactId.dao.entity.api.ITicket;
-import groupId.artifactId.service.IoC.OrderDataServiceSingleton;
 import groupId.artifactId.service.api.IOrderDataService;
 import groupId.artifactId.service.api.IOrderService;
 
@@ -24,11 +23,13 @@ public class OrderService implements IOrderService {
     private final ISelectedItemDao selectedItemDao;
     private final IOrderDao orderDao;
     private final ITicketDao ticketDao;
+    private final IOrderDataService orderDataService;
 
-    public OrderService(ISelectedItemDao selectedItemDao, IOrderDao orderDao, ITicketDao ticketDao) {
+    public OrderService(ISelectedItemDao selectedItemDao, IOrderDao orderDao, ITicketDao ticketDao, IOrderDataService orderDataService) {
         this.selectedItemDao = selectedItemDao;
         this.orderDao = orderDao;
         this.ticketDao = ticketDao;
+        this.orderDataService = orderDataService;
     }
 
     @Override
@@ -61,7 +62,6 @@ public class OrderService implements IOrderService {
             items.add(output);
         }
         ITicket ticket = this.ticketDao.save(new Ticket(orderId.getId()));
-        IOrderDataService orderDataService = OrderDataServiceSingleton.getInstance();
         orderDataService.save(new OrderDataDtoInput(ticket.getId(),false,"Order accepted"));
         return TicketMapper.ticketOutputMapping(new Ticket(new Order(items, orderId.getId()), ticket.getId(), ticket.getOrderId()));
     }
