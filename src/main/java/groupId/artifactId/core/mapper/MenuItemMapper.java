@@ -12,8 +12,13 @@ public class MenuItemMapper {
     }
 
     public static MenuItemDtoOutput menuItemOutputMapping(IMenuItem menuItem) {
-        PizzaInfoDtoOutput pizzaInfo = PizzaInfoMapper.pizzaInfoOutputMapping(menuItem.getInfo());
-        return new MenuItemDtoOutput(menuItem.getId(), menuItem.getPrice(), menuItem.getPizzaInfoId(), menuItem.getCreationDate(),
-                menuItem.getVersion(), menuItem.getMenuId(), pizzaInfo);
+        if (menuItem.getInfo()==null){
+            return new MenuItemDtoOutput(menuItem.getId(), menuItem.getPrice(), menuItem.getPizzaInfoId(), menuItem.getCreationDate(),
+                    menuItem.getVersion(), menuItem.getMenuId(), new PizzaInfoDtoOutput());
+        } else {
+            PizzaInfoDtoOutput pizzaInfo = PizzaInfoMapper.pizzaInfoOutputMapping(menuItem.getInfo());
+            return new MenuItemDtoOutput(menuItem.getId(), menuItem.getPrice(), menuItem.getPizzaInfoId(), menuItem.getCreationDate(),
+                    menuItem.getVersion(), menuItem.getMenuId(), pizzaInfo);
+        }
     }
 }
