@@ -51,8 +51,7 @@ public class CompletedOrderService implements ICompletedOrderService {
             pizzas.add(output);
         }
         return CompletedOrderMapper.completedOrderOutputMapping(new CompletedOrder(completedOrder.getTicket(), pizzas,
-                completedOrder.getId(), completedOrder.getTicketId(), completedOrder.getCreationDate(),
-                completedOrder.getVersion()));
+                completedOrder.getId(), completedOrder.getTicketId()));
     }
 
     @Override
