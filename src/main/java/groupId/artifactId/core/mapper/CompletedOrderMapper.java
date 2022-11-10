@@ -32,6 +32,13 @@ public class CompletedOrderMapper {
             TicketDtoOutPut ticketDtoOutPut = TicketMapper.ticketOutputMapping(completedOrder.getTicket());
             return new CompletedOrderDtoOutput(ticketDtoOutPut, temp, completedOrder.getId(), completedOrder.getTicketId(),
                     completedOrder.getCreationDate(), completedOrder.getVersion());
+        } else if (completedOrder.getItems() != null) {
+            for (IPizza pizza : completedOrder.getItems()) {
+                PizzaDtoOutput output = PizzaMapper.pizzaOutputMapper(pizza);
+                temp.add(output);
+            }
+            return new CompletedOrderDtoOutput(new TicketDtoOutPut(), temp, completedOrder.getId(), completedOrder.getTicketId(),
+                    completedOrder.getCreationDate(), completedOrder.getVersion());
         } else {
             return new CompletedOrderDtoOutput(new TicketDtoOutPut(), Collections.singletonList(new PizzaDtoOutput()),
                     completedOrder.getId(), completedOrder.getTicketId(),
