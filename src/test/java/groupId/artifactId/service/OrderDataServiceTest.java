@@ -9,7 +9,6 @@ import groupId.artifactId.dao.OrderStageDao;
 import groupId.artifactId.dao.entity.*;
 import groupId.artifactId.dao.entity.api.*;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -36,11 +35,6 @@ class OrderDataServiceTest {
     private OrderStageDao orderStageDao;
     @Mock
     private CompletedOrderService completedOrderService;
-
-    @BeforeEach
-    public void init() {
-        orderDataService = new OrderDataService(orderDataDao, orderStageDao, completedOrderService);
-    }
 
     @Test
     void getAllData() {

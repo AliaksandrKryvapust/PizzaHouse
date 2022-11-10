@@ -10,7 +10,6 @@ import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.api.IMenu;
 import groupId.artifactId.dao.entity.api.IMenuItem;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -34,11 +33,6 @@ class MenuServiceTest {
     private MenuService menuService;
     @Mock
     private MenuDao menuDao;
-
-    @BeforeEach
-    public void init() {
-        menuService = new MenuService(menuDao);
-    }
 
     @Test
     void get() {

@@ -10,7 +10,6 @@ import groupId.artifactId.dao.entity.api.ICompletedOrder;
 import groupId.artifactId.dao.entity.api.IPizza;
 import groupId.artifactId.dao.entity.api.ISelectedItem;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,11 +31,6 @@ class CompletedOrderServiceTest {
     private CompletedOrderDao completedOrderDao;
     @Mock
     private PizzaDao pizzaDao;
-
-    @BeforeEach
-    public void init() {
-        completedOrderService = new CompletedOrderService(completedOrderDao, pizzaDao);
-    }
 
     @Test
     void getAllData() {

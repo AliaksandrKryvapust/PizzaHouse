@@ -14,7 +14,6 @@ import groupId.artifactId.dao.entity.api.IOrder;
 import groupId.artifactId.dao.entity.api.ISelectedItem;
 import groupId.artifactId.dao.entity.api.ITicket;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -42,11 +41,6 @@ class OrderServiceTest {
     private TicketDao ticketDao;
     @Mock
     private OrderDataService orderDataService;
-
-    @BeforeEach
-    public void init() {
-        orderService = new OrderService(selectedItemDao, orderDao, ticketDao, orderDataService);
-    }
 
     @Test
     void getAllData() {

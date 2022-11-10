@@ -6,7 +6,6 @@ import groupId.artifactId.dao.PizzaInfoDao;
 import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -29,11 +28,6 @@ class PizzaInfoServiceTest {
     private PizzaInfoService pizzaInfoService;
     @Mock
     private PizzaInfoDao pizzaInfoDao;
-
-    @BeforeEach
-    public void init() {
-        pizzaInfoService = new PizzaInfoService(pizzaInfoDao);
-    }
 
     @Test
     void save() {
