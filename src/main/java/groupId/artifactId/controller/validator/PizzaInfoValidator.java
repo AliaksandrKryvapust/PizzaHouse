@@ -15,7 +15,7 @@ public class PizzaInfoValidator implements IPizzaInfoValidator {
         if (pizzaInfo.getDescription() == null || pizzaInfo.getDescription().isBlank()) {
             throw new IllegalArgumentException("Pizza`s description is not valid");
         }
-        if (pizzaInfo.getSize()==null && pizzaInfo.getSize() <= 0) {
+        if (pizzaInfo.getSize()==null || pizzaInfo.getSize() <= 0) {
             throw new IllegalArgumentException("Pizza`s size is not valid");
         }
     }
