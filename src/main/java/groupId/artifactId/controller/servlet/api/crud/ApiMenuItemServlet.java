@@ -11,6 +11,7 @@ import groupId.artifactId.service.IoC.PizzaInfoServiceSingleton;
 import groupId.artifactId.service.api.IMenuItemService;
 import groupId.artifactId.service.api.IMenuService;
 import groupId.artifactId.service.api.IPizzaInfoService;
+import groupId.artifactId.utils.Constants;
 import groupId.artifactId.utils.JsonConverter;
 
 import javax.servlet.annotation.WebServlet;
@@ -26,11 +27,6 @@ public class ApiMenuItemServlet extends HttpServlet {
     private final IMenuService menuService = MenuServiceSingleton.getInstance();
     private final IPizzaInfoService pizzaInfoService = PizzaInfoServiceSingleton.getInstance();
     private final IMenuItemValidator menuItemValidator = MenuItemValidatorSingleton.getInstance();
-    private static final String CONTENT_TYPE = "application/json";
-    private static final String ENCODING = "UTF-8";
-    private static final String PARAMETER_ID = "id";
-    private static final String PARAMETER_VERSION = "version";
-    private static final String PARAMETER_DELETE = "delete";
 
     //Read POSITION
     //1) Read list
@@ -38,9 +34,9 @@ public class ApiMenuItemServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            resp.setContentType(CONTENT_TYPE);
-            resp.setCharacterEncoding(ENCODING);
-            String id = req.getParameter(PARAMETER_ID);
+            resp.setContentType(Constants.CONTENT_TYPE);
+            resp.setCharacterEncoding(Constants.ENCODING);
+            String id = req.getParameter(Constants.PARAMETER_ID);
             if (id != null) {
                 if (menuItemService.isIdValid(Long.valueOf(id))) {
                     resp.getWriter().write(JsonConverter.fromMenuItemToJson(menuItemService.get(Long.valueOf(id))));
@@ -67,8 +63,8 @@ public class ApiMenuItemServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            resp.setCharacterEncoding(ENCODING);
-            resp.setContentType(CONTENT_TYPE);
+            resp.setCharacterEncoding(Constants.ENCODING);
+            resp.setContentType(Constants.CONTENT_TYPE);
             MenuItemDtoInput menuItem = JsonConverter.fromJsonToMenuItem(req.getInputStream());
             if (menuService.isIdValid(menuItem.getMenuId()) && pizzaInfoService.isIdValid(menuItem.getPizzaInfoId())) {
                 try {
@@ -99,10 +95,10 @@ public class ApiMenuItemServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            resp.setCharacterEncoding(ENCODING);
-            resp.setContentType(CONTENT_TYPE);
-            String id = req.getParameter(PARAMETER_ID);
-            String version = req.getParameter(PARAMETER_VERSION);
+            resp.setCharacterEncoding(Constants.ENCODING);
+            resp.setContentType(Constants.CONTENT_TYPE);
+            String id = req.getParameter(Constants.PARAMETER_ID);
+            String version = req.getParameter(Constants.PARAMETER_VERSION);
             if (id != null && version != null) {
                 if (menuItemService.isIdValid(Long.valueOf(id))) {
                     MenuItemDtoInput menuItem = JsonConverter.fromJsonToMenuItem(req.getInputStream());
@@ -134,11 +130,11 @@ public class ApiMenuItemServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            resp.setCharacterEncoding(ENCODING);
-            resp.setContentType(CONTENT_TYPE);
-            String id = req.getParameter(PARAMETER_ID);
-            String version = req.getParameter(PARAMETER_VERSION);
-            String delete = req.getParameter(PARAMETER_DELETE);
+            resp.setCharacterEncoding(Constants.ENCODING);
+            resp.setContentType(Constants.CONTENT_TYPE);
+            String id = req.getParameter(Constants.PARAMETER_ID);
+            String version = req.getParameter(Constants.PARAMETER_VERSION);
+            String delete = req.getParameter(Constants.PARAMETER_DELETE);
             if (id != null && version != null && delete != null) {
                 if (menuItemService.isIdValid(Long.valueOf(id))) {
                     menuItemService.delete(id, version, delete);

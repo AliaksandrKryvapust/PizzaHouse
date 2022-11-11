@@ -7,6 +7,7 @@ import groupId.artifactId.core.dto.output.MenuDtoOutput;
 import groupId.artifactId.exceptions.OptimisticLockException;
 import groupId.artifactId.service.IoC.MenuServiceSingleton;
 import groupId.artifactId.service.api.IMenuService;
+import groupId.artifactId.utils.Constants;
 import groupId.artifactId.utils.JsonConverter;
 
 import javax.servlet.annotation.WebServlet;
@@ -18,11 +19,6 @@ import javax.servlet.http.HttpServletResponse;
 //IMenu
 @WebServlet(name = "Menu", urlPatterns = "/api/menu")
 public class ApiMenuServlet extends HttpServlet {
-    private static final String CONTENT_TYPE = "application/json";
-    private static final String ENCODING = "UTF-8";
-    private static final String PARAMETER_ID = "id";
-    private static final String PARAMETER_VERSION = "version";
-    private static final String PARAMETER_DELETE = "delete";
     private final IMenuService menuService = MenuServiceSingleton.getInstance();
     private final IMenuValidator menuValidator = MenuValidatorSingleton.getInstance();
 
@@ -33,9 +29,9 @@ public class ApiMenuServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            resp.setContentType(CONTENT_TYPE);
-            resp.setCharacterEncoding(ENCODING);
-            String id = req.getParameter(PARAMETER_ID);
+            resp.setContentType(Constants.CONTENT_TYPE);
+            resp.setCharacterEncoding(Constants.ENCODING);
+            String id = req.getParameter(Constants.PARAMETER_ID);
             if (id != null) {
                 if (menuService.isIdValid(Long.valueOf(id))) {
                     resp.getWriter().write(JsonConverter.fromMenuToJson(menuService.get(Long.valueOf(id))));
@@ -61,8 +57,8 @@ public class ApiMenuServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            resp.setCharacterEncoding(ENCODING);
-            resp.setContentType(CONTENT_TYPE);
+            resp.setCharacterEncoding(Constants.ENCODING);
+            resp.setContentType(Constants.CONTENT_TYPE);
             MenuDtoInput menu = JsonConverter.fromJsonToMenu(req.getInputStream());
             if (!menuService.exist(menu.getName())) {
                 try {
@@ -92,10 +88,10 @@ public class ApiMenuServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            resp.setCharacterEncoding(ENCODING);
-            resp.setContentType(CONTENT_TYPE);
-            String id = req.getParameter(PARAMETER_ID);
-            String version = req.getParameter(PARAMETER_VERSION);
+            resp.setCharacterEncoding(Constants.ENCODING);
+            resp.setContentType(Constants.CONTENT_TYPE);
+            String id = req.getParameter(Constants.PARAMETER_ID);
+            String version = req.getParameter(Constants.PARAMETER_VERSION);
             if (id != null && version != null) {
                 if (menuService.isIdValid(Long.valueOf(id))) {
                     MenuDtoInput menu = JsonConverter.fromJsonToMenu(req.getInputStream());
@@ -127,11 +123,11 @@ public class ApiMenuServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            resp.setCharacterEncoding(ENCODING);
-            resp.setContentType(CONTENT_TYPE);
-            String id = req.getParameter(PARAMETER_ID);
-            String version = req.getParameter(PARAMETER_VERSION);
-            String delete = req.getParameter(PARAMETER_DELETE);
+            resp.setCharacterEncoding(Constants.ENCODING);
+            resp.setContentType(Constants.CONTENT_TYPE);
+            String id = req.getParameter(Constants.PARAMETER_ID);
+            String version = req.getParameter(Constants.PARAMETER_VERSION);
+            String delete = req.getParameter(Constants.PARAMETER_DELETE);
             if (id != null && version != null && delete != null) {
                 if (menuService.isIdValid(Long.valueOf(id))) {
                     menuService.delete(id, version, delete);

@@ -11,6 +11,7 @@ import groupId.artifactId.service.IoC.MenuItemServiceSingleton;
 import groupId.artifactId.service.IoC.OrderServiceSingleton;
 import groupId.artifactId.service.api.IMenuItemService;
 import groupId.artifactId.service.api.IOrderService;
+import groupId.artifactId.utils.Constants;
 import groupId.artifactId.utils.JsonConverter;
 
 import javax.servlet.annotation.WebServlet;
@@ -20,11 +21,6 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet(name = "Order", urlPatterns = "/api/order")
 public class ApiOrderServlet extends HttpServlet {
-    private static final String CONTENT_TYPE = "application/json";
-    private static final String ENCODING = "UTF-8";
-    private static final String PARAMETER_ID = "id";
-    private static final String PARAMETER_VERSION = "version";
-    private static final String PARAMETER_DELETE = "delete";
     private final IOrderService orderService = OrderServiceSingleton.getInstance();
     private final IMenuItemService menuItemService = MenuItemServiceSingleton.getInstance();
     private final IOrderValidator orderValidator = OrderValidatorSingleton.getInstance();
@@ -35,9 +31,9 @@ public class ApiOrderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            resp.setContentType(CONTENT_TYPE);
-            resp.setCharacterEncoding(ENCODING);
-            String id = req.getParameter(PARAMETER_ID);
+            resp.setContentType(Constants.CONTENT_TYPE);
+            resp.setCharacterEncoding(Constants.ENCODING);
+            String id = req.getParameter(Constants.PARAMETER_ID);
             if (id != null) {
                 if (orderService.isTicketIdValid(Long.valueOf(id))) {
                     resp.getWriter().write(JsonConverter.fromTicketToJson(orderService.get(Long.valueOf(id))));
@@ -67,8 +63,8 @@ public class ApiOrderServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            resp.setCharacterEncoding(ENCODING);
-            resp.setContentType(CONTENT_TYPE);
+            resp.setCharacterEncoding(Constants.ENCODING);
+            resp.setContentType(Constants.CONTENT_TYPE);
             OrderDtoInput order = JsonConverter.fromJsonToOrder(req.getInputStream());
             try {
                 orderValidator.validate(order);
@@ -97,11 +93,11 @@ public class ApiOrderServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            resp.setCharacterEncoding(ENCODING);
-            resp.setContentType(CONTENT_TYPE);
-            String id = req.getParameter(PARAMETER_ID);
-            String version = req.getParameter(PARAMETER_VERSION);
-            String delete = req.getParameter(PARAMETER_DELETE);
+            resp.setCharacterEncoding(Constants.ENCODING);
+            resp.setContentType(Constants.CONTENT_TYPE);
+            String id = req.getParameter(Constants.PARAMETER_ID);
+            String version = req.getParameter(Constants.PARAMETER_VERSION);
+            String delete = req.getParameter(Constants.PARAMETER_DELETE);
             if (id != null && version != null && delete != null) {
                 if (orderService.isTicketIdValid(Long.valueOf(id))) {
                     orderService.delete(id, version, delete);

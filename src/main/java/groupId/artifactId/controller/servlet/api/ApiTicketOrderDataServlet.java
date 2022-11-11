@@ -2,6 +2,7 @@ package groupId.artifactId.controller.servlet.api;
 
 import groupId.artifactId.service.IoC.OrderDataServiceSingleton;
 import groupId.artifactId.service.api.IOrderDataService;
+import groupId.artifactId.utils.Constants;
 import groupId.artifactId.utils.JsonConverter;
 
 import javax.servlet.annotation.WebServlet;
@@ -11,9 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet(name = "TicketOrderData", urlPatterns = "/api/ticket/order_data")
 public class ApiTicketOrderDataServlet extends HttpServlet {
-    private static final String CONTENT_TYPE = "application/json";
-    private static final String ENCODING = "UTF-8";
-    private static final String PARAMETER_ID = "id";
     private final IOrderDataService orderDataService = OrderDataServiceSingleton.getInstance();
 
     //Read POSITION
@@ -21,9 +19,9 @@ public class ApiTicketOrderDataServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            resp.setContentType(CONTENT_TYPE);
-            resp.setCharacterEncoding(ENCODING);
-            String id = req.getParameter(PARAMETER_ID);
+            resp.setContentType(Constants.CONTENT_TYPE);
+            resp.setCharacterEncoding(Constants.ENCODING);
+            String id = req.getParameter(Constants.PARAMETER_ID);
             if (id != null) {
                 if (orderDataService.isTicketIdValid(Long.valueOf(id))) {
                     resp.getWriter().write(JsonConverter.fromOrderDataToJson(orderDataService.getAllData(Long.valueOf(id))));

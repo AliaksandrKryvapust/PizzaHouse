@@ -7,6 +7,7 @@ import groupId.artifactId.core.dto.output.PizzaInfoDtoOutput;
 import groupId.artifactId.exceptions.OptimisticLockException;
 import groupId.artifactId.service.IoC.PizzaInfoServiceSingleton;
 import groupId.artifactId.service.api.IPizzaInfoService;
+import groupId.artifactId.utils.Constants;
 import groupId.artifactId.utils.JsonConverter;
 
 import javax.servlet.annotation.WebServlet;
@@ -20,11 +21,6 @@ import javax.servlet.http.HttpServletResponse;
 public class ApiPizzaInfoServlet extends HttpServlet {
     private final IPizzaInfoService pizzaInfoService = PizzaInfoServiceSingleton.getInstance();
     private final IPizzaInfoValidator pizzaInfoValidator = PizzaInfoValidatorSingleton.getInstance();
-    private static final String CONTENT_TYPE = "application/json";
-    private static final String ENCODING = "UTF-8";
-    private static final String PARAMETER_ID = "id";
-    private static final String PARAMETER_VERSION = "version";
-    private static final String PARAMETER_DELETE = "delete";
 
     //Read POSITION
     //1) Read list
@@ -32,9 +28,9 @@ public class ApiPizzaInfoServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            resp.setContentType(CONTENT_TYPE);
-            resp.setCharacterEncoding(ENCODING);
-            String id = req.getParameter(PARAMETER_ID);
+            resp.setContentType(Constants.CONTENT_TYPE);
+            resp.setCharacterEncoding(Constants.ENCODING);
+            String id = req.getParameter(Constants.PARAMETER_ID);
             if (id != null) {
                 if (pizzaInfoService.isIdValid(Long.valueOf(id))) {
                     resp.getWriter().write(JsonConverter.fromPizzaInfoToJson(pizzaInfoService.get(Long.valueOf(id))));
@@ -61,8 +57,8 @@ public class ApiPizzaInfoServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            resp.setCharacterEncoding(ENCODING);
-            resp.setContentType(CONTENT_TYPE);
+            resp.setCharacterEncoding(Constants.ENCODING);
+            resp.setContentType(Constants.CONTENT_TYPE);
             PizzaInfoDtoInput pizzaInfo = JsonConverter.fromJsonToPizzaInfo(req.getInputStream());
             if (!pizzaInfoService.exist(pizzaInfo.getName())) {
                 try {
@@ -92,10 +88,10 @@ public class ApiPizzaInfoServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            resp.setCharacterEncoding(ENCODING);
-            resp.setContentType(CONTENT_TYPE);
-            String id = req.getParameter(PARAMETER_ID);
-            String version = req.getParameter(PARAMETER_VERSION);
+            resp.setCharacterEncoding(Constants.ENCODING);
+            resp.setContentType(Constants.CONTENT_TYPE);
+            String id = req.getParameter(Constants.PARAMETER_ID);
+            String version = req.getParameter(Constants.PARAMETER_VERSION);
             if (id != null && version != null) {
                 if (pizzaInfoService.isIdValid(Long.valueOf(id))) {
                     PizzaInfoDtoInput pizzaInfo = JsonConverter.fromJsonToPizzaInfo(req.getInputStream());
@@ -126,11 +122,11 @@ public class ApiPizzaInfoServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            resp.setCharacterEncoding(ENCODING);
-            resp.setContentType(CONTENT_TYPE);
-            String id = req.getParameter(PARAMETER_ID);
-            String version = req.getParameter(PARAMETER_VERSION);
-            String delete = req.getParameter(PARAMETER_DELETE);
+            resp.setCharacterEncoding(Constants.ENCODING);
+            resp.setContentType(Constants.CONTENT_TYPE);
+            String id = req.getParameter(Constants.PARAMETER_ID);
+            String version = req.getParameter(Constants.PARAMETER_VERSION);
+            String delete = req.getParameter(Constants.PARAMETER_DELETE);
             if (id != null && version != null && delete != null) {
                 if (pizzaInfoService.isIdValid(Long.valueOf(id))) {
                     pizzaInfoService.delete(id, version, delete);

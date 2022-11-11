@@ -4,6 +4,7 @@ import groupId.artifactId.service.IoC.CompletedOrderServiceSingleton;
 import groupId.artifactId.service.IoC.OrderDataServiceSingleton;
 import groupId.artifactId.service.api.ICompletedOrderService;
 import groupId.artifactId.service.api.IOrderDataService;
+import groupId.artifactId.utils.Constants;
 import groupId.artifactId.utils.JsonConverter;
 
 import javax.servlet.annotation.WebServlet;
@@ -13,9 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet(name = "TicketCompletedOrder", urlPatterns = "/api/ticket/completed_order")
 public class ApiTicketCompletedOrderServlet extends HttpServlet {
-    private static final String CONTENT_TYPE = "application/json";
-    private static final String ENCODING = "UTF-8";
-    private static final String PARAMETER_ID = "id";
     private final ICompletedOrderService completedOrderService = CompletedOrderServiceSingleton.getInstance();
     private final IOrderDataService orderDataService = OrderDataServiceSingleton.getInstance();
 
@@ -24,9 +22,9 @@ public class ApiTicketCompletedOrderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            resp.setContentType(CONTENT_TYPE);
-            resp.setCharacterEncoding(ENCODING);
-            String id = req.getParameter(PARAMETER_ID);
+            resp.setContentType(Constants.CONTENT_TYPE);
+            resp.setCharacterEncoding(Constants.ENCODING);
+            String id = req.getParameter(Constants.PARAMETER_ID);
             if (id != null) {
                 if (orderDataService.isTicketIdValid(Long.valueOf(id))) {
                     resp.getWriter().write(JsonConverter.fromCompletedOrderToJson(completedOrderService.getAllData(Long.valueOf(id))));
