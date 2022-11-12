@@ -1,5 +1,6 @@
 package groupId.artifactId.service.IoC;
 
+import groupId.artifactId.core.mapper.*;
 import groupId.artifactId.dao.IoC.OrderDaoSingleton;
 import groupId.artifactId.dao.IoC.SelectedItemDaoSingleton;
 import groupId.artifactId.dao.IoC.TicketDaoSingleton;
@@ -12,7 +13,9 @@ public class OrderServiceSingleton {
 
     public OrderServiceSingleton() {
         this.orderService = new OrderService(SelectedItemDaoSingleton.getInstance(), OrderDaoSingleton.getInstance(),
-                TicketDaoSingleton.getInstance(), OrderDataServiceSingleton.getInstance());
+                TicketDaoSingleton.getInstance(), OrderDataServiceSingleton.getInstance(), new TicketMapper(new OrderMapper(
+                new SelectedItemMapper(new MenuItemMapper(new PizzaInfoMapper())))), new OrderMapper(new SelectedItemMapper(
+                new MenuItemMapper(new PizzaInfoMapper()))));
     }
 
     public static IOrderService getInstance() {

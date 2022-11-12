@@ -25,16 +25,22 @@ public class OrderService implements IOrderService {
     private final ITicketDao ticketDao;
     private final IOrderDataService orderDataService;
 
-    public OrderService(ISelectedItemDao selectedItemDao, IOrderDao orderDao, ITicketDao ticketDao, IOrderDataService orderDataService) {
+    private final TicketMapper ticketMapper;
+    private final OrderMapper orderMapper;
+
+    public OrderService(ISelectedItemDao selectedItemDao, IOrderDao orderDao, ITicketDao ticketDao, IOrderDataService orderDataService,
+                        TicketMapper ticketMapper, OrderMapper orderMapper) {
         this.selectedItemDao = selectedItemDao;
         this.orderDao = orderDao;
         this.ticketDao = ticketDao;
         this.orderDataService = orderDataService;
+        this.ticketMapper = ticketMapper;
+        this.orderMapper = orderMapper;
     }
 
     @Override
     public TicketDtoOutPut getAllData(Long id) {
-        return TicketMapper.ticketOutputMapping(this.ticketDao.getAllData(id));
+        return ticketMapper.ticketOutputMapping(this.ticketDao.getAllData(id));
     }
 
     @Override
@@ -55,7 +61,7 @@ public class OrderService implements IOrderService {
     @Override
     public TicketDtoOutPut save(OrderDtoInput orderDtoInput) {
         IOrder orderId = this.orderDao.save(new Order());
-        IOrder input = OrderMapper.orderInputMapping(orderDtoInput, orderId.getId());
+        IOrder input = orderMapper.orderInputMapping(orderDtoInput, orderId.getId());
         List<ISelectedItem> items = new ArrayList<>();
         for (ISelectedItem selectedItem : input.getSelectedItems()) {
             ISelectedItem output = this.selectedItemDao.save(selectedItem);
@@ -63,14 +69,14 @@ public class OrderService implements IOrderService {
         }
         ITicket ticket = this.ticketDao.save(new Ticket(orderId.getId()));
         orderDataService.save(new OrderDataDtoInput(ticket.getId(),false,"Order accepted"));
-        return TicketMapper.ticketOutputMapping(new Ticket(new Order(items, orderId.getId()), ticket.getId(), ticket.getOrderId()));
+        return ticketMapper.ticketOutputMapping(new Ticket(new Order(items, orderId.getId()), ticket.getId(), ticket.getOrderId()));
     }
 
     @Override
     public List<TicketDtoOutPut> get() {
         List<TicketDtoOutPut> temp = new ArrayList<>();
         for (ITicket ticket : this.ticketDao.get()) {
-            TicketDtoOutPut outPut = TicketMapper.ticketOutputMapping(ticket);
+            TicketDtoOutPut outPut = ticketMapper.ticketOutputMapping(ticket);
             temp.add(outPut);
         }
         return temp;
@@ -78,7 +84,7 @@ public class OrderService implements IOrderService {
 
     @Override
     public TicketDtoOutPut get(Long id) {
-        return TicketMapper.ticketOutputMapping(this.ticketDao.get(id));
+        return ticketMapper.ticketOutputMapping(this.ticketDao.get(id));
     }
 
     @Override
