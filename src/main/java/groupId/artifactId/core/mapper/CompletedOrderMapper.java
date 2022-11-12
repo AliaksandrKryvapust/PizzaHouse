@@ -12,7 +12,10 @@ import java.util.Collections;
 import java.util.List;
 
 public class CompletedOrderMapper {
-    public static ICompletedOrder completedOrderInputMapping(IOrderData orderData) {
+    public CompletedOrderMapper() {
+    }
+
+    public ICompletedOrder completedOrderInputMapping(IOrderData orderData) {
         ITicket ticket = orderData.getTicket();
         List<IPizza> temp = new ArrayList<>();
         for (ISelectedItem selectedItem : ticket.getOrder().getSelectedItems()) {
@@ -22,7 +25,7 @@ public class CompletedOrderMapper {
         return new CompletedOrder(ticket, temp, orderData.getTicketId());
     }
 
-    public static CompletedOrderDtoOutput completedOrderOutputMapping(ICompletedOrder completedOrder) {
+    public CompletedOrderDtoOutput completedOrderOutputMapping(ICompletedOrder completedOrder) {
         List<PizzaDtoOutput> temp = new ArrayList<>();
         if (completedOrder.getItems() != null && completedOrder.getTicket() != null) {
             for (IPizza pizza : completedOrder.getItems()) {
