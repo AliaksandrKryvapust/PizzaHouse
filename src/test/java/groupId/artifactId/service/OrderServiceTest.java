@@ -3,9 +3,9 @@ package groupId.artifactId.service;
 import groupId.artifactId.core.dto.input.OrderDataDtoInput;
 import groupId.artifactId.core.dto.input.OrderDtoInput;
 import groupId.artifactId.core.dto.input.SelectedItemDtoInput;
-import groupId.artifactId.core.dto.output.OrderDataDtoOutput;
-import groupId.artifactId.core.dto.output.SelectedItemDtoOutput;
-import groupId.artifactId.core.dto.output.TicketDtoOutPut;
+import groupId.artifactId.core.dto.output.*;
+import groupId.artifactId.core.mapper.OrderMapper;
+import groupId.artifactId.core.mapper.TicketMapper;
 import groupId.artifactId.dao.OrderDao;
 import groupId.artifactId.dao.SelectedItemDao;
 import groupId.artifactId.dao.TicketDao;
@@ -41,6 +41,10 @@ class OrderServiceTest {
     private TicketDao ticketDao;
     @Mock
     private OrderDataService orderDataService;
+    @Mock
+    private TicketMapper ticketMapper;
+    @Mock
+    private OrderMapper orderMapper;
 
     @Test
     void getAllData() {
@@ -57,8 +61,13 @@ class OrderServiceTest {
         List<ISelectedItem> selectedItems = Collections.singletonList(new SelectedItem(new MenuItem(id,
                 new PizzaInfo(id, name, description, size, creationDate, version), price, id, creationDate, version, id),
                 id, id, id, count, creationDate, version));
+        List<SelectedItemDtoOutput> outputs = Collections.singletonList(new SelectedItemDtoOutput(new MenuItemDtoOutput(id,
+                price, id, creationDate, version, id, new PizzaInfoDtoOutput(id, name, description, size, creationDate, version)),
+                id, id, id, count, creationDate, version));
         final ITicket ticket = new Ticket(new Order(selectedItems, id, creationDate, version), id, orderId, creationDate, version);
         Mockito.when(ticketDao.getAllData(id)).thenReturn(ticket);
+        Mockito.when(ticketMapper.ticketOutputMapping(any(ITicket.class))).
+                thenReturn(new TicketDtoOutPut(new OrderDtoOutput(outputs, id, creationDate, version), id, orderId, creationDate, version));
 
         //test
         TicketDtoOutPut test = orderService.getAllData(id);
@@ -147,12 +156,19 @@ class OrderServiceTest {
         final int count = 5;
         final boolean done = false;
         final String description = "Order accepted";
+        final int version = 1;
+        final Instant creationDate = Instant.now();
         final OrderDtoInput orderDtoInput = new OrderDtoInput(Collections.singletonList(new SelectedItemDtoInput(id, count)));
         Mockito.when(orderDao.save(any(IOrder.class))).thenReturn(new Order(id));
+        Mockito.when(orderMapper.orderInputMapping(any(OrderDtoInput.class), any(Long.class))).thenReturn(new Order(
+                Collections.singletonList(new SelectedItem(id, id, count)), id));
         Mockito.when(selectedItemDao.save(any(ISelectedItem.class))).thenReturn(new SelectedItem(id, id, id, count));
         Mockito.when(ticketDao.save(any(ITicket.class))).thenReturn(new Ticket(id, id));
         Mockito.when(orderDataService.save(any(OrderDataDtoInput.class))).thenReturn(new OrderDataDtoOutput());
         ArgumentCaptor<OrderDataDtoInput> value = ArgumentCaptor.forClass(OrderDataDtoInput.class);
+        Mockito.when(ticketMapper.ticketOutputMapping(any(ITicket.class))).thenReturn(new TicketDtoOutPut(
+                new OrderDtoOutput(Collections.singletonList(new SelectedItemDtoOutput(new MenuItemDtoOutput(), id, id, id,
+                        count, creationDate, version)), id, creationDate, version), id, id, creationDate, version));
 
         //test
         TicketDtoOutPut test = orderService.save(orderDtoInput);
@@ -183,14 +199,16 @@ class OrderServiceTest {
         final int version = 1;
         final Instant creationDate = Instant.now();
         List<ITicket> tickets = Collections.singletonList(new Ticket(id, id, creationDate, version));
+        final TicketDtoOutPut output = new TicketDtoOutPut(new OrderDtoOutput(), id, id, creationDate, version);
         Mockito.when(ticketDao.get()).thenReturn(tickets);
+        Mockito.when(ticketMapper.ticketOutputMapping(any(ITicket.class))).thenReturn(output);
 
         //test
         List<TicketDtoOutPut> test = orderService.get();
 
         // assert
         Assertions.assertEquals(tickets.size(), test.size());
-        for (TicketDtoOutPut ticket: test) {
+        for (TicketDtoOutPut ticket : test) {
             Assertions.assertNotNull(ticket);
             Assertions.assertEquals(id, ticket.getId());
             Assertions.assertEquals(id, ticket.getOrderId());
@@ -206,7 +224,9 @@ class OrderServiceTest {
         final int version = 1;
         final Instant creationDate = Instant.now();
         final ITicket ticket = new Ticket(id, id, creationDate, version);
+        final TicketDtoOutPut output = new TicketDtoOutPut(new OrderDtoOutput(), id, id, creationDate, version);
         Mockito.when(ticketDao.get(id)).thenReturn(ticket);
+        Mockito.when(ticketMapper.ticketOutputMapping(any(ITicket.class))).thenReturn(output);
 
         //test
         TicketDtoOutPut test = orderService.get(id);
