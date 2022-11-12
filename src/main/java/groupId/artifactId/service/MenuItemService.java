@@ -12,22 +12,24 @@ import java.util.List;
 
 public class MenuItemService implements IMenuItemService {
     private final IMenuItemDao dao;
+    private final MenuItemMapper menuItemMapper;
 
-    public MenuItemService(IMenuItemDao dao) {
+    public MenuItemService(IMenuItemDao dao, MenuItemMapper menuItemMapper) {
         this.dao = dao;
+        this. menuItemMapper = menuItemMapper;
     }
 
     @Override
     public MenuItemDtoOutput save(MenuItemDtoInput menuItemDtoInput) {
-        IMenuItem menuItem = this.dao.save(MenuItemMapper.menuItemInputMapping(menuItemDtoInput));
-        return MenuItemMapper.menuItemOutputMapping(menuItem);
+        IMenuItem menuItem = this.dao.save(menuItemMapper.menuItemInputMapping(menuItemDtoInput));
+        return menuItemMapper.menuItemOutputMapping(menuItem);
     }
 
     @Override
     public List<MenuItemDtoOutput> get() {
         List<MenuItemDtoOutput> temp = new ArrayList<>();
         for (IMenuItem menuItem : this.dao.get()) {
-            MenuItemDtoOutput menuItemDtoOutput = MenuItemMapper.menuItemOutputMapping(menuItem);
+            MenuItemDtoOutput menuItemDtoOutput = menuItemMapper.menuItemOutputMapping(menuItem);
             temp.add(menuItemDtoOutput);
         }
         return temp;
@@ -35,12 +37,12 @@ public class MenuItemService implements IMenuItemService {
 
     @Override
     public MenuItemDtoOutput get(Long id) {
-        return MenuItemMapper.menuItemOutputMapping(this.dao.get(id));
+        return menuItemMapper.menuItemOutputMapping(this.dao.get(id));
     }
 
     @Override
     public MenuItemDtoOutput getAllData(Long id) {
-        return MenuItemMapper.menuItemOutputMapping(this.dao.getAllData(id));
+        return menuItemMapper.menuItemOutputMapping(this.dao.getAllData(id));
     }
 
     @Override
@@ -50,8 +52,8 @@ public class MenuItemService implements IMenuItemService {
 
     @Override
     public MenuItemDtoOutput update(MenuItemDtoInput menuItemDtoInput, String id, String version) {
-        IMenuItem menuItem = this.dao.update(MenuItemMapper.menuItemInputMapping(menuItemDtoInput), Long.valueOf(id), Integer.valueOf(version));
-        return MenuItemMapper.menuItemOutputMapping(menuItem);
+        IMenuItem menuItem = this.dao.update(menuItemMapper.menuItemInputMapping(menuItemDtoInput), Long.valueOf(id), Integer.valueOf(version));
+        return menuItemMapper.menuItemOutputMapping(menuItem);
     }
 
     @Override
