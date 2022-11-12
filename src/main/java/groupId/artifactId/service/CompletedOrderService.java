@@ -17,14 +17,17 @@ public class CompletedOrderService implements ICompletedOrderService {
     private final ICompletedOrderDao completedOrderDao;
     private final IPizzaDao pizzaDao;
 
-    public CompletedOrderService(ICompletedOrderDao completedOrderDao, IPizzaDao pizzaDao) {
+    private final CompletedOrderMapper completedOrderMapper;
+
+    public CompletedOrderService(ICompletedOrderDao completedOrderDao, IPizzaDao pizzaDao, CompletedOrderMapper completedOrderMapper) {
         this.completedOrderDao = completedOrderDao;
         this.pizzaDao = pizzaDao;
+        this.completedOrderMapper = completedOrderMapper;
     }
 
     @Override
     public CompletedOrderDtoOutput getAllData(Long id) {
-        return CompletedOrderMapper.completedOrderOutputMapping(this.completedOrderDao.getAllData(id));
+        return completedOrderMapper.completedOrderOutputMapping(this.completedOrderDao.getAllData(id));
     }
 
     @Override
@@ -50,7 +53,7 @@ public class CompletedOrderService implements ICompletedOrderService {
             IPizza output = this.pizzaDao.save(new Pizza(completedOrder.getId(),pizza.getName(), pizza.getSize()));
             pizzas.add(output);
         }
-        return CompletedOrderMapper.completedOrderOutputMapping(new CompletedOrder(completedOrder.getTicket(), pizzas,
+        return completedOrderMapper.completedOrderOutputMapping(new CompletedOrder(completedOrder.getTicket(), pizzas,
                 completedOrder.getId(), completedOrder.getTicketId()));
     }
 
@@ -58,7 +61,7 @@ public class CompletedOrderService implements ICompletedOrderService {
     public List<CompletedOrderDtoOutput> get() {
         List<CompletedOrderDtoOutput> outputs = new ArrayList<>();
         for (ICompletedOrder order : this.completedOrderDao.get()) {
-            CompletedOrderDtoOutput output = CompletedOrderMapper.completedOrderOutputMapping(order);
+            CompletedOrderDtoOutput output = completedOrderMapper.completedOrderOutputMapping(order);
             outputs.add(output);
         }
         return outputs;
@@ -66,6 +69,6 @@ public class CompletedOrderService implements ICompletedOrderService {
 
     @Override
     public CompletedOrderDtoOutput get(Long id) {
-        return CompletedOrderMapper.completedOrderOutputMapping(this.completedOrderDao.get(id));
+        return completedOrderMapper.completedOrderOutputMapping(this.completedOrderDao.get(id));
     }
 }

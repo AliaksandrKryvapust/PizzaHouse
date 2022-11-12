@@ -22,11 +22,14 @@ public class OrderDataService implements IOrderDataService {
     private final IOrderDataDao orderDataDao;
     private final IOrderStageDao orderStageDao;
     private final ICompletedOrderService completedOrderService;
+    private final CompletedOrderMapper completedOrderMapper;
 
-    public OrderDataService(IOrderDataDao orderDataDao, IOrderStageDao orderStageDao, ICompletedOrderService completedOrderService) {
+    public OrderDataService(IOrderDataDao orderDataDao, IOrderStageDao orderStageDao, ICompletedOrderService completedOrderService,
+                            CompletedOrderMapper completedOrderMapper) {
         this.orderDataDao = orderDataDao;
         this.orderStageDao = orderStageDao;
         this.completedOrderService = completedOrderService;
+        this.completedOrderMapper = completedOrderMapper;
     }
 
     @Override
@@ -90,7 +93,8 @@ public class OrderDataService implements IOrderDataService {
         IOrderStage stage;
         if (input.isDone()) {
             orderData = this.orderDataDao.update(input, Long.valueOf(id), Integer.valueOf(version));
-            ICompletedOrder completedOrder = CompletedOrderMapper.completedOrderInputMapping(this.orderDataDao.getAllData(type.getTicketId()));
+            ICompletedOrder completedOrder = completedOrderMapper.completedOrderInputMapping(this.orderDataDao
+                    .getAllData(type.getTicketId()));
             completedOrderService.save(completedOrder);
         } else {
             orderData = new OrderData(Long.valueOf(id),input.getTicketId(), input.isDone());

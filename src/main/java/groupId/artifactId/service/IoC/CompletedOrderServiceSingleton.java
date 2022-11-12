@@ -1,5 +1,6 @@
 package groupId.artifactId.service.IoC;
 
+import groupId.artifactId.core.mapper.CompletedOrderMapper;
 import groupId.artifactId.dao.IoC.CompletedOrderDaoSingleton;
 import groupId.artifactId.dao.IoC.PizzaDaoSingleton;
 import groupId.artifactId.service.CompletedOrderService;
@@ -11,7 +12,7 @@ public class CompletedOrderServiceSingleton {
 
     public CompletedOrderServiceSingleton() {
         this.completedOrderService = new CompletedOrderService(CompletedOrderDaoSingleton.getInstance(),
-                PizzaDaoSingleton.getInstance());
+                PizzaDaoSingleton.getInstance(), new CompletedOrderMapper());
     }
 
     public static ICompletedOrderService getInstance() {
