@@ -7,7 +7,10 @@ import groupId.artifactId.dao.entity.MenuItem;
 import groupId.artifactId.dao.entity.api.IMenuItem;
 
 public class MenuItemMapper {
-    public MenuItemMapper() {
+    private final PizzaInfoMapper pizzaInfoMapper;
+
+    public MenuItemMapper(PizzaInfoMapper pizzaInfoMapper) {
+        this.pizzaInfoMapper = pizzaInfoMapper;
     }
 
     public IMenuItem menuItemInputMapping(MenuItemDtoInput menuItemDtoInput) {
@@ -19,7 +22,7 @@ public class MenuItemMapper {
             return new MenuItemDtoOutput(menuItem.getId(), menuItem.getPrice(), menuItem.getPizzaInfoId(), menuItem.getCreationDate(),
                     menuItem.getVersion(), menuItem.getMenuId(), new PizzaInfoDtoOutput());
         } else {
-            PizzaInfoDtoOutput pizzaInfo = PizzaInfoMapper.pizzaInfoOutputMapping(menuItem.getInfo());
+            PizzaInfoDtoOutput pizzaInfo = pizzaInfoMapper.pizzaInfoOutputMapping(menuItem.getInfo());
             return new MenuItemDtoOutput(menuItem.getId(), menuItem.getPrice(), menuItem.getPizzaInfoId(), menuItem.getCreationDate(),
                     menuItem.getVersion(), menuItem.getMenuId(), pizzaInfo);
         }

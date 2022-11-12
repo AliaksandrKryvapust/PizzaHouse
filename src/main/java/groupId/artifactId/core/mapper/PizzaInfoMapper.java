@@ -6,12 +6,15 @@ import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
 
 public class PizzaInfoMapper {
-    public static IPizzaInfo pizzaInfoInputMapping(PizzaInfoDtoInput pizzaInfoDtoInput) {
+    public PizzaInfoMapper() {
+    }
+
+    public IPizzaInfo pizzaInfoInputMapping(PizzaInfoDtoInput pizzaInfoDtoInput) {
         return new PizzaInfo(pizzaInfoDtoInput.getName(), pizzaInfoDtoInput.getDescription(),
                 pizzaInfoDtoInput.getSize());
     }
 
-    public static PizzaInfoDtoOutput pizzaInfoOutputMapping(IPizzaInfo pizzaInfo) {
+    public PizzaInfoDtoOutput pizzaInfoOutputMapping(IPizzaInfo pizzaInfo) {
         return new PizzaInfoDtoOutput(pizzaInfo.getId(), pizzaInfo.getName(), pizzaInfo.getDescription(),
                 pizzaInfo.getSize(), pizzaInfo.getCreationDate(), pizzaInfo.getVersion());
     }
