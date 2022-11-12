@@ -3,6 +3,7 @@ package groupId.artifactId.service;
 import groupId.artifactId.core.dto.input.OrderDataDtoInput;
 import groupId.artifactId.core.dto.input.OrderDtoInput;
 import groupId.artifactId.core.dto.output.TicketDtoOutput;
+import groupId.artifactId.core.dto.output.crud.TicketDtoCrudOutput;
 import groupId.artifactId.core.mapper.OrderMapper;
 import groupId.artifactId.core.mapper.TicketMapper;
 import groupId.artifactId.dao.api.IOrderDao;
@@ -40,7 +41,7 @@ public class OrderService implements IOrderService {
 
     @Override
     public TicketDtoOutput getAllData(Long id) {
-        return ticketMapper.ticketOutputMapping(this.ticketDao.getAllData(id));
+        return ticketMapper.outputMapping(this.ticketDao.getAllData(id));
     }
 
     @Override
@@ -59,32 +60,32 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public TicketDtoOutput save(OrderDtoInput orderDtoInput) {
+    public TicketDtoCrudOutput save(OrderDtoInput orderDtoInput) {
         IOrder orderId = this.orderDao.save(new Order());
-        IOrder input = orderMapper.orderInputMapping(orderDtoInput, orderId.getId());
+        IOrder input = orderMapper.inputMapping(orderDtoInput, orderId.getId());
         List<ISelectedItem> items = new ArrayList<>();
         for (ISelectedItem selectedItem : input.getSelectedItems()) {
             ISelectedItem output = this.selectedItemDao.save(selectedItem);
             items.add(output);
         }
         ITicket ticket = this.ticketDao.save(new Ticket(orderId.getId()));
-        orderDataService.save(new OrderDataDtoInput(ticket.getId(),false,"Order accepted"));
-        return ticketMapper.ticketOutputMapping(new Ticket(new Order(items, orderId.getId()), ticket.getId(), ticket.getOrderId()));
+        orderDataService.save(new OrderDataDtoInput(ticket.getId(), false, "Order accepted"));
+        return ticketMapper.outputCrudMapping(new Ticket(new Order(items, orderId.getId()), ticket.getId(), ticket.getOrderId()));
     }
 
     @Override
-    public List<TicketDtoOutput> get() {
-        List<TicketDtoOutput> temp = new ArrayList<>();
+    public List<TicketDtoCrudOutput> get() {
+        List<TicketDtoCrudOutput> temp = new ArrayList<>();
         for (ITicket ticket : this.ticketDao.get()) {
-            TicketDtoOutput outPut = ticketMapper.ticketOutputMapping(ticket);
+            TicketDtoCrudOutput outPut = ticketMapper.outputCrudMapping(ticket);
             temp.add(outPut);
         }
         return temp;
     }
 
     @Override
-    public TicketDtoOutput get(Long id) {
-        return ticketMapper.ticketOutputMapping(this.ticketDao.get(id));
+    public TicketDtoCrudOutput get(Long id) {
+        return ticketMapper.outputCrudMapping(this.ticketDao.get(id));
     }
 
     @Override
