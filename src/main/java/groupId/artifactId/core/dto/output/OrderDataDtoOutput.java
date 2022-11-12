@@ -4,7 +4,7 @@ import java.time.Instant;
 import java.util.List;
 
 public class OrderDataDtoOutput {
-    private TicketDtoOutPut ticket;
+    private TicketDtoOutput ticket;
     private List<OrderStageDtoOutput> orderHistory;
     private Long id;
     private Long ticketId;
@@ -29,7 +29,7 @@ public class OrderDataDtoOutput {
         this.version = version;
     }
 
-    public OrderDataDtoOutput(TicketDtoOutPut ticket, List<OrderStageDtoOutput> orderHistory, Long id, Long ticketId,
+    public OrderDataDtoOutput(TicketDtoOutput ticket, List<OrderStageDtoOutput> orderHistory, Long id, Long ticketId,
                               Boolean done, Instant creationDate, Integer version) {
         this.ticket = ticket;
         this.orderHistory = orderHistory;
@@ -40,11 +40,11 @@ public class OrderDataDtoOutput {
         this.version = version;
     }
 
-    public TicketDtoOutPut getTicket() {
+    public TicketDtoOutput getTicket() {
         return ticket;
     }
 
-    public void setTicket(TicketDtoOutPut ticket) {
+    public void setTicket(TicketDtoOutput ticket) {
         this.ticket = ticket;
     }
 

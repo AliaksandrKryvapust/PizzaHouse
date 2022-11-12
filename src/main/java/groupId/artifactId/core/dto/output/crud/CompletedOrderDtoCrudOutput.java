@@ -1,43 +1,21 @@
-package groupId.artifactId.core.dto.output;
+package groupId.artifactId.core.dto.output.crud;
 
 import java.time.Instant;
-import java.util.List;
 
-public class CompletedOrderDtoOutput {
-    private TicketDtoOutput ticket;
-    private List<PizzaDtoOutput> items;
+public class CompletedOrderDtoCrudOutput {
     private Long id;
     private Long ticketId;
     private Instant creationDate;
     private Integer version;
 
-    public CompletedOrderDtoOutput() {
+    public CompletedOrderDtoCrudOutput() {
     }
 
-    public CompletedOrderDtoOutput(TicketDtoOutput ticket, List<PizzaDtoOutput> items, Long id, Long ticketId,
-                                   Instant creationDate, Integer version) {
-        this.ticket = ticket;
-        this.items = items;
+    public CompletedOrderDtoCrudOutput(Long id, Long ticketId, Instant creationDate, Integer version) {
         this.id = id;
         this.ticketId = ticketId;
         this.creationDate = creationDate;
         this.version = version;
-    }
-
-    public TicketDtoOutput getTicket() {
-        return ticket;
-    }
-
-    public void setTicket(TicketDtoOutput ticket) {
-        this.ticket = ticket;
-    }
-
-    public List<PizzaDtoOutput> getItems() {
-        return items;
-    }
-
-    public void setItems(List<PizzaDtoOutput> items) {
-        this.items = items;
     }
 
     public Long getId() {

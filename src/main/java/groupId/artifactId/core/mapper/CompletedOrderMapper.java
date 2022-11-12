@@ -2,7 +2,7 @@ package groupId.artifactId.core.mapper;
 
 import groupId.artifactId.core.dto.output.CompletedOrderDtoOutput;
 import groupId.artifactId.core.dto.output.PizzaDtoOutput;
-import groupId.artifactId.core.dto.output.TicketDtoOutPut;
+import groupId.artifactId.core.dto.output.TicketDtoOutput;
 import groupId.artifactId.dao.entity.CompletedOrder;
 import groupId.artifactId.dao.entity.Pizza;
 import groupId.artifactId.dao.entity.api.*;
@@ -38,7 +38,7 @@ public class CompletedOrderMapper {
                 PizzaDtoOutput output = pizzaMapper.pizzaOutputMapper(pizza);
                 temp.add(output);
             }
-            TicketDtoOutPut ticketDtoOutPut = ticketMapper.ticketOutputMapping(completedOrder.getTicket());
+            TicketDtoOutput ticketDtoOutPut = ticketMapper.ticketOutputMapping(completedOrder.getTicket());
             return new CompletedOrderDtoOutput(ticketDtoOutPut, temp, completedOrder.getId(), completedOrder.getTicketId(),
                     completedOrder.getCreationDate(), completedOrder.getVersion());
         } else if (completedOrder.getItems() != null) {
@@ -46,10 +46,10 @@ public class CompletedOrderMapper {
                 PizzaDtoOutput output = pizzaMapper.pizzaOutputMapper(pizza);
                 temp.add(output);
             }
-            return new CompletedOrderDtoOutput(new TicketDtoOutPut(), temp, completedOrder.getId(), completedOrder.getTicketId(),
+            return new CompletedOrderDtoOutput(new TicketDtoOutput(), temp, completedOrder.getId(), completedOrder.getTicketId(),
                     completedOrder.getCreationDate(), completedOrder.getVersion());
         } else {
-            return new CompletedOrderDtoOutput(new TicketDtoOutPut(), Collections.singletonList(new PizzaDtoOutput()),
+            return new CompletedOrderDtoOutput(new TicketDtoOutput(), Collections.singletonList(new PizzaDtoOutput()),
                     completedOrder.getId(), completedOrder.getTicketId(),
                     completedOrder.getCreationDate(), completedOrder.getVersion());
         }

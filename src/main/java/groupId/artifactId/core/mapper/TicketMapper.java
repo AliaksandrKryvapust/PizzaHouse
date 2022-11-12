@@ -1,7 +1,7 @@
 package groupId.artifactId.core.mapper;
 
 import groupId.artifactId.core.dto.output.OrderDtoOutput;
-import groupId.artifactId.core.dto.output.TicketDtoOutPut;
+import groupId.artifactId.core.dto.output.TicketDtoOutput;
 import groupId.artifactId.dao.entity.api.ITicket;
 
 public class TicketMapper {
@@ -11,13 +11,13 @@ public class TicketMapper {
         this.orderMapper = orderMapper;
     }
 
-    public TicketDtoOutPut ticketOutputMapping(ITicket ticket) {
+    public TicketDtoOutput ticketOutputMapping(ITicket ticket) {
         if (ticket.getOrder()==null){
-            return new TicketDtoOutPut(new OrderDtoOutput(), ticket.getId(), ticket.getOrderId(), ticket.getCreateAt(),
+            return new TicketDtoOutput(new OrderDtoOutput(), ticket.getId(), ticket.getOrderId(), ticket.getCreateAt(),
                     ticket.getVersion());
         } else {
             OrderDtoOutput orderDtoOutput = orderMapper.orderOutputMapping(ticket.getOrder());
-            return new TicketDtoOutPut(orderDtoOutput, ticket.getId(), ticket.getOrderId(), ticket.getCreateAt(),
+            return new TicketDtoOutput(orderDtoOutput, ticket.getId(), ticket.getOrderId(), ticket.getCreateAt(),
                     ticket.getVersion());
         }
 

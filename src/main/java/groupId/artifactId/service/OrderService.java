@@ -2,7 +2,7 @@ package groupId.artifactId.service;
 
 import groupId.artifactId.core.dto.input.OrderDataDtoInput;
 import groupId.artifactId.core.dto.input.OrderDtoInput;
-import groupId.artifactId.core.dto.output.TicketDtoOutPut;
+import groupId.artifactId.core.dto.output.TicketDtoOutput;
 import groupId.artifactId.core.mapper.OrderMapper;
 import groupId.artifactId.core.mapper.TicketMapper;
 import groupId.artifactId.dao.api.IOrderDao;
@@ -39,7 +39,7 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public TicketDtoOutPut getAllData(Long id) {
+    public TicketDtoOutput getAllData(Long id) {
         return ticketMapper.ticketOutputMapping(this.ticketDao.getAllData(id));
     }
 
@@ -59,7 +59,7 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public TicketDtoOutPut save(OrderDtoInput orderDtoInput) {
+    public TicketDtoOutput save(OrderDtoInput orderDtoInput) {
         IOrder orderId = this.orderDao.save(new Order());
         IOrder input = orderMapper.orderInputMapping(orderDtoInput, orderId.getId());
         List<ISelectedItem> items = new ArrayList<>();
@@ -73,17 +73,17 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public List<TicketDtoOutPut> get() {
-        List<TicketDtoOutPut> temp = new ArrayList<>();
+    public List<TicketDtoOutput> get() {
+        List<TicketDtoOutput> temp = new ArrayList<>();
         for (ITicket ticket : this.ticketDao.get()) {
-            TicketDtoOutPut outPut = ticketMapper.ticketOutputMapping(ticket);
+            TicketDtoOutput outPut = ticketMapper.ticketOutputMapping(ticket);
             temp.add(outPut);
         }
         return temp;
     }
 
     @Override
-    public TicketDtoOutPut get(Long id) {
+    public TicketDtoOutput get(Long id) {
         return ticketMapper.ticketOutputMapping(this.ticketDao.get(id));
     }
 

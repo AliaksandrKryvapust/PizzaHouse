@@ -1,31 +1,26 @@
-package groupId.artifactId.core.dto.output;
+package groupId.artifactId.core.dto.output.crud;
 
 import java.time.Instant;
 
-public class TicketDtoOutPut {
-    private OrderDtoOutput order;
+public class SelectedItemDtoCrudOutput {
     private Long id;
+    private Long menuItemId;
     private Long orderId;
+    private Integer count;
     private Instant createAt;
     private Integer version;
 
-    public TicketDtoOutPut() {
+    public SelectedItemDtoCrudOutput() {
     }
 
-    public TicketDtoOutPut(OrderDtoOutput order, Long id, Long orderId, Instant createAt, Integer version) {
-        this.order = order;
+    public SelectedItemDtoCrudOutput(Long id, Long menuItemId, Long orderId, Integer count,
+                                     Instant createAt, Integer version) {
         this.id = id;
+        this.menuItemId = menuItemId;
         this.orderId = orderId;
+        this.count = count;
         this.createAt = createAt;
         this.version = version;
-    }
-
-    public OrderDtoOutput getOrder() {
-        return order;
-    }
-
-    public void setOrder(OrderDtoOutput order) {
-        this.order = order;
     }
 
     public Long getId() {
@@ -36,12 +31,28 @@ public class TicketDtoOutPut {
         this.id = id;
     }
 
+    public Long getMenuItemId() {
+        return menuItemId;
+    }
+
+    public void setMenuItemId(Long menuItemId) {
+        this.menuItemId = menuItemId;
+    }
+
     public Long getOrderId() {
         return orderId;
     }
 
     public void setOrderId(Long orderId) {
         this.orderId = orderId;
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
     }
 
     public Instant getCreateAt() {

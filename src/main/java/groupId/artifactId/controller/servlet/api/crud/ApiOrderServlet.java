@@ -4,7 +4,7 @@ import groupId.artifactId.controller.validator.IoC.OrderValidatorSingleton;
 import groupId.artifactId.controller.validator.api.IOrderValidator;
 import groupId.artifactId.core.dto.input.OrderDtoInput;
 import groupId.artifactId.core.dto.input.SelectedItemDtoInput;
-import groupId.artifactId.core.dto.output.TicketDtoOutPut;
+import groupId.artifactId.core.dto.output.TicketDtoOutput;
 import groupId.artifactId.exceptions.IncorrectOrderInputException;
 import groupId.artifactId.exceptions.OptimisticLockException;
 import groupId.artifactId.service.IoC.MenuItemServiceSingleton;
@@ -76,7 +76,7 @@ public class ApiOrderServlet extends HttpServlet {
                     throw new IncorrectOrderInputException("Such menu item id do not exist");
                 }
             }
-            TicketDtoOutPut outPut = orderService.save(order);
+            TicketDtoOutput outPut = orderService.save(order);
             resp.getWriter().write(JsonConverter.fromTicketToJson(outPut));
             resp.setStatus(HttpServletResponse.SC_CREATED);
         } catch (IncorrectOrderInputException e) {

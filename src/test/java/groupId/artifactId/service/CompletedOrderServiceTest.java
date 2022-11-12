@@ -57,7 +57,7 @@ class CompletedOrderServiceTest {
                 orderId, creationDate, version), pizzas, id, id, creationDate, version);
         Mockito.when(completedOrderDao.getAllData(id)).thenReturn(completedOrder);
         Mockito.when(completedOrderMapper.completedOrderOutputMapping(any(ICompletedOrder.class)))
-                .thenReturn(new CompletedOrderDtoOutput(new TicketDtoOutPut(new OrderDtoOutput(selectedItemDtoOutputs,
+                .thenReturn(new CompletedOrderDtoOutput(new TicketDtoOutput(new OrderDtoOutput(selectedItemDtoOutputs,
                         id, creationDate, version), id, orderId, creationDate, version), pizzaDtoOutputs, id, id, creationDate, version));
 
         //test
@@ -224,7 +224,7 @@ class CompletedOrderServiceTest {
         Mockito.when(completedOrderDao.save(any(ICompletedOrder.class))).thenReturn(new CompletedOrder(id, id));
         Mockito.when(pizzaDao.save(any(IPizza.class))).thenReturn(new Pizza(id, id, name, size));
         Mockito.when(completedOrderMapper.completedOrderOutputMapping(any(ICompletedOrder.class))).
-                thenReturn(new CompletedOrderDtoOutput(new TicketDtoOutPut(), Collections.singletonList(
+                thenReturn(new CompletedOrderDtoOutput(new TicketDtoOutput(), Collections.singletonList(
                         new PizzaDtoOutput(id, id, name, size, creationDate, version)), id,id, creationDate, version));
 
         //test
@@ -256,7 +256,7 @@ class CompletedOrderServiceTest {
                 Collections.singletonList(new Pizza()), id, id, creationDate, version));
         Mockito.when(completedOrderDao.get()).thenReturn(completedOrders);
         Mockito.when(completedOrderMapper.completedOrderOutputMapping(any(ICompletedOrder.class))).
-                thenReturn(new CompletedOrderDtoOutput(new TicketDtoOutPut(), Collections.singletonList(
+                thenReturn(new CompletedOrderDtoOutput(new TicketDtoOutput(), Collections.singletonList(
                         new PizzaDtoOutput(id, id, name, size, creationDate, version)), id,id, creationDate, version));
 
         //test
@@ -285,7 +285,7 @@ class CompletedOrderServiceTest {
                 Collections.singletonList(new Pizza()), id, id, creationDate, version);
         Mockito.when(completedOrderDao.get(id)).thenReturn(completedOrders);
         Mockito.when(completedOrderMapper.completedOrderOutputMapping(any(ICompletedOrder.class))).
-                thenReturn(new CompletedOrderDtoOutput(new TicketDtoOutPut(), Collections.singletonList(
+                thenReturn(new CompletedOrderDtoOutput(new TicketDtoOutput(), Collections.singletonList(
                         new PizzaDtoOutput(id, id, name, size, creationDate, version)), id,id, creationDate, version));
 
         //test

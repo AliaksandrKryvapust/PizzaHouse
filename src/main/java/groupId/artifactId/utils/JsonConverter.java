@@ -63,19 +63,19 @@ public class JsonConverter {
         }
     }
 
-    public static String fromTicketToJson(TicketDtoOutPut ticket) {
+    public static String fromTicketToJson(TicketDtoOutput ticket) {
         try {
             return mapper.writeValueAsString(ticket);
         } catch (JsonProcessingException e) {
-            throw new IncorrectJsonParseException("failed to write TicketDtoOutPut as json", e);
+            throw new IncorrectJsonParseException("failed to write TicketDtoOutput as json", e);
         }
     }
 
-    public static String fromTicketListToJson(List<TicketDtoOutPut> ticket) {
+    public static String fromTicketListToJson(List<TicketDtoOutput> ticket) {
         try {
             return mapper.writeValueAsString(ticket);
         } catch (JsonProcessingException e) {
-            throw new IncorrectJsonParseException("failed to write List of TicketDtoOutPut as json", e);
+            throw new IncorrectJsonParseException("failed to write List of TicketDtoOutput as json", e);
         }
     }
     public static String fromOrderDataToJson(OrderDataDtoOutput output) {
