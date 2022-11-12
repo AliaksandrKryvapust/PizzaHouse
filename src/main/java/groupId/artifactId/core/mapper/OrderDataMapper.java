@@ -13,22 +13,30 @@ import java.util.Collections;
 import java.util.List;
 
 public class OrderDataMapper {
-    public static IOrderData orderDataInputMapping(OrderDataDtoInput dtoInput) {
-        List<IOrderStage> orderStage = Collections.singletonList(OrderStageMapper.orderStageInputMapping(dtoInput.getDescription()));
+    private final OrderStageMapper orderStageMapper;
+    private final TicketMapper ticketMapper;
+
+    public OrderDataMapper(OrderStageMapper orderStageMapper, TicketMapper ticketMapper) {
+        this.orderStageMapper = orderStageMapper;
+        this.ticketMapper = ticketMapper;
+    }
+
+    public IOrderData orderDataInputMapping(OrderDataDtoInput dtoInput) {
+        List<IOrderStage> orderStage = Collections.singletonList(orderStageMapper.orderStageInputMapping(dtoInput.getDescription()));
         return new OrderData(orderStage, dtoInput.getTicketId(), dtoInput.getDone());
     }
 
-    public static OrderDataDtoOutput orderDataOutputMapping(IOrderData orderData) {
+    public OrderDataDtoOutput orderDataOutputMapping(IOrderData orderData) {
         List<OrderStageDtoOutput> stageDtoOutputs = new ArrayList<>();
         for (IOrderStage stage : orderData.getOrderHistory()) {
-            OrderStageDtoOutput output = OrderStageMapper.orderStageOutputMapping(stage);
+            OrderStageDtoOutput output = orderStageMapper.orderStageOutputMapping(stage);
             stageDtoOutputs.add(output);
         }
         if (orderData.getTicket() == null) {
             return new OrderDataDtoOutput(new TicketDtoOutPut(), stageDtoOutputs, orderData.getId(), orderData.getTicketId(),
                     orderData.isDone(), orderData.getCreationDate(), orderData.getVersion());
         } else {
-            TicketDtoOutPut ticketDtoOutPut = TicketMapper.ticketOutputMapping(orderData.getTicket());
+            TicketDtoOutPut ticketDtoOutPut = ticketMapper.ticketOutputMapping(orderData.getTicket());
             return new OrderDataDtoOutput(ticketDtoOutPut, stageDtoOutputs, orderData.getId(), orderData.getTicketId(),
                     orderData.isDone(), orderData.getCreationDate(), orderData.getVersion());
         }
