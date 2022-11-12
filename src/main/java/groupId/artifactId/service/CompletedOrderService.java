@@ -1,6 +1,7 @@
 package groupId.artifactId.service;
 
 import groupId.artifactId.core.dto.output.CompletedOrderDtoOutput;
+import groupId.artifactId.core.dto.output.crud.CompletedOrderDtoCrudOutput;
 import groupId.artifactId.core.mapper.CompletedOrderMapper;
 import groupId.artifactId.dao.api.ICompletedOrderDao;
 import groupId.artifactId.dao.api.IPizzaDao;
@@ -27,7 +28,7 @@ public class CompletedOrderService implements ICompletedOrderService {
 
     @Override
     public CompletedOrderDtoOutput getAllData(Long id) {
-        return completedOrderMapper.completedOrderOutputMapping(this.completedOrderDao.getAllData(id));
+        return completedOrderMapper.outputMapping(this.completedOrderDao.getAllData(id));
     }
 
     @Override
@@ -46,29 +47,29 @@ public class CompletedOrderService implements ICompletedOrderService {
     }
 
     @Override
-    public CompletedOrderDtoOutput save(ICompletedOrder type) {
+    public CompletedOrderDtoCrudOutput save(ICompletedOrder type) {
         ICompletedOrder completedOrder = this.completedOrderDao.save(type);
         List<IPizza> pizzas = new ArrayList<>();// completedOrderId needed
         for (IPizza pizza : type.getItems()) {
-            IPizza output = this.pizzaDao.save(new Pizza(completedOrder.getId(),pizza.getName(), pizza.getSize()));
+            IPizza output = this.pizzaDao.save(new Pizza(completedOrder.getId(), pizza.getName(), pizza.getSize()));
             pizzas.add(output);
         }
-        return completedOrderMapper.completedOrderOutputMapping(new CompletedOrder(completedOrder.getTicket(), pizzas,
+        return completedOrderMapper.outputCrudMapping(new CompletedOrder(completedOrder.getTicket(), pizzas,
                 completedOrder.getId(), completedOrder.getTicketId()));
     }
 
     @Override
-    public List<CompletedOrderDtoOutput> get() {
-        List<CompletedOrderDtoOutput> outputs = new ArrayList<>();
+    public List<CompletedOrderDtoCrudOutput> get() {
+        List<CompletedOrderDtoCrudOutput> outputs = new ArrayList<>();
         for (ICompletedOrder order : this.completedOrderDao.get()) {
-            CompletedOrderDtoOutput output = completedOrderMapper.completedOrderOutputMapping(order);
+            CompletedOrderDtoCrudOutput output = completedOrderMapper.outputCrudMapping(order);
             outputs.add(output);
         }
         return outputs;
     }
 
     @Override
-    public CompletedOrderDtoOutput get(Long id) {
-        return completedOrderMapper.completedOrderOutputMapping(this.completedOrderDao.get(id));
+    public CompletedOrderDtoCrudOutput get(Long id) {
+        return completedOrderMapper.outputCrudMapping(this.completedOrderDao.get(id));
     }
 }
