@@ -12,6 +12,12 @@ public class MenuDtoCrudOutput {
     public MenuDtoCrudOutput() {
     }
 
+    public MenuDtoCrudOutput(Long id, String name, Boolean enable) {
+        this.id = id;
+        this.name = name;
+        this.enable = enable;
+    }
+
     public MenuDtoCrudOutput(Long id, Instant createdAt, Integer version, String name, Boolean enable) {
         this.id = id;
         this.createdAt = createdAt;

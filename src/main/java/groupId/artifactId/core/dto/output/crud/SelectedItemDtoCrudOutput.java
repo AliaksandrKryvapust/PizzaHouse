@@ -13,6 +13,13 @@ public class SelectedItemDtoCrudOutput {
     public SelectedItemDtoCrudOutput() {
     }
 
+    public SelectedItemDtoCrudOutput(Long id, Long menuItemId, Long orderId, Integer count) {
+        this.id = id;
+        this.menuItemId = menuItemId;
+        this.orderId = orderId;
+        this.count = count;
+    }
+
     public SelectedItemDtoCrudOutput(Long id, Long menuItemId, Long orderId, Integer count,
                                      Instant createAt, Integer version) {
         this.id = id;

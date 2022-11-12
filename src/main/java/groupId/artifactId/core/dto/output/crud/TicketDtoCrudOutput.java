@@ -11,6 +11,11 @@ public class TicketDtoCrudOutput {
     public TicketDtoCrudOutput() {
     }
 
+    public TicketDtoCrudOutput(Long id, Long orderId) {
+        this.id = id;
+        this.orderId = orderId;
+    }
+
     public TicketDtoCrudOutput(Long id, Long orderId, Instant createAt, Integer version) {
         this.id = id;
         this.orderId = orderId;

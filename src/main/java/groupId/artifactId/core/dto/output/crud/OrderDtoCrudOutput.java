@@ -10,6 +10,10 @@ public class OrderDtoCrudOutput {
     public OrderDtoCrudOutput() {
     }
 
+    public OrderDtoCrudOutput(Long id) {
+        this.id = id;
+    }
+
     public OrderDtoCrudOutput(Long id, Instant creationDate, Integer version) {
         this.id = id;
         this.creationDate = creationDate;

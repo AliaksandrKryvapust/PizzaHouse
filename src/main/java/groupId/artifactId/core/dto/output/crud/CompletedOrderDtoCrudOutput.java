@@ -11,6 +11,11 @@ public class CompletedOrderDtoCrudOutput {
     public CompletedOrderDtoCrudOutput() {
     }
 
+    public CompletedOrderDtoCrudOutput(Long id, Long ticketId) {
+        this.id = id;
+        this.ticketId = ticketId;
+    }
+
     public CompletedOrderDtoCrudOutput(Long id, Long ticketId, Instant creationDate, Integer version) {
         this.id = id;
         this.ticketId = ticketId;
