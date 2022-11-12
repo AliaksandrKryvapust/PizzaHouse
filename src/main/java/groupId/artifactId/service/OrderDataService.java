@@ -23,18 +23,20 @@ public class OrderDataService implements IOrderDataService {
     private final IOrderStageDao orderStageDao;
     private final ICompletedOrderService completedOrderService;
     private final CompletedOrderMapper completedOrderMapper;
+    private final OrderDataMapper orderDataMapper;
 
     public OrderDataService(IOrderDataDao orderDataDao, IOrderStageDao orderStageDao, ICompletedOrderService completedOrderService,
-                            CompletedOrderMapper completedOrderMapper) {
+                            CompletedOrderMapper completedOrderMapper, OrderDataMapper orderDataMapper) {
         this.orderDataDao = orderDataDao;
         this.orderStageDao = orderStageDao;
         this.completedOrderService = completedOrderService;
         this.completedOrderMapper = completedOrderMapper;
+        this.orderDataMapper= orderDataMapper;
     }
 
     @Override
     public OrderDataDtoOutput getAllData(Long id) {
-        return OrderDataMapper.orderDataOutputMapping(this.orderDataDao.getAllData(id));
+        return orderDataMapper.orderDataOutputMapping(this.orderDataDao.getAllData(id));
     }
 
     @Override
@@ -59,7 +61,7 @@ public class OrderDataService implements IOrderDataService {
 
     @Override
     public OrderDataDtoOutput save(OrderDataDtoInput type) {
-        IOrderData input = OrderDataMapper.orderDataInputMapping(type);
+        IOrderData input = orderDataMapper.orderDataInputMapping(type);
         IOrderData id;
         if (!this.orderDataDao.doesTicketExist(type.getTicketId())) {
             id = this.orderDataDao.save(input);
@@ -67,7 +69,7 @@ public class OrderDataService implements IOrderDataService {
             id = this.orderDataDao.getDataByTicket(type.getTicketId());
         }
         IOrderStage stage = this.orderStageDao.save(new OrderStage(id.getId(), input.getOrderHistory().get(0).getDescription()));
-        return OrderDataMapper.orderDataOutputMapping(new OrderData(Collections.singletonList(stage),
+        return orderDataMapper.orderDataOutputMapping(new OrderData(Collections.singletonList(stage),
                 id.getId(), id.getTicketId(), id.isDone()));
     }
 
@@ -75,7 +77,7 @@ public class OrderDataService implements IOrderDataService {
     public List<OrderDataDtoOutput> get() {
         List<OrderDataDtoOutput> temp = new ArrayList<>();
         for (IOrderData orderData : this.orderDataDao.get()) {
-            OrderDataDtoOutput output = OrderDataMapper.orderDataOutputMapping(orderData);
+            OrderDataDtoOutput output = orderDataMapper.orderDataOutputMapping(orderData);
             temp.add(output);
         }
         return temp;
@@ -83,12 +85,12 @@ public class OrderDataService implements IOrderDataService {
 
     @Override
     public OrderDataDtoOutput get(Long id) {
-        return OrderDataMapper.orderDataOutputMapping(this.orderDataDao.get(id));
+        return orderDataMapper.orderDataOutputMapping(this.orderDataDao.get(id));
     }
 
     @Override
     public OrderDataDtoOutput update(OrderDataDtoInput type, String id, String version) {
-        IOrderData input = OrderDataMapper.orderDataInputMapping(type);
+        IOrderData input = orderDataMapper.orderDataInputMapping(type);
         IOrderData orderData;
         IOrderStage stage;
         if (input.isDone()) {
@@ -105,7 +107,7 @@ public class OrderDataService implements IOrderDataService {
         } else {
             stage = input.getOrderHistory().get(0);
         }
-        return OrderDataMapper.orderDataOutputMapping(new OrderData(Collections.singletonList(stage),
+        return orderDataMapper.orderDataOutputMapping(new OrderData(Collections.singletonList(stage),
                 orderData.getId(), orderData.getTicketId(), orderData.isDone()));
     }
 }
