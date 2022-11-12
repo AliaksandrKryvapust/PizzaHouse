@@ -2,6 +2,7 @@ package groupId.artifactId.service;
 
 import groupId.artifactId.core.dto.input.MenuDtoInput;
 import groupId.artifactId.core.dto.output.MenuDtoOutput;
+import groupId.artifactId.core.dto.output.crud.MenuDtoCrudOutput;
 import groupId.artifactId.core.mapper.MenuMapper;
 import groupId.artifactId.dao.api.IMenuDao;
 import groupId.artifactId.dao.entity.api.IMenu;
@@ -20,23 +21,23 @@ public class MenuService implements IMenuService {
     }
 
     @Override
-    public List<MenuDtoOutput> get() {
-        List<MenuDtoOutput> temp = new ArrayList<>();
+    public List<MenuDtoCrudOutput> get() {
+        List<MenuDtoCrudOutput> temp = new ArrayList<>();
         for (IMenu menu : this.dao.get()) {
-            MenuDtoOutput menuDtoOutput = menuMapper.menuOutputMapping(menu);
+            MenuDtoCrudOutput menuDtoOutput = menuMapper.outputCrudMapping(menu);
             temp.add(menuDtoOutput);
         }
         return temp;
     }
 
     @Override
-    public MenuDtoOutput get(Long id) {
-        return menuMapper.menuOutputMapping(this.dao.get(id));
+    public MenuDtoCrudOutput get(Long id) {
+        return menuMapper.outputCrudMapping(this.dao.get(id));
     }
 
     @Override
     public MenuDtoOutput getAllData(Long id) {
-        return menuMapper.menuOutputMapping(this.dao.getAllData(id));
+        return menuMapper.outputMapping(this.dao.getAllData(id));
     }
 
     @Override
@@ -50,9 +51,9 @@ public class MenuService implements IMenuService {
     }
 
     @Override
-    public MenuDtoOutput update(MenuDtoInput menuDtoInput, String id, String version) {
-        IMenu menu = this.dao.update(menuMapper.menuInputMapping(menuDtoInput), Long.valueOf(id), Integer.valueOf(version));
-        return menuMapper.menuOutputMapping(menu);
+    public MenuDtoCrudOutput update(MenuDtoInput menuDtoInput, String id, String version) {
+        IMenu menu = this.dao.update(menuMapper.inputMapping(menuDtoInput), Long.valueOf(id), Integer.valueOf(version));
+        return menuMapper.outputCrudMapping(menu);
     }
 
     @Override
@@ -61,9 +62,9 @@ public class MenuService implements IMenuService {
     }
 
     @Override
-    public MenuDtoOutput save(MenuDtoInput menuDtoInput) {
-        IMenu menu = this.dao.save(menuMapper.menuInputMapping(menuDtoInput));
-        return menuMapper.menuOutputMapping(menu);
+    public MenuDtoCrudOutput save(MenuDtoInput menuDtoInput) {
+        IMenu menu = this.dao.save(menuMapper.inputMapping(menuDtoInput));
+        return menuMapper.outputCrudMapping(menu);
     }
 
 }
