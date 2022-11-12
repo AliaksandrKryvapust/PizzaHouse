@@ -12,16 +12,18 @@ import java.util.List;
 
 public class MenuService implements IMenuService {
     private final IMenuDao dao;
+    private final MenuMapper menuMapper;
 
-    public MenuService(IMenuDao dao) {
+    public MenuService(IMenuDao dao, MenuMapper menuMapper) {
         this.dao = dao;
+        this.menuMapper = menuMapper;
     }
 
     @Override
     public List<MenuDtoOutput> get() {
         List<MenuDtoOutput> temp = new ArrayList<>();
         for (IMenu menu : this.dao.get()) {
-            MenuDtoOutput menuDtoOutput = MenuMapper.menuOutputMapping(menu);
+            MenuDtoOutput menuDtoOutput = menuMapper.menuOutputMapping(menu);
             temp.add(menuDtoOutput);
         }
         return temp;
@@ -29,12 +31,12 @@ public class MenuService implements IMenuService {
 
     @Override
     public MenuDtoOutput get(Long id) {
-        return MenuMapper.menuOutputMapping(this.dao.get(id));
+        return menuMapper.menuOutputMapping(this.dao.get(id));
     }
 
     @Override
     public MenuDtoOutput getAllData(Long id) {
-        return MenuMapper.menuOutputMapping(this.dao.getAllData(id));
+        return menuMapper.menuOutputMapping(this.dao.getAllData(id));
     }
 
     @Override
@@ -49,8 +51,8 @@ public class MenuService implements IMenuService {
 
     @Override
     public MenuDtoOutput update(MenuDtoInput menuDtoInput, String id, String version) {
-        IMenu menu = this.dao.update(MenuMapper.menuInputMapping(menuDtoInput), Long.valueOf(id), Integer.valueOf(version));
-        return MenuMapper.menuOutputMapping(menu);
+        IMenu menu = this.dao.update(menuMapper.menuInputMapping(menuDtoInput), Long.valueOf(id), Integer.valueOf(version));
+        return menuMapper.menuOutputMapping(menu);
     }
 
     @Override
@@ -60,8 +62,8 @@ public class MenuService implements IMenuService {
 
     @Override
     public MenuDtoOutput save(MenuDtoInput menuDtoInput) {
-        IMenu menu = this.dao.save(MenuMapper.menuInputMapping(menuDtoInput));
-        return MenuMapper.menuOutputMapping(menu);
+        IMenu menu = this.dao.save(menuMapper.menuInputMapping(menuDtoInput));
+        return menuMapper.menuOutputMapping(menu);
     }
 
 }
