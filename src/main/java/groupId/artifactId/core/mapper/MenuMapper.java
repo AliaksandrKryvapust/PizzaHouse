@@ -11,14 +11,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MenuMapper {
-    public static IMenu menuInputMapping(MenuDtoInput menuDtoInput) {
+    private final MenuItemMapper menuItemMapper;
+
+    public MenuMapper(MenuItemMapper menuItemMapper) {
+        this.menuItemMapper = menuItemMapper;
+    }
+
+    public IMenu menuInputMapping(MenuDtoInput menuDtoInput) {
         return new Menu(menuDtoInput.getName(), menuDtoInput.getEnable());
     }
 
-    public static MenuDtoOutput menuOutputMapping(IMenu menu) {
+    public MenuDtoOutput menuOutputMapping(IMenu menu) {
         List<MenuItemDtoOutput> items = new ArrayList<>();
-        for (IMenuItem menuItem: menu.getItems()) {
-            MenuItemDtoOutput item = MenuItemMapper.menuItemOutputMapping(menuItem);
+        for (IMenuItem menuItem : menu.getItems()) {
+            MenuItemDtoOutput item = menuItemMapper.menuItemOutputMapping(menuItem);
             items.add(item);
         }
         return new MenuDtoOutput(menu.getId(), menu.getCreationDate(), menu.getVersion(), menu.getName(), menu.getEnable(),
