@@ -1,5 +1,6 @@
 package groupId.artifactId.service.IoC;
 
+import groupId.artifactId.core.mapper.PizzaInfoMapper;
 import groupId.artifactId.dao.IoC.PizzaInfoDaoSingleton;
 import groupId.artifactId.service.PizzaInfoService;
 import groupId.artifactId.service.api.IPizzaInfoService;
@@ -9,7 +10,7 @@ public class PizzaInfoServiceSingleton {
     private volatile static PizzaInfoServiceSingleton firstInstance = null;
 
     public PizzaInfoServiceSingleton() {
-        this.pizzaInfoService = new PizzaInfoService(PizzaInfoDaoSingleton.getInstance());
+        this.pizzaInfoService = new PizzaInfoService(PizzaInfoDaoSingleton.getInstance(), new PizzaInfoMapper());
     }
 
     public static IPizzaInfoService getInstance() {

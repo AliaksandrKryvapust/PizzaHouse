@@ -2,6 +2,7 @@ package groupId.artifactId.service.IoC;
 
 import groupId.artifactId.core.mapper.MenuItemMapper;
 import groupId.artifactId.core.mapper.MenuMapper;
+import groupId.artifactId.core.mapper.PizzaInfoMapper;
 import groupId.artifactId.dao.IoC.MenuDaoSingleton;
 import groupId.artifactId.service.MenuService;
 import groupId.artifactId.service.api.IMenuService;
@@ -11,7 +12,7 @@ public class MenuServiceSingleton {
     private volatile static MenuServiceSingleton firstInstance = null;
 
     public MenuServiceSingleton() {
-        this.menuService = new MenuService(MenuDaoSingleton.getInstance(), new MenuMapper(new MenuItemMapper()));
+        this.menuService = new MenuService(MenuDaoSingleton.getInstance(), new MenuMapper(new MenuItemMapper(new PizzaInfoMapper())));
     }
 
     public static IMenuService getInstance() {
