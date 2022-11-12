@@ -3,6 +3,8 @@ package groupId.artifactId.service;
 import groupId.artifactId.core.dto.input.MenuDtoInput;
 import groupId.artifactId.core.dto.output.MenuDtoOutput;
 import groupId.artifactId.core.dto.output.MenuItemDtoOutput;
+import groupId.artifactId.core.dto.output.PizzaInfoDtoOutput;
+import groupId.artifactId.core.mapper.MenuMapper;
 import groupId.artifactId.dao.MenuDao;
 import groupId.artifactId.dao.entity.Menu;
 import groupId.artifactId.dao.entity.MenuItem;
@@ -33,6 +35,8 @@ class MenuServiceTest {
     private MenuService menuService;
     @Mock
     private MenuDao menuDao;
+    @Mock
+    private MenuMapper menuMapper;
 
     @Test
     void get() {
@@ -44,6 +48,8 @@ class MenuServiceTest {
         final Instant creationDate = Instant.now();
         List<IMenu> menus = singletonList(new Menu(id, creationDate, version, name, enable));
         Mockito.when(menuDao.get()).thenReturn(menus);
+        Mockito.when(menuMapper.menuOutputMapping(any(IMenu.class))).thenReturn(new MenuDtoOutput(id, creationDate,
+                version, name, enable, Collections.singletonList(new MenuItemDtoOutput())));
 
         //test
         List<MenuDtoOutput> test = menuService.get();
@@ -70,6 +76,8 @@ class MenuServiceTest {
         final Instant creationDate = Instant.now();
         IMenu menu = new Menu(id, creationDate, version, name, enable);
         Mockito.when(menuDao.get(id)).thenReturn(menu);
+        Mockito.when(menuMapper.menuOutputMapping(any(IMenu.class))).thenReturn(new MenuDtoOutput(id, creationDate,
+                version, name, enable, Collections.singletonList(new MenuItemDtoOutput())));
 
         //test
         MenuDtoOutput test = menuService.get(id);
@@ -99,6 +107,9 @@ class MenuServiceTest {
                 description, size, creationDate, version), price, id, creationDate, version, id));
         IMenu menu = new Menu(items, id, creationDate, version, name, enable);
         Mockito.when(menuDao.getAllData(id)).thenReturn(menu);
+        Mockito.when(menuMapper.menuOutputMapping(any(IMenu.class))).thenReturn(new MenuDtoOutput(id, creationDate,
+                version, name, enable, Collections.singletonList(new MenuItemDtoOutput(id, price, id, creationDate, version, id,
+                new PizzaInfoDtoOutput(id, pizzaName, description, size, creationDate, version)))));
 
         //test
         MenuDtoOutput test = menuService.getAllData(id);
@@ -164,13 +175,18 @@ class MenuServiceTest {
         final boolean enable = false;
         final long id = 1L;
         final String inputId = "1";
-        final String version = "1";
+        final String inputVersion = "1";
+        final int version = 1;
+        final Instant creationDate = Instant.now();
         final MenuDtoInput menuDtoInput = new MenuDtoInput(name, enable);
-        Mockito.when(menuDao.update(any(IMenu.class), eq(Long.valueOf(inputId)), eq(Integer.valueOf(version)))).
+        Mockito.when(menuMapper.menuInputMapping(any(MenuDtoInput.class))).thenReturn(new Menu(name, enable));
+        Mockito.when(menuDao.update(any(IMenu.class), eq(Long.valueOf(inputId)), eq(Integer.valueOf(inputVersion)))).
                 thenReturn(new Menu(id, name, enable));
+        Mockito.when(menuMapper.menuOutputMapping(any(IMenu.class))).thenReturn(new MenuDtoOutput(id, creationDate,
+                version, name, enable, Collections.singletonList(new MenuItemDtoOutput())));
 
         //test
-        MenuDtoOutput test = menuService.update(menuDtoInput, inputId, version);
+        MenuDtoOutput test = menuService.update(menuDtoInput, inputId, inputVersion);
 
         // assert
         Assertions.assertNotNull(test);
@@ -204,8 +220,13 @@ class MenuServiceTest {
         final String name = "Optional Menu";
         final boolean enable = false;
         final long id = 1L;
+        final int version = 1;
+        final Instant creationDate = Instant.now();
         final MenuDtoInput menuDtoInput = new MenuDtoInput(name, enable);
+        Mockito.when(menuMapper.menuInputMapping(any(MenuDtoInput.class))).thenReturn(new Menu(name, enable));
         Mockito.when(menuDao.save(any(IMenu.class))).thenReturn(new Menu(id, name, enable));
+        Mockito.when(menuMapper.menuOutputMapping(any(IMenu.class))).thenReturn(new MenuDtoOutput(id, creationDate,
+                version, name, enable, Collections.singletonList(new MenuItemDtoOutput())));
 
         //test
         MenuDtoOutput test = menuService.save(menuDtoInput);
