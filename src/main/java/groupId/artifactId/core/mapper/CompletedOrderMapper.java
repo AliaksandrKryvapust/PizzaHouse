@@ -12,7 +12,13 @@ import java.util.Collections;
 import java.util.List;
 
 public class CompletedOrderMapper {
-    public CompletedOrderMapper() {
+
+    private final TicketMapper ticketMapper;
+    private final PizzaMapper pizzaMapper;
+
+    public CompletedOrderMapper(TicketMapper ticketMapper, PizzaMapper pizzaMapper) {
+        this.ticketMapper = ticketMapper;
+        this.pizzaMapper = pizzaMapper;
     }
 
     public ICompletedOrder completedOrderInputMapping(IOrderData orderData) {
@@ -29,15 +35,15 @@ public class CompletedOrderMapper {
         List<PizzaDtoOutput> temp = new ArrayList<>();
         if (completedOrder.getItems() != null && completedOrder.getTicket() != null) {
             for (IPizza pizza : completedOrder.getItems()) {
-                PizzaDtoOutput output = PizzaMapper.pizzaOutputMapper(pizza);
+                PizzaDtoOutput output = pizzaMapper.pizzaOutputMapper(pizza);
                 temp.add(output);
             }
-            TicketDtoOutPut ticketDtoOutPut = TicketMapper.ticketOutputMapping(completedOrder.getTicket());
+            TicketDtoOutPut ticketDtoOutPut = ticketMapper.ticketOutputMapping(completedOrder.getTicket());
             return new CompletedOrderDtoOutput(ticketDtoOutPut, temp, completedOrder.getId(), completedOrder.getTicketId(),
                     completedOrder.getCreationDate(), completedOrder.getVersion());
         } else if (completedOrder.getItems() != null) {
             for (IPizza pizza : completedOrder.getItems()) {
-                PizzaDtoOutput output = PizzaMapper.pizzaOutputMapper(pizza);
+                PizzaDtoOutput output = pizzaMapper.pizzaOutputMapper(pizza);
                 temp.add(output);
             }
             return new CompletedOrderDtoOutput(new TicketDtoOutPut(), temp, completedOrder.getId(), completedOrder.getTicketId(),
