@@ -1,8 +1,7 @@
 package groupId.artifactId.service;
 
-import groupId.artifactId.core.dto.output.CompletedOrderDtoOutput;
-import groupId.artifactId.core.dto.output.PizzaDtoOutput;
-import groupId.artifactId.core.dto.output.SelectedItemDtoOutput;
+import groupId.artifactId.core.dto.output.*;
+import groupId.artifactId.core.mapper.CompletedOrderMapper;
 import groupId.artifactId.dao.CompletedOrderDao;
 import groupId.artifactId.dao.PizzaDao;
 import groupId.artifactId.dao.entity.*;
@@ -31,6 +30,8 @@ class CompletedOrderServiceTest {
     private CompletedOrderDao completedOrderDao;
     @Mock
     private PizzaDao pizzaDao;
+    @Mock
+    private CompletedOrderMapper completedOrderMapper;
 
     @Test
     void getAllData() {
@@ -47,10 +48,17 @@ class CompletedOrderServiceTest {
         List<ISelectedItem> selectedItems = Collections.singletonList(new SelectedItem(new MenuItem(id,
                 new PizzaInfo(id, name, description, size, creationDate, version), price, id, creationDate, version, id),
                 id, id, id, count, creationDate, version));
+        List<SelectedItemDtoOutput> selectedItemDtoOutputs = Collections.singletonList(new SelectedItemDtoOutput(new MenuItemDtoOutput(id,
+                price, id, creationDate, version, id, new PizzaInfoDtoOutput(id, name, description, size, creationDate, version)),
+                id, id, id, count, creationDate, version));
         List<IPizza> pizzas = Collections.singletonList(new Pizza(id, id, name, size, creationDate, version));
+        List<PizzaDtoOutput> pizzaDtoOutputs = Collections.singletonList(new PizzaDtoOutput(id, id, name, size, creationDate, version));
         final ICompletedOrder completedOrder = new CompletedOrder(new Ticket(new Order(selectedItems, id, creationDate, version), id,
                 orderId, creationDate, version), pizzas, id, id, creationDate, version);
         Mockito.when(completedOrderDao.getAllData(id)).thenReturn(completedOrder);
+        Mockito.when(completedOrderMapper.completedOrderOutputMapping(any(ICompletedOrder.class)))
+                .thenReturn(new CompletedOrderDtoOutput(new TicketDtoOutPut(new OrderDtoOutput(selectedItemDtoOutputs,
+                        id, creationDate, version), id, orderId, creationDate, version), pizzaDtoOutputs, id, id, creationDate, version));
 
         //test
         CompletedOrderDtoOutput test = completedOrderService.getAllData(id);
@@ -210,9 +218,14 @@ class CompletedOrderServiceTest {
         final long id = 1L;
         final String name = "ITALIANO PIZZA";
         final int size = 32;
+        final int version = 1;
+        final Instant creationDate = Instant.now();
         final ICompletedOrder completedOrder = new CompletedOrder(new Ticket(), Collections.singletonList(new Pizza()), id);
         Mockito.when(completedOrderDao.save(any(ICompletedOrder.class))).thenReturn(new CompletedOrder(id, id));
         Mockito.when(pizzaDao.save(any(IPizza.class))).thenReturn(new Pizza(id, id, name, size));
+        Mockito.when(completedOrderMapper.completedOrderOutputMapping(any(ICompletedOrder.class))).
+                thenReturn(new CompletedOrderDtoOutput(new TicketDtoOutPut(), Collections.singletonList(
+                        new PizzaDtoOutput(id, id, name, size, creationDate, version)), id,id, creationDate, version));
 
         //test
         CompletedOrderDtoOutput test = completedOrderService.save(completedOrder);
@@ -235,11 +248,16 @@ class CompletedOrderServiceTest {
     void get() {
         // preconditions
         final long id = 1L;
+        final String name = "ITALIANO PIZZA";
+        final int size = 32;
         final int version = 1;
         final Instant creationDate = Instant.now();
         List<ICompletedOrder> completedOrders = Collections.singletonList(new CompletedOrder(new Ticket(),
                 Collections.singletonList(new Pizza()), id, id, creationDate, version));
         Mockito.when(completedOrderDao.get()).thenReturn(completedOrders);
+        Mockito.when(completedOrderMapper.completedOrderOutputMapping(any(ICompletedOrder.class))).
+                thenReturn(new CompletedOrderDtoOutput(new TicketDtoOutPut(), Collections.singletonList(
+                        new PizzaDtoOutput(id, id, name, size, creationDate, version)), id,id, creationDate, version));
 
         //test
         List<CompletedOrderDtoOutput> test = completedOrderService.get();
@@ -259,11 +277,16 @@ class CompletedOrderServiceTest {
     void testGet() {
         // preconditions
         final long id = 1L;
+        final String name = "ITALIANO PIZZA";
+        final int size = 32;
         final int version = 1;
         final Instant creationDate = Instant.now();
         ICompletedOrder completedOrders = new CompletedOrder(new Ticket(),
                 Collections.singletonList(new Pizza()), id, id, creationDate, version);
         Mockito.when(completedOrderDao.get(id)).thenReturn(completedOrders);
+        Mockito.when(completedOrderMapper.completedOrderOutputMapping(any(ICompletedOrder.class))).
+                thenReturn(new CompletedOrderDtoOutput(new TicketDtoOutPut(), Collections.singletonList(
+                        new PizzaDtoOutput(id, id, name, size, creationDate, version)), id,id, creationDate, version));
 
         //test
         CompletedOrderDtoOutput test = completedOrderService.get(id);
