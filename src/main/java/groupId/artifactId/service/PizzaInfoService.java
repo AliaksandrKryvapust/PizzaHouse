@@ -23,15 +23,15 @@ public class PizzaInfoService implements IPizzaInfoService {
 
     @Override
     public PizzaInfoDtoOutput save(PizzaInfoDtoInput pizzaInfoDtoInput) {
-        IPizzaInfo pizzaInfo = this.dao.save(pizzaInfoMapper.pizzaInfoInputMapping(pizzaInfoDtoInput));
-        return pizzaInfoMapper.pizzaInfoOutputMapping(pizzaInfo);
+        IPizzaInfo pizzaInfo = this.dao.save(pizzaInfoMapper.inputMapping(pizzaInfoDtoInput));
+        return pizzaInfoMapper.outputMapping(pizzaInfo);
     }
 
     @Override
     public List<PizzaInfoDtoOutput> get() {
         List<PizzaInfoDtoOutput> temp = new ArrayList<>();
         for (IPizzaInfo pizzaInfo : this.dao.get()) {
-            PizzaInfoDtoOutput pizzaInfoDtoOutput = pizzaInfoMapper.pizzaInfoOutputMapping(pizzaInfo);
+            PizzaInfoDtoOutput pizzaInfoDtoOutput = pizzaInfoMapper.outputMapping(pizzaInfo);
             temp.add(pizzaInfoDtoOutput);
         }
         return temp;
@@ -39,7 +39,7 @@ public class PizzaInfoService implements IPizzaInfoService {
 
     @Override
     public PizzaInfoDtoOutput get(Long id) {
-        return pizzaInfoMapper.pizzaInfoOutputMapping(this.dao.get(id));
+        return pizzaInfoMapper.outputMapping(this.dao.get(id));
     }
 
     @Override
@@ -54,9 +54,9 @@ public class PizzaInfoService implements IPizzaInfoService {
 
     @Override
     public PizzaInfoDtoOutput update(PizzaInfoDtoInput pizzaInfoDtoInput, String id, String version) {
-        IPizzaInfo pizzaInfo = this.dao.update(pizzaInfoMapper.pizzaInfoInputMapping(pizzaInfoDtoInput),
+        IPizzaInfo pizzaInfo = this.dao.update(pizzaInfoMapper.inputMapping(pizzaInfoDtoInput),
                 Long.valueOf(id), Integer.valueOf(version));
-        return pizzaInfoMapper.pizzaInfoOutputMapping(pizzaInfo);
+        return pizzaInfoMapper.outputMapping(pizzaInfo);
     }
 
     @Override
