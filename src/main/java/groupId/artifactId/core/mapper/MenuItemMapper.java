@@ -3,6 +3,7 @@ package groupId.artifactId.core.mapper;
 import groupId.artifactId.core.dto.input.MenuItemDtoInput;
 import groupId.artifactId.core.dto.output.MenuItemDtoOutput;
 import groupId.artifactId.core.dto.output.PizzaInfoDtoOutput;
+import groupId.artifactId.core.dto.output.crud.MenuItemDtoCrudOutput;
 import groupId.artifactId.dao.entity.MenuItem;
 import groupId.artifactId.dao.entity.api.IMenuItem;
 
@@ -13,16 +14,21 @@ public class MenuItemMapper {
         this.pizzaInfoMapper = pizzaInfoMapper;
     }
 
-    public IMenuItem menuItemInputMapping(MenuItemDtoInput menuItemDtoInput) {
+    public IMenuItem inputMapping(MenuItemDtoInput menuItemDtoInput) {
         return new MenuItem(menuItemDtoInput.getPrice(), menuItemDtoInput.getPizzaInfoId(), menuItemDtoInput.getMenuId());
     }
 
-    public MenuItemDtoOutput menuItemOutputMapping(IMenuItem menuItem) {
-        if (menuItem.getInfo()==null){
+    public MenuItemDtoCrudOutput outputCrudMapping(IMenuItem menuItem) {
+        return new MenuItemDtoCrudOutput(menuItem.getId(), menuItem.getPrice(), menuItem.getPizzaInfoId(), menuItem.getCreationDate(),
+                menuItem.getVersion(), menuItem.getMenuId());
+    }
+
+    public MenuItemDtoOutput outputMapping(IMenuItem menuItem) {
+        if (menuItem.getInfo() == null) {
             return new MenuItemDtoOutput(menuItem.getId(), menuItem.getPrice(), menuItem.getPizzaInfoId(), menuItem.getCreationDate(),
                     menuItem.getVersion(), menuItem.getMenuId(), new PizzaInfoDtoOutput());
         } else {
-            PizzaInfoDtoOutput pizzaInfo = pizzaInfoMapper.pizzaInfoOutputMapping(menuItem.getInfo());
+            PizzaInfoDtoOutput pizzaInfo = pizzaInfoMapper.outputMapping(menuItem.getInfo());
             return new MenuItemDtoOutput(menuItem.getId(), menuItem.getPrice(), menuItem.getPizzaInfoId(), menuItem.getCreationDate(),
                     menuItem.getVersion(), menuItem.getMenuId(), pizzaInfo);
         }

@@ -4,6 +4,7 @@ import groupId.artifactId.core.dto.input.OrderDtoInput;
 import groupId.artifactId.core.dto.input.SelectedItemDtoInput;
 import groupId.artifactId.core.dto.output.OrderDtoOutput;
 import groupId.artifactId.core.dto.output.SelectedItemDtoOutput;
+import groupId.artifactId.core.dto.output.crud.OrderDtoCrudOutput;
 import groupId.artifactId.dao.entity.Order;
 import groupId.artifactId.dao.entity.api.IOrder;
 import groupId.artifactId.dao.entity.api.ISelectedItem;
@@ -19,19 +20,23 @@ public class OrderMapper {
         this.selectedItemMapper = selectedItemMapper;
     }
 
-    public IOrder orderInputMapping(OrderDtoInput input, Long orderId) {
+    public IOrder inputMapping(OrderDtoInput input, Long orderId) {
         List<ISelectedItem> items = new ArrayList<>();
         for (SelectedItemDtoInput selectedItem : input.getSelectedItems()) {
-            ISelectedItem item = selectedItemMapper.selectedItemInputMapping(selectedItem, orderId);
+            ISelectedItem item = selectedItemMapper.inputMapping(selectedItem, orderId);
             items.add(item);
         }
         return new Order(items, orderId);
     }
 
-    public OrderDtoOutput orderOutputMapping(IOrder order) {
+    public OrderDtoCrudOutput outputCrudMapping(IOrder order) {
+        return new OrderDtoCrudOutput(order.getId(), order.getCreationDate(), order.getVersion());
+    }
+
+    public OrderDtoOutput outputMapping(IOrder order) {
         List<SelectedItemDtoOutput> items = new ArrayList<>();
         for (ISelectedItem selectedItem : order.getSelectedItems()) {
-            SelectedItemDtoOutput item = selectedItemMapper.selectedItemOutputMapping(selectedItem);
+            SelectedItemDtoOutput item = selectedItemMapper.outputMapping(selectedItem);
             items.add(item);
         }
         return new OrderDtoOutput(items, order.getId(), order.getCreationDate(), order.getVersion());

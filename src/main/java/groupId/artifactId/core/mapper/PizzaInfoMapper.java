@@ -9,12 +9,12 @@ public class PizzaInfoMapper {
     public PizzaInfoMapper() {
     }
 
-    public IPizzaInfo pizzaInfoInputMapping(PizzaInfoDtoInput pizzaInfoDtoInput) {
+    public IPizzaInfo inputMapping(PizzaInfoDtoInput pizzaInfoDtoInput) {
         return new PizzaInfo(pizzaInfoDtoInput.getName(), pizzaInfoDtoInput.getDescription(),
                 pizzaInfoDtoInput.getSize());
     }
 
-    public PizzaInfoDtoOutput pizzaInfoOutputMapping(IPizzaInfo pizzaInfo) {
+    public PizzaInfoDtoOutput outputMapping(IPizzaInfo pizzaInfo) {
         return new PizzaInfoDtoOutput(pizzaInfo.getId(), pizzaInfo.getName(), pizzaInfo.getDescription(),
                 pizzaInfo.getSize(), pizzaInfo.getCreationDate(), pizzaInfo.getVersion());
     }
