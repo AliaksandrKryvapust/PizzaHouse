@@ -3,7 +3,7 @@ package groupId.artifactId.controller.servlet.api.crud;
 import groupId.artifactId.controller.validator.IoC.OrderDataValidatorSingleton;
 import groupId.artifactId.controller.validator.api.IOrderDataValidator;
 import groupId.artifactId.core.dto.input.OrderDataDtoInput;
-import groupId.artifactId.core.dto.output.OrderDataDtoOutput;
+import groupId.artifactId.core.dto.output.crud.OrderDataDtoCrudOutput;
 import groupId.artifactId.exceptions.OptimisticLockException;
 import groupId.artifactId.service.IoC.OrderDataServiceSingleton;
 import groupId.artifactId.service.api.IOrderDataService;
@@ -31,7 +31,7 @@ public class ApiOrderDataServlet extends HttpServlet {
             String id = req.getParameter(Constants.PARAMETER_ID);
             if (id != null) {
                 if (orderDataService.isIdValid(Long.valueOf(id))) {
-                    resp.getWriter().write(JsonConverter.fromOrderDataToJson(orderDataService.get(Long.valueOf(id))));
+                    resp.getWriter().write(JsonConverter.fromOrderDataCrudToJson(orderDataService.get(Long.valueOf(id))));
                     resp.setStatus(HttpServletResponse.SC_OK);
                 } else {
                     resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
@@ -63,8 +63,8 @@ public class ApiOrderDataServlet extends HttpServlet {
             } catch (IllegalArgumentException e) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             }
-            OrderDataDtoOutput output = orderDataService.save(orderData);
-            resp.getWriter().write(JsonConverter.fromOrderDataToJson(output));
+            OrderDataDtoCrudOutput output = orderDataService.save(orderData);
+            resp.getWriter().write(JsonConverter.fromOrderDataCrudToJson(output));
             resp.setStatus(HttpServletResponse.SC_CREATED);
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -95,8 +95,8 @@ public class ApiOrderDataServlet extends HttpServlet {
                     } catch (IllegalArgumentException e) {
                         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                     }
-                    OrderDataDtoOutput output = orderDataService.update(orderData, id, version);
-                    resp.getWriter().write(JsonConverter.fromOrderDataToJson(output));
+                    OrderDataDtoCrudOutput output = orderDataService.update(orderData, id, version);
+                    resp.getWriter().write(JsonConverter.fromOrderDataCrudToJson(output));
                     resp.setStatus(HttpServletResponse.SC_CREATED);
                 } else {
                     resp.setStatus(HttpServletResponse.SC_NO_CONTENT);

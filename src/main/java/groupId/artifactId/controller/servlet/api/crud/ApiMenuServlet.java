@@ -3,7 +3,7 @@ package groupId.artifactId.controller.servlet.api.crud;
 import groupId.artifactId.controller.validator.IoC.MenuValidatorSingleton;
 import groupId.artifactId.controller.validator.api.IMenuValidator;
 import groupId.artifactId.core.dto.input.MenuDtoInput;
-import groupId.artifactId.core.dto.output.MenuDtoOutput;
+import groupId.artifactId.core.dto.output.crud.MenuDtoCrudOutput;
 import groupId.artifactId.exceptions.OptimisticLockException;
 import groupId.artifactId.service.IoC.MenuServiceSingleton;
 import groupId.artifactId.service.api.IMenuService;
@@ -34,7 +34,7 @@ public class ApiMenuServlet extends HttpServlet {
             String id = req.getParameter(Constants.PARAMETER_ID);
             if (id != null) {
                 if (menuService.isIdValid(Long.valueOf(id))) {
-                    resp.getWriter().write(JsonConverter.fromMenuToJson(menuService.get(Long.valueOf(id))));
+                    resp.getWriter().write(JsonConverter.fromMenuToCrudJson(menuService.get(Long.valueOf(id))));
                     resp.setStatus(HttpServletResponse.SC_OK);
                 } else {
                     resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
@@ -66,8 +66,8 @@ public class ApiMenuServlet extends HttpServlet {
                 } catch (IllegalArgumentException e) {
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 }
-                MenuDtoOutput menuDto = menuService.save(menu);
-                resp.getWriter().write(JsonConverter.fromMenuToJson(menuDto));
+                MenuDtoCrudOutput menuDto = menuService.save(menu);
+                resp.getWriter().write(JsonConverter.fromMenuToCrudJson(menuDto));
                 resp.setStatus(HttpServletResponse.SC_CREATED);
             } else {
                 resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
@@ -100,8 +100,8 @@ public class ApiMenuServlet extends HttpServlet {
                     } catch (IllegalArgumentException e) {
                         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                     }
-                    MenuDtoOutput menuDto = menuService.update(menu, id, version);
-                    resp.getWriter().write(JsonConverter.fromMenuToJson(menuDto));
+                    MenuDtoCrudOutput menuDto = menuService.update(menu, id, version);
+                    resp.getWriter().write(JsonConverter.fromMenuToCrudJson(menuDto));
                     resp.setStatus(HttpServletResponse.SC_CREATED);
                 } else {
                     resp.setStatus(HttpServletResponse.SC_NO_CONTENT);

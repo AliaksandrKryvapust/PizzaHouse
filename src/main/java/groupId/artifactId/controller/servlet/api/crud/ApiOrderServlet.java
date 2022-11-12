@@ -4,7 +4,7 @@ import groupId.artifactId.controller.validator.IoC.OrderValidatorSingleton;
 import groupId.artifactId.controller.validator.api.IOrderValidator;
 import groupId.artifactId.core.dto.input.OrderDtoInput;
 import groupId.artifactId.core.dto.input.SelectedItemDtoInput;
-import groupId.artifactId.core.dto.output.TicketDtoOutput;
+import groupId.artifactId.core.dto.output.crud.TicketDtoCrudOutput;
 import groupId.artifactId.exceptions.IncorrectOrderInputException;
 import groupId.artifactId.exceptions.OptimisticLockException;
 import groupId.artifactId.service.IoC.MenuItemServiceSingleton;
@@ -36,7 +36,7 @@ public class ApiOrderServlet extends HttpServlet {
             String id = req.getParameter(Constants.PARAMETER_ID);
             if (id != null) {
                 if (orderService.isTicketIdValid(Long.valueOf(id))) {
-                    resp.getWriter().write(JsonConverter.fromTicketToJson(orderService.get(Long.valueOf(id))));
+                    resp.getWriter().write(JsonConverter.fromTicketCrudToJson(orderService.get(Long.valueOf(id))));
                     resp.setStatus(HttpServletResponse.SC_OK);
                 } else {
                     resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
@@ -76,8 +76,8 @@ public class ApiOrderServlet extends HttpServlet {
                     throw new IncorrectOrderInputException("Such menu item id do not exist");
                 }
             }
-            TicketDtoOutput outPut = orderService.save(order);
-            resp.getWriter().write(JsonConverter.fromTicketToJson(outPut));
+            TicketDtoCrudOutput outPut = orderService.save(order);
+            resp.getWriter().write(JsonConverter.fromTicketCrudToJson(outPut));
             resp.setStatus(HttpServletResponse.SC_CREATED);
         } catch (IncorrectOrderInputException e) {
             resp.setStatus(HttpServletResponse.SC_NO_CONTENT);

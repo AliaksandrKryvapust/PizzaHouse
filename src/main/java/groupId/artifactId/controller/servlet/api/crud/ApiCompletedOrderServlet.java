@@ -25,7 +25,7 @@ public class ApiCompletedOrderServlet extends HttpServlet {
             String id = req.getParameter(Constants.PARAMETER_ID);
             if (id != null) {
                 if (completedOrderService.isOrderIdValid(Long.valueOf(id))) {
-                    resp.getWriter().write(JsonConverter.fromCompletedOrderToJson(completedOrderService.get(Long.valueOf(id))));
+                    resp.getWriter().write(JsonConverter.fromCompletedOrderCrudToJson(completedOrderService.get(Long.valueOf(id))));
                     resp.setStatus(HttpServletResponse.SC_OK);
                 } else {
                     resp.setStatus(HttpServletResponse.SC_NO_CONTENT);

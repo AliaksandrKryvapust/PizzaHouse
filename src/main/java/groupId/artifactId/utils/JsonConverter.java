@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import groupId.artifactId.core.dto.input.*;
 import groupId.artifactId.core.dto.output.*;
+import groupId.artifactId.core.dto.output.crud.*;
 import groupId.artifactId.exceptions.IncorrectJsonParseException;
 
 import javax.servlet.ServletInputStream;
@@ -14,28 +15,45 @@ import java.util.List;
 
 public class JsonConverter {
     private static final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule()); // findAndRegisterModules()
-    public static String fromMenuListToJson(List<MenuDtoOutput> menu) {
+
+    public static String fromMenuListToJson(List<MenuDtoCrudOutput> menu) {
         try {
             return mapper.writeValueAsString(menu);
         } catch (JsonProcessingException e) {
-            throw new IncorrectJsonParseException("Failed to write MenuDtoOutput:"+ menu.toString() + "as json", e);
+            throw new IncorrectJsonParseException("Failed to write MenuDtoOutput:" + menu.toString() + "as json", e);
         }
 
+    }
+
+    public static String fromMenuToCrudJson(MenuDtoCrudOutput menu) {
+        try {
+            return mapper.writeValueAsString(menu);
+        } catch (JsonProcessingException e) {
+            throw new IncorrectJsonParseException("Failed to write MenuDtoCrudOutput:" + menu.toString() + "as json", e);
+        }
     }
 
     public static String fromMenuToJson(MenuDtoOutput menu) {
         try {
             return mapper.writeValueAsString(menu);
         } catch (JsonProcessingException e) {
-            throw new IncorrectJsonParseException("Failed to write MenuDtoOutput:"+ menu.toString() + "as json", e);
+            throw new IncorrectJsonParseException("Failed to write MenuDtoOutput:" + menu.toString() + "as json", e);
         }
     }
 
-    public static String fromMenuItemListToJson(List<MenuItemDtoOutput> items) {
+    public static String fromMenuItemListToJson(List<MenuItemDtoCrudOutput> items) {
         try {
             return mapper.writeValueAsString(items);
         } catch (JsonProcessingException e) {
             throw new IncorrectJsonParseException("failed to write List MenuItemDtoOutput as json", e);
+        }
+    }
+
+    public static String fromMenuItemToCrudJson(MenuItemDtoCrudOutput item) {
+        try {
+            return mapper.writeValueAsString(item);
+        } catch (JsonProcessingException e) {
+            throw new IncorrectJsonParseException("failed to write MenuItemDtoCrudOutput as json", e);
         }
     }
 
@@ -63,6 +81,14 @@ public class JsonConverter {
         }
     }
 
+    public static String fromTicketCrudToJson(TicketDtoCrudOutput ticket) {
+        try {
+            return mapper.writeValueAsString(ticket);
+        } catch (JsonProcessingException e) {
+            throw new IncorrectJsonParseException("failed to write TicketDtoCrudOutput as json", e);
+        }
+    }
+
     public static String fromTicketToJson(TicketDtoOutput ticket) {
         try {
             return mapper.writeValueAsString(ticket);
@@ -71,13 +97,22 @@ public class JsonConverter {
         }
     }
 
-    public static String fromTicketListToJson(List<TicketDtoOutput> ticket) {
+    public static String fromTicketListToJson(List<TicketDtoCrudOutput> ticket) {
         try {
             return mapper.writeValueAsString(ticket);
         } catch (JsonProcessingException e) {
-            throw new IncorrectJsonParseException("failed to write List of TicketDtoOutput as json", e);
+            throw new IncorrectJsonParseException("failed to write List of TicketDtoCrudOutput as json", e);
         }
     }
+
+    public static String fromOrderDataCrudToJson(OrderDataDtoCrudOutput output) {
+        try {
+            return mapper.writeValueAsString(output);
+        } catch (JsonProcessingException e) {
+            throw new IncorrectJsonParseException("failed to write OrderDataDtoCrudOutput as json", e);
+        }
+    }
+
     public static String fromOrderDataToJson(OrderDataDtoOutput output) {
         try {
             return mapper.writeValueAsString(output);
@@ -86,11 +121,19 @@ public class JsonConverter {
         }
     }
 
-    public static String fromOrderDataListToJson(List<OrderDataDtoOutput> output) {
+    public static String fromOrderDataListToJson(List<OrderDataDtoCrudOutput> output) {
         try {
             return mapper.writeValueAsString(output);
         } catch (JsonProcessingException e) {
-            throw new IncorrectJsonParseException("failed to write List of OrderDataDtoOutput as json", e);
+            throw new IncorrectJsonParseException("failed to write List of OrderDataDtoCrudOutput as json", e);
+        }
+    }
+
+    public static String fromCompletedOrderCrudToJson(CompletedOrderDtoCrudOutput output) {
+        try {
+            return mapper.writeValueAsString(output);
+        } catch (JsonProcessingException e) {
+            throw new IncorrectJsonParseException("failed to write CompletedOrderDtoCrudOutput as json", e);
         }
     }
 
@@ -102,11 +145,11 @@ public class JsonConverter {
         }
     }
 
-    public static String fromCompletedOrderListToJson(List<CompletedOrderDtoOutput> output) {
+    public static String fromCompletedOrderListToJson(List<CompletedOrderDtoCrudOutput> output) {
         try {
             return mapper.writeValueAsString(output);
         } catch (JsonProcessingException e) {
-            throw new IncorrectJsonParseException("failed to write List of CompletedOrderDtoOutput as json", e);
+            throw new IncorrectJsonParseException("failed to write List of CompletedOrderDtoCrudOutput as json", e);
         }
     }
 

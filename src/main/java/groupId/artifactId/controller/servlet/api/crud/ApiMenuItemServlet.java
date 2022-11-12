@@ -3,7 +3,7 @@ package groupId.artifactId.controller.servlet.api.crud;
 import groupId.artifactId.controller.validator.IoC.MenuItemValidatorSingleton;
 import groupId.artifactId.controller.validator.api.IMenuItemValidator;
 import groupId.artifactId.core.dto.input.MenuItemDtoInput;
-import groupId.artifactId.core.dto.output.MenuItemDtoOutput;
+import groupId.artifactId.core.dto.output.crud.MenuItemDtoCrudOutput;
 import groupId.artifactId.exceptions.OptimisticLockException;
 import groupId.artifactId.service.IoC.MenuItemServiceSingleton;
 import groupId.artifactId.service.IoC.MenuServiceSingleton;
@@ -39,7 +39,7 @@ public class ApiMenuItemServlet extends HttpServlet {
             String id = req.getParameter(Constants.PARAMETER_ID);
             if (id != null) {
                 if (menuItemService.isIdValid(Long.valueOf(id))) {
-                    resp.getWriter().write(JsonConverter.fromMenuItemToJson(menuItemService.get(Long.valueOf(id))));
+                    resp.getWriter().write(JsonConverter.fromMenuItemToCrudJson(menuItemService.get(Long.valueOf(id))));
                     resp.setStatus(HttpServletResponse.SC_OK);
                 } else {
                     resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
@@ -72,8 +72,8 @@ public class ApiMenuItemServlet extends HttpServlet {
                 } catch (IllegalArgumentException e) {
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 }
-                MenuItemDtoOutput menuItemDto = menuItemService.save(menuItem);
-                resp.getWriter().write(JsonConverter.fromMenuItemToJson(menuItemDto));
+                MenuItemDtoCrudOutput menuItemDto = menuItemService.save(menuItem);
+                resp.getWriter().write(JsonConverter.fromMenuItemToCrudJson(menuItemDto));
                 resp.setStatus(HttpServletResponse.SC_CREATED);
             } else {
                 resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
@@ -107,8 +107,8 @@ public class ApiMenuItemServlet extends HttpServlet {
                     } catch (IllegalArgumentException e) {
                         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                     }
-                    MenuItemDtoOutput menuItemDto = menuItemService.update(menuItem, id, version);
-                    resp.getWriter().write(JsonConverter.fromMenuItemToJson(menuItemDto));
+                    MenuItemDtoCrudOutput menuItemDto = menuItemService.update(menuItem, id, version);
+                    resp.getWriter().write(JsonConverter.fromMenuItemToCrudJson(menuItemDto));
                     resp.setStatus(HttpServletResponse.SC_CREATED);
                 } else {
                     resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
