@@ -18,7 +18,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Instant;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
@@ -107,9 +106,6 @@ class MenuItemMapperTest {
         // preconditions
         final long id = 1L;
         final double price = 20.0;
-        final String pizzaName = "ITALIANO PIZZA";
-        final String description = "Mozzarella cheese, basilica, ham";
-        final int size = 32;
         final int version = 1;
         final Instant creationDate = Instant.now();
         final IMenuItem menuItem = new MenuItem(id, null, price, id, creationDate, version, id);
