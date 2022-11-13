@@ -1,6 +1,7 @@
 package groupId.artifactId.service;
 
 import groupId.artifactId.core.dto.output.*;
+import groupId.artifactId.core.dto.output.crud.CompletedOrderDtoCrudOutput;
 import groupId.artifactId.core.mapper.CompletedOrderMapper;
 import groupId.artifactId.dao.CompletedOrderDao;
 import groupId.artifactId.dao.PizzaDao;
@@ -55,10 +56,10 @@ class CompletedOrderServiceTest {
         List<PizzaDtoOutput> pizzaDtoOutputs = Collections.singletonList(new PizzaDtoOutput(id, id, name, size, creationDate, version));
         final ICompletedOrder completedOrder = new CompletedOrder(new Ticket(new Order(selectedItems, id, creationDate, version), id,
                 orderId, creationDate, version), pizzas, id, id, creationDate, version);
+        final CompletedOrderDtoOutput dtoOutput = new CompletedOrderDtoOutput(new TicketDtoOutput(new OrderDtoOutput(selectedItemDtoOutputs,
+                id, creationDate, version), id, orderId, creationDate, version), pizzaDtoOutputs, id, id, creationDate, version);
         Mockito.when(completedOrderDao.getAllData(id)).thenReturn(completedOrder);
-        Mockito.when(completedOrderMapper.completedOrderOutputMapping(any(ICompletedOrder.class)))
-                .thenReturn(new CompletedOrderDtoOutput(new TicketDtoOutput(new OrderDtoOutput(selectedItemDtoOutputs,
-                        id, creationDate, version), id, orderId, creationDate, version), pizzaDtoOutputs, id, id, creationDate, version));
+        Mockito.when(completedOrderMapper.outputMapping(any(ICompletedOrder.class))).thenReturn(dtoOutput);
 
         //test
         CompletedOrderDtoOutput test = completedOrderService.getAllData(id);
@@ -221,50 +222,39 @@ class CompletedOrderServiceTest {
         final int version = 1;
         final Instant creationDate = Instant.now();
         final ICompletedOrder completedOrder = new CompletedOrder(new Ticket(), Collections.singletonList(new Pizza()), id);
+        final Pizza pizza = new Pizza(id, id, name, size);
+        final CompletedOrderDtoCrudOutput dtoCrudOutput = new CompletedOrderDtoCrudOutput(id, id, creationDate, version);
         Mockito.when(completedOrderDao.save(any(ICompletedOrder.class))).thenReturn(new CompletedOrder(id, id));
-        Mockito.when(pizzaDao.save(any(IPizza.class))).thenReturn(new Pizza(id, id, name, size));
-        Mockito.when(completedOrderMapper.completedOrderOutputMapping(any(ICompletedOrder.class))).
-                thenReturn(new CompletedOrderDtoOutput(new TicketDtoOutput(), Collections.singletonList(
-                        new PizzaDtoOutput(id, id, name, size, creationDate, version)), id,id, creationDate, version));
+        Mockito.when(pizzaDao.save(any(IPizza.class))).thenReturn(pizza);
+        Mockito.when(completedOrderMapper.outputCrudMapping(any(ICompletedOrder.class))).thenReturn(dtoCrudOutput);
 
         //test
-        CompletedOrderDtoOutput test = completedOrderService.save(completedOrder);
+        CompletedOrderDtoCrudOutput test = completedOrderService.save(completedOrder);
 
         // assert
         Assertions.assertNotNull(test);
-        Assertions.assertNotNull(test.getTicket());
-        Assertions.assertNotNull(test.getItems());
         Assertions.assertEquals(id, test.getId());
         Assertions.assertEquals(id, test.getTicketId());
-        for (PizzaDtoOutput output : test.getItems()) {
-            Assertions.assertEquals(id, output.getId());
-            Assertions.assertEquals(id, output.getCompletedOrderId());
-            Assertions.assertEquals(name, output.getName());
-            Assertions.assertEquals(size, output.getSize());
-        }
     }
 
     @Test
     void get() {
         // preconditions
         final long id = 1L;
-        final String name = "ITALIANO PIZZA";
-        final int size = 32;
         final int version = 1;
         final Instant creationDate = Instant.now();
         List<ICompletedOrder> completedOrders = Collections.singletonList(new CompletedOrder(new Ticket(),
                 Collections.singletonList(new Pizza()), id, id, creationDate, version));
+        final CompletedOrderDtoCrudOutput crudOutput = new CompletedOrderDtoCrudOutput(id, id, creationDate, version);
         Mockito.when(completedOrderDao.get()).thenReturn(completedOrders);
-        Mockito.when(completedOrderMapper.completedOrderOutputMapping(any(ICompletedOrder.class))).
-                thenReturn(new CompletedOrderDtoOutput(new TicketDtoOutput(), Collections.singletonList(
-                        new PizzaDtoOutput(id, id, name, size, creationDate, version)), id,id, creationDate, version));
+        Mockito.when(completedOrderMapper.outputCrudMapping(any(ICompletedOrder.class))).thenReturn(crudOutput);
 
         //test
-        List<CompletedOrderDtoOutput> test = completedOrderService.get();
+        List<CompletedOrderDtoCrudOutput> test = completedOrderService.get();
 
         // assert
         Assertions.assertEquals(completedOrders.size(), test.size());
-        for (CompletedOrderDtoOutput output : test) {
+        for (CompletedOrderDtoCrudOutput output : test) {
             Assertions.assertNotNull(output);
             Assertions.assertEquals(id, output.getId());
             Assertions.assertEquals(id, output.getTicketId());
@@ -277,19 +267,16 @@ class CompletedOrderServiceTest {
     void testGet() {
         // preconditions
         final long id = 1L;
-        final String name = "ITALIANO PIZZA";
-        final int size = 32;
         final int version = 1;
         final Instant creationDate = Instant.now();
         ICompletedOrder completedOrders = new CompletedOrder(new Ticket(),
                 Collections.singletonList(new Pizza()), id, id, creationDate, version);
+        final CompletedOrderDtoCrudOutput crudOutput = new CompletedOrderDtoCrudOutput(id, id, creationDate, version);
         Mockito.when(completedOrderDao.get(id)).thenReturn(completedOrders);
-        Mockito.when(completedOrderMapper.completedOrderOutputMapping(any(ICompletedOrder.class))).
-                thenReturn(new CompletedOrderDtoOutput(new TicketDtoOutput(), Collections.singletonList(
-                        new PizzaDtoOutput(id, id, name, size, creationDate, version)), id,id, creationDate, version));
+        Mockito.when(completedOrderMapper.outputCrudMapping(any(ICompletedOrder.class))).thenReturn(crudOutput);
 
         //test
-        CompletedOrderDtoOutput test = completedOrderService.get(id);
+        CompletedOrderDtoCrudOutput test = completedOrderService.get(id);
 
         // assert
         Assertions.assertNotNull(test);

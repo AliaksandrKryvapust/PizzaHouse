@@ -3,6 +3,7 @@ package groupId.artifactId.service;
 import groupId.artifactId.core.dto.input.MenuItemDtoInput;
 import groupId.artifactId.core.dto.output.MenuItemDtoOutput;
 import groupId.artifactId.core.dto.output.PizzaInfoDtoOutput;
+import groupId.artifactId.core.dto.output.crud.MenuItemDtoCrudOutput;
 import groupId.artifactId.core.mapper.MenuItemMapper;
 import groupId.artifactId.dao.MenuItemDao;
 import groupId.artifactId.dao.entity.MenuItem;
@@ -22,7 +23,6 @@ import java.util.List;
 
 import static java.util.Collections.singletonList;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,12 +40,15 @@ class MenuItemServiceTest {
         final long id = 1L;
         final double price = 20.0;
         final MenuItemDtoInput menuDtoInput = new MenuItemDtoInput(price, id, id);
-        Mockito.when(menuItemMapper.menuItemInputMapping(any(MenuItemDtoInput.class))).thenReturn(new MenuItem(price, id, id));
-        Mockito.when(menuItemDao.save(any(IMenuItem.class))).thenReturn(new MenuItem(id, price, id, id));
-        Mockito.when(menuItemMapper.menuItemOutputMapping(any(IMenuItem.class))).thenReturn(new MenuItemDtoOutput(id, price, id, id));
+        final MenuItem menuItem = new MenuItem(price, id, id);
+        final MenuItem menuItemOutput = new MenuItem(id, price, id, id);
+        final MenuItemDtoCrudOutput dtoCrudOutput = new MenuItemDtoCrudOutput(id, price, id, id);
+        Mockito.when(menuItemMapper.inputMapping(any(MenuItemDtoInput.class))).thenReturn(menuItem);
+        Mockito.when(menuItemDao.save(any(IMenuItem.class))).thenReturn(menuItemOutput);
+        Mockito.when(menuItemMapper.outputCrudMapping(any(IMenuItem.class))).thenReturn(dtoCrudOutput);
 
         //test
-        MenuItemDtoOutput test = menuItemService.save(menuDtoInput);
+        MenuItemDtoCrudOutput test = menuItemService.save(menuDtoInput);
 
         // assert
         Assertions.assertNotNull(test);
@@ -63,16 +66,16 @@ class MenuItemServiceTest {
         final int version = 1;
         final Instant creationDate = Instant.now();
         List<IMenuItem> menuItems = singletonList(new MenuItem(id, new PizzaInfo(), price, id, creationDate, version, id));
+        final MenuItemDtoCrudOutput crudOutput = new MenuItemDtoCrudOutput(id, price, id, creationDate, version, id);
         Mockito.when(menuItemDao.get()).thenReturn(menuItems);
-        Mockito.when(menuItemMapper.menuItemOutputMapping(any(IMenuItem.class))).
-                thenReturn(new MenuItemDtoOutput(id, price, id, creationDate, version, id, new PizzaInfoDtoOutput()));
+        Mockito.when(menuItemMapper.outputCrudMapping(any(IMenuItem.class))).thenReturn(crudOutput);
 
         //test
-        List<MenuItemDtoOutput> test = menuItemService.get();
+        List<MenuItemDtoCrudOutput> test = menuItemService.get();
 
         // assert
         Assertions.assertEquals(menuItems.size(), test.size());
-        for (MenuItemDtoOutput output : test) {
+        for (MenuItemDtoCrudOutput output : test) {
             Assertions.assertNotNull(output);
             Assertions.assertEquals(id, output.getId());
             Assertions.assertEquals(id, output.getPizzaInfoId());
@@ -90,13 +93,13 @@ class MenuItemServiceTest {
         final double price = 20.0;
         final int version = 1;
         final Instant creationDate = Instant.now();
-        IMenuItem menuItem = new MenuItem(id, new PizzaInfo(), price, id, creationDate, version, id);
+        final IMenuItem menuItem = new MenuItem(id, new PizzaInfo(), price, id, creationDate, version, id);
+        final MenuItemDtoCrudOutput crudOutput = new MenuItemDtoCrudOutput(id, price, id, creationDate, version, id);
         Mockito.when(menuItemDao.get(id)).thenReturn(menuItem);
-        Mockito.when(menuItemMapper.menuItemOutputMapping(any(IMenuItem.class))).
-                thenReturn(new MenuItemDtoOutput(id, price, id, creationDate, version, id, new PizzaInfoDtoOutput()));
+        Mockito.when(menuItemMapper.outputCrudMapping(any(IMenuItem.class))).thenReturn(crudOutput);
 
         //test
-        MenuItemDtoOutput test = menuItemService.get(id);
+        MenuItemDtoCrudOutput test = menuItemService.get(id);
 
         // assert
         Assertions.assertNotNull(test);
@@ -118,12 +121,12 @@ class MenuItemServiceTest {
         final int size = 32;
         final int version = 1;
         final Instant creationDate = Instant.now();
-        IMenuItem menuItem = new MenuItem(id, new PizzaInfo(id, pizzaName, description, size, creationDate, version),
+        final IMenuItem menuItem = new MenuItem(id, new PizzaInfo(id, pizzaName, description, size, creationDate, version),
                 price, id, creationDate, version, id);
+        final MenuItemDtoOutput dtoOutput = new MenuItemDtoOutput(id, price, id, creationDate, version, id,
+                new PizzaInfoDtoOutput(id, pizzaName, description, size, creationDate, version));
         Mockito.when(menuItemDao.getAllData(id)).thenReturn(menuItem);
-        Mockito.when(menuItemMapper.menuItemOutputMapping(any(IMenuItem.class))).
-                thenReturn(new MenuItemDtoOutput(id, price, id, creationDate, version, id,
-                        new PizzaInfoDtoOutput(id, pizzaName, description, size, creationDate, version)));
+        Mockito.when(menuItemMapper.outputMapping(any(IMenuItem.class))).thenReturn(dtoOutput);
 
         //test
         MenuItemDtoOutput test = menuItemService.getAllData(id);
@@ -167,13 +170,14 @@ class MenuItemServiceTest {
         final String inputId = "1";
         final String version = "1";
         final MenuItemDtoInput menuDtoInput = new MenuItemDtoInput(price, id, id);
-        Mockito.when(menuItemMapper.menuItemInputMapping(any(MenuItemDtoInput.class))).thenReturn(new MenuItem(price, id, id));
-        Mockito.when(menuItemDao.update(any(IMenuItem.class), eq(Long.valueOf(inputId)), eq(Integer.valueOf(version)))).
-                thenReturn(new MenuItem(id, price, id, id));
-        Mockito.when(menuItemMapper.menuItemOutputMapping(any(IMenuItem.class))).thenReturn(new MenuItemDtoOutput(id, price, id, id));
+        final MenuItem menuItem = new MenuItem(id, price, id, id);
+        final MenuItemDtoCrudOutput dtoCrudOutput = new MenuItemDtoCrudOutput(id, price, id, id);
+        Mockito.when(menuItemMapper.inputMapping(any(MenuItemDtoInput.class))).thenReturn(new MenuItem(price, id, id));
+        Mockito.when(menuItemDao.update(any(IMenuItem.class), any(Long.class), any(Integer.class))).thenReturn(menuItem);
+        Mockito.when(menuItemMapper.outputCrudMapping(any(IMenuItem.class))).thenReturn(dtoCrudOutput);
 
         //test
-        MenuItemDtoOutput test = menuItemService.update(menuDtoInput, inputId, version);
+        MenuItemDtoCrudOutput test = menuItemService.update(menuDtoInput, inputId, version);
 
         // assert
         Assertions.assertNotNull(test);
