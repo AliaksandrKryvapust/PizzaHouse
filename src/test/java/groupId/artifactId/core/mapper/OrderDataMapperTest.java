@@ -160,7 +160,6 @@ class OrderDataMapperTest {
     void outputMappingConditionTwo() {
         // preconditions
         final long id = 1L;
-        final long orderId = 1L;
         final int version = 1;
         final String stageDescription = "Stage #";
         final boolean done = false;
