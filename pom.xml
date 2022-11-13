@@ -58,6 +58,11 @@
             <version>4.8.1</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
         <!--        &lt;!&ndash; Hibernate 5.2.6 Final &ndash;&gt;-->
         <!--        <dependency>-->
         <!--            <groupId>org.hibernate</groupId>-->
