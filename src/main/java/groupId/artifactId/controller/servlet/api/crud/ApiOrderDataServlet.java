@@ -9,6 +9,8 @@ import groupId.artifactId.service.IoC.OrderDataServiceSingleton;
 import groupId.artifactId.service.api.IOrderDataService;
 import groupId.artifactId.utils.Constants;
 import groupId.artifactId.utils.JsonConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,6 +21,9 @@ import javax.servlet.http.HttpServletResponse;
 public class ApiOrderDataServlet extends HttpServlet {
     private final IOrderDataService orderDataService = OrderDataServiceSingleton.getInstance();
     private final IOrderDataValidator orderDataValidator = OrderDataValidatorSingleton.getInstance();
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
 
     //Read POSITION
     //1) Read list
@@ -42,6 +47,7 @@ public class ApiOrderDataServlet extends HttpServlet {
             }
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            logger.error("/api/order_data crashed during doGet method" + e.getMessage() + resp.getStatus());
         }
     }
 
@@ -68,6 +74,7 @@ public class ApiOrderDataServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_CREATED);
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            logger.error("/api/order_data crashed during doPost method" + e.getMessage() + resp.getStatus());
         }
     }
 
@@ -106,8 +113,10 @@ public class ApiOrderDataServlet extends HttpServlet {
             }
         } catch (OptimisticLockException e) {
             resp.setStatus(HttpServletResponse.SC_CONFLICT);
+            logger.error("/api/order_data optimistic lock during doPost method" + e.getMessage() + resp.getStatus());
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            logger.error("/api/order_data crashed during doPut method" + e.getMessage() + resp.getStatus());
         }
     }
 }

@@ -13,6 +13,8 @@ import groupId.artifactId.service.api.IMenuService;
 import groupId.artifactId.service.api.IPizzaInfoService;
 import groupId.artifactId.utils.Constants;
 import groupId.artifactId.utils.JsonConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -27,6 +29,8 @@ public class ApiMenuItemServlet extends HttpServlet {
     private final IMenuService menuService = MenuServiceSingleton.getInstance();
     private final IPizzaInfoService pizzaInfoService = PizzaInfoServiceSingleton.getInstance();
     private final IMenuItemValidator menuItemValidator = MenuItemValidatorSingleton.getInstance();
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     //Read POSITION
     //1) Read list
@@ -50,6 +54,7 @@ public class ApiMenuItemServlet extends HttpServlet {
             }
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            logger.error("/api/menu_item crashed during doGet method" + e.getMessage() + resp.getStatus());
         }
     }
 
@@ -80,6 +85,7 @@ public class ApiMenuItemServlet extends HttpServlet {
             }
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            logger.error("/api/menu_item crashed during doPost method" + e.getMessage() + resp.getStatus());
         }
     }
 
@@ -118,8 +124,10 @@ public class ApiMenuItemServlet extends HttpServlet {
             }
         } catch (OptimisticLockException e) {
             resp.setStatus(HttpServletResponse.SC_CONFLICT);
+            logger.error("/api/menu_item optimistic lock during doPut method" + e.getMessage() + resp.getStatus());
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            logger.error("/api/menu_item crashed during doPut method" + e.getMessage() + resp.getStatus());
         }
     }
 
@@ -147,8 +155,10 @@ public class ApiMenuItemServlet extends HttpServlet {
             }
         } catch (OptimisticLockException e) {
             resp.setStatus(HttpServletResponse.SC_CONFLICT);
+            logger.error("/api/menu_item optimistic lock during doDelete method" + e.getMessage() + resp.getStatus());
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            logger.error("/api/menu_item crashed during doDelete method" + e.getMessage() + resp.getStatus());
         }
     }
 }

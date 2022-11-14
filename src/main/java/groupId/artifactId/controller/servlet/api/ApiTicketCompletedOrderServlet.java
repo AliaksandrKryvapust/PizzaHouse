@@ -6,6 +6,8 @@ import groupId.artifactId.service.api.ICompletedOrderService;
 import groupId.artifactId.service.api.IOrderDataService;
 import groupId.artifactId.utils.Constants;
 import groupId.artifactId.utils.JsonConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 public class ApiTicketCompletedOrderServlet extends HttpServlet {
     private final ICompletedOrderService completedOrderService = CompletedOrderServiceSingleton.getInstance();
     private final IOrderDataService orderDataService = OrderDataServiceSingleton.getInstance();
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     //Read POSITION
     //1) Read item need id param  (id = 1)
@@ -37,6 +40,7 @@ public class ApiTicketCompletedOrderServlet extends HttpServlet {
             }
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            logger.error("/api/ticket/completed_order crashed during doGet method" + e.getMessage() + resp.getStatus());
         }
     }
 }

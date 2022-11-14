@@ -9,6 +9,8 @@ import groupId.artifactId.service.IoC.MenuServiceSingleton;
 import groupId.artifactId.service.api.IMenuService;
 import groupId.artifactId.utils.Constants;
 import groupId.artifactId.utils.JsonConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -21,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 public class ApiMenuServlet extends HttpServlet {
     private final IMenuService menuService = MenuServiceSingleton.getInstance();
     private final IMenuValidator menuValidator = MenuValidatorSingleton.getInstance();
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     //Read POSITION
     //1) Read list
@@ -45,6 +48,7 @@ public class ApiMenuServlet extends HttpServlet {
             }
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            logger.error("/api/menu crashed during doGet method" + e.getMessage() + resp.getStatus());
         }
     }
 
@@ -74,6 +78,7 @@ public class ApiMenuServlet extends HttpServlet {
             }
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            logger.error("/api/menu crashed during doPost method" + e.getMessage() + resp.getStatus());
         }
     }
 
@@ -111,8 +116,10 @@ public class ApiMenuServlet extends HttpServlet {
             }
         } catch (OptimisticLockException e) {
             resp.setStatus(HttpServletResponse.SC_CONFLICT);
+            logger.error("/api/menu optimistic lock during doPut method" + e.getMessage() + resp.getStatus());
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            logger.error("/api/menu crashed during doPut method" + e.getMessage() + resp.getStatus());
         }
     }
 
@@ -140,8 +147,10 @@ public class ApiMenuServlet extends HttpServlet {
             }
         } catch (OptimisticLockException e) {
             resp.setStatus(HttpServletResponse.SC_CONFLICT);
+            logger.error("/api/menu optimistic lock during doDelete method" + e.getMessage() + resp.getStatus());
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            logger.error("/api/menu crashed during doDelete method" + e.getMessage() + resp.getStatus());
         }
     }
 }

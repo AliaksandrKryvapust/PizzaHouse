@@ -9,6 +9,8 @@ import groupId.artifactId.service.IoC.PizzaInfoServiceSingleton;
 import groupId.artifactId.service.api.IPizzaInfoService;
 import groupId.artifactId.utils.Constants;
 import groupId.artifactId.utils.JsonConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -21,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 public class ApiPizzaInfoServlet extends HttpServlet {
     private final IPizzaInfoService pizzaInfoService = PizzaInfoServiceSingleton.getInstance();
     private final IPizzaInfoValidator pizzaInfoValidator = PizzaInfoValidatorSingleton.getInstance();
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     //Read POSITION
     //1) Read list
@@ -44,6 +47,7 @@ public class ApiPizzaInfoServlet extends HttpServlet {
             }
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            logger.error("/api/pizza_info crashed during doGet method" + e.getMessage() + resp.getStatus());
         }
     }
 
@@ -74,6 +78,7 @@ public class ApiPizzaInfoServlet extends HttpServlet {
             }
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            logger.error("/api/pizza_info crashed during doPost method" + e.getMessage() + resp.getStatus());
         }
     }
     //UPDATE POSITION
@@ -111,8 +116,10 @@ public class ApiPizzaInfoServlet extends HttpServlet {
             }
         } catch (OptimisticLockException e) {
             resp.setStatus(HttpServletResponse.SC_CONFLICT);
+            logger.error("/api/pizza_info optimistic lock during doPut method" + e.getMessage() + resp.getStatus());
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            logger.error("/api/pizza_info crashed during doPut method" + e.getMessage() + resp.getStatus());
         }
     }
     //DELETE POSITION
@@ -139,8 +146,10 @@ public class ApiPizzaInfoServlet extends HttpServlet {
             }
         } catch (OptimisticLockException e) {
             resp.setStatus(HttpServletResponse.SC_CONFLICT);
+            logger.error("/api/pizza_info optimistic lock during doDelete method" + e.getMessage() + resp.getStatus());
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            logger.error("/api/pizza_info crashed during doDelete method" + e.getMessage() + resp.getStatus());
         }
     }
 }

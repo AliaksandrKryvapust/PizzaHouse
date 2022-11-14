@@ -4,6 +4,8 @@ import groupId.artifactId.service.IoC.MenuServiceSingleton;
 import groupId.artifactId.service.api.IMenuService;
 import groupId.artifactId.utils.Constants;
 import groupId.artifactId.utils.JsonConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "MenuMenuItem", urlPatterns = "/api/menu/menu_item")
 public class ApiMenuMenuItemServlet extends HttpServlet {
     private final IMenuService menuService = MenuServiceSingleton.getInstance();
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     //Read POSITION
     //1) Read item with all enclosed data need id param  (id = 1)
@@ -34,6 +37,7 @@ public class ApiMenuMenuItemServlet extends HttpServlet {
             }
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            logger.error("/api/menu/menu_item crashed during doGet method" + e.getMessage() + resp.getStatus());
         }
     }
 }

@@ -13,6 +13,8 @@ import groupId.artifactId.service.api.IMenuItemService;
 import groupId.artifactId.service.api.IOrderService;
 import groupId.artifactId.utils.Constants;
 import groupId.artifactId.utils.JsonConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -24,6 +26,7 @@ public class ApiOrderServlet extends HttpServlet {
     private final IOrderService orderService = OrderServiceSingleton.getInstance();
     private final IMenuItemService menuItemService = MenuItemServiceSingleton.getInstance();
     private final IOrderValidator orderValidator = OrderValidatorSingleton.getInstance();
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     //Read POSITION
     //1) Read list
@@ -47,6 +50,7 @@ public class ApiOrderServlet extends HttpServlet {
             }
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            logger.error("/api/order crashed during doGet method" + e.getMessage() + resp.getStatus());
         }
     }
 
@@ -81,8 +85,10 @@ public class ApiOrderServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_CREATED);
         } catch (IncorrectOrderInputException e) {
             resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            logger.error("/api/order crashed during doPost method menu item id do not exist" + e.getMessage() + resp.getStatus());
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            logger.error("/api/order crashed during doPost method" + e.getMessage() + resp.getStatus());
         }
     }
 
@@ -110,8 +116,10 @@ public class ApiOrderServlet extends HttpServlet {
             }
         } catch (OptimisticLockException e) {
             resp.setStatus(HttpServletResponse.SC_CONFLICT);
+            logger.error("/api/order optimistic lock during doDelete method" + e.getMessage() + resp.getStatus());
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            logger.error("/api/order crashed during doDelete method" + e.getMessage() + resp.getStatus());
         }
     }
 }

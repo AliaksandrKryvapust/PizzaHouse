@@ -4,6 +4,8 @@ import groupId.artifactId.service.IoC.OrderServiceSingleton;
 import groupId.artifactId.service.api.IOrderService;
 import groupId.artifactId.utils.Constants;
 import groupId.artifactId.utils.JsonConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "TicketSelectedItem", urlPatterns = "/api/ticket/selected_item")
 public class ApiTicketSelectedItemServlet extends HttpServlet {
     private final IOrderService orderService = OrderServiceSingleton.getInstance();
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     //Read POSITION
     //1) Read item need id param  (id = 1)
@@ -34,6 +37,7 @@ public class ApiTicketSelectedItemServlet extends HttpServlet {
             }
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            logger.error("/api/ticket/selected_item crashed during doGet method" + e.getMessage() + resp.getStatus());
         }
     }
 }
