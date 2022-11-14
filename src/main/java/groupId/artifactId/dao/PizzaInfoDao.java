@@ -3,6 +3,7 @@ package groupId.artifactId.dao;
 import groupId.artifactId.dao.api.IPizzaInfoDao;
 import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
+import groupId.artifactId.exceptions.DaoException;
 import groupId.artifactId.exceptions.OptimisticLockException;
 
 import javax.sql.DataSource;
@@ -52,7 +53,7 @@ public class PizzaInfoDao implements IPizzaInfoDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to save new PizzaInfo");
+            throw new DaoException("Failed to save new PizzaInfo" + info, e);
         }
     }
 
@@ -79,7 +80,7 @@ public class PizzaInfoDao implements IPizzaInfoDao {
                 return new PizzaInfo(id, info.getName(), info.getDescription(), info.getSize());
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to update pizza_info by id:" + id);
+            throw new DaoException("Failed to update pizza_info" + info + " by id:" + id, e);
         }
     }
 
@@ -93,8 +94,8 @@ public class PizzaInfoDao implements IPizzaInfoDao {
                     return this.mapper(resultSet);
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to get Pizza Info by id:" + id);
+        } catch (Exception e) {
+            throw new DaoException("Failed to get Pizza Info by id:" + id, e);
         }
     }
 
@@ -113,8 +114,8 @@ public class PizzaInfoDao implements IPizzaInfoDao {
                     throw new IllegalStateException("Incorrect pizza_info table delete, more than 1 row affected");
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to delete pizza info with id:" + id);
+        } catch (Exception e) {
+            throw new DaoException("Failed to delete pizza info with id:" + id, e);
         }
     }
 
@@ -130,8 +131,8 @@ public class PizzaInfoDao implements IPizzaInfoDao {
                 }
                 return iPizzaInfos;
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to get List of pizza Info");
+        } catch (Exception e) {
+            throw new DaoException("Failed to get List of pizza Info", e);
         }
     }
 
@@ -144,8 +145,8 @@ public class PizzaInfoDao implements IPizzaInfoDao {
                     return resultSet.next();
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to select Pizza Info with id:"+ id);
+        } catch (Exception e) {
+            throw new DaoException("Failed to select Pizza Info with id:" + id, e);
         }
     }
 
@@ -158,8 +159,8 @@ public class PizzaInfoDao implements IPizzaInfoDao {
                     return resultSet.next();
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to select Pizza Info with name:"+ name);
+        } catch (Exception e) {
+            throw new DaoException("Failed to select Pizza Info with name:" + name, e);
         }
     }
 
