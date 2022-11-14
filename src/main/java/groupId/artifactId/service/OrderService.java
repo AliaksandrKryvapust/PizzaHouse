@@ -14,6 +14,9 @@ import groupId.artifactId.dao.entity.Ticket;
 import groupId.artifactId.dao.entity.api.IOrder;
 import groupId.artifactId.dao.entity.api.ISelectedItem;
 import groupId.artifactId.dao.entity.api.ITicket;
+import groupId.artifactId.exceptions.DaoException;
+import groupId.artifactId.exceptions.OptimisticLockException;
+import groupId.artifactId.exceptions.ServiceException;
 import groupId.artifactId.service.api.IOrderDataService;
 import groupId.artifactId.service.api.IOrderService;
 
@@ -41,57 +44,111 @@ public class OrderService implements IOrderService {
 
     @Override
     public TicketDtoOutput getAllData(Long id) {
-        return ticketMapper.outputMapping(this.ticketDao.getAllData(id));
+        try {
+            return ticketMapper.outputMapping(this.ticketDao.getAllData(id));
+        } catch (DaoException e) {
+            throw new ServiceException(e.getMessage(), e);
+        } catch (Exception e) {
+            throw new ServiceException("Failed to getAll data from Ticket at Service by id" + id, e);
+        }
     }
 
     @Override
     public Boolean isItemIdValid(Long id) {
-        return this.selectedItemDao.exist(id);
+        try {
+            return this.selectedItemDao.exist(id);
+        } catch (DaoException e) {
+            throw new ServiceException(e.getMessage(), e);
+        } catch (Exception e) {
+            throw new ServiceException("Failed to check Selected Item at Service by id " + id, e);
+        }
     }
 
     @Override
     public Boolean isOrderIdValid(Long id) {
-        return this.orderDao.exist(id);
+        try {
+            return this.orderDao.exist(id);
+        } catch (DaoException e) {
+            throw new ServiceException(e.getMessage(), e);
+        } catch (Exception e) {
+            throw new ServiceException("Failed to check Order at Service by id " + id, e);
+        }
     }
 
     @Override
     public Boolean isTicketIdValid(Long id) {
-        return this.ticketDao.exist(id);
+        try {
+            return this.ticketDao.exist(id);
+        } catch (DaoException e) {
+            throw new ServiceException(e.getMessage(), e);
+        } catch (Exception e) {
+            throw new ServiceException("Failed to check Ticket at Service by id " + id, e);
+        }
     }
 
     @Override
     public TicketDtoCrudOutput save(OrderDtoInput orderDtoInput) {
-        IOrder orderId = this.orderDao.save(new Order());
-        IOrder input = orderMapper.inputMapping(orderDtoInput, orderId.getId());
-        List<ISelectedItem> items = new ArrayList<>();
-        for (ISelectedItem selectedItem : input.getSelectedItems()) {
-            ISelectedItem output = this.selectedItemDao.save(selectedItem);
-            items.add(output);
+        try {
+            IOrder orderId = this.orderDao.save(new Order());
+            IOrder input = orderMapper.inputMapping(orderDtoInput, orderId.getId());
+            List<ISelectedItem> items = new ArrayList<>();
+            for (ISelectedItem selectedItem : input.getSelectedItems()) {
+                ISelectedItem output = this.selectedItemDao.save(selectedItem);
+                items.add(output);
+            }
+            ITicket ticket = this.ticketDao.save(new Ticket(orderId.getId()));
+            orderDataService.save(new OrderDataDtoInput(ticket.getId(), false, "Order accepted"));
+            return ticketMapper.outputCrudMapping(new Ticket(new Order(items, orderId.getId()), ticket.getId(), ticket.getOrderId()));
+        } catch (DaoException e) {
+            throw new ServiceException(e.getMessage(), e);
+        } catch (IllegalStateException e) {
+            throw new IllegalStateException(e);
+        } catch (Exception e) {
+            throw new ServiceException("Failed to save Order" + orderDtoInput, e);
         }
-        ITicket ticket = this.ticketDao.save(new Ticket(orderId.getId()));
-        orderDataService.save(new OrderDataDtoInput(ticket.getId(), false, "Order accepted"));
-        return ticketMapper.outputCrudMapping(new Ticket(new Order(items, orderId.getId()), ticket.getId(), ticket.getOrderId()));
     }
 
     @Override
     public List<TicketDtoCrudOutput> get() {
-        List<TicketDtoCrudOutput> temp = new ArrayList<>();
-        for (ITicket ticket : this.ticketDao.get()) {
-            TicketDtoCrudOutput outPut = ticketMapper.outputCrudMapping(ticket);
-            temp.add(outPut);
+        try {
+            List<TicketDtoCrudOutput> temp = new ArrayList<>();
+            for (ITicket ticket : this.ticketDao.get()) {
+                TicketDtoCrudOutput outPut = ticketMapper.outputCrudMapping(ticket);
+                temp.add(outPut);
+            }
+            return temp;
+        } catch (DaoException e) {
+            throw new ServiceException(e.getMessage(), e);
+        } catch (Exception e) {
+            throw new ServiceException("Failed to get List of Ticket`s at Service", e);
         }
-        return temp;
     }
 
     @Override
     public TicketDtoCrudOutput get(Long id) {
-        return ticketMapper.outputCrudMapping(this.ticketDao.get(id));
+        try {
+            return ticketMapper.outputCrudMapping(this.ticketDao.get(id));
+        } catch (DaoException e) {
+            throw new ServiceException(e.getMessage(), e);
+        } catch (Exception e) {
+            throw new ServiceException("Failed to get Ticket at Service by id" + id, e);
+        }
     }
 
     @Override
     public void delete(String id, String version, String delete) {
-        this.selectedItemDao.delete(Long.valueOf(id), Integer.valueOf(version), Boolean.valueOf(delete));
-        this.ticketDao.delete(Long.valueOf(id), Integer.valueOf(version), Boolean.valueOf(delete));
-        this.orderDao.delete(Long.valueOf(id), Integer.valueOf(version), Boolean.valueOf(delete));
+        try {
+            this.selectedItemDao.delete(Long.valueOf(id), Integer.valueOf(version), Boolean.valueOf(delete));
+            this.ticketDao.delete(Long.valueOf(id), Integer.valueOf(version), Boolean.valueOf(delete));
+            this.orderDao.delete(Long.valueOf(id), Integer.valueOf(version), Boolean.valueOf(delete));
+        } catch (DaoException e) {
+            throw new ServiceException(e.getMessage(), e);
+        } catch (IllegalStateException e) {
+            throw new IllegalStateException(e);
+        } catch (OptimisticLockException e) {
+            throw new OptimisticLockException(e.getMessage());
+        } catch (Exception e) {
+            throw new ServiceException("Failed to delete Order with id:" + id, e);
+        }
     }
 }
