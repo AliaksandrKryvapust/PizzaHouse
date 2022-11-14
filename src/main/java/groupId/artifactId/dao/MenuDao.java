@@ -7,6 +7,7 @@ import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.api.IMenu;
 import groupId.artifactId.dao.entity.api.IMenuItem;
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
+import groupId.artifactId.exceptions.DaoException;
 import groupId.artifactId.exceptions.OptimisticLockException;
 
 import javax.sql.DataSource;
@@ -53,8 +54,8 @@ public class MenuDao implements IMenuDao {
                 }
             }
             return menus;
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to get List of Menu");
+        } catch (Exception e) {
+            throw new DaoException("Failed to get List of Menu", e);
         }
     }
 
@@ -68,8 +69,8 @@ public class MenuDao implements IMenuDao {
                     return this.mapper(resultSet);
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to get Menu by id:" + id);
+        } catch (Exception e) {
+            throw new DaoException("Failed to get Menu by id:" + id, e);
         }
     }
 
@@ -96,7 +97,7 @@ public class MenuDao implements IMenuDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to save new Menu");
+            throw new DaoException("Failed to save new Menu" + menu, e);
         }
 
     }
@@ -123,7 +124,7 @@ public class MenuDao implements IMenuDao {
                 return new Menu(id, menu.getName(), menu.getEnable());
             }
             } catch (SQLException e) {
-            throw new RuntimeException("Failed to update Menu with id:" + id);
+            throw new DaoException("Failed to update Menu" + menu + " with id:" + id, e);
             }
     }
 
@@ -143,7 +144,7 @@ public class MenuDao implements IMenuDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to delete Menu with id:" + id);
+            throw new DaoException("Failed to delete Menu with id:" + id, e);
         }
     }
 
@@ -156,8 +157,8 @@ public class MenuDao implements IMenuDao {
                     return this.menuItemMapper(resultSet);
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to get Menu by id:" + id);
+        } catch (Exception e) {
+            throw new DaoException("Failed to get Menu by id:" + id, e);
         }
     }
 
@@ -170,8 +171,8 @@ public class MenuDao implements IMenuDao {
                     return resultSet.next();
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to select Menu with id:" + id);
+        } catch (Exception e) {
+            throw new DaoException("Failed to select Menu with id:" + id, e);
         }
     }
 
@@ -184,8 +185,8 @@ public class MenuDao implements IMenuDao {
                     return resultSet.next();
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to select Menu with name:" + name);
+        } catch (Exception e) {
+            throw new DaoException("Failed to select Menu with name:" + name, e);
         }
     }
 

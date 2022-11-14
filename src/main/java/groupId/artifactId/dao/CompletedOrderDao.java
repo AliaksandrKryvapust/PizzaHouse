@@ -87,7 +87,7 @@ public class CompletedOrderDao implements ICompletedOrderDao {
                     return new CompletedOrder(generatedKeys.getLong(1), completedOrder.getTicketId());
                 }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw new DaoException("Failed to save new Completed Order:" + completedOrder, e);
         }
     }
