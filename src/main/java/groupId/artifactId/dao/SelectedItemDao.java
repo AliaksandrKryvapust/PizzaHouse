@@ -7,6 +7,7 @@ import groupId.artifactId.dao.entity.SelectedItem;
 import groupId.artifactId.dao.entity.api.IMenuItem;
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
 import groupId.artifactId.dao.entity.api.ISelectedItem;
+import groupId.artifactId.exceptions.DaoException;
 import groupId.artifactId.exceptions.OptimisticLockException;
 
 import javax.sql.DataSource;
@@ -59,7 +60,7 @@ public class SelectedItemDao implements ISelectedItemDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to save new Selected item");
+            throw new DaoException("Failed to save new Selected item" + selectedItem, e);
         }
     }
 
@@ -75,8 +76,8 @@ public class SelectedItemDao implements ISelectedItemDao {
                 }
                 return items;
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to get List of selected Items");
+        } catch (Exception e) {
+            throw new DaoException("Failed to get List of selected Items", e);
         }
     }
 
@@ -90,8 +91,8 @@ public class SelectedItemDao implements ISelectedItemDao {
                     return this.mapper(resultSet);
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to get Selected Item by id:" + id);
+        } catch (Exception e) {
+            throw new DaoException("Failed to get Selected Item by id:" + id, e);
         }
     }
 
@@ -108,7 +109,7 @@ public class SelectedItemDao implements ISelectedItemDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to delete selected item with id:" + id);
+            throw new DaoException("Failed to delete selected item with id:" + id, e);
         }
     }
 
@@ -119,11 +120,11 @@ public class SelectedItemDao implements ISelectedItemDao {
                 statement.setLong(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     resultSet.next();
-                    return this.menuItemMapper(resultSet);
+                    return this.allDataMapper(resultSet);
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to get Selected items with menu items by id:" + id);
+        } catch (Exception e) {
+            throw new DaoException("Failed to get Selected items with menu items by id:" + id, e);
         }
     }
 
@@ -136,8 +137,8 @@ public class SelectedItemDao implements ISelectedItemDao {
                     return resultSet.next();
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to select selected item with id:" + id);
+        } catch (Exception e) {
+            throw new DaoException("Failed to select selected item with id:" + id, e);
         }
     }
 
@@ -147,7 +148,7 @@ public class SelectedItemDao implements ISelectedItemDao {
                 resultSet.getTimestamp("creation_date").toInstant(), resultSet.getInt("version"));
     }
 
-    private ISelectedItem menuItemMapper(ResultSet resultSet) throws SQLException {
+    private ISelectedItem allDataMapper(ResultSet resultSet) throws SQLException {
         IPizzaInfo pizzaInfo = new PizzaInfo(resultSet.getLong("pizza_info_id"), resultSet.getString("name"),
                 resultSet.getString("description"), resultSet.getInt("size"),
                 resultSet.getTimestamp("picd").toInstant(), resultSet.getInt("piv"));
