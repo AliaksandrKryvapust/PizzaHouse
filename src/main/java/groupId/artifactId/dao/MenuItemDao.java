@@ -148,7 +148,7 @@ public class MenuItemDao implements IMenuItemDao {
                 statement.setLong(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     resultSet.next();
-                    return this.menuItemMapper(resultSet);
+                    return this.allDataMapper(resultSet);
                 }
             }
         } catch (Exception e) {
@@ -175,7 +175,7 @@ public class MenuItemDao implements IMenuItemDao {
                 resultSet.getLong("pizza_info_id"), resultSet.getTimestamp("creation_date").toInstant(),
                 resultSet.getInt("version"), resultSet.getLong("menu_id"));
     }
-    private IMenuItem menuItemMapper(ResultSet resultSet) throws SQLException {
+    private IMenuItem allDataMapper(ResultSet resultSet) throws SQLException {
         IPizzaInfo pizzaInfo =  new PizzaInfo(resultSet.getLong("pizza_info_id"), resultSet.getString("name"),
                 resultSet.getString("description"), resultSet.getInt("size"),
                 resultSet.getTimestamp("picd").toInstant(), resultSet.getInt("piv"));

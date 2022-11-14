@@ -154,7 +154,7 @@ public class MenuDao implements IMenuDao {
             try (PreparedStatement statement = con.prepareStatement(SELECT_MENU_ALL_DATA_SQL)) {
                 statement.setLong(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
-                    return this.menuItemMapper(resultSet);
+                    return this.allDataMapper(resultSet);
                 }
             }
         } catch (Exception e) {
@@ -197,7 +197,7 @@ public class MenuDao implements IMenuDao {
                 resultSet.getBoolean("enabled"));
     }
 
-    private IMenu menuItemMapper(ResultSet resultSet) throws SQLException {
+    private IMenu allDataMapper(ResultSet resultSet) throws SQLException {
         List<IMenuItem> items = new ArrayList<>();
         IMenu menu = new Menu();
         while (resultSet.next()) {

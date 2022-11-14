@@ -44,7 +44,7 @@ public class CompletedOrderDao implements ICompletedOrderDao {
             try (PreparedStatement statement = con.prepareStatement(SELECT_COMPLETED_ORDER_ALL_DATA_SQL)) {
                 statement.setLong(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
-                    return this.menuItemMapper(resultSet);
+                    return this.allDataMapper(resultSet);
                 }
             }
         } catch (Exception e) {
@@ -130,7 +130,7 @@ public class CompletedOrderDao implements ICompletedOrderDao {
                 resultSet.getTimestamp("creation_date").toInstant(), resultSet.getInt("version"));
     }
 
-    private ICompletedOrder menuItemMapper(ResultSet resultSet) throws SQLException {
+    private ICompletedOrder allDataMapper(ResultSet resultSet) throws SQLException {
         List<IPizza> pizzas = new ArrayList<>();
         List<ISelectedItem> items = new ArrayList<>();
         IOrder order;
