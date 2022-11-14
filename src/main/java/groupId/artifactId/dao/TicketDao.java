@@ -3,6 +3,7 @@ package groupId.artifactId.dao;
 import groupId.artifactId.dao.api.ITicketDao;
 import groupId.artifactId.dao.entity.*;
 import groupId.artifactId.dao.entity.api.*;
+import groupId.artifactId.exceptions.DaoException;
 import groupId.artifactId.exceptions.OptimisticLockException;
 
 import javax.sql.DataSource;
@@ -54,7 +55,7 @@ public class TicketDao implements ITicketDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to save new Ticket");
+            throw new DaoException("Failed to save new Ticket" + ticket, e);
         }
     }
 
@@ -70,8 +71,8 @@ public class TicketDao implements ITicketDao {
                 }
                 return iTickets;
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to get List of tickets");
+        } catch (Exception e) {
+            throw new DaoException("Failed to get List of tickets", e);
         }
     }
 
@@ -85,8 +86,8 @@ public class TicketDao implements ITicketDao {
                     return this.mapper(resultSet);
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to get Ticket by id:" + id);
+        } catch (Exception e) {
+            throw new DaoException("Failed to get Ticket by id:" + id, e);
         }
     }
 
@@ -106,7 +107,7 @@ public class TicketDao implements ITicketDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to delete order with id:" + id);
+            throw new DaoException("Failed to delete order with id:" + id, e);
         }
     }
 
@@ -116,11 +117,11 @@ public class TicketDao implements ITicketDao {
             try (PreparedStatement statement = con.prepareStatement(SELECT_TICKET_ALL_DATA_SQL)) {
                 statement.setLong(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
-                    return this.menuItemMapper(resultSet);
+                    return this.allDataMapper(resultSet);
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to get Ticket with selected items by id:" + id);
+        } catch (Exception e) {
+            throw new DaoException("Failed to get Ticket with selected items by id:" + id, e);
         }
     }
 
@@ -133,8 +134,8 @@ public class TicketDao implements ITicketDao {
                     return resultSet.next();
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to select ticket with id:" + id);
+        } catch (Exception e) {
+            throw new DaoException("Failed to select ticket with id:" + id, e);
         }
     }
 
@@ -143,7 +144,7 @@ public class TicketDao implements ITicketDao {
                 resultSet.getTimestamp("creation_date").toInstant(), resultSet.getInt("version"));
     }
 
-    private ITicket menuItemMapper(ResultSet resultSet) throws SQLException {
+    private ITicket allDataMapper(ResultSet resultSet) throws SQLException {
         List<ISelectedItem> items = new ArrayList<>();
         IOrder order;
         ITicket ticket = new Ticket();
