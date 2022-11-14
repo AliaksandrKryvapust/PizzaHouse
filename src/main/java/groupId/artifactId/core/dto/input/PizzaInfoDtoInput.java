@@ -37,4 +37,13 @@ public class PizzaInfoDtoInput {
     public void setSize(Integer size) {
         this.size = size;
     }
+
+    @Override
+    public String toString() {
+        return "PizzaInfoDtoInput{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", size=" + size +
+                '}';
+    }
 }

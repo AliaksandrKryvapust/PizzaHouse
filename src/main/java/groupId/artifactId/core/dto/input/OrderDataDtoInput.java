@@ -37,4 +37,13 @@ public class OrderDataDtoInput {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    @Override
+    public String toString() {
+        return "OrderDataDtoInput{" +
+                "ticketId=" + ticketId +
+                ", done=" + done +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

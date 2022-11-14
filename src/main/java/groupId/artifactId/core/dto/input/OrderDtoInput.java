@@ -19,4 +19,11 @@ public class OrderDtoInput {
     public void setSelectedItems(List<SelectedItemDtoInput> selectedItems) {
         this.selectedItems = selectedItems;
     }
+
+    @Override
+    public String toString() {
+        return "OrderDtoInput{" +
+                "selectedItems=" + selectedItems +
+                '}';
+    }
 }

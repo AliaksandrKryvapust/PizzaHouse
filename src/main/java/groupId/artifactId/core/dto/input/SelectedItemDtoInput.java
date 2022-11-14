@@ -27,4 +27,12 @@ public class SelectedItemDtoInput {
     public void setCount(Integer count) {
         this.count = count;
     }
+
+    @Override
+    public String toString() {
+        return "SelectedItemDtoInput{" +
+                "menuItemId=" + menuItemId +
+                ", count=" + count +
+                '}';
+    }
 }
