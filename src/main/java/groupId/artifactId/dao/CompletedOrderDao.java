@@ -3,6 +3,7 @@ package groupId.artifactId.dao;
 import groupId.artifactId.dao.api.ICompletedOrderDao;
 import groupId.artifactId.dao.entity.*;
 import groupId.artifactId.dao.entity.api.*;
+import groupId.artifactId.exceptions.DaoException;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -46,8 +47,8 @@ public class CompletedOrderDao implements ICompletedOrderDao {
                     return this.menuItemMapper(resultSet);
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to get Completed Order by Ticket id:" + id);
+        } catch (Exception e) {
+            throw new DaoException("Failed to get Completed Order by Ticket id:" + id, e);
         }
     }
 
@@ -60,8 +61,8 @@ public class CompletedOrderDao implements ICompletedOrderDao {
                     return resultSet.next();
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to select Completed Order with id:" + id);
+        } catch (Exception e) {
+            throw new DaoException("Failed to select Completed Order with id:" + id, e);
         }
     }
 
@@ -86,8 +87,8 @@ public class CompletedOrderDao implements ICompletedOrderDao {
                     return new CompletedOrder(generatedKeys.getLong(1), completedOrder.getTicketId());
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to save new Completed Order");
+        } catch (Exception e) {
+            throw new DaoException("Failed to save new Completed Order:" + completedOrder, e);
         }
     }
 
@@ -103,8 +104,8 @@ public class CompletedOrderDao implements ICompletedOrderDao {
                 }
             }
             return orderData;
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to get List of Completed Order");
+        } catch (Exception e) {
+            throw new DaoException("Failed to get List of Completed Order", e);
         }
     }
 
@@ -118,8 +119,8 @@ public class CompletedOrderDao implements ICompletedOrderDao {
                     return this.mapper(resultSet);
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to get Completed Order by id:" + id);
+        } catch (Exception e) {
+            throw new DaoException("Failed to get Completed Order by id:" + id, e);
         }
     }
 
