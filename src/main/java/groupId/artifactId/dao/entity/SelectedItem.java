@@ -112,4 +112,17 @@ public class SelectedItem implements ISelectedItem {
     public void setVersion(Integer version) {
         this.version = version;
     }
+
+    @Override
+    public String toString() {
+        return "SelectedItem{" +
+                "menuItem=" + menuItem +
+                ", id=" + id +
+                ", menuItemId=" + menuItemId +
+                ", orderId=" + orderId +
+                ", count=" + count +
+                ", createAt=" + createAt +
+                ", version=" + version +
+                '}';
+    }
 }

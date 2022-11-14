@@ -95,4 +95,16 @@ public class Pizza implements IPizza {
     public void setVersion(Integer version) {
         this.version = version;
     }
+
+    @Override
+    public String toString() {
+        return "Pizza{" +
+                "id=" + id +
+                ", completedOrderId=" + completedOrderId +
+                ", name='" + name + '\'' +
+                ", size=" + size +
+                ", creationDate=" + creationDate +
+                ", version=" + version +
+                '}';
+    }
 }

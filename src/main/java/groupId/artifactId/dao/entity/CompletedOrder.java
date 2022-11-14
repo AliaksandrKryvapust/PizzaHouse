@@ -105,4 +105,16 @@ public class CompletedOrder implements ICompletedOrder {
     public void setVersion(Integer version) {
         this.version = version;
     }
+
+    @Override
+    public String toString() {
+        return "CompletedOrder{" +
+                "ticket=" + ticket +
+                ", items=" + items +
+                ", id=" + id +
+                ", ticketId=" + ticketId +
+                ", creationDate=" + creationDate +
+                ", version=" + version +
+                '}';
+    }
 }

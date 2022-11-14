@@ -76,4 +76,14 @@ public class Order implements IOrder {
     public void setVersion(Integer version) {
         this.version = version;
     }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "selectedItems=" + selectedItems +
+                ", id=" + id +
+                ", creationDate=" + creationDate +
+                ", version=" + version +
+                '}';
+    }
 }

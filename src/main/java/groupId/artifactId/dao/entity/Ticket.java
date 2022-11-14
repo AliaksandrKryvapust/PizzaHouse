@@ -90,4 +90,15 @@ public class Ticket implements ITicket {
     public void setVersion(Integer version) {
         this.version = version;
     }
+
+    @Override
+    public String toString() {
+        return "Ticket{" +
+                "order=" + order +
+                ", id=" + id +
+                ", orderId=" + orderId +
+                ", createAt=" + createAt +
+                ", version=" + version +
+                '}';
+    }
 }
