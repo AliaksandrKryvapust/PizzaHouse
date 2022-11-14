@@ -3,6 +3,7 @@ package groupId.artifactId.dao;
 import groupId.artifactId.dao.api.IOrderDataDao;
 import groupId.artifactId.dao.entity.*;
 import groupId.artifactId.dao.entity.api.*;
+import groupId.artifactId.exceptions.DaoException;
 import groupId.artifactId.exceptions.OptimisticLockException;
 
 import javax.sql.DataSource;
@@ -65,7 +66,7 @@ public class OrderDataDao implements IOrderDataDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to save new Order data");
+            throw new DaoException("Failed to save new Order data" + orderData, e);
         }
     }
 
@@ -81,8 +82,8 @@ public class OrderDataDao implements IOrderDataDao {
                 }
             }
             return orderData;
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to get List of Order Data");
+        } catch (Exception e) {
+            throw new DaoException("Failed to get List of Order Data", e);
         }
     }
 
@@ -96,8 +97,8 @@ public class OrderDataDao implements IOrderDataDao {
                     return this.mapper(resultSet);
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to get Order Data by id:" + id);
+        } catch (Exception e) {
+            throw new DaoException("Failed to get Order Data by id:" + id, e);
         }
     }
 
@@ -122,7 +123,7 @@ public class OrderDataDao implements IOrderDataDao {
                 return new OrderData(id, orderData.isDone());
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to update Order data with id:" + id);
+            throw new DaoException("Failed to update Order data" + orderData + " with id:" + id, e);
         }
     }
 
@@ -132,11 +133,11 @@ public class OrderDataDao implements IOrderDataDao {
             try (PreparedStatement statement = con.prepareStatement(SELECT_ORDER_DATA_ALL_DATA_SQL)) {
                 statement.setLong(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
-                    return this.menuItemMapper(resultSet);
+                    return this.allDataMapper(resultSet);
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to get Order Stage by Ticket id:" + id);
+        } catch (Exception e) {
+            throw new DaoException("Failed to get Order Stage by Ticket id:" + id, e);
         }
     }
 
@@ -150,8 +151,8 @@ public class OrderDataDao implements IOrderDataDao {
                     return this.mapper(resultSet);
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to get Order Data by ticket id:" + id);
+        } catch (Exception e) {
+            throw new DaoException("Failed to get Order Data by ticket id:" + id, e);
         }
     }
 
@@ -164,8 +165,8 @@ public class OrderDataDao implements IOrderDataDao {
                     return resultSet.next();
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to select Order Data with id:" + id);
+        } catch (Exception e) {
+            throw new DaoException("Failed to select Order Data with id:" + id, e);
         }
     }
 
@@ -178,8 +179,8 @@ public class OrderDataDao implements IOrderDataDao {
                     return resultSet.next();
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to select Order Data with ticket id:" + id);
+        } catch (Exception e) {
+            throw new DaoException("Failed to select Order Data with ticket id:" + id, e);
         }
     }
 
@@ -190,7 +191,7 @@ public class OrderDataDao implements IOrderDataDao {
                 resultSet.getInt("version"));
     }
 
-    private IOrderData menuItemMapper(ResultSet resultSet) throws SQLException {
+    private IOrderData allDataMapper(ResultSet resultSet) throws SQLException {
         List<IOrderStage> stages = new ArrayList<>();
         List<ISelectedItem> items = new ArrayList<>();
         IOrder order;
