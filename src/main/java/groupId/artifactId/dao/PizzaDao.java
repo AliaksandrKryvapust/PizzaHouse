@@ -3,6 +3,7 @@ package groupId.artifactId.dao;
 import groupId.artifactId.dao.api.IPizzaDao;
 import groupId.artifactId.dao.entity.Pizza;
 import groupId.artifactId.dao.entity.api.IPizza;
+import groupId.artifactId.exceptions.DaoException;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -47,7 +48,7 @@ public class PizzaDao implements IPizzaDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to save new Pizza");
+            throw new DaoException("Failed to save new Pizza" + pizza, e);
         }
     }
 
@@ -63,8 +64,8 @@ public class PizzaDao implements IPizzaDao {
                 }
                 return iPizzaInfos;
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to get List of pizza Info");
+        } catch (Exception e) {
+            throw new DaoException("Failed to get List of pizza Info", e);
         }
     }
 
@@ -78,8 +79,8 @@ public class PizzaDao implements IPizzaDao {
                     return this.mapper(resultSet);
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to get Pizza by id:" + id);
+        } catch (Exception e) {
+            throw new DaoException("Failed to get Pizza by id:" + id, e);
         }
     }
 
@@ -92,8 +93,8 @@ public class PizzaDao implements IPizzaDao {
                     return resultSet.next();
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to select Pizza with id:" + id);
+        } catch (Exception e) {
+            throw new DaoException("Failed to select Pizza with id:" + id, e);
         }
     }
 
