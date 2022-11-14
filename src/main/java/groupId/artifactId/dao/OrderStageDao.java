@@ -3,6 +3,7 @@ package groupId.artifactId.dao;
 import groupId.artifactId.dao.api.IOrderStageDao;
 import groupId.artifactId.dao.entity.OrderStage;
 import groupId.artifactId.dao.entity.api.IOrderStage;
+import groupId.artifactId.exceptions.DaoException;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -48,7 +49,7 @@ public class OrderStageDao implements IOrderStageDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to save new Order Stage");
+            throw new DaoException("Failed to save new Order Stage" + orderStage, e);
         }
     }
 
@@ -64,8 +65,8 @@ public class OrderStageDao implements IOrderStageDao {
                 }
                 return stages;
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to get List of Order stages");
+        } catch (Exception e) {
+            throw new DaoException("Failed to get List of Order stages", e);
         }
     }
 
@@ -79,8 +80,8 @@ public class OrderStageDao implements IOrderStageDao {
                     return this.mapper(resultSet);
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to get Order stage by id:" + id);
+        } catch (Exception e) {
+            throw new DaoException("Failed to get Order stage by id:" + id, e);
         }
     }
 
@@ -93,8 +94,8 @@ public class OrderStageDao implements IOrderStageDao {
                     return resultSet.next();
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to select Order stage with id:" + id);
+        } catch (Exception e) {
+            throw new DaoException("Failed to select Order stage with id:" + id, e);
         }
     }
 
@@ -108,9 +109,9 @@ public class OrderStageDao implements IOrderStageDao {
                     return resultSet.next();
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to select Order Stage with orderDataId:" + orderDataId + "\tdescription:"
-                    + description);
+        } catch (Exception e) {
+            throw new DaoException("Failed to select Order Stage with orderDataId:" + orderDataId + "\tdescription:"
+                    + description, e);
         }
     }
 
