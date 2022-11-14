@@ -9,6 +9,7 @@ import groupId.artifactId.dao.entity.api.IMenuItem;
 import groupId.artifactId.dao.entity.api.IOrder;
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
 import groupId.artifactId.dao.entity.api.ISelectedItem;
+import groupId.artifactId.exceptions.DaoException;
 import groupId.artifactId.exceptions.OptimisticLockException;
 
 import javax.sql.DataSource;
@@ -57,7 +58,7 @@ public class OrderDao implements IOrderDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to save new Order");
+            throw new DaoException("Failed to save new Order" + order, e);
         }
     }
 
@@ -73,8 +74,8 @@ public class OrderDao implements IOrderDao {
                 }
                 return iOrders;
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to get List of orders");
+        } catch (Exception e) {
+            throw new DaoException("Failed to get List of orders", e);
         }
     }
 
@@ -88,8 +89,8 @@ public class OrderDao implements IOrderDao {
                     return this.mapper(resultSet);
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to get Order by id:" + id);
+        } catch (Exception e) {
+            throw new DaoException("Failed to get Order by id:" + id, e);
         }
     }
 
@@ -109,7 +110,7 @@ public class OrderDao implements IOrderDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to delete order with id:" + id);
+            throw new DaoException("Failed to delete order with id:" + id, e);
         }
     }
 
@@ -119,11 +120,11 @@ public class OrderDao implements IOrderDao {
             try (PreparedStatement statement = con.prepareStatement(SELECT_ORDER_ALL_DATA_SQL)) {
                 statement.setLong(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
-                    return this.menuItemMapper(resultSet);
+                    return this.allDataMapper(resultSet);
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to get Order with selected items by id:" + id);
+        } catch (Exception e) {
+            throw new DaoException("Failed to get Order with selected items by id:" + id, e);
         }
     }
 
@@ -136,8 +137,8 @@ public class OrderDao implements IOrderDao {
                     return resultSet.next();
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to select Order with id:" + id);
+        } catch (Exception e) {
+            throw new DaoException("Failed to select Order with id:" + id, e);
         }
     }
 
@@ -146,7 +147,7 @@ public class OrderDao implements IOrderDao {
                 resultSet.getTimestamp("creation_date").toInstant(), resultSet.getInt("version"));
     }
 
-    private IOrder menuItemMapper(ResultSet resultSet) throws SQLException {
+    private IOrder allDataMapper(ResultSet resultSet) throws SQLException {
         List<ISelectedItem> items = new ArrayList<>();
         IOrder order = new Order();
         while (resultSet.next()) {
