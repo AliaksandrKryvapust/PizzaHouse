@@ -6,6 +6,9 @@ import groupId.artifactId.core.dto.output.crud.MenuItemDtoCrudOutput;
 import groupId.artifactId.core.mapper.MenuItemMapper;
 import groupId.artifactId.dao.api.IMenuItemDao;
 import groupId.artifactId.dao.entity.api.IMenuItem;
+import groupId.artifactId.exceptions.DaoException;
+import groupId.artifactId.exceptions.OptimisticLockException;
+import groupId.artifactId.exceptions.ServiceException;
 import groupId.artifactId.service.api.IMenuItemService;
 
 import java.util.ArrayList;
@@ -22,43 +25,95 @@ public class MenuItemService implements IMenuItemService {
 
     @Override
     public MenuItemDtoCrudOutput save(MenuItemDtoInput menuItemDtoInput) {
-        IMenuItem menuItem = this.dao.save(menuItemMapper.inputMapping(menuItemDtoInput));
-        return menuItemMapper.outputCrudMapping(menuItem);
+        try {
+            IMenuItem menuItem = this.dao.save(menuItemMapper.inputMapping(menuItemDtoInput));
+            return menuItemMapper.outputCrudMapping(menuItem);
+        } catch (DaoException e) {
+            throw new ServiceException(e.getMessage(), e);
+        } catch (IllegalStateException e) {
+            throw new IllegalStateException(e);
+        } catch (Exception e) {
+            throw new ServiceException("Failed to save Menu item" + menuItemDtoInput, e);
+        }
     }
 
     @Override
     public List<MenuItemDtoCrudOutput> get() {
-        List<MenuItemDtoCrudOutput> temp = new ArrayList<>();
-        for (IMenuItem menuItem : this.dao.get()) {
-            MenuItemDtoCrudOutput menuItemDtoOutput = menuItemMapper.outputCrudMapping(menuItem);
-            temp.add(menuItemDtoOutput);
+        try {
+            List<MenuItemDtoCrudOutput> temp = new ArrayList<>();
+            for (IMenuItem menuItem : this.dao.get()) {
+                MenuItemDtoCrudOutput menuItemDtoOutput = menuItemMapper.outputCrudMapping(menuItem);
+                temp.add(menuItemDtoOutput);
+            }
+            return temp;
+        } catch (DaoException e) {
+            throw new ServiceException(e.getMessage(), e);
+        } catch (Exception e) {
+            throw new ServiceException("Failed to get List of Menu Item at Service", e);
         }
-        return temp;
     }
 
     @Override
     public MenuItemDtoCrudOutput get(Long id) {
-        return menuItemMapper.outputCrudMapping(this.dao.get(id));
+        try {
+            return menuItemMapper.outputCrudMapping(this.dao.get(id));
+        } catch (DaoException e) {
+            throw new ServiceException(e.getMessage(), e);
+        } catch (Exception e) {
+            throw new ServiceException("Failed to get Menu Item at Service by id" + id, e);
+        }
     }
 
     @Override
     public MenuItemDtoOutput getAllData(Long id) {
-        return menuItemMapper.outputMapping(this.dao.getAllData(id));
+        try {
+            return menuItemMapper.outputMapping(this.dao.getAllData(id));
+        } catch (DaoException e) {
+            throw new ServiceException(e.getMessage(), e);
+        } catch (Exception e) {
+            throw new ServiceException("Failed to getAll data from Menu Item at Service by id" + id, e);
+        }
     }
 
     @Override
     public Boolean isIdValid(Long id) {
-        return this.dao.exist(id);
+        try {
+            return this.dao.exist(id);
+        } catch (DaoException e) {
+            throw new ServiceException(e.getMessage(), e);
+        } catch (Exception e) {
+            throw new ServiceException("Failed to check Menu Item at Service by id" + id, e);
+        }
     }
 
     @Override
     public MenuItemDtoCrudOutput update(MenuItemDtoInput menuItemDtoInput, String id, String version) {
-        IMenuItem menuItem = this.dao.update(menuItemMapper.inputMapping(menuItemDtoInput), Long.valueOf(id), Integer.valueOf(version));
-        return menuItemMapper.outputCrudMapping(menuItem);
+        try {
+            IMenuItem menuItem = this.dao.update(menuItemMapper.inputMapping(menuItemDtoInput), Long.valueOf(id), Integer.valueOf(version));
+            return menuItemMapper.outputCrudMapping(menuItem);
+        } catch (DaoException e) {
+            throw new ServiceException(e.getMessage(), e);
+        } catch (IllegalStateException e) {
+            throw new IllegalStateException(e);
+        } catch (OptimisticLockException e) {
+            throw new OptimisticLockException(e.getMessage());
+        } catch (Exception e) {
+            throw new ServiceException("Failed to update Menu item" + menuItemDtoInput + "by id:" + id, e);
+        }
     }
 
     @Override
     public void delete(String id, String version, String delete) {
-        this.dao.delete(Long.valueOf(id), Integer.valueOf(version), Boolean.valueOf(delete));
+        try {
+            this.dao.delete(Long.valueOf(id), Integer.valueOf(version), Boolean.valueOf(delete));
+        } catch (DaoException e) {
+            throw new ServiceException(e.getMessage(), e);
+        } catch (IllegalStateException e) {
+            throw new IllegalStateException(e);
+        } catch (OptimisticLockException e) {
+            throw new OptimisticLockException(e.getMessage());
+        } catch (Exception e) {
+            throw new ServiceException("Failed to delete Menu item with id:" + id, e);
+        }
     }
 }
