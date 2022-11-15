@@ -61,7 +61,7 @@ public class ApiOrderServlet extends HttpServlet {
 //    {
 //        "selectedItems": [
 //        {
-//            "menuItemId": 90,
+//            "menu_item_id": 90,
 //                "count": 2
 //        }
 //    ]

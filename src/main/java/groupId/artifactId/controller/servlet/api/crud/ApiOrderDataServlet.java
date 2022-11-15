@@ -57,7 +57,7 @@ public class ApiOrderDataServlet extends HttpServlet {
     //body json
 //    {
 //        "done": false,
-//            "ticketId": 1,
+//            "ticket_id": 1,
 //            "description": "cooking"
 //    }
     @Override
@@ -86,7 +86,7 @@ public class ApiOrderDataServlet extends HttpServlet {
     //body json
 //    {
 //        "done": true,
-//            "ticketId": 1,
+//            "ticket_id": 1,
 //            "description": "ready"
 //    }
     @Override

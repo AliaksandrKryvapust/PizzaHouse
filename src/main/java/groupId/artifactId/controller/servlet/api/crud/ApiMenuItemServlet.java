@@ -64,8 +64,8 @@ public class ApiMenuItemServlet extends HttpServlet {
     //body json
 //   {
 //           "price":20.0,
-//           "pizzaInfoId":123,
-//           "menuId":1
+//           "pizza_info_id":123,
+//           "menu_id":1
 //           }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
@@ -97,8 +97,8 @@ public class ApiMenuItemServlet extends HttpServlet {
     //body json
 //   {
 //           "price":25.0,
-//           "pizzaInfoId":123,
-//           "menuId":1
+//           "pizza_info_id":123,
+//           "menu_id":1
 //           }
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) {
