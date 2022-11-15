@@ -1,11 +1,12 @@
 package groupId.artifactId.controller.servlet.api;
 
+import groupId.artifactId.controller.utils.IoC.JsonConverterSingleton;
+import groupId.artifactId.controller.utils.JsonConverter;
+import groupId.artifactId.core.Constants;
 import groupId.artifactId.service.IoC.CompletedOrderServiceSingleton;
 import groupId.artifactId.service.IoC.OrderDataServiceSingleton;
 import groupId.artifactId.service.api.ICompletedOrderService;
 import groupId.artifactId.service.api.IOrderDataService;
-import groupId.artifactId.core.Constants;
-import groupId.artifactId.controller.utils.JsonConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +20,7 @@ public class ApiTicketCompletedOrderServlet extends HttpServlet {
     private final ICompletedOrderService completedOrderService = CompletedOrderServiceSingleton.getInstance();
     private final IOrderDataService orderDataService = OrderDataServiceSingleton.getInstance();
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final JsonConverter jsonConverter = JsonConverterSingleton.getInstance();
 
     //Read POSITION
     //1) Read item need id param  (id = 1)
@@ -30,7 +32,7 @@ public class ApiTicketCompletedOrderServlet extends HttpServlet {
             String id = req.getParameter(Constants.PARAMETER_ID);
             if (id != null) {
                 if (orderDataService.isTicketIdValid(Long.valueOf(id))) {
-                    resp.getWriter().write(JsonConverter.fromCompletedOrderToJson(completedOrderService.getAllData(Long.valueOf(id))));
+                    resp.getWriter().write(jsonConverter.fromCompletedOrderToJson(completedOrderService.getAllData(Long.valueOf(id))));
                     resp.setStatus(HttpServletResponse.SC_OK);
                 } else {
                     resp.setStatus(HttpServletResponse.SC_NO_CONTENT);

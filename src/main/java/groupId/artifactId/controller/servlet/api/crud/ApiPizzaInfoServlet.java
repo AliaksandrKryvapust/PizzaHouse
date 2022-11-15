@@ -1,14 +1,15 @@
 package groupId.artifactId.controller.servlet.api.crud;
 
+import groupId.artifactId.controller.utils.IoC.JsonConverterSingleton;
+import groupId.artifactId.controller.utils.JsonConverter;
 import groupId.artifactId.controller.validator.IoC.PizzaInfoValidatorSingleton;
 import groupId.artifactId.controller.validator.api.IPizzaInfoValidator;
+import groupId.artifactId.core.Constants;
 import groupId.artifactId.core.dto.input.PizzaInfoDtoInput;
 import groupId.artifactId.core.dto.output.PizzaInfoDtoOutput;
 import groupId.artifactId.exceptions.OptimisticLockException;
 import groupId.artifactId.service.IoC.PizzaInfoServiceSingleton;
 import groupId.artifactId.service.api.IPizzaInfoService;
-import groupId.artifactId.core.Constants;
-import groupId.artifactId.controller.utils.JsonConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +25,7 @@ public class ApiPizzaInfoServlet extends HttpServlet {
     private final IPizzaInfoService pizzaInfoService = PizzaInfoServiceSingleton.getInstance();
     private final IPizzaInfoValidator pizzaInfoValidator = PizzaInfoValidatorSingleton.getInstance();
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final JsonConverter jsonConverter = JsonConverterSingleton.getInstance();
 
     //Read POSITION
     //1) Read list
@@ -36,13 +38,13 @@ public class ApiPizzaInfoServlet extends HttpServlet {
             String id = req.getParameter(Constants.PARAMETER_ID);
             if (id != null) {
                 if (pizzaInfoService.isIdValid(Long.valueOf(id))) {
-                    resp.getWriter().write(JsonConverter.fromPizzaInfoToJson(pizzaInfoService.get(Long.valueOf(id))));
+                    resp.getWriter().write(jsonConverter.fromPizzaInfoToJson(pizzaInfoService.get(Long.valueOf(id))));
                     resp.setStatus(HttpServletResponse.SC_OK);
                 } else {
                     resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
                 }
             } else {
-                resp.getWriter().write(JsonConverter.fromPizzaInfoListToJson(pizzaInfoService.get()));
+                resp.getWriter().write(jsonConverter.fromPizzaInfoListToJson(pizzaInfoService.get()));
                 resp.setStatus(HttpServletResponse.SC_OK);
             }
         } catch (Exception e) {
@@ -63,7 +65,7 @@ public class ApiPizzaInfoServlet extends HttpServlet {
         try {
             resp.setCharacterEncoding(Constants.ENCODING);
             resp.setContentType(Constants.CONTENT_TYPE);
-            PizzaInfoDtoInput pizzaInfo = JsonConverter.fromJsonToPizzaInfo(req.getInputStream());
+            PizzaInfoDtoInput pizzaInfo = jsonConverter.fromJsonToPizzaInfo(req.getInputStream());
             if (!pizzaInfoService.exist(pizzaInfo.getName())) {
                 try {
                     pizzaInfoValidator.validate(pizzaInfo);
@@ -71,7 +73,7 @@ public class ApiPizzaInfoServlet extends HttpServlet {
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 }
                 PizzaInfoDtoOutput pizzaInfoDto = pizzaInfoService.save(pizzaInfo);
-                resp.getWriter().write(JsonConverter.fromPizzaInfoToJson(pizzaInfoDto));
+                resp.getWriter().write(jsonConverter.fromPizzaInfoToJson(pizzaInfoDto));
                 resp.setStatus(HttpServletResponse.SC_CREATED);
             } else {
                 resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
@@ -99,14 +101,14 @@ public class ApiPizzaInfoServlet extends HttpServlet {
             String version = req.getParameter(Constants.PARAMETER_VERSION);
             if (id != null && version != null) {
                 if (pizzaInfoService.isIdValid(Long.valueOf(id))) {
-                    PizzaInfoDtoInput pizzaInfo = JsonConverter.fromJsonToPizzaInfo(req.getInputStream());
+                    PizzaInfoDtoInput pizzaInfo = jsonConverter.fromJsonToPizzaInfo(req.getInputStream());
                     try {
                         pizzaInfoValidator.validate(pizzaInfo);
                     } catch (IllegalArgumentException e) {
                         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                     }
                     PizzaInfoDtoOutput pizzaInfoDto = pizzaInfoService.update(pizzaInfo, id, version);
-                    resp.getWriter().write(JsonConverter.fromPizzaInfoToJson(pizzaInfoDto));
+                    resp.getWriter().write(jsonConverter.fromPizzaInfoToJson(pizzaInfoDto));
                     resp.setStatus(HttpServletResponse.SC_CREATED);
                 } else {
                     resp.setStatus(HttpServletResponse.SC_NO_CONTENT);

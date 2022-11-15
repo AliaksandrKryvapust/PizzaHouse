@@ -1,7 +1,10 @@
 package groupId.artifactId.controller.servlet.api.crud;
 
+import groupId.artifactId.controller.utils.IoC.JsonConverterSingleton;
+import groupId.artifactId.controller.utils.JsonConverter;
 import groupId.artifactId.controller.validator.IoC.OrderValidatorSingleton;
 import groupId.artifactId.controller.validator.api.IOrderValidator;
+import groupId.artifactId.core.Constants;
 import groupId.artifactId.core.dto.input.OrderDtoInput;
 import groupId.artifactId.core.dto.input.SelectedItemDtoInput;
 import groupId.artifactId.core.dto.output.crud.TicketDtoCrudOutput;
@@ -11,8 +14,6 @@ import groupId.artifactId.service.IoC.MenuItemServiceSingleton;
 import groupId.artifactId.service.IoC.OrderServiceSingleton;
 import groupId.artifactId.service.api.IMenuItemService;
 import groupId.artifactId.service.api.IOrderService;
-import groupId.artifactId.core.Constants;
-import groupId.artifactId.controller.utils.JsonConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +28,7 @@ public class ApiOrderServlet extends HttpServlet {
     private final IMenuItemService menuItemService = MenuItemServiceSingleton.getInstance();
     private final IOrderValidator orderValidator = OrderValidatorSingleton.getInstance();
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final JsonConverter jsonConverter = JsonConverterSingleton.getInstance();
 
     //Read POSITION
     //1) Read list
@@ -39,13 +41,13 @@ public class ApiOrderServlet extends HttpServlet {
             String id = req.getParameter(Constants.PARAMETER_ID);
             if (id != null) {
                 if (orderService.isTicketIdValid(Long.valueOf(id))) {
-                    resp.getWriter().write(JsonConverter.fromTicketCrudToJson(orderService.get(Long.valueOf(id))));
+                    resp.getWriter().write(jsonConverter.fromTicketCrudToJson(orderService.get(Long.valueOf(id))));
                     resp.setStatus(HttpServletResponse.SC_OK);
                 } else {
                     resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
                 }
             } else {
-                resp.getWriter().write(JsonConverter.fromTicketListToJson(orderService.get()));
+                resp.getWriter().write(jsonConverter.fromTicketListToJson(orderService.get()));
                 resp.setStatus(HttpServletResponse.SC_OK);
             }
         } catch (Exception e) {
@@ -69,7 +71,7 @@ public class ApiOrderServlet extends HttpServlet {
         try {
             resp.setCharacterEncoding(Constants.ENCODING);
             resp.setContentType(Constants.CONTENT_TYPE);
-            OrderDtoInput order = JsonConverter.fromJsonToOrder(req.getInputStream());
+            OrderDtoInput order = jsonConverter.fromJsonToOrder(req.getInputStream());
             try {
                 orderValidator.validate(order);
             } catch (IllegalArgumentException e) {
@@ -81,7 +83,7 @@ public class ApiOrderServlet extends HttpServlet {
                 }
             }
             TicketDtoCrudOutput outPut = orderService.save(order);
-            resp.getWriter().write(JsonConverter.fromTicketCrudToJson(outPut));
+            resp.getWriter().write(jsonConverter.fromTicketCrudToJson(outPut));
             resp.setStatus(HttpServletResponse.SC_CREATED);
         } catch (IncorrectOrderInputException e) {
             resp.setStatus(HttpServletResponse.SC_NO_CONTENT);

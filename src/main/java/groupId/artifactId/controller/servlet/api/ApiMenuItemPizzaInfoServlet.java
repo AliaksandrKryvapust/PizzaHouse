@@ -1,9 +1,10 @@
 package groupId.artifactId.controller.servlet.api;
 
+import groupId.artifactId.controller.utils.IoC.JsonConverterSingleton;
+import groupId.artifactId.controller.utils.JsonConverter;
+import groupId.artifactId.core.Constants;
 import groupId.artifactId.service.IoC.MenuItemServiceSingleton;
 import groupId.artifactId.service.api.IMenuItemService;
-import groupId.artifactId.core.Constants;
-import groupId.artifactId.controller.utils.JsonConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 public class ApiMenuItemPizzaInfoServlet extends HttpServlet {
     private final IMenuItemService menuItemService = MenuItemServiceSingleton.getInstance();
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final JsonConverter jsonConverter = JsonConverterSingleton.getInstance();
 
     //Read POSITION
     //1) Read item with all enclosed data need id param  (id = 92)
@@ -27,7 +29,7 @@ public class ApiMenuItemPizzaInfoServlet extends HttpServlet {
             String id = req.getParameter(Constants.PARAMETER_ID);
             if (id != null) {
                 if (menuItemService.isIdValid(Long.valueOf(id))) {
-                    resp.getWriter().write(JsonConverter.fromMenuItemToJson(menuItemService.getAllData(Long.valueOf(id))));
+                    resp.getWriter().write(jsonConverter.fromMenuItemToJson(menuItemService.getAllData(Long.valueOf(id))));
                     resp.setStatus(HttpServletResponse.SC_OK);
                 } else {
                     resp.setStatus(HttpServletResponse.SC_NO_CONTENT);

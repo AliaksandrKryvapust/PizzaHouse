@@ -1,5 +1,6 @@
 package groupId.artifactId.controller.servlet.api.crud;
 
+import groupId.artifactId.controller.utils.IoC.JsonConverterSingleton;
 import groupId.artifactId.controller.validator.IoC.OrderDataValidatorSingleton;
 import groupId.artifactId.controller.validator.api.IOrderDataValidator;
 import groupId.artifactId.core.dto.input.OrderDataDtoInput;
@@ -23,6 +24,7 @@ public class ApiOrderDataServlet extends HttpServlet {
     private final IOrderDataValidator orderDataValidator = OrderDataValidatorSingleton.getInstance();
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final JsonConverter jsonConverter = JsonConverterSingleton.getInstance();
 
 
     //Read POSITION
@@ -36,13 +38,13 @@ public class ApiOrderDataServlet extends HttpServlet {
             String id = req.getParameter(Constants.PARAMETER_ID);
             if (id != null) {
                 if (orderDataService.isIdValid(Long.valueOf(id))) {
-                    resp.getWriter().write(JsonConverter.fromOrderDataCrudToJson(orderDataService.get(Long.valueOf(id))));
+                    resp.getWriter().write(jsonConverter.fromOrderDataCrudToJson(orderDataService.get(Long.valueOf(id))));
                     resp.setStatus(HttpServletResponse.SC_OK);
                 } else {
                     resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
                 }
             } else {
-                resp.getWriter().write(JsonConverter.fromOrderDataListToJson(orderDataService.get()));
+                resp.getWriter().write(jsonConverter.fromOrderDataListToJson(orderDataService.get()));
                 resp.setStatus(HttpServletResponse.SC_OK);
             }
         } catch (Exception e) {
@@ -63,14 +65,14 @@ public class ApiOrderDataServlet extends HttpServlet {
         try {
             resp.setCharacterEncoding(Constants.ENCODING);
             resp.setContentType(Constants.CONTENT_TYPE);
-            OrderDataDtoInput orderData = JsonConverter.fromJsonToOrderData(req.getInputStream());
+            OrderDataDtoInput orderData = jsonConverter.fromJsonToOrderData(req.getInputStream());
             try {
                 orderDataValidator.validate(orderData);
             } catch (IllegalArgumentException e) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             }
             OrderDataDtoCrudOutput output = orderDataService.save(orderData);
-            resp.getWriter().write(JsonConverter.fromOrderDataCrudToJson(output));
+            resp.getWriter().write(jsonConverter.fromOrderDataCrudToJson(output));
             resp.setStatus(HttpServletResponse.SC_CREATED);
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -96,14 +98,14 @@ public class ApiOrderDataServlet extends HttpServlet {
             String version = req.getParameter(Constants.PARAMETER_VERSION);
             if (id != null && version != null) {
                 if (orderDataService.isIdValid(Long.valueOf(id))) {
-                    OrderDataDtoInput orderData = JsonConverter.fromJsonToOrderData(req.getInputStream());
+                    OrderDataDtoInput orderData = jsonConverter.fromJsonToOrderData(req.getInputStream());
                     try {
                         orderDataValidator.validate(orderData);
                     } catch (IllegalArgumentException e) {
                         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                     }
                     OrderDataDtoCrudOutput output = orderDataService.update(orderData, id, version);
-                    resp.getWriter().write(JsonConverter.fromOrderDataCrudToJson(output));
+                    resp.getWriter().write(jsonConverter.fromOrderDataCrudToJson(output));
                     resp.setStatus(HttpServletResponse.SC_CREATED);
                 } else {
                     resp.setStatus(HttpServletResponse.SC_NO_CONTENT);

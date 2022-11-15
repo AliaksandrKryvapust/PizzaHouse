@@ -1,9 +1,10 @@
 package groupId.artifactId.controller.servlet.api.crud;
 
+import groupId.artifactId.controller.utils.IoC.JsonConverterSingleton;
+import groupId.artifactId.controller.utils.JsonConverter;
+import groupId.artifactId.core.Constants;
 import groupId.artifactId.service.IoC.CompletedOrderServiceSingleton;
 import groupId.artifactId.service.api.ICompletedOrderService;
-import groupId.artifactId.core.Constants;
-import groupId.artifactId.controller.utils.JsonConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "CompletedOrder", urlPatterns = "/api/completed_order")
 public class ApiCompletedOrderServlet extends HttpServlet {
     private final ICompletedOrderService completedOrderService = CompletedOrderServiceSingleton.getInstance();
+    private final JsonConverter jsonConverter = JsonConverterSingleton.getInstance();
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     //Read POSITION
@@ -28,13 +30,13 @@ public class ApiCompletedOrderServlet extends HttpServlet {
             String id = req.getParameter(Constants.PARAMETER_ID);
             if (id != null) {
                 if (completedOrderService.isOrderIdValid(Long.valueOf(id))) {
-                    resp.getWriter().write(JsonConverter.fromCompletedOrderCrudToJson(completedOrderService.get(Long.valueOf(id))));
+                    resp.getWriter().write(jsonConverter.fromCompletedOrderCrudToJson(completedOrderService.get(Long.valueOf(id))));
                     resp.setStatus(HttpServletResponse.SC_OK);
                 } else {
                     resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
                 }
             } else {
-                resp.getWriter().write(JsonConverter.fromCompletedOrderListToJson(completedOrderService.get()));
+                resp.getWriter().write(jsonConverter.fromCompletedOrderListToJson(completedOrderService.get()));
                 resp.setStatus(HttpServletResponse.SC_OK);
             }
         } catch (Exception e) {

@@ -3,7 +3,6 @@ package groupId.artifactId.controller.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import groupId.artifactId.core.dto.input.*;
 import groupId.artifactId.core.dto.output.*;
 import groupId.artifactId.core.dto.output.crud.*;
@@ -14,9 +13,13 @@ import java.io.IOException;
 import java.util.List;
 
 public class JsonConverter {
-    private static final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule()); // findAndRegisterModules()
+    private final ObjectMapper mapper;
 
-    public static String fromMenuListToJson(List<MenuDtoCrudOutput> menu) {
+    public JsonConverter(ObjectMapper mapper) {
+        this.mapper = mapper;
+    }
+
+    public String fromMenuListToJson(List<MenuDtoCrudOutput> menu) {
         try {
             return mapper.writeValueAsString(menu);
         } catch (JsonProcessingException e) {
@@ -25,7 +28,7 @@ public class JsonConverter {
 
     }
 
-    public static String fromMenuToCrudJson(MenuDtoCrudOutput menu) {
+    public String fromMenuToCrudJson(MenuDtoCrudOutput menu) {
         try {
             return mapper.writeValueAsString(menu);
         } catch (JsonProcessingException e) {
@@ -33,7 +36,7 @@ public class JsonConverter {
         }
     }
 
-    public static String fromMenuToJson(MenuDtoOutput menu) {
+    public String fromMenuToJson(MenuDtoOutput menu) {
         try {
             return mapper.writeValueAsString(menu);
         } catch (JsonProcessingException e) {
@@ -41,7 +44,7 @@ public class JsonConverter {
         }
     }
 
-    public static String fromMenuItemListToJson(List<MenuItemDtoCrudOutput> items) {
+    public String fromMenuItemListToJson(List<MenuItemDtoCrudOutput> items) {
         try {
             return mapper.writeValueAsString(items);
         } catch (JsonProcessingException e) {
@@ -49,7 +52,7 @@ public class JsonConverter {
         }
     }
 
-    public static String fromMenuItemToCrudJson(MenuItemDtoCrudOutput item) {
+    public String fromMenuItemToCrudJson(MenuItemDtoCrudOutput item) {
         try {
             return mapper.writeValueAsString(item);
         } catch (JsonProcessingException e) {
@@ -57,7 +60,7 @@ public class JsonConverter {
         }
     }
 
-    public static String fromMenuItemToJson(MenuItemDtoOutput item) {
+    public String fromMenuItemToJson(MenuItemDtoOutput item) {
         try {
             return mapper.writeValueAsString(item);
         } catch (JsonProcessingException e) {
@@ -65,7 +68,7 @@ public class JsonConverter {
         }
     }
 
-    public static String fromPizzaInfoListToJson(List<PizzaInfoDtoOutput> items) {
+    public String fromPizzaInfoListToJson(List<PizzaInfoDtoOutput> items) {
         try {
             return mapper.writeValueAsString(items);
         } catch (JsonProcessingException e) {
@@ -73,7 +76,7 @@ public class JsonConverter {
         }
     }
 
-    public static String fromPizzaInfoToJson(PizzaInfoDtoOutput pizzaInfo) {
+    public String fromPizzaInfoToJson(PizzaInfoDtoOutput pizzaInfo) {
         try {
             return mapper.writeValueAsString(pizzaInfo);
         } catch (JsonProcessingException e) {
@@ -81,7 +84,7 @@ public class JsonConverter {
         }
     }
 
-    public static String fromTicketCrudToJson(TicketDtoCrudOutput ticket) {
+    public String fromTicketCrudToJson(TicketDtoCrudOutput ticket) {
         try {
             return mapper.writeValueAsString(ticket);
         } catch (JsonProcessingException e) {
@@ -89,7 +92,7 @@ public class JsonConverter {
         }
     }
 
-    public static String fromTicketToJson(TicketDtoOutput ticket) {
+    public String fromTicketToJson(TicketDtoOutput ticket) {
         try {
             return mapper.writeValueAsString(ticket);
         } catch (JsonProcessingException e) {
@@ -97,7 +100,7 @@ public class JsonConverter {
         }
     }
 
-    public static String fromTicketListToJson(List<TicketDtoCrudOutput> ticket) {
+    public String fromTicketListToJson(List<TicketDtoCrudOutput> ticket) {
         try {
             return mapper.writeValueAsString(ticket);
         } catch (JsonProcessingException e) {
@@ -105,7 +108,7 @@ public class JsonConverter {
         }
     }
 
-    public static String fromOrderDataCrudToJson(OrderDataDtoCrudOutput output) {
+    public String fromOrderDataCrudToJson(OrderDataDtoCrudOutput output) {
         try {
             return mapper.writeValueAsString(output);
         } catch (JsonProcessingException e) {
@@ -113,7 +116,7 @@ public class JsonConverter {
         }
     }
 
-    public static String fromOrderDataToJson(OrderDataDtoOutput output) {
+    public String fromOrderDataToJson(OrderDataDtoOutput output) {
         try {
             return mapper.writeValueAsString(output);
         } catch (JsonProcessingException e) {
@@ -121,7 +124,7 @@ public class JsonConverter {
         }
     }
 
-    public static String fromOrderDataListToJson(List<OrderDataDtoCrudOutput> output) {
+    public String fromOrderDataListToJson(List<OrderDataDtoCrudOutput> output) {
         try {
             return mapper.writeValueAsString(output);
         } catch (JsonProcessingException e) {
@@ -129,7 +132,7 @@ public class JsonConverter {
         }
     }
 
-    public static String fromCompletedOrderCrudToJson(CompletedOrderDtoCrudOutput output) {
+    public String fromCompletedOrderCrudToJson(CompletedOrderDtoCrudOutput output) {
         try {
             return mapper.writeValueAsString(output);
         } catch (JsonProcessingException e) {
@@ -137,7 +140,7 @@ public class JsonConverter {
         }
     }
 
-    public static String fromCompletedOrderToJson(CompletedOrderDtoOutput output) {
+    public String fromCompletedOrderToJson(CompletedOrderDtoOutput output) {
         try {
             return mapper.writeValueAsString(output);
         } catch (JsonProcessingException e) {
@@ -145,7 +148,7 @@ public class JsonConverter {
         }
     }
 
-    public static String fromCompletedOrderListToJson(List<CompletedOrderDtoCrudOutput> output) {
+    public String fromCompletedOrderListToJson(List<CompletedOrderDtoCrudOutput> output) {
         try {
             return mapper.writeValueAsString(output);
         } catch (JsonProcessingException e) {
@@ -153,7 +156,7 @@ public class JsonConverter {
         }
     }
 
-    public static MenuDtoInput fromJsonToMenu(ServletInputStream servletInputStream) {
+    public MenuDtoInput fromJsonToMenu(ServletInputStream servletInputStream) {
         try {
             return mapper.readValue(servletInputStream, new TypeReference<>() {
             });
@@ -162,7 +165,7 @@ public class JsonConverter {
         }
     }
 
-    public static MenuItemDtoInput fromJsonToMenuItem(ServletInputStream servletInputStream) {
+    public MenuItemDtoInput fromJsonToMenuItem(ServletInputStream servletInputStream) {
         try {
             return mapper.readValue(servletInputStream, MenuItemDtoInput.class);
         } catch (IOException e) {
@@ -170,7 +173,7 @@ public class JsonConverter {
         }
     }
 
-    public static PizzaInfoDtoInput fromJsonToPizzaInfo(ServletInputStream servletInputStream) {
+    public PizzaInfoDtoInput fromJsonToPizzaInfo(ServletInputStream servletInputStream) {
         try {
             return mapper.readValue(servletInputStream, PizzaInfoDtoInput.class);
         } catch (IOException e) {
@@ -178,7 +181,7 @@ public class JsonConverter {
         }
     }
 
-    public static OrderDtoInput fromJsonToOrder(ServletInputStream servletInputStream) {
+    public OrderDtoInput fromJsonToOrder(ServletInputStream servletInputStream) {
         try {
             return mapper.readValue(servletInputStream, OrderDtoInput.class);
         } catch (IOException e) {
@@ -186,11 +189,11 @@ public class JsonConverter {
         }
     }
 
-    public static OrderDataDtoInput fromJsonToOrderData(ServletInputStream servletInputStream) {
+    public OrderDataDtoInput fromJsonToOrderData(ServletInputStream servletInputStream) {
         try {
             return mapper.readValue(servletInputStream, OrderDataDtoInput.class);
         } catch (IOException e) {
-            throw new IncorrectJsonParseException("failed to read servletInputStream of OrderDataDtoInput.class",e);
+            throw new IncorrectJsonParseException("failed to read servletInputStream of OrderDataDtoInput.class", e);
         }
     }
 }

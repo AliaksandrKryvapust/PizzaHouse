@@ -1,7 +1,10 @@
 package groupId.artifactId.controller.servlet.api.crud;
 
+import groupId.artifactId.controller.utils.IoC.JsonConverterSingleton;
+import groupId.artifactId.controller.utils.JsonConverter;
 import groupId.artifactId.controller.validator.IoC.MenuItemValidatorSingleton;
 import groupId.artifactId.controller.validator.api.IMenuItemValidator;
+import groupId.artifactId.core.Constants;
 import groupId.artifactId.core.dto.input.MenuItemDtoInput;
 import groupId.artifactId.core.dto.output.crud.MenuItemDtoCrudOutput;
 import groupId.artifactId.exceptions.OptimisticLockException;
@@ -11,8 +14,6 @@ import groupId.artifactId.service.IoC.PizzaInfoServiceSingleton;
 import groupId.artifactId.service.api.IMenuItemService;
 import groupId.artifactId.service.api.IMenuService;
 import groupId.artifactId.service.api.IPizzaInfoService;
-import groupId.artifactId.core.Constants;
-import groupId.artifactId.controller.utils.JsonConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +32,7 @@ public class ApiMenuItemServlet extends HttpServlet {
     private final IMenuItemValidator menuItemValidator = MenuItemValidatorSingleton.getInstance();
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final JsonConverter jsonConverter = JsonConverterSingleton.getInstance();
 
     //Read POSITION
     //1) Read list
@@ -43,13 +45,13 @@ public class ApiMenuItemServlet extends HttpServlet {
             String id = req.getParameter(Constants.PARAMETER_ID);
             if (id != null) {
                 if (menuItemService.isIdValid(Long.valueOf(id))) {
-                    resp.getWriter().write(JsonConverter.fromMenuItemToCrudJson(menuItemService.get(Long.valueOf(id))));
+                    resp.getWriter().write(jsonConverter.fromMenuItemToCrudJson(menuItemService.get(Long.valueOf(id))));
                     resp.setStatus(HttpServletResponse.SC_OK);
                 } else {
                     resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
                 }
             } else {
-                resp.getWriter().write(JsonConverter.fromMenuItemListToJson(menuItemService.get()));
+                resp.getWriter().write(jsonConverter.fromMenuItemListToJson(menuItemService.get()));
                 resp.setStatus(HttpServletResponse.SC_OK);
             }
         } catch (Exception e) {
@@ -70,7 +72,7 @@ public class ApiMenuItemServlet extends HttpServlet {
         try {
             resp.setCharacterEncoding(Constants.ENCODING);
             resp.setContentType(Constants.CONTENT_TYPE);
-            MenuItemDtoInput menuItem = JsonConverter.fromJsonToMenuItem(req.getInputStream());
+            MenuItemDtoInput menuItem = jsonConverter.fromJsonToMenuItem(req.getInputStream());
             if (menuService.isIdValid(menuItem.getMenuId()) && pizzaInfoService.isIdValid(menuItem.getPizzaInfoId())) {
                 try {
                     menuItemValidator.validate(menuItem);
@@ -78,7 +80,7 @@ public class ApiMenuItemServlet extends HttpServlet {
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 }
                 MenuItemDtoCrudOutput menuItemDto = menuItemService.save(menuItem);
-                resp.getWriter().write(JsonConverter.fromMenuItemToCrudJson(menuItemDto));
+                resp.getWriter().write(jsonConverter.fromMenuItemToCrudJson(menuItemDto));
                 resp.setStatus(HttpServletResponse.SC_CREATED);
             } else {
                 resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
@@ -107,14 +109,14 @@ public class ApiMenuItemServlet extends HttpServlet {
             String version = req.getParameter(Constants.PARAMETER_VERSION);
             if (id != null && version != null) {
                 if (menuItemService.isIdValid(Long.valueOf(id))) {
-                    MenuItemDtoInput menuItem = JsonConverter.fromJsonToMenuItem(req.getInputStream());
+                    MenuItemDtoInput menuItem = jsonConverter.fromJsonToMenuItem(req.getInputStream());
                     try {
                         menuItemValidator.validate(menuItem);
                     } catch (IllegalArgumentException e) {
                         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                     }
                     MenuItemDtoCrudOutput menuItemDto = menuItemService.update(menuItem, id, version);
-                    resp.getWriter().write(JsonConverter.fromMenuItemToCrudJson(menuItemDto));
+                    resp.getWriter().write(jsonConverter.fromMenuItemToCrudJson(menuItemDto));
                     resp.setStatus(HttpServletResponse.SC_CREATED);
                 } else {
                     resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
