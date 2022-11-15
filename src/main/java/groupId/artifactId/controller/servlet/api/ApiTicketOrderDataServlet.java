@@ -3,7 +3,7 @@ package groupId.artifactId.controller.servlet.api;
 import groupId.artifactId.service.IoC.OrderDataServiceSingleton;
 import groupId.artifactId.service.api.IOrderDataService;
 import groupId.artifactId.core.Constants;
-import groupId.artifactId.utils.JsonConverter;
+import groupId.artifactId.controller.utils.JsonConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

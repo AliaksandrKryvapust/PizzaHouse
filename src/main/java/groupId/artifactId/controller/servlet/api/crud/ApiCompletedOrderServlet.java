@@ -3,7 +3,7 @@ package groupId.artifactId.controller.servlet.api.crud;
 import groupId.artifactId.service.IoC.CompletedOrderServiceSingleton;
 import groupId.artifactId.service.api.ICompletedOrderService;
 import groupId.artifactId.core.Constants;
-import groupId.artifactId.utils.JsonConverter;
+import groupId.artifactId.controller.utils.JsonConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
