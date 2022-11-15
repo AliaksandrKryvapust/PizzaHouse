@@ -116,14 +116,14 @@ class OrderDataMapperTest {
         Assertions.assertEquals(id, test.getId());
         Assertions.assertEquals(id, test.getTicketId());
         Assertions.assertEquals(done, test.getDone());
-        Assertions.assertEquals(creationDate, test.getCreationDate());
+        Assertions.assertEquals(creationDate, test.getCreatedAt());
         Assertions.assertEquals(version, test.getVersion());
         Assertions.assertEquals(id, test.getTicket().getId());
         Assertions.assertEquals(orderId, test.getTicket().getOrderId());
-        Assertions.assertEquals(creationDate, test.getTicket().getCreateAt());
+        Assertions.assertEquals(creationDate, test.getTicket().getCreatedAt());
         Assertions.assertEquals(version, test.getTicket().getVersion());
         Assertions.assertEquals(id, test.getTicket().getOrder().getId());
-        Assertions.assertEquals(creationDate, test.getTicket().getOrder().getCreationDate());
+        Assertions.assertEquals(creationDate, test.getTicket().getOrder().getCreatedAt());
         Assertions.assertEquals(version, test.getTicket().getOrder().getVersion());
         for (SelectedItemDtoOutput output : test.getTicket().getOrder().getSelectedItems()) {
             Assertions.assertNotNull(output.getMenuItem());
@@ -132,13 +132,13 @@ class OrderDataMapperTest {
             Assertions.assertEquals(id, output.getOrderId());
             Assertions.assertEquals(id, output.getMenuItemId());
             Assertions.assertEquals(count, output.getCount());
-            Assertions.assertEquals(creationDate, output.getCreateAt());
+            Assertions.assertEquals(creationDate, output.getCreatedAt());
             Assertions.assertEquals(version, output.getVersion());
             Assertions.assertEquals(id, output.getMenuItem().getId());
             Assertions.assertEquals(price, output.getMenuItem().getPrice());
             Assertions.assertEquals(id, output.getMenuItem().getPizzaInfoId());
             Assertions.assertEquals(id, output.getMenuItem().getMenuId());
-            Assertions.assertEquals(creationDate, output.getMenuItem().getCreation_date());
+            Assertions.assertEquals(creationDate, output.getMenuItem().getCreatedAt());
             Assertions.assertEquals(version, output.getMenuItem().getVersion());
             Assertions.assertEquals(id, output.getMenuItem().getPizzaInfo().getId());
             Assertions.assertEquals(name, output.getMenuItem().getPizzaInfo().getName());
@@ -151,7 +151,7 @@ class OrderDataMapperTest {
             Assertions.assertEquals(id, output.getId());
             Assertions.assertEquals(id, output.getOrderDataId());
             Assertions.assertEquals(stageDescription, output.getDescription());
-            Assertions.assertEquals(creationDate, output.getCreationDate());
+            Assertions.assertEquals(creationDate, output.getCreatedAt());
             Assertions.assertEquals(version, output.getVersion());
         }
     }
@@ -179,13 +179,13 @@ class OrderDataMapperTest {
         Assertions.assertEquals(id, test.getId());
         Assertions.assertEquals(id, test.getTicketId());
         Assertions.assertEquals(done, test.getDone());
-        Assertions.assertEquals(creationDate, test.getCreationDate());
+        Assertions.assertEquals(creationDate, test.getCreatedAt());
         Assertions.assertEquals(version, test.getVersion());
         for (OrderStageDtoOutput output : test.getOrderHistory()) {
             Assertions.assertEquals(id, output.getId());
             Assertions.assertEquals(id, output.getOrderDataId());
             Assertions.assertEquals(stageDescription, output.getDescription());
-            Assertions.assertEquals(creationDate, output.getCreationDate());
+            Assertions.assertEquals(creationDate, output.getCreatedAt());
             Assertions.assertEquals(version, output.getVersion());
         }
     }

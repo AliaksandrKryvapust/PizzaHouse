@@ -35,7 +35,7 @@ class PizzaMapperTest {
         Assertions.assertEquals(id, test.getCompletedOrderId());
         Assertions.assertEquals(name, test.getName());
         Assertions.assertEquals(size, test.getSize());
-        Assertions.assertEquals(creationDate, test.getCreationDate());
+        Assertions.assertEquals(creationDate, test.getCreatedAt());
         Assertions.assertEquals(version, test.getVersion());
     }
 }

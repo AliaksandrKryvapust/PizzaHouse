@@ -92,7 +92,7 @@ class MenuItemMapperTest {
         Assertions.assertEquals(id, test.getMenuId());
         Assertions.assertEquals(price, test.getPrice());
         Assertions.assertEquals(version, test.getVersion());
-        Assertions.assertEquals(creationDate, test.getCreation_date());
+        Assertions.assertEquals(creationDate, test.getCreatedAt());
         Assertions.assertEquals(id, test.getPizzaInfo().getId());
         Assertions.assertEquals(pizzaName, test.getPizzaInfo().getName());
         Assertions.assertEquals(description, test.getPizzaInfo().getDescription());
@@ -120,6 +120,6 @@ class MenuItemMapperTest {
         Assertions.assertEquals(id, test.getMenuId());
         Assertions.assertEquals(price, test.getPrice());
         Assertions.assertEquals(version, test.getVersion());
-        Assertions.assertEquals(creationDate, test.getCreation_date());
+        Assertions.assertEquals(creationDate, test.getCreatedAt());
     }
 }

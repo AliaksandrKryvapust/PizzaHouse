@@ -6,7 +6,7 @@ public class MenuItemDtoOutput {
     private Long id;
     private Double price;
     private Long pizzaInfoId;
-    private Instant creation_date;
+    private Instant createdAt;
     private Integer version;
     private Long menuId;
     private PizzaInfoDtoOutput pizzaInfo;
@@ -21,20 +21,20 @@ public class MenuItemDtoOutput {
         this.menuId = menuId;
     }
 
-    public MenuItemDtoOutput(Long id, Double price, Long pizzaInfoId, Instant creation_date, Integer version, Long menuId) {
+    public MenuItemDtoOutput(Long id, Double price, Long pizzaInfoId, Instant createdAt, Integer version, Long menuId) {
         this.id = id;
         this.price = price;
         this.pizzaInfoId = pizzaInfoId;
-        this.creation_date = creation_date;
+        this.createdAt = createdAt;
         this.version = version;
         this.menuId = menuId;
     }
 
-    public MenuItemDtoOutput(Long id, Double price, Long pizzaInfoId, Instant creation_date, Integer version, Long menuId, PizzaInfoDtoOutput pizzaInfo) {
+    public MenuItemDtoOutput(Long id, Double price, Long pizzaInfoId, Instant createdAt, Integer version, Long menuId, PizzaInfoDtoOutput pizzaInfo) {
         this.id = id;
         this.price = price;
         this.pizzaInfoId = pizzaInfoId;
-        this.creation_date = creation_date;
+        this.createdAt = createdAt;
         this.version = version;
         this.menuId = menuId;
         this.pizzaInfo = pizzaInfo;
@@ -64,12 +64,12 @@ public class MenuItemDtoOutput {
         this.pizzaInfoId = pizzaInfoId;
     }
 
-    public Instant getCreation_date() {
-        return creation_date;
+    public Instant getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreation_date(Instant creation_date) {
-        this.creation_date = creation_date;
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Integer getVersion() {

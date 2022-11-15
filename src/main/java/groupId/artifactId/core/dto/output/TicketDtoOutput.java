@@ -6,17 +6,17 @@ public class TicketDtoOutput {
     private OrderDtoOutput order;
     private Long id;
     private Long orderId;
-    private Instant createAt;
+    private Instant createdAt;
     private Integer version;
 
     public TicketDtoOutput() {
     }
 
-    public TicketDtoOutput(OrderDtoOutput order, Long id, Long orderId, Instant createAt, Integer version) {
+    public TicketDtoOutput(OrderDtoOutput order, Long id, Long orderId, Instant createdAt, Integer version) {
         this.order = order;
         this.id = id;
         this.orderId = orderId;
-        this.createAt = createAt;
+        this.createdAt = createdAt;
         this.version = version;
     }
 
@@ -44,12 +44,12 @@ public class TicketDtoOutput {
         this.orderId = orderId;
     }
 
-    public Instant getCreateAt() {
-        return createAt;
+    public Instant getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreateAt(Instant createAt) {
-        this.createAt = createAt;
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Integer getVersion() {

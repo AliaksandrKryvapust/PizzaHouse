@@ -7,18 +7,18 @@ public class PizzaDtoOutput {
     private Long completedOrderId;
     private String name;
     private Integer size;
-    private Instant creationDate;
+    private Instant createdAt;
     private Integer version;
 
     public PizzaDtoOutput() {
     }
 
-    public PizzaDtoOutput(Long id, Long completedOrderId, String name, Integer size, Instant creationDate, Integer version) {
+    public PizzaDtoOutput(Long id, Long completedOrderId, String name, Integer size, Instant createdAt, Integer version) {
         this.id = id;
         this.completedOrderId = completedOrderId;
         this.name = name;
         this.size = size;
-        this.creationDate = creationDate;
+        this.createdAt = createdAt;
         this.version = version;
     }
 
@@ -54,12 +54,12 @@ public class PizzaDtoOutput {
         this.size = size;
     }
 
-    public Instant getCreationDate() {
-        return creationDate;
+    public Instant getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreationDate(Instant creationDate) {
-        this.creationDate = creationDate;
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Integer getVersion() {

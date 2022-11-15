@@ -81,10 +81,10 @@ class OrderServiceTest {
         Assertions.assertNotNull(test.getOrder().getSelectedItems());
         Assertions.assertEquals(id, test.getId());
         Assertions.assertEquals(orderId, test.getOrderId());
-        Assertions.assertEquals(creationDate, test.getCreateAt());
+        Assertions.assertEquals(creationDate, test.getCreatedAt());
         Assertions.assertEquals(version, test.getVersion());
         Assertions.assertEquals(id, test.getOrder().getId());
-        Assertions.assertEquals(creationDate, test.getOrder().getCreationDate());
+        Assertions.assertEquals(creationDate, test.getOrder().getCreatedAt());
         Assertions.assertEquals(version, test.getOrder().getVersion());
         for (SelectedItemDtoOutput output : test.getOrder().getSelectedItems()) {
             Assertions.assertNotNull(output.getMenuItem());
@@ -93,13 +93,13 @@ class OrderServiceTest {
             Assertions.assertEquals(id, output.getOrderId());
             Assertions.assertEquals(id, output.getMenuItemId());
             Assertions.assertEquals(count, output.getCount());
-            Assertions.assertEquals(creationDate, output.getCreateAt());
+            Assertions.assertEquals(creationDate, output.getCreatedAt());
             Assertions.assertEquals(version, output.getVersion());
             Assertions.assertEquals(id, output.getMenuItem().getId());
             Assertions.assertEquals(price, output.getMenuItem().getPrice());
             Assertions.assertEquals(id, output.getMenuItem().getPizzaInfoId());
             Assertions.assertEquals(id, output.getMenuItem().getMenuId());
-            Assertions.assertEquals(creationDate, output.getMenuItem().getCreation_date());
+            Assertions.assertEquals(creationDate, output.getMenuItem().getCreatedAt());
             Assertions.assertEquals(version, output.getMenuItem().getVersion());
             Assertions.assertEquals(id, output.getMenuItem().getPizzaInfo().getId());
             Assertions.assertEquals(name, output.getMenuItem().getPizzaInfo().getName());

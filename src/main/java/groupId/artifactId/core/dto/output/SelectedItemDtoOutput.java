@@ -8,20 +8,20 @@ public class SelectedItemDtoOutput {
     private Long menuItemId;
     private Long orderId;
     private Integer count;
-    private Instant createAt;
+    private Instant createdAt;
     private Integer version;
 
     public SelectedItemDtoOutput() {
     }
 
     public SelectedItemDtoOutput(MenuItemDtoOutput menuItem, Long id, Long menuItemId, Long orderId, Integer count,
-                                 Instant createAt, Integer version) {
+                                 Instant createdAt, Integer version) {
         this.menuItem = menuItem;
         this.id = id;
         this.menuItemId = menuItemId;
         this.orderId = orderId;
         this.count = count;
-        this.createAt = createAt;
+        this.createdAt = createdAt;
         this.version = version;
     }
 
@@ -65,12 +65,12 @@ public class SelectedItemDtoOutput {
         this.count = count;
     }
 
-    public Instant getCreateAt() {
-        return createAt;
+    public Instant getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreateAt(Instant createAt) {
-        this.createAt = createAt;
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Integer getVersion() {

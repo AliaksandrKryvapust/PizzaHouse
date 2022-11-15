@@ -6,7 +6,7 @@ public class OrderStageDtoOutput {
     private Long id;
     private Long orderDataId;
     private String description;
-    private Instant creationDate;
+    private Instant createdAt;
     private Integer version;
 
     public OrderStageDtoOutput() {
@@ -17,11 +17,11 @@ public class OrderStageDtoOutput {
         this.description = description;
     }
 
-    public OrderStageDtoOutput(Long id, Long orderDataId, String description, Instant creationDate, Integer version) {
+    public OrderStageDtoOutput(Long id, Long orderDataId, String description, Instant createdAt, Integer version) {
         this.id = id;
         this.orderDataId = orderDataId;
         this.description = description;
-        this.creationDate = creationDate;
+        this.createdAt = createdAt;
         this.version = version;
     }
 
@@ -49,12 +49,12 @@ public class OrderStageDtoOutput {
         this.description = description;
     }
 
-    public Instant getCreationDate() {
-        return creationDate;
+    public Instant getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreationDate(Instant creationDate) {
-        this.creationDate = creationDate;
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Integer getVersion() {

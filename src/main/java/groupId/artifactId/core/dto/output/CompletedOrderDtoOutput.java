@@ -8,19 +8,19 @@ public class CompletedOrderDtoOutput {
     private List<PizzaDtoOutput> items;
     private Long id;
     private Long ticketId;
-    private Instant creationDate;
+    private Instant createdAt;
     private Integer version;
 
     public CompletedOrderDtoOutput() {
     }
 
     public CompletedOrderDtoOutput(TicketDtoOutput ticket, List<PizzaDtoOutput> items, Long id, Long ticketId,
-                                   Instant creationDate, Integer version) {
+                                   Instant createdAt, Integer version) {
         this.ticket = ticket;
         this.items = items;
         this.id = id;
         this.ticketId = ticketId;
-        this.creationDate = creationDate;
+        this.createdAt = createdAt;
         this.version = version;
     }
 
@@ -56,12 +56,12 @@ public class CompletedOrderDtoOutput {
         this.ticketId = ticketId;
     }
 
-    public Instant getCreationDate() {
-        return creationDate;
+    public Instant getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreationDate(Instant creationDate) {
-        this.creationDate = creationDate;
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Integer getVersion() {

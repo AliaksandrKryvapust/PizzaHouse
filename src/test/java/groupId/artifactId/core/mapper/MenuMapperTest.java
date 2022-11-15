@@ -107,7 +107,7 @@ class MenuMapperTest {
             Assertions.assertEquals(id, output.getMenuId());
             Assertions.assertEquals(price, output.getPrice());
             Assertions.assertEquals(version, output.getVersion());
-            Assertions.assertEquals(creationDate, output.getCreation_date());
+            Assertions.assertEquals(creationDate, output.getCreatedAt());
             Assertions.assertEquals(id, output.getPizzaInfo().getId());
             Assertions.assertEquals(pizzaName, output.getPizzaInfo().getName());
             Assertions.assertEquals(description, output.getPizzaInfo().getDescription());

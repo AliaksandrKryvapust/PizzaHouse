@@ -6,16 +6,16 @@ import java.util.List;
 public class OrderDtoOutput {
     private List<SelectedItemDtoOutput> selectedItems;
     private Long id;
-    private Instant creationDate;
+    private Instant createdAt;
     private Integer version;
 
     public OrderDtoOutput() {
     }
 
-    public OrderDtoOutput(List<SelectedItemDtoOutput> selectedItems, Long id, Instant creationDate, Integer version) {
+    public OrderDtoOutput(List<SelectedItemDtoOutput> selectedItems, Long id, Instant createdAt, Integer version) {
         this.selectedItems = selectedItems;
         this.id = id;
-        this.creationDate = creationDate;
+        this.createdAt = createdAt;
         this.version = version;
     }
 
@@ -35,12 +35,12 @@ public class OrderDtoOutput {
         this.id = id;
     }
 
-    public Instant getCreationDate() {
-        return creationDate;
+    public Instant getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreationDate(Instant creationDate) {
-        this.creationDate = creationDate;
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Integer getVersion() {

@@ -9,7 +9,7 @@ public class OrderDataDtoOutput {
     private Long id;
     private Long ticketId;
     private Boolean done;
-    private Instant creationDate;
+    private Instant createdAt;
     private Integer version;
 
     public OrderDataDtoOutput() {
@@ -21,22 +21,22 @@ public class OrderDataDtoOutput {
         this.done = done;
     }
 
-    public OrderDataDtoOutput(Long id, Long ticketId, Boolean done, Instant creationDate, Integer version) {
+    public OrderDataDtoOutput(Long id, Long ticketId, Boolean done, Instant createdAt, Integer version) {
         this.id = id;
         this.ticketId = ticketId;
         this.done = done;
-        this.creationDate = creationDate;
+        this.createdAt = createdAt;
         this.version = version;
     }
 
     public OrderDataDtoOutput(TicketDtoOutput ticket, List<OrderStageDtoOutput> orderHistory, Long id, Long ticketId,
-                              Boolean done, Instant creationDate, Integer version) {
+                              Boolean done, Instant createdAt, Integer version) {
         this.ticket = ticket;
         this.orderHistory = orderHistory;
         this.id = id;
         this.ticketId = ticketId;
         this.done = done;
-        this.creationDate = creationDate;
+        this.createdAt = createdAt;
         this.version = version;
     }
 
@@ -80,12 +80,12 @@ public class OrderDataDtoOutput {
         this.done = done;
     }
 
-    public Instant getCreationDate() {
-        return creationDate;
+    public Instant getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreationDate(Instant creationDate) {
-        this.creationDate = creationDate;
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Integer getVersion() {
