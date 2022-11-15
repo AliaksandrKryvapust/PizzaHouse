@@ -2,7 +2,7 @@ package groupId.artifactId.controller.servlet.api;
 
 import groupId.artifactId.service.IoC.MenuServiceSingleton;
 import groupId.artifactId.service.api.IMenuService;
-import groupId.artifactId.utils.Constants;
+import groupId.artifactId.core.Constants;
 import groupId.artifactId.utils.JsonConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

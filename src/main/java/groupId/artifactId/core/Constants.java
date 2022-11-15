@@ -1,4 +1,4 @@
-package groupId.artifactId.utils;
+package groupId.artifactId.core;
 
 public class Constants {
     public static final String CONTENT_TYPE = "application/json";

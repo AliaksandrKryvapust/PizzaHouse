@@ -7,7 +7,7 @@ import groupId.artifactId.core.dto.output.crud.MenuDtoCrudOutput;
 import groupId.artifactId.exceptions.OptimisticLockException;
 import groupId.artifactId.service.IoC.MenuServiceSingleton;
 import groupId.artifactId.service.api.IMenuService;
-import groupId.artifactId.utils.Constants;
+import groupId.artifactId.core.Constants;
 import groupId.artifactId.utils.JsonConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

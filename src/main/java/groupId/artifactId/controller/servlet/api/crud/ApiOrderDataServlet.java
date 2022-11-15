@@ -7,7 +7,7 @@ import groupId.artifactId.core.dto.output.crud.OrderDataDtoCrudOutput;
 import groupId.artifactId.exceptions.OptimisticLockException;
 import groupId.artifactId.service.IoC.OrderDataServiceSingleton;
 import groupId.artifactId.service.api.IOrderDataService;
-import groupId.artifactId.utils.Constants;
+import groupId.artifactId.core.Constants;
 import groupId.artifactId.utils.JsonConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

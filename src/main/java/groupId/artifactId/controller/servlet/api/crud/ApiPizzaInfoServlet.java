@@ -7,7 +7,7 @@ import groupId.artifactId.core.dto.output.PizzaInfoDtoOutput;
 import groupId.artifactId.exceptions.OptimisticLockException;
 import groupId.artifactId.service.IoC.PizzaInfoServiceSingleton;
 import groupId.artifactId.service.api.IPizzaInfoService;
-import groupId.artifactId.utils.Constants;
+import groupId.artifactId.core.Constants;
 import groupId.artifactId.utils.JsonConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -11,7 +11,7 @@ import groupId.artifactId.service.IoC.PizzaInfoServiceSingleton;
 import groupId.artifactId.service.api.IMenuItemService;
 import groupId.artifactId.service.api.IMenuService;
 import groupId.artifactId.service.api.IPizzaInfoService;
-import groupId.artifactId.utils.Constants;
+import groupId.artifactId.core.Constants;
 import groupId.artifactId.utils.JsonConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
