@@ -60,7 +60,8 @@ public class ApiOrderServlet extends HttpServlet {
             }
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            logger.error("/api/order crashed during doGet method" + e.getMessage() + resp.getStatus());
+            logger.error("/api/order crashed during doGet method" + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         }
     }
 
@@ -95,10 +96,12 @@ public class ApiOrderServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_CREATED);
         } catch (IncorrectOrderInputException e) {
             resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
-            logger.error("/api/order crashed during doPost method menu item id do not exist" + e.getMessage() + resp.getStatus());
+            logger.error("/api/order crashed during doPost method menu item id do not exist" + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            logger.error("/api/order crashed during doPost method" + e.getMessage() + resp.getStatus());
+            logger.error("/api/order crashed during doPost method" + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         }
     }
 
@@ -126,10 +129,12 @@ public class ApiOrderServlet extends HttpServlet {
             }
         } catch (OptimisticLockException e) {
             resp.setStatus(HttpServletResponse.SC_CONFLICT);
-            logger.error("/api/order optimistic lock during doDelete method" + e.getMessage() + resp.getStatus());
+            logger.error("/api/order optimistic lock during doDelete method" + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            logger.error("/api/order crashed during doDelete method" + e.getMessage() + resp.getStatus());
+            logger.error("/api/order crashed during doDelete method" + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         }
     }
 }

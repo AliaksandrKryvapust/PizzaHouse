@@ -54,7 +54,8 @@ public class ApiOrderDataServlet extends HttpServlet {
             }
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            logger.error("/api/order_data crashed during doGet method" + e.getMessage() + resp.getStatus());
+            logger.error("/api/order_data crashed during doGet method" + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         }
     }
 
@@ -81,7 +82,8 @@ public class ApiOrderDataServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_CREATED);
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            logger.error("/api/order_data crashed during doPost method" + e.getMessage() + resp.getStatus());
+            logger.error("/api/order_data crashed during doPost method" + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         }
     }
 
@@ -120,10 +122,12 @@ public class ApiOrderDataServlet extends HttpServlet {
             }
         } catch (OptimisticLockException e) {
             resp.setStatus(HttpServletResponse.SC_CONFLICT);
-            logger.error("/api/order_data optimistic lock during doPost method" + e.getMessage() + resp.getStatus());
+            logger.error("/api/order_data optimistic lock during doPost method" + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            logger.error("/api/order_data crashed during doPut method" + e.getMessage() + resp.getStatus());
+            logger.error("/api/order_data crashed during doPut method" + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         }
     }
 }

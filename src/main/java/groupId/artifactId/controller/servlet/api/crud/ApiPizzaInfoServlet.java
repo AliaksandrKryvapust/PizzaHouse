@@ -56,7 +56,8 @@ public class ApiPizzaInfoServlet extends HttpServlet {
             }
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            logger.error("/api/pizza_info crashed during doGet method" + e.getMessage() + resp.getStatus());
+            logger.error("/api/pizza_info crashed during doGet method" + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         }
     }
 
@@ -87,7 +88,8 @@ public class ApiPizzaInfoServlet extends HttpServlet {
             }
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            logger.error("/api/pizza_info crashed during doPost method" + e.getMessage() + resp.getStatus());
+            logger.error("/api/pizza_info crashed during doPost method" + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         }
     }
     //UPDATE POSITION
@@ -125,10 +127,12 @@ public class ApiPizzaInfoServlet extends HttpServlet {
             }
         } catch (OptimisticLockException e) {
             resp.setStatus(HttpServletResponse.SC_CONFLICT);
-            logger.error("/api/pizza_info optimistic lock during doPut method" + e.getMessage() + resp.getStatus());
+            logger.error("/api/pizza_info optimistic lock during doPut method" + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            logger.error("/api/pizza_info crashed during doPut method" + e.getMessage() + resp.getStatus());
+            logger.error("/api/pizza_info crashed during doPut method" + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         }
     }
     //DELETE POSITION
@@ -155,10 +159,12 @@ public class ApiPizzaInfoServlet extends HttpServlet {
             }
         } catch (OptimisticLockException e) {
             resp.setStatus(HttpServletResponse.SC_CONFLICT);
-            logger.error("/api/pizza_info optimistic lock during doDelete method" + e.getMessage() + resp.getStatus());
+            logger.error("/api/pizza_info optimistic lock during doDelete method" + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            logger.error("/api/pizza_info crashed during doDelete method" + e.getMessage() + resp.getStatus());
+            logger.error("/api/pizza_info crashed during doDelete method" + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         }
     }
 }

@@ -56,7 +56,8 @@ public class ApiMenuServlet extends HttpServlet {
             }
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            logger.error("/api/menu crashed during doGet method" + e.getMessage() + resp.getStatus());
+            logger.error("/api/menu crashed during doGet method" + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         }
     }
 
@@ -86,7 +87,8 @@ public class ApiMenuServlet extends HttpServlet {
             }
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            logger.error("/api/menu crashed during doPost method" + e.getMessage() + resp.getStatus());
+            logger.error("/api/menu crashed during doPost method" + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         }
     }
 
@@ -124,10 +126,12 @@ public class ApiMenuServlet extends HttpServlet {
             }
         } catch (OptimisticLockException e) {
             resp.setStatus(HttpServletResponse.SC_CONFLICT);
-            logger.error("/api/menu optimistic lock during doPut method" + e.getMessage() + resp.getStatus());
+            logger.error("/api/menu optimistic lock during doPut method" + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            logger.error("/api/menu crashed during doPut method" + e.getMessage() + resp.getStatus());
+            logger.error("/api/menu crashed during doPut method" + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         }
     }
 
@@ -155,10 +159,12 @@ public class ApiMenuServlet extends HttpServlet {
             }
         } catch (OptimisticLockException e) {
             resp.setStatus(HttpServletResponse.SC_CONFLICT);
-            logger.error("/api/menu optimistic lock during doDelete method" + e.getMessage() + resp.getStatus());
+            logger.error("/api/menu optimistic lock during doDelete method" + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            logger.error("/api/menu crashed during doDelete method" + e.getMessage() + resp.getStatus());
+            logger.error("/api/menu crashed during doDelete method" + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         }
     }
 }

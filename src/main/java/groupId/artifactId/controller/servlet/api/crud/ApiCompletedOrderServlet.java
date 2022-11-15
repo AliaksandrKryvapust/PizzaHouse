@@ -47,7 +47,8 @@ public class ApiCompletedOrderServlet extends HttpServlet {
             }
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            logger.error("/api/completed_order crashed during doGet method" + e.getMessage() + resp.getStatus());
+            logger.error("/api/completed_order crashed during doGet method"  + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         }
     }
 
