@@ -26,13 +26,21 @@ import javax.servlet.http.HttpServletResponse;
 //IMenuItem
 @WebServlet(name = "MenuItem", urlPatterns = "/api/menu_item")
 public class ApiMenuItemServlet extends HttpServlet {
-    private final IMenuItemService menuItemService = MenuItemServiceSingleton.getInstance();
-    private final IMenuService menuService = MenuServiceSingleton.getInstance();
-    private final IPizzaInfoService pizzaInfoService = PizzaInfoServiceSingleton.getInstance();
-    private final IMenuItemValidator menuItemValidator = MenuItemValidatorSingleton.getInstance();
+    private final IMenuItemService menuItemService;
+    private final IMenuService menuService;
+    private final IPizzaInfoService pizzaInfoService;
+    private final IMenuItemValidator menuItemValidator;
+    private final Logger logger;
+    private final JsonConverter jsonConverter;
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final JsonConverter jsonConverter = JsonConverterSingleton.getInstance();
+    public ApiMenuItemServlet() {
+        this.menuItemService = MenuItemServiceSingleton.getInstance();
+        this.menuService = MenuServiceSingleton.getInstance();
+        this.pizzaInfoService = PizzaInfoServiceSingleton.getInstance();
+        this.menuItemValidator = MenuItemValidatorSingleton.getInstance();
+        this.logger = LoggerFactory.getLogger(this.getClass());
+        this.jsonConverter = JsonConverterSingleton.getInstance();
+    }
 
     //Read POSITION
     //1) Read list

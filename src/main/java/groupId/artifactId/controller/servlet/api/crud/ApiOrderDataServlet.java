@@ -1,15 +1,15 @@
 package groupId.artifactId.controller.servlet.api.crud;
 
 import groupId.artifactId.controller.utils.IoC.JsonConverterSingleton;
+import groupId.artifactId.controller.utils.JsonConverter;
 import groupId.artifactId.controller.validator.IoC.OrderDataValidatorSingleton;
 import groupId.artifactId.controller.validator.api.IOrderDataValidator;
+import groupId.artifactId.core.Constants;
 import groupId.artifactId.core.dto.input.OrderDataDtoInput;
 import groupId.artifactId.core.dto.output.crud.OrderDataDtoCrudOutput;
 import groupId.artifactId.exceptions.OptimisticLockException;
 import groupId.artifactId.service.IoC.OrderDataServiceSingleton;
 import groupId.artifactId.service.api.IOrderDataService;
-import groupId.artifactId.core.Constants;
-import groupId.artifactId.controller.utils.JsonConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,12 +20,17 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet(name = "OrderData", urlPatterns = "/api/order_data")
 public class ApiOrderDataServlet extends HttpServlet {
-    private final IOrderDataService orderDataService = OrderDataServiceSingleton.getInstance();
-    private final IOrderDataValidator orderDataValidator = OrderDataValidatorSingleton.getInstance();
+    private final IOrderDataService orderDataService;
+    private final IOrderDataValidator orderDataValidator;
+    private final Logger logger;
+    private final JsonConverter jsonConverter;
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final JsonConverter jsonConverter = JsonConverterSingleton.getInstance();
-
+    public ApiOrderDataServlet() {
+        this.orderDataService = OrderDataServiceSingleton.getInstance();
+        this.orderDataValidator = OrderDataValidatorSingleton.getInstance();
+        this.logger = LoggerFactory.getLogger(this.getClass());
+        this.jsonConverter = JsonConverterSingleton.getInstance();
+    }
 
     //Read POSITION
     //1) Read list

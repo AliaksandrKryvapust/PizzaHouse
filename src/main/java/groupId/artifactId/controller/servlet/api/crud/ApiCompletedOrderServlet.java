@@ -15,9 +15,15 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet(name = "CompletedOrder", urlPatterns = "/api/completed_order")
 public class ApiCompletedOrderServlet extends HttpServlet {
-    private final ICompletedOrderService completedOrderService = CompletedOrderServiceSingleton.getInstance();
-    private final JsonConverter jsonConverter = JsonConverterSingleton.getInstance();
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final ICompletedOrderService completedOrderService;
+    private final JsonConverter jsonConverter;
+    private final Logger logger;
+
+    public ApiCompletedOrderServlet() {
+        this.completedOrderService = CompletedOrderServiceSingleton.getInstance();
+        this.jsonConverter = JsonConverterSingleton.getInstance();
+        this.logger = LoggerFactory.getLogger(this.getClass());
+    }
 
     //Read POSITION
     //1) Read list

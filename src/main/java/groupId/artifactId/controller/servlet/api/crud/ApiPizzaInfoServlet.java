@@ -22,10 +22,17 @@ import javax.servlet.http.HttpServletResponse;
 //IPizzaInfo
 @WebServlet(name = "PizzaInfo", urlPatterns = "/api/pizza_info")
 public class ApiPizzaInfoServlet extends HttpServlet {
-    private final IPizzaInfoService pizzaInfoService = PizzaInfoServiceSingleton.getInstance();
-    private final IPizzaInfoValidator pizzaInfoValidator = PizzaInfoValidatorSingleton.getInstance();
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final JsonConverter jsonConverter = JsonConverterSingleton.getInstance();
+    private final IPizzaInfoService pizzaInfoService;
+    private final IPizzaInfoValidator pizzaInfoValidator;
+    private final Logger logger;
+    private final JsonConverter jsonConverter;
+
+    public ApiPizzaInfoServlet() {
+        this.pizzaInfoService = PizzaInfoServiceSingleton.getInstance();
+        this.pizzaInfoValidator = PizzaInfoValidatorSingleton.getInstance();
+        this.logger = LoggerFactory.getLogger(this.getClass());
+        this.jsonConverter = JsonConverterSingleton.getInstance();
+    }
 
     //Read POSITION
     //1) Read list

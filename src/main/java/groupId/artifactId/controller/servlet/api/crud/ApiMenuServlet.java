@@ -22,11 +22,17 @@ import javax.servlet.http.HttpServletResponse;
 //IMenu
 @WebServlet(name = "Menu", urlPatterns = "/api/menu")
 public class ApiMenuServlet extends HttpServlet {
-    private final IMenuService menuService = MenuServiceSingleton.getInstance();
-    private final IMenuValidator menuValidator = MenuValidatorSingleton.getInstance();
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final JsonConverter jsonConverter = JsonConverterSingleton.getInstance();
+    private final IMenuService menuService;
+    private final IMenuValidator menuValidator;
+    private final Logger logger;
+    private final JsonConverter jsonConverter;
 
+    public ApiMenuServlet() {
+        this.menuService = MenuServiceSingleton.getInstance();
+        this.menuValidator = MenuValidatorSingleton.getInstance();
+        this.logger = LoggerFactory.getLogger(this.getClass());
+        this.jsonConverter = JsonConverterSingleton.getInstance();
+    }
     //Read POSITION
     //1) Read list
     //2) Read item need id param  (id = 1)

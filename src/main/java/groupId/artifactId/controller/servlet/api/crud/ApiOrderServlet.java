@@ -24,11 +24,19 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet(name = "Order", urlPatterns = "/api/order")
 public class ApiOrderServlet extends HttpServlet {
-    private final IOrderService orderService = OrderServiceSingleton.getInstance();
-    private final IMenuItemService menuItemService = MenuItemServiceSingleton.getInstance();
-    private final IOrderValidator orderValidator = OrderValidatorSingleton.getInstance();
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final JsonConverter jsonConverter = JsonConverterSingleton.getInstance();
+    private final IOrderService orderService;
+    private final IMenuItemService menuItemService;
+    private final IOrderValidator orderValidator;
+    private final Logger logger;
+    private final JsonConverter jsonConverter;
+
+    public ApiOrderServlet() {
+        this.orderService = OrderServiceSingleton.getInstance();
+        this.menuItemService = MenuItemServiceSingleton.getInstance();
+        this.orderValidator = OrderValidatorSingleton.getInstance();
+        this.logger = LoggerFactory.getLogger(this.getClass());
+        this.jsonConverter = JsonConverterSingleton.getInstance();
+    }
 
     //Read POSITION
     //1) Read list
