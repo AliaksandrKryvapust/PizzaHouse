@@ -258,7 +258,7 @@ class CompletedOrderServiceTest {
             Assertions.assertNotNull(output);
             Assertions.assertEquals(id, output.getId());
             Assertions.assertEquals(id, output.getTicketId());
-            Assertions.assertEquals(creationDate, output.getCreationDate());
+            Assertions.assertEquals(creationDate, output.getCreatedAt());
             Assertions.assertEquals(version, output.getVersion());
         }
     }
@@ -282,6 +282,6 @@ class CompletedOrderServiceTest {
         Assertions.assertNotNull(test);
         Assertions.assertEquals(id, test.getId());
         Assertions.assertEquals(id, test.getTicketId());
-        Assertions.assertEquals(creationDate, test.getCreationDate());
+        Assertions.assertEquals(creationDate, test.getCreatedAt());
     }
 }

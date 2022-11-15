@@ -264,7 +264,7 @@ class OrderDataServiceTest {
             Assertions.assertEquals(id, output.getId());
             Assertions.assertEquals(id, output.getTicketId());
             Assertions.assertEquals(done, output.getDone());
-            Assertions.assertEquals(creationDate, output.getCreationDate());
+            Assertions.assertEquals(creationDate, output.getCreatedAt());
             Assertions.assertEquals(version, output.getVersion());
         }
     }
@@ -290,7 +290,7 @@ class OrderDataServiceTest {
         Assertions.assertEquals(id, test.getId());
         Assertions.assertEquals(id, test.getTicketId());
         Assertions.assertEquals(done, test.getDone());
-        Assertions.assertEquals(creationDate, test.getCreationDate());
+        Assertions.assertEquals(creationDate, test.getCreatedAt());
         Assertions.assertEquals(version, test.getVersion());
 
     }

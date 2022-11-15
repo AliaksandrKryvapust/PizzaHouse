@@ -64,7 +64,7 @@ class SelectedItemMapperTest {
         Assertions.assertEquals(id, test.getOrderId());
         Assertions.assertEquals(id, test.getMenuItemId());
         Assertions.assertEquals(count, test.getCount());
-        Assertions.assertEquals(creationDate, test.getCreateAt());
+        Assertions.assertEquals(creationDate, test.getCreatedAt());
         Assertions.assertEquals(version, test.getVersion());
     }
 

@@ -4,7 +4,7 @@ import java.time.Instant;
 
 public class OrderDtoCrudOutput {
     private Long id;
-    private Instant creationDate;
+    private Instant createdAt;
     private Integer version;
 
     public OrderDtoCrudOutput() {
@@ -14,9 +14,9 @@ public class OrderDtoCrudOutput {
         this.id = id;
     }
 
-    public OrderDtoCrudOutput(Long id, Instant creationDate, Integer version) {
+    public OrderDtoCrudOutput(Long id, Instant createdAt, Integer version) {
         this.id = id;
-        this.creationDate = creationDate;
+        this.createdAt = createdAt;
         this.version = version;
     }
 
@@ -28,12 +28,12 @@ public class OrderDtoCrudOutput {
         this.id = id;
     }
 
-    public Instant getCreationDate() {
-        return creationDate;
+    public Instant getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreationDate(Instant creationDate) {
-        this.creationDate = creationDate;
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Integer getVersion() {

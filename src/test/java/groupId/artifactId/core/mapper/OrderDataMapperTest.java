@@ -71,7 +71,7 @@ class OrderDataMapperTest {
         Assertions.assertEquals(id, test.getId());
         Assertions.assertEquals(id, test.getTicketId());
         Assertions.assertEquals(done, test.getDone());
-        Assertions.assertEquals(creationDate, test.getCreationDate());
+        Assertions.assertEquals(creationDate, test.getCreatedAt());
         Assertions.assertEquals(version, test.getVersion());
     }
 

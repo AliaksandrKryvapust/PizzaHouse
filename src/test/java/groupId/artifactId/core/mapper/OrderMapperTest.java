@@ -71,7 +71,7 @@ class OrderMapperTest {
         // assert
         Assertions.assertNotNull(test);
         Assertions.assertEquals(id, test.getId());
-        Assertions.assertEquals(creationDate, test.getCreationDate());
+        Assertions.assertEquals(creationDate, test.getCreatedAt());
         Assertions.assertEquals(version, test.getVersion());
     }
 

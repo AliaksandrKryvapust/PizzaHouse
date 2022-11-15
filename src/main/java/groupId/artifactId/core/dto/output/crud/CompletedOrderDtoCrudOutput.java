@@ -5,7 +5,7 @@ import java.time.Instant;
 public class CompletedOrderDtoCrudOutput {
     private Long id;
     private Long ticketId;
-    private Instant creationDate;
+    private Instant createdAt;
     private Integer version;
 
     public CompletedOrderDtoCrudOutput() {
@@ -16,10 +16,10 @@ public class CompletedOrderDtoCrudOutput {
         this.ticketId = ticketId;
     }
 
-    public CompletedOrderDtoCrudOutput(Long id, Long ticketId, Instant creationDate, Integer version) {
+    public CompletedOrderDtoCrudOutput(Long id, Long ticketId, Instant createdAt, Integer version) {
         this.id = id;
         this.ticketId = ticketId;
-        this.creationDate = creationDate;
+        this.createdAt = createdAt;
         this.version = version;
     }
 
@@ -39,12 +39,12 @@ public class CompletedOrderDtoCrudOutput {
         this.ticketId = ticketId;
     }
 
-    public Instant getCreationDate() {
-        return creationDate;
+    public Instant getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreationDate(Instant creationDate) {
-        this.creationDate = creationDate;
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Integer getVersion() {

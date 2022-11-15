@@ -89,7 +89,7 @@ class CompletedOrderMapperTest {
         Assertions.assertNotNull(test);
         Assertions.assertEquals(id, test.getId());
         Assertions.assertEquals(id, test.getTicketId());
-        Assertions.assertEquals(creationDate, test.getCreationDate());
+        Assertions.assertEquals(creationDate, test.getCreatedAt());
         Assertions.assertEquals(version, test.getVersion());
     }
 

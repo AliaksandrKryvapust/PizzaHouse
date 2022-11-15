@@ -6,7 +6,7 @@ public class OrderDataDtoCrudOutput {
     private Long id;
     private Long ticketId;
     private Boolean done;
-    private Instant creationDate;
+    private Instant createdAt;
     private Integer version;
 
     public OrderDataDtoCrudOutput() {
@@ -18,11 +18,11 @@ public class OrderDataDtoCrudOutput {
         this.done = done;
     }
 
-    public OrderDataDtoCrudOutput(Long id, Long ticketId, Boolean done, Instant creationDate, Integer version) {
+    public OrderDataDtoCrudOutput(Long id, Long ticketId, Boolean done, Instant createdAt, Integer version) {
         this.id = id;
         this.ticketId = ticketId;
         this.done = done;
-        this.creationDate = creationDate;
+        this.createdAt = createdAt;
         this.version = version;
     }
 
@@ -50,12 +50,12 @@ public class OrderDataDtoCrudOutput {
         this.done = done;
     }
 
-    public Instant getCreationDate() {
-        return creationDate;
+    public Instant getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreationDate(Instant creationDate) {
-        this.creationDate = creationDate;
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Integer getVersion() {
