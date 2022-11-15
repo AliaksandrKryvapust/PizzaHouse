@@ -15,9 +15,15 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet(name = "TicketSelectedItem", urlPatterns = "/api/ticket/selected_item")
 public class ApiTicketSelectedItemServlet extends HttpServlet {
-    private final IOrderService orderService = OrderServiceSingleton.getInstance();
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final JsonConverter jsonConverter = JsonConverterSingleton.getInstance();
+    private final IOrderService orderService;
+    private final Logger logger;
+    private final JsonConverter jsonConverter;
+
+    public ApiTicketSelectedItemServlet() {
+        this.orderService = OrderServiceSingleton.getInstance();
+        this.logger = LoggerFactory.getLogger(this.getClass());
+        this.jsonConverter = JsonConverterSingleton.getInstance();
+    }
 
     //Read POSITION
     //1) Read item need id param  (id = 1)

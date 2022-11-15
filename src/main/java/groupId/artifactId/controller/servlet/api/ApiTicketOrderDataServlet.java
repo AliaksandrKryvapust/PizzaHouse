@@ -1,10 +1,10 @@
 package groupId.artifactId.controller.servlet.api;
 
 import groupId.artifactId.controller.utils.IoC.JsonConverterSingleton;
+import groupId.artifactId.controller.utils.JsonConverter;
+import groupId.artifactId.core.Constants;
 import groupId.artifactId.service.IoC.OrderDataServiceSingleton;
 import groupId.artifactId.service.api.IOrderDataService;
-import groupId.artifactId.core.Constants;
-import groupId.artifactId.controller.utils.JsonConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,9 +15,15 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet(name = "TicketOrderData", urlPatterns = "/api/ticket/order_data")
 public class ApiTicketOrderDataServlet extends HttpServlet {
-    private final IOrderDataService orderDataService = OrderDataServiceSingleton.getInstance();
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final JsonConverter jsonConverter = JsonConverterSingleton.getInstance();
+    private final IOrderDataService orderDataService;
+    private final Logger logger;
+    private final JsonConverter jsonConverter;
+
+    public ApiTicketOrderDataServlet() {
+        this.orderDataService = OrderDataServiceSingleton.getInstance();
+        this.logger = LoggerFactory.getLogger(this.getClass());
+        this.jsonConverter = JsonConverterSingleton.getInstance();
+    }
 
     //Read POSITION
     //1) Read item need id param  (id = 1)

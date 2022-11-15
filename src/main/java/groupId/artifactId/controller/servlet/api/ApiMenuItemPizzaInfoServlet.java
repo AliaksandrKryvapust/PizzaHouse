@@ -15,9 +15,15 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet(name = "MenuItemPizzaInfo", urlPatterns = "/api/menu_item/pizza_info")
 public class ApiMenuItemPizzaInfoServlet extends HttpServlet {
-    private final IMenuItemService menuItemService = MenuItemServiceSingleton.getInstance();
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final JsonConverter jsonConverter = JsonConverterSingleton.getInstance();
+    private final IMenuItemService menuItemService;
+    private final Logger logger;
+    private final JsonConverter jsonConverter;
+
+    public ApiMenuItemPizzaInfoServlet() {
+        this.menuItemService = MenuItemServiceSingleton.getInstance();
+        this.logger = LoggerFactory.getLogger(this.getClass());
+        this.jsonConverter = JsonConverterSingleton.getInstance();
+    }
 
     //Read POSITION
     //1) Read item with all enclosed data need id param  (id = 92)

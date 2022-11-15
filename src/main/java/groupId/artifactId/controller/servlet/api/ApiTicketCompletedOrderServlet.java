@@ -17,10 +17,17 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet(name = "TicketCompletedOrder", urlPatterns = "/api/ticket/completed_order")
 public class ApiTicketCompletedOrderServlet extends HttpServlet {
-    private final ICompletedOrderService completedOrderService = CompletedOrderServiceSingleton.getInstance();
-    private final IOrderDataService orderDataService = OrderDataServiceSingleton.getInstance();
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final JsonConverter jsonConverter = JsonConverterSingleton.getInstance();
+    private final ICompletedOrderService completedOrderService;
+    private final IOrderDataService orderDataService;
+    private final Logger logger;
+    private final JsonConverter jsonConverter;
+
+    public ApiTicketCompletedOrderServlet() {
+        this.completedOrderService = CompletedOrderServiceSingleton.getInstance();
+        this.orderDataService = OrderDataServiceSingleton.getInstance();
+        this.logger = LoggerFactory.getLogger(this.getClass());
+        this.jsonConverter = JsonConverterSingleton.getInstance();
+    }
 
     //Read POSITION
     //1) Read item need id param  (id = 1)
