@@ -45,7 +45,8 @@ public class ApiTicketSelectedItemServlet extends HttpServlet {
             }
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            logger.error("/api/ticket/selected_item crashed during doGet method" + e.getMessage() + resp.getStatus());
+            logger.error("/api/ticket/selected_item crashed during doGet method" + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         }
     }
 }
