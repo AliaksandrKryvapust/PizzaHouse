@@ -191,7 +191,8 @@ class OrderDataServiceTest {
         final OrderDataDtoInput orderDataDtoInput = new OrderDataDtoInput(id, done, description);
         List<IOrderStage> stages = singletonList(new OrderStage(description));
         final IOrderData orderData = new OrderData(stages, id, done);
-        final OrderDataDtoCrudOutput dtoOutput = new OrderDataDtoCrudOutput(id, id, done, creationDate, version);
+        final OrderDataDtoCrudOutput dtoOutput = OrderDataDtoCrudOutput.builder().id(id).ticketId(id).done(done)
+                .createdAt(creationDate).version(version).build();
         final OrderData orderDataOutput = new OrderData(id, id, done);
         final OrderStage orderStage = new OrderStage(id, id, description);
         Mockito.when(orderDataMapper.inputMapping(any(OrderDataDtoInput.class))).thenReturn(orderData);
@@ -221,8 +222,8 @@ class OrderDataServiceTest {
         final OrderDataDtoInput orderDataDtoInput = new OrderDataDtoInput(id, done, description);
         List<IOrderStage> stages = singletonList(new OrderStage(description));
         final IOrderData orderData = new OrderData(stages, id, done);
-        final OrderDataDtoCrudOutput dtoOutput = new OrderDataDtoCrudOutput(id, id,
-                done, creationDate, version);
+        final OrderDataDtoCrudOutput dtoOutput = OrderDataDtoCrudOutput.builder().id(id).ticketId(id).done(done)
+                .createdAt(creationDate).version(version).build();
         final OrderData orderDataOutput = new OrderData(id, id, done, creationDate, version);
         final OrderStage orderStage = new OrderStage(id, id, description);
         Mockito.when(orderDataMapper.inputMapping(any(OrderDataDtoInput.class))).thenReturn(orderData);
@@ -250,7 +251,8 @@ class OrderDataServiceTest {
         final Instant creationDate = Instant.now();
         List<IOrderData> orderData = singletonList(new OrderData(new Ticket(), singletonList(new OrderStage()),
                 id, id, done, creationDate, version));
-        final OrderDataDtoCrudOutput orderDataDtoOutput = new OrderDataDtoCrudOutput(id, id, done, creationDate, version);
+        final OrderDataDtoCrudOutput orderDataDtoOutput = OrderDataDtoCrudOutput.builder().id(id).ticketId(id).done(done)
+                .createdAt(creationDate).version(version).build();
         Mockito.when(orderDataDao.get()).thenReturn(orderData);
         Mockito.when(orderDataMapper.outputCrudMapping(any(IOrderData.class))).thenReturn(orderDataDtoOutput);
 
@@ -278,7 +280,8 @@ class OrderDataServiceTest {
         final Instant creationDate = Instant.now();
         final IOrderData orderData = new OrderData(new Ticket(), singletonList(new OrderStage()),
                 id, id, done, creationDate, version);
-        final OrderDataDtoCrudOutput orderDataDtoOutput = new OrderDataDtoCrudOutput(id, id, done, creationDate, version);
+        final OrderDataDtoCrudOutput orderDataDtoOutput = OrderDataDtoCrudOutput.builder().id(id).ticketId(id).done(done)
+                .createdAt(creationDate).version(version).build();
         Mockito.when(orderDataDao.get(id)).thenReturn(orderData);
         Mockito.when(orderDataMapper.outputCrudMapping(any(IOrderData.class))).thenReturn(orderDataDtoOutput);
 
@@ -314,7 +317,8 @@ class OrderDataServiceTest {
         List<IOrderStage> stages = singletonList(new OrderStage(description));
         final IOrderData orderData = new OrderData(stages, id, done);
         final IOrderData orderDataUpdate = new OrderData(id, id, done);
-        final OrderDataDtoCrudOutput orderDataDtoOutput = new OrderDataDtoCrudOutput(id, id, done, creationDate, version);
+        final OrderDataDtoCrudOutput orderDataDtoOutput = OrderDataDtoCrudOutput.builder().id(id).ticketId(id).done(done)
+                .createdAt(creationDate).version(version).build();
         final CompletedOrder completedOrder = new CompletedOrder(new Ticket(new Order(singletonList(new SelectedItem(
                 new MenuItem(id, new PizzaInfo(name, pizzaDescription, size), price, id, creationDate, version, id),
                 id, id, id, count, creationDate, version)), id, creationDate, version),
@@ -366,7 +370,8 @@ class OrderDataServiceTest {
         final OrderDataDtoInput orderDataDtoInput = new OrderDataDtoInput(id, done, description);
         List<IOrderStage> stages = singletonList(new OrderStage(description));
         final IOrderData orderData = new OrderData(stages, id, done);
-        final OrderDataDtoCrudOutput orderDataDtoOutput = new OrderDataDtoCrudOutput(id, id, done, creationDate, version);
+        final OrderDataDtoCrudOutput orderDataDtoOutput = OrderDataDtoCrudOutput.builder().id(id).ticketId(id).done(done)
+                .createdAt(creationDate).version(version).build();
         Mockito.when(orderDataMapper.inputMapping(any(OrderDataDtoInput.class))).thenReturn(orderData);
         Mockito.when(orderStageDao.doesStageExist(any(Long.class), any(String.class))).thenReturn(true);
         Mockito.when(orderDataMapper.outputCrudMapping(any(IOrderData.class))).thenReturn(orderDataDtoOutput);

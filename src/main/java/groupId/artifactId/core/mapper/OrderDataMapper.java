@@ -28,8 +28,12 @@ public class OrderDataMapper {
     }
 
     public OrderDataDtoCrudOutput outputCrudMapping(IOrderData orderData) {
-        return new OrderDataDtoCrudOutput(orderData.getId(), orderData.getTicketId(),
-                orderData.isDone(), orderData.getCreationDate(), orderData.getVersion());
+        return OrderDataDtoCrudOutput.builder()
+                .id(orderData.getId())
+                .ticketId(orderData.getTicketId())
+                .done(orderData.isDone())
+                .createdAt(orderData.getCreationDate())
+                .version(orderData.getVersion()).build();
     }
 
     public OrderDataDtoOutput outputMapping(IOrderData orderData) {

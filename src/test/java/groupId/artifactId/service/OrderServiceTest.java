@@ -171,7 +171,8 @@ class OrderServiceTest {
         Mockito.when(orderMapper.inputMapping(any(OrderDtoInput.class), any(Long.class))).thenReturn(orderOutput);
         Mockito.when(selectedItemDao.save(any(ISelectedItem.class))).thenReturn(selectedItem);
         Mockito.when(ticketDao.save(any(ITicket.class))).thenReturn(ticket);
-        Mockito.when(orderDataService.save(any(OrderDataDtoInput.class))).thenReturn(new OrderDataDtoCrudOutput());
+        Mockito.when(orderDataService.save(any(OrderDataDtoInput.class))).thenReturn(OrderDataDtoCrudOutput.builder()
+                .id(id).ticketId(id).done(done).build());
         ArgumentCaptor<OrderDataDtoInput> value = ArgumentCaptor.forClass(OrderDataDtoInput.class);
         Mockito.when(ticketMapper.outputCrudMapping(any(ITicket.class))).thenReturn(crudOutput);
 
