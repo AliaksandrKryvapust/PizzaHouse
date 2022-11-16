@@ -13,8 +13,11 @@ public class TicketMapper {
     }
 
     public TicketDtoCrudOutput outputCrudMapping(ITicket ticket) {
-        return new TicketDtoCrudOutput(ticket.getId(), ticket.getOrderId(), ticket.getCreateAt(),
-                ticket.getVersion());
+        return TicketDtoCrudOutput.builder()
+                .id(ticket.getId())
+                .orderId(ticket.getOrderId())
+                .createAt(ticket.getCreateAt())
+                .version(ticket.getVersion()).build();
     }
 
     public TicketDtoOutput outputMapping(ITicket ticket) {

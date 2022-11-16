@@ -166,13 +166,15 @@ class OrderServiceTest {
         final Order orderOutput = new Order(singletonList(new SelectedItem(id, id, count)), id);
         final SelectedItem selectedItem = new SelectedItem(id, id, id, count);
         final Ticket ticket = new Ticket(id, id);
-        final TicketDtoCrudOutput crudOutput = new TicketDtoCrudOutput(id, id, creationDate, version);
+        final TicketDtoCrudOutput crudOutput = TicketDtoCrudOutput.builder().id(id).orderId(id).createAt(creationDate)
+                .version(version).build();
+        final OrderDataDtoCrudOutput dtoCrudOutput = OrderDataDtoCrudOutput.builder()
+                .id(id).ticketId(id).done(done).build();
         Mockito.when(orderDao.save(any(IOrder.class))).thenReturn(order);
         Mockito.when(orderMapper.inputMapping(any(OrderDtoInput.class), any(Long.class))).thenReturn(orderOutput);
         Mockito.when(selectedItemDao.save(any(ISelectedItem.class))).thenReturn(selectedItem);
         Mockito.when(ticketDao.save(any(ITicket.class))).thenReturn(ticket);
-        Mockito.when(orderDataService.save(any(OrderDataDtoInput.class))).thenReturn(OrderDataDtoCrudOutput.builder()
-                .id(id).ticketId(id).done(done).build());
+        Mockito.when(orderDataService.save(any(OrderDataDtoInput.class))).thenReturn(dtoCrudOutput);
         ArgumentCaptor<OrderDataDtoInput> value = ArgumentCaptor.forClass(OrderDataDtoInput.class);
         Mockito.when(ticketMapper.outputCrudMapping(any(ITicket.class))).thenReturn(crudOutput);
 
@@ -196,7 +198,8 @@ class OrderServiceTest {
         final int version = 1;
         final Instant creationDate = Instant.now();
         List<ITicket> tickets = singletonList(new Ticket(id, id, creationDate, version));
-        final TicketDtoCrudOutput output = new TicketDtoCrudOutput(id, id, creationDate, version);
+        final TicketDtoCrudOutput output = TicketDtoCrudOutput.builder().id(id).orderId(id).createAt(creationDate)
+                .version(version).build();
         Mockito.when(ticketDao.get()).thenReturn(tickets);
         Mockito.when(ticketMapper.outputCrudMapping(any(ITicket.class))).thenReturn(output);
 
@@ -221,7 +224,8 @@ class OrderServiceTest {
         final int version = 1;
         final Instant creationDate = Instant.now();
         final ITicket ticket = new Ticket(id, id, creationDate, version);
-        final TicketDtoCrudOutput output = new TicketDtoCrudOutput(id, id, creationDate, version);
+        final TicketDtoCrudOutput output = TicketDtoCrudOutput.builder().id(id).orderId(id).createAt(creationDate)
+                .version(version).build();
         Mockito.when(ticketDao.get(id)).thenReturn(ticket);
         Mockito.when(ticketMapper.outputCrudMapping(any(ITicket.class))).thenReturn(output);
 
