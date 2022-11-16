@@ -94,7 +94,7 @@ class CompletedOrderMapperTest {
     }
 
     @Test
-    void outputMappingFirstCondition() {
+    void outputMapping() {
         // preconditions
         final long id = 1L;
         final long orderId = 1L;
@@ -170,56 +170,5 @@ class CompletedOrderMapperTest {
             Assertions.assertEquals(creationDate, output.getCreatedAt());
             Assertions.assertEquals(version, output.getVersion());
         }
-    }
-
-    @Test
-    void outputMappingSecondCondition() {
-        // preconditions
-        final long id = 1L;
-        final int version = 1;
-        final String name = "ITALIANO PIZZA";
-        final int size = 32;
-        final Instant creationDate = Instant.now();
-        List<IPizza> pizzas = Collections.singletonList(new Pizza(id, id, name, size, creationDate, version));
-        final ICompletedOrder completedOrder = new CompletedOrder(null, pizzas, id, id, creationDate, version);
-        final PizzaDtoOutput pizzaDtoOutputs = new PizzaDtoOutput(id, id, name, size, creationDate, version);
-        Mockito.when(pizzaMapper.outputMapping(any(IPizza.class))).thenReturn(pizzaDtoOutputs);
-
-        //test
-        CompletedOrderDtoOutput test = completedOrderMapper.outputMapping(completedOrder);
-
-        // assert
-        Assertions.assertNotNull(test);
-        Assertions.assertEquals(id, test.getId());
-        Assertions.assertEquals(id, test.getTicketId());
-        Assertions.assertEquals(creationDate, test.getCreatedAt());
-        Assertions.assertEquals(version, test.getVersion());
-        for (PizzaDtoOutput output : test.getItems()) {
-            Assertions.assertEquals(id, output.getId());
-            Assertions.assertEquals(id, output.getCompletedOrderId());
-            Assertions.assertEquals(name, output.getName());
-            Assertions.assertEquals(size, output.getSize());
-            Assertions.assertEquals(creationDate, output.getCreatedAt());
-            Assertions.assertEquals(version, output.getVersion());
-        }
-    }
-
-    @Test
-    void outputMappingThirdCondition() {
-        // preconditions
-        final long id = 1L;
-        final int version = 1;
-        final Instant creationDate = Instant.now();
-        final ICompletedOrder completedOrder = new CompletedOrder(null, null, id, id, creationDate, version);
-
-        //test
-        CompletedOrderDtoOutput test = completedOrderMapper.outputMapping(completedOrder);
-
-        // assert
-        Assertions.assertNotNull(test);
-        Assertions.assertEquals(id, test.getId());
-        Assertions.assertEquals(id, test.getTicketId());
-        Assertions.assertEquals(creationDate, test.getCreatedAt());
-        Assertions.assertEquals(version, test.getVersion());
     }
 }

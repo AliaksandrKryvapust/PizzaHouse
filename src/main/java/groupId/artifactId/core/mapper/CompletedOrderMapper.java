@@ -11,8 +11,6 @@ import groupId.artifactId.dao.entity.api.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Collections.singletonList;
-
 public class CompletedOrderMapper {
 
     private final TicketMapper ticketMapper;
@@ -34,31 +32,26 @@ public class CompletedOrderMapper {
     }
 
     public CompletedOrderDtoCrudOutput outputCrudMapping(ICompletedOrder completedOrder) {
-        return CompletedOrderDtoCrudOutput.builder().id(completedOrder.getId()).ticketId(completedOrder.getTicketId())
-                .createdAt(completedOrder.getCreationDate()).version(completedOrder.getVersion()).build();
+        return CompletedOrderDtoCrudOutput.builder()
+                .id(completedOrder.getId())
+                .ticketId(completedOrder.getTicketId())
+                .createdAt(completedOrder.getCreationDate())
+                .version(completedOrder.getVersion()).build();
     }
 
     public CompletedOrderDtoOutput outputMapping(ICompletedOrder completedOrder) {
         List<PizzaDtoOutput> temp = new ArrayList<>();
-        if (completedOrder.getItems() != null && completedOrder.getTicket() != null) {
-            for (IPizza pizza : completedOrder.getItems()) {
-                PizzaDtoOutput output = pizzaMapper.outputMapping(pizza);
-                temp.add(output);
-            }
-            TicketDtoOutput ticketDtoOutPut = ticketMapper.outputMapping(completedOrder.getTicket());
-            return new CompletedOrderDtoOutput(ticketDtoOutPut, temp, completedOrder.getId(), completedOrder.getTicketId(),
-                    completedOrder.getCreationDate(), completedOrder.getVersion());
-        } else if (completedOrder.getItems() != null) {
-            for (IPizza pizza : completedOrder.getItems()) {
-                PizzaDtoOutput output = pizzaMapper.outputMapping(pizza);
-                temp.add(output);
-            }
-            return new CompletedOrderDtoOutput(new TicketDtoOutput(), temp, completedOrder.getId(), completedOrder.getTicketId(),
-                    completedOrder.getCreationDate(), completedOrder.getVersion());
-        } else {
-            return new CompletedOrderDtoOutput(new TicketDtoOutput(), singletonList(new PizzaDtoOutput()),
-                    completedOrder.getId(), completedOrder.getTicketId(),
-                    completedOrder.getCreationDate(), completedOrder.getVersion());
+        for (IPizza pizza : completedOrder.getItems()) {
+            PizzaDtoOutput output = pizzaMapper.outputMapping(pizza);
+            temp.add(output);
         }
+        TicketDtoOutput ticketDtoOutPut = ticketMapper.outputMapping(completedOrder.getTicket());
+        return CompletedOrderDtoOutput.builder()
+                .ticket(ticketDtoOutPut)
+                .items(temp)
+                .id(completedOrder.getId())
+                .ticketId(completedOrder.getTicketId())
+                .createdAt(completedOrder.getCreationDate())
+                .version(completedOrder.getVersion()).build();
     }
 }
