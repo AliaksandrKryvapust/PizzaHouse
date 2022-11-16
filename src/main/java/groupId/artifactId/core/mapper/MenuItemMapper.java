@@ -19,8 +19,8 @@ public class MenuItemMapper {
     }
 
     public MenuItemDtoCrudOutput outputCrudMapping(IMenuItem menuItem) {
-        return new MenuItemDtoCrudOutput(menuItem.getId(), menuItem.getPrice(), menuItem.getPizzaInfoId(), menuItem.getCreationDate(),
-                menuItem.getVersion(), menuItem.getMenuId());
+        return MenuItemDtoCrudOutput.builder().id(menuItem.getId()).price(menuItem.getPrice()).pizzaInfoId(menuItem.getPizzaInfoId())
+                .createdAt(menuItem.getCreationDate()).version(menuItem.getVersion()).menuId(menuItem.getMenuId()).build();
     }
 
     public MenuItemDtoOutput outputMapping(IMenuItem menuItem) {
