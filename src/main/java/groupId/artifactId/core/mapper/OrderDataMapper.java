@@ -42,13 +42,8 @@ public class OrderDataMapper {
             OrderStageDtoOutput output = orderStageMapper.outputMapping(stage);
             stageDtoOutputs.add(output);
         }
-        if (orderData.getTicket() == null) {
-            return new OrderDataDtoOutput(new TicketDtoOutput(), stageDtoOutputs, orderData.getId(), orderData.getTicketId(),
-                    orderData.isDone(), orderData.getCreationDate(), orderData.getVersion());
-        } else {
-            TicketDtoOutput ticketDtoOutPut = ticketMapper.outputMapping(orderData.getTicket());
-            return new OrderDataDtoOutput(ticketDtoOutPut, stageDtoOutputs, orderData.getId(), orderData.getTicketId(),
-                    orderData.isDone(), orderData.getCreationDate(), orderData.getVersion());
-        }
+        TicketDtoOutput ticketDtoOutPut = ticketMapper.outputMapping(orderData.getTicket());
+        return new OrderDataDtoOutput(ticketDtoOutPut, stageDtoOutputs, orderData.getId(), orderData.getTicketId(),
+                orderData.isDone(), orderData.getCreationDate(), orderData.getVersion());
     }
 }

@@ -47,7 +47,7 @@ class TicketMapperTest {
     }
 
     @Test
-    void outputMappingConditionOne() {
+    void outputMapping() {
         // preconditions
         final long id = 1L;
         final long orderId = 1L;
@@ -104,25 +104,5 @@ class TicketMapperTest {
             Assertions.assertEquals(creationDate, output.getMenuItem().getPizzaInfo().getCreatedAt());
             Assertions.assertEquals(version, output.getMenuItem().getPizzaInfo().getVersion());
         }
-    }
-
-    @Test
-    void outputMappingConditionTwo() {
-        // preconditions
-        final long id = 1L;
-        final long orderId = 1L;
-        final int version = 1;
-        final Instant creationDate = Instant.now();
-        final ITicket ticket = new Ticket(null, id, orderId, creationDate, version);
-
-        //test
-        TicketDtoOutput test = ticketMapper.outputMapping(ticket);
-
-        // assert
-        Assertions.assertNotNull(test);
-        Assertions.assertEquals(id, test.getId());
-        Assertions.assertEquals(orderId, test.getOrderId());
-        Assertions.assertEquals(creationDate, test.getCreatedAt());
-        Assertions.assertEquals(version, test.getVersion());
     }
 }

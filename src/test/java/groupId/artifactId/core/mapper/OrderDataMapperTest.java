@@ -76,7 +76,7 @@ class OrderDataMapperTest {
     }
 
     @Test
-    void outputMappingConditionOne() {
+    void outputMapping() {
         // preconditions
         final long id = 1L;
         final long orderId = 1L;
@@ -99,10 +99,11 @@ class OrderDataMapperTest {
         OrderStageDtoOutput stageDtoOutputs = new OrderStageDtoOutput(id, id, stageDescription, creationDate, version);
         final IOrderData orderData = new OrderData(new Ticket(new Order(selectedItems, id, creationDate, version), id,
                 orderId, creationDate, version), orderStages, id, id, done, creationDate, version);
-        final TicketDtoOutput dtoOutput = new TicketDtoOutput(new OrderDtoOutput(
-                selectedItemDtoOutputs, id, creationDate, version), id, orderId, creationDate, version);
+        final OrderDtoOutput orderDtoOutput = new OrderDtoOutput(selectedItemDtoOutputs, id, creationDate, version);
+        final TicketDtoOutput ticketDtoOutput = TicketDtoOutput.builder().order(orderDtoOutput).id(id).orderId(orderId)
+                .createdAt(creationDate).version(version).build();
         Mockito.when(orderStageMapper.outputMapping(any(IOrderStage.class))).thenReturn(stageDtoOutputs);
-        Mockito.when(ticketMapper.outputMapping(any(ITicket.class))).thenReturn(dtoOutput);
+        Mockito.when(ticketMapper.outputMapping(any(ITicket.class))).thenReturn(ticketDtoOutput);
 
         //test
         OrderDataDtoOutput test = orderDataMapper.outputMapping(orderData);
@@ -156,37 +157,4 @@ class OrderDataMapperTest {
         }
     }
 
-    @Test
-    void outputMappingConditionTwo() {
-        // preconditions
-        final long id = 1L;
-        final int version = 1;
-        final String stageDescription = "Stage #";
-        final boolean done = false;
-        final Instant creationDate = Instant.now();
-        List<IOrderStage> orderStages = singletonList(new OrderStage(id, id, stageDescription, creationDate, version));
-        OrderStageDtoOutput stageDtoOutputs = new OrderStageDtoOutput(id, id, stageDescription, creationDate, version);
-        final IOrderData orderData = new OrderData(null, orderStages, id, id, done, creationDate, version);
-        Mockito.when(orderStageMapper.outputMapping(any(IOrderStage.class))).thenReturn(stageDtoOutputs);
-
-        //test
-        OrderDataDtoOutput test = orderDataMapper.outputMapping(orderData);
-
-        // assert
-        Assertions.assertNotNull(test);
-        Assertions.assertNotNull(test.getTicket());
-        Assertions.assertNotNull(test.getOrderHistory());
-        Assertions.assertEquals(id, test.getId());
-        Assertions.assertEquals(id, test.getTicketId());
-        Assertions.assertEquals(done, test.getDone());
-        Assertions.assertEquals(creationDate, test.getCreatedAt());
-        Assertions.assertEquals(version, test.getVersion());
-        for (OrderStageDtoOutput output : test.getOrderHistory()) {
-            Assertions.assertEquals(id, output.getId());
-            Assertions.assertEquals(id, output.getOrderDataId());
-            Assertions.assertEquals(stageDescription, output.getDescription());
-            Assertions.assertEquals(creationDate, output.getCreatedAt());
-            Assertions.assertEquals(version, output.getVersion());
-        }
-    }
 }

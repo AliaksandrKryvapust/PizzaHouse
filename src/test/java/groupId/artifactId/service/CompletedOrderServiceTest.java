@@ -56,8 +56,9 @@ class CompletedOrderServiceTest {
         List<PizzaDtoOutput> pizzaDtoOutputs = Collections.singletonList(new PizzaDtoOutput(id, id, name, size, creationDate, version));
         final ICompletedOrder completedOrder = new CompletedOrder(new Ticket(new Order(selectedItems, id, creationDate, version), id,
                 orderId, creationDate, version), pizzas, id, id, creationDate, version);
-        final TicketDtoOutput ticketDtoOutput = new TicketDtoOutput(new OrderDtoOutput(selectedItemDtoOutputs,
-                id, creationDate, version), id, orderId, creationDate, version);
+        final OrderDtoOutput orderDtoOutput = new OrderDtoOutput(selectedItemDtoOutputs, id, creationDate, version);
+        final TicketDtoOutput ticketDtoOutput = TicketDtoOutput.builder().order(orderDtoOutput).id(id).orderId(orderId)
+                .createdAt(creationDate).version(version).build();
         final CompletedOrderDtoOutput dtoOutput = CompletedOrderDtoOutput.builder().ticket(ticketDtoOutput)
                 .items(pizzaDtoOutputs).id(id).ticketId(id).createdAt(creationDate).version(version).build();
         Mockito.when(completedOrderDao.getAllData(id)).thenReturn(completedOrder);

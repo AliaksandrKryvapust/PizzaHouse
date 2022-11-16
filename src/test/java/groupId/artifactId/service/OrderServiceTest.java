@@ -67,10 +67,11 @@ class OrderServiceTest {
                 price, id, creationDate, version, id, new PizzaInfoDtoOutput(id, name, description, size, creationDate, version)),
                 id, id, id, count, creationDate, version));
         final ITicket ticket = new Ticket(new Order(selectedItems, id, creationDate, version), id, orderId, creationDate, version);
-        final TicketDtoOutput dtoOutput = new TicketDtoOutput(new OrderDtoOutput(outputs, id, creationDate, version),
-                id, orderId, creationDate, version);
+        final OrderDtoOutput orderDtoOutput = new OrderDtoOutput(outputs, id, creationDate, version);
+        final TicketDtoOutput ticketDtoOutput = TicketDtoOutput.builder().order(orderDtoOutput).id(id).orderId(orderId)
+                .createdAt(creationDate).version(version).build();
         Mockito.when(ticketDao.getAllData(id)).thenReturn(ticket);
-        Mockito.when(ticketMapper.outputMapping(any(ITicket.class))).thenReturn(dtoOutput);
+        Mockito.when(ticketMapper.outputMapping(any(ITicket.class))).thenReturn(ticketDtoOutput);
 
         //test
         TicketDtoOutput test = orderService.getAllData(id);

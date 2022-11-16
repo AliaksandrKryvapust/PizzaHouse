@@ -21,13 +21,12 @@ public class TicketMapper {
     }
 
     public TicketDtoOutput outputMapping(ITicket ticket) {
-        if (ticket.getOrder() == null) {
-            return new TicketDtoOutput(new OrderDtoOutput(), ticket.getId(), ticket.getOrderId(), ticket.getCreateAt(),
-                    ticket.getVersion());
-        } else {
-            OrderDtoOutput orderDtoOutput = orderMapper.outputMapping(ticket.getOrder());
-            return new TicketDtoOutput(orderDtoOutput, ticket.getId(), ticket.getOrderId(), ticket.getCreateAt(),
-                    ticket.getVersion());
-        }
+        OrderDtoOutput orderDtoOutput = orderMapper.outputMapping(ticket.getOrder());
+        return TicketDtoOutput.builder()
+                .order(orderDtoOutput)
+                .id(ticket.getId())
+                .orderId(ticket.getOrderId())
+                .createdAt(ticket.getCreateAt())
+                .version(ticket.getVersion()).build();
     }
 }
