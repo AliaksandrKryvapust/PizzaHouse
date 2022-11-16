@@ -34,8 +34,8 @@ public class CompletedOrderMapper {
     }
 
     public CompletedOrderDtoCrudOutput outputCrudMapping(ICompletedOrder completedOrder) {
-        return new CompletedOrderDtoCrudOutput(completedOrder.getId(), completedOrder.getTicketId(),
-                completedOrder.getCreationDate(), completedOrder.getVersion());
+        return CompletedOrderDtoCrudOutput.builder().id(completedOrder.getId()).ticketId(completedOrder.getTicketId())
+                .createdAt(completedOrder.getCreationDate()).version(completedOrder.getVersion()).build();
     }
 
     public CompletedOrderDtoOutput outputMapping(ICompletedOrder completedOrder) {

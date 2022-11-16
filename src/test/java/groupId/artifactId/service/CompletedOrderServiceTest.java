@@ -223,7 +223,8 @@ class CompletedOrderServiceTest {
         final Instant creationDate = Instant.now();
         final ICompletedOrder completedOrder = new CompletedOrder(new Ticket(), Collections.singletonList(new Pizza()), id);
         final Pizza pizza = new Pizza(id, id, name, size);
-        final CompletedOrderDtoCrudOutput dtoCrudOutput = new CompletedOrderDtoCrudOutput(id, id, creationDate, version);
+        final CompletedOrderDtoCrudOutput dtoCrudOutput = CompletedOrderDtoCrudOutput.builder().id(id).ticketId(id)
+        .createdAt(creationDate).version(version).build();
         Mockito.when(completedOrderDao.save(any(ICompletedOrder.class))).thenReturn(new CompletedOrder(id, id));
         Mockito.when(pizzaDao.save(any(IPizza.class))).thenReturn(pizza);
         Mockito.when(completedOrderMapper.outputCrudMapping(any(ICompletedOrder.class))).thenReturn(dtoCrudOutput);
@@ -245,7 +246,8 @@ class CompletedOrderServiceTest {
         final Instant creationDate = Instant.now();
         List<ICompletedOrder> completedOrders = Collections.singletonList(new CompletedOrder(new Ticket(),
                 Collections.singletonList(new Pizza()), id, id, creationDate, version));
-        final CompletedOrderDtoCrudOutput crudOutput = new CompletedOrderDtoCrudOutput(id, id, creationDate, version);
+        final CompletedOrderDtoCrudOutput crudOutput = CompletedOrderDtoCrudOutput.builder().id(id).ticketId(id)
+                .createdAt(creationDate).version(version).build();
         Mockito.when(completedOrderDao.get()).thenReturn(completedOrders);
         Mockito.when(completedOrderMapper.outputCrudMapping(any(ICompletedOrder.class))).thenReturn(crudOutput);
 
@@ -271,7 +273,8 @@ class CompletedOrderServiceTest {
         final Instant creationDate = Instant.now();
         ICompletedOrder completedOrders = new CompletedOrder(new Ticket(),
                 Collections.singletonList(new Pizza()), id, id, creationDate, version);
-        final CompletedOrderDtoCrudOutput crudOutput = new CompletedOrderDtoCrudOutput(id, id, creationDate, version);
+        final CompletedOrderDtoCrudOutput crudOutput = CompletedOrderDtoCrudOutput.builder().id(id).ticketId(id)
+                .createdAt(creationDate).version(version).build();
         Mockito.when(completedOrderDao.get(id)).thenReturn(completedOrders);
         Mockito.when(completedOrderMapper.outputCrudMapping(any(ICompletedOrder.class))).thenReturn(crudOutput);
 
