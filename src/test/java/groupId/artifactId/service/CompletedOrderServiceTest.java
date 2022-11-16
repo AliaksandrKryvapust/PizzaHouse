@@ -57,7 +57,8 @@ class CompletedOrderServiceTest {
         List<SelectedItemDtoOutput> outputs = singletonList(SelectedItemDtoOutput.builder().menuItem(menuItemDtoOutput)
                 .id(id).menuItemId(id).orderId(id).count(count).createdAt(creationDate).version(version).build());
         List<IPizza> pizzas = Collections.singletonList(new Pizza(id, id, name, size, creationDate, version));
-        List<PizzaDtoOutput> pizzaDtoOutputs = Collections.singletonList(new PizzaDtoOutput(id, id, name, size, creationDate, version));
+        List<PizzaDtoOutput> pizzaDtoOutputs = Collections.singletonList(PizzaDtoOutput.builder().id(id)
+                .completedOrderId(id).name(name).size(size).createdAt(creationDate).version(version).build());
         final ICompletedOrder completedOrder = new CompletedOrder(new Ticket(new Order(selectedItems, id, creationDate, version), id,
                 orderId, creationDate, version), pizzas, id, id, creationDate, version);
         final OrderDtoOutput orderDtoOutput = new OrderDtoOutput(outputs, id, creationDate, version);

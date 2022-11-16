@@ -120,7 +120,8 @@ class CompletedOrderMapperTest {
         final OrderDtoOutput orderDtoOutput = new OrderDtoOutput(outputs, id, creationDate, version);
         final TicketDtoOutput ticketDtoOutput = TicketDtoOutput.builder().order(orderDtoOutput).id(id).orderId(orderId)
                 .createdAt(creationDate).version(version).build();
-        final PizzaDtoOutput pizzaDtoOutputs = new PizzaDtoOutput(id, id, name, size, creationDate, version);
+        final PizzaDtoOutput pizzaDtoOutputs = PizzaDtoOutput.builder().id(id)
+                .completedOrderId(id).name(name).size(size).createdAt(creationDate).version(version).build();
         Mockito.when(pizzaMapper.outputMapping(any(IPizza.class))).thenReturn(pizzaDtoOutputs);
         Mockito.when(ticketMapper.outputMapping(any(ITicket.class))).thenReturn(ticketDtoOutput);
 

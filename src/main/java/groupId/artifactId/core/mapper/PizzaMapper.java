@@ -8,7 +8,12 @@ public class PizzaMapper {
     }
 
     public PizzaDtoOutput outputMapping(IPizza pizza){
-        return new PizzaDtoOutput(pizza.getId(),pizza.getCompletedOrderId(), pizza.getName(), pizza.getSize(),
-                pizza.getCreationDate(), pizza.getVersion());
+        return PizzaDtoOutput.builder()
+                .id(pizza.getId())
+                .completedOrderId(pizza.getCompletedOrderId())
+                .name(pizza.getName())
+                .size(pizza.getSize())
+                .createdAt(pizza.getCreationDate())
+                .version(pizza.getVersion()).build();
     }
 }
