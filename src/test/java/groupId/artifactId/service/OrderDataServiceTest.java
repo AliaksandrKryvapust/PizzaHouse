@@ -71,8 +71,9 @@ class OrderDataServiceTest {
         final OrderDtoOutput orderDtoOutput = new OrderDtoOutput(outputs, id, creationDate, version);
         final TicketDtoOutput ticketDtoOutput = TicketDtoOutput.builder().order(orderDtoOutput).id(id).orderId(orderId)
                 .createdAt(creationDate).version(version).build();
-        final OrderDataDtoOutput orderDataDtoOutput = new OrderDataDtoOutput(ticketDtoOutput, stageDtoOutputs, id, id,
-                done, creationDate, version);
+        final OrderDataDtoOutput orderDataDtoOutput = OrderDataDtoOutput.builder().ticket(ticketDtoOutput)
+                .orderHistory(stageDtoOutputs).id(id).ticketId(id).done(done).createdAt(creationDate)
+                .version(version).build();
         Mockito.when(orderDataDao.getAllData(id)).thenReturn(orderData);
         Mockito.when(orderDataMapper.outputMapping(any(IOrderData.class))).thenReturn(orderDataDtoOutput);
 
