@@ -65,7 +65,8 @@ class OrderDataServiceTest {
         List<SelectedItemDtoOutput> outputs = singletonList(SelectedItemDtoOutput.builder().menuItem(menuItemDtoOutput)
                 .id(id).menuItemId(id).orderId(id).count(count).createdAt(creationDate).version(version).build());
         List<IOrderStage> orderStages = singletonList(new OrderStage(id, id, stageDescription, creationDate, version));
-        List<OrderStageDtoOutput> stageDtoOutputs = singletonList(new OrderStageDtoOutput(id, id, stageDescription, creationDate, version));
+        List<OrderStageDtoOutput> stageDtoOutputs = singletonList(OrderStageDtoOutput.builder().id(id).orderDataId(id)
+                .description(stageDescription).createdAt(creationDate).version(version).build());
         final IOrderData orderData = new OrderData(new Ticket(new Order(selectedItems, id, creationDate, version), id,
                 orderId, creationDate, version), orderStages, id, id, done, creationDate, version);
         final OrderDtoOutput orderDtoOutput = new OrderDtoOutput(outputs, id, creationDate, version);

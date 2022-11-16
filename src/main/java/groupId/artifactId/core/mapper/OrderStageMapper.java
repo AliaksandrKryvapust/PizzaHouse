@@ -13,7 +13,11 @@ public class OrderStageMapper {
     }
 
     public OrderStageDtoOutput outputMapping(IOrderStage orderStage) {
-        return new OrderStageDtoOutput(orderStage.getId(), orderStage.getOrderDataId(), orderStage.getDescription(),
-                orderStage.getCreationDate(), orderStage.getVersion());
+        return OrderStageDtoOutput.builder()
+                .id(orderStage.getId())
+                .orderDataId(orderStage.getOrderDataId())
+                .description(orderStage.getDescription())
+                .createdAt(orderStage.getCreationDate())
+                .version(orderStage.getVersion()).build();
     }
 }
