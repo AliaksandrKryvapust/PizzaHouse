@@ -39,7 +39,7 @@ class MenuItemServiceTest {
         // preconditions
         final long id = 1L;
         final double price = 20.0;
-        final MenuItemDtoInput menuDtoInput = new MenuItemDtoInput(price, id, id);
+        final MenuItemDtoInput menuDtoInput = MenuItemDtoInput.builder().price(price).pizzaInfoId(id).menuId(id).build();
         final MenuItem menuItem = new MenuItem(price, id, id);
         final MenuItem menuItemOutput = new MenuItem(id, price, id, id);
         final MenuItemDtoCrudOutput dtoCrudOutput = MenuItemDtoCrudOutput.builder().id(id).price(price).pizzaInfoId(id)
@@ -174,7 +174,7 @@ class MenuItemServiceTest {
         final double price = 20.0;
         final String inputId = "1";
         final String version = "1";
-        final MenuItemDtoInput menuDtoInput = new MenuItemDtoInput(price, id, id);
+        final MenuItemDtoInput menuDtoInput = MenuItemDtoInput.builder().price(price).pizzaInfoId(id).menuId(id).build();
         final MenuItem menuItem = new MenuItem(id, price, id, id);
         final MenuItemDtoCrudOutput dtoCrudOutput = MenuItemDtoCrudOutput.builder().id(id).price(price).pizzaInfoId(id)
                 .menuId(id).build();

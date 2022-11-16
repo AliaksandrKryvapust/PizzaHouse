@@ -19,7 +19,7 @@ class MenuItemValidatorTest {
         // preconditions
         final long id = 1L;
         final String messageFirstArg = "MenuItem`s price is not valid";
-        final MenuItemDtoInput menuDtoInput = new MenuItemDtoInput(null, id, id);
+        final MenuItemDtoInput menuDtoInput = MenuItemDtoInput.builder().price(-20.0).pizzaInfoId(id).menuId(id).build();
 
         //test
         Exception exception = assertThrows(IllegalArgumentException.class, () -> menuItemValidator.validate(menuDtoInput));
@@ -34,7 +34,7 @@ class MenuItemValidatorTest {
         final long id = 1L;
         final double price = 20.0;
         final String messageSecondArg = "MenuItem`s pizza info id is not valid";
-        final MenuItemDtoInput menuDtoInput = new MenuItemDtoInput(price, null, id);
+        final MenuItemDtoInput menuDtoInput = MenuItemDtoInput.builder().price(price).pizzaInfoId(-5L).menuId(id).build();
 
         //test
         Exception exception = assertThrows(IllegalArgumentException.class, () -> menuItemValidator.validate(menuDtoInput));
@@ -49,7 +49,7 @@ class MenuItemValidatorTest {
         final long id = 1L;
         final double price = 20.0;
         final String messageThirdArg = "MenuItem`s menu id price is not valid";
-        final MenuItemDtoInput menuDtoInput = new MenuItemDtoInput(price, id, null);
+        final MenuItemDtoInput menuDtoInput = MenuItemDtoInput.builder().price(price).pizzaInfoId(id).menuId(-5L).build();
 
         //test
         Exception exception = assertThrows(IllegalArgumentException.class, () -> menuItemValidator.validate(menuDtoInput));

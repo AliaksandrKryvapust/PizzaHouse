@@ -32,7 +32,7 @@ class MenuItemMapperTest {
         // preconditions
         final long id = 1L;
         final double price = 20.0;
-        final MenuItemDtoInput menuDtoInput = new MenuItemDtoInput(price, id, id);
+        final MenuItemDtoInput menuDtoInput = MenuItemDtoInput.builder().price(price).pizzaInfoId(id).menuId(id).build();
 
         //test
         IMenuItem test = menuItemMapper.inputMapping(menuDtoInput);
