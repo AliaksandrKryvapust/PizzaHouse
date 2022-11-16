@@ -23,7 +23,8 @@ public class MenuMapper {
     }
 
     public MenuDtoCrudOutput outputCrudMapping(IMenu menu) {
-        return new MenuDtoCrudOutput(menu.getId(), menu.getCreationDate(), menu.getVersion(), menu.getName(), menu.getEnable());
+        return MenuDtoCrudOutput.builder().id(menu.getId()).createdAt(menu.getCreationDate()).version(menu.getVersion())
+                .name(menu.getName()).enable(menu.getEnable()).build();
     }
 
     public MenuDtoOutput outputMapping(IMenu menu) {
