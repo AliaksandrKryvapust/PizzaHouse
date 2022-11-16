@@ -22,7 +22,8 @@ class OrderValidatorTest {
         // preconditions
         final int count = 5;
         final String messageExpected = "Menu item id in Order is not valid";
-        final OrderDtoInput orderDtoInput = new OrderDtoInput(Collections.singletonList(new SelectedItemDtoInput(null, count)));
+        final OrderDtoInput orderDtoInput = new OrderDtoInput(Collections.singletonList(SelectedItemDtoInput.builder()
+                .menuItemId(0L).count(count).build()));
 
         //test
         Exception exception = assertThrows(IllegalArgumentException.class, () -> orderValidator.validate(orderDtoInput));
@@ -36,7 +37,8 @@ class OrderValidatorTest {
         // preconditions
         final long id = 1L;
         final String messageExpected = "Menu item count in Order is not valid";
-        final OrderDtoInput orderDtoInput = new OrderDtoInput(Collections.singletonList(new SelectedItemDtoInput(id, null)));
+        final OrderDtoInput orderDtoInput = new OrderDtoInput(Collections.singletonList(SelectedItemDtoInput.builder()
+                .menuItemId(id).count(0).build()));
 
         //test
         Exception exception = assertThrows(IllegalArgumentException.class, () -> orderValidator.validate(orderDtoInput));

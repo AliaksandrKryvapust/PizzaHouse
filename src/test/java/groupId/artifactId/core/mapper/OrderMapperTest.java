@@ -39,7 +39,8 @@ class OrderMapperTest {
         // preconditions
         final long id = 1L;
         final int count = 5;
-        final OrderDtoInput orderDtoInput = new OrderDtoInput(singletonList(new SelectedItemDtoInput(id, count)));
+        final OrderDtoInput orderDtoInput = new OrderDtoInput(singletonList(SelectedItemDtoInput.builder()
+                .menuItemId(id).count(count).build()));
         final ISelectedItem selectedItem = new SelectedItem(id, id, count);
         Mockito.when(selectedItemMapper.inputMapping(any(SelectedItemDtoInput.class), any(Long.class))).thenReturn(selectedItem);
 

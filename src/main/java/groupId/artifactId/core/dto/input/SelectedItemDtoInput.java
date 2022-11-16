@@ -1,38 +1,16 @@
 package groupId.artifactId.core.dto.input;
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.ToString;
+import lombok.extern.jackson.Jacksonized;
+
+@Builder
+@Getter
+@ToString
+@Jacksonized
 public class SelectedItemDtoInput {
-    private Long menuItemId;
-    private Integer count;
-
-    public SelectedItemDtoInput() {
-    }
-
-    public SelectedItemDtoInput(Long menuItemId, Integer count) {
-        this.menuItemId = menuItemId;
-        this.count = count;
-    }
-
-    public Long getMenuItemId() {
-        return menuItemId;
-    }
-
-    public void setMenuItemId(Long menuItemId) {
-        this.menuItemId = menuItemId;
-    }
-
-    public Integer getCount() {
-        return count;
-    }
-
-    public void setCount(Integer count) {
-        this.count = count;
-    }
-
-    @Override
-    public String toString() {
-        return "SelectedItemDtoInput{" +
-                "menuItemId=" + menuItemId +
-                ", count=" + count +
-                '}';
-    }
+    private final @NonNull Long menuItemId;
+    private final @NonNull Integer count;
 }

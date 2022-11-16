@@ -4,7 +4,6 @@ import groupId.artifactId.core.dto.input.SelectedItemDtoInput;
 import groupId.artifactId.core.dto.output.MenuItemDtoOutput;
 import groupId.artifactId.core.dto.output.PizzaInfoDtoOutput;
 import groupId.artifactId.core.dto.output.SelectedItemDtoOutput;
-
 import groupId.artifactId.dao.entity.MenuItem;
 import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.SelectedItem;
@@ -34,7 +33,7 @@ class SelectedItemMapperTest {
         // preconditions
         final long id = 1L;
         final int count = 5;
-        final SelectedItemDtoInput dtoInput = new SelectedItemDtoInput(id, count);
+        final SelectedItemDtoInput dtoInput = SelectedItemDtoInput.builder().menuItemId(id).count(count).build();
 
         //test
         ISelectedItem test = selectedItemMapper.inputMapping(dtoInput, id);
