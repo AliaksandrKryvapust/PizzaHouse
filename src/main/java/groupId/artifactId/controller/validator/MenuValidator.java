@@ -10,11 +10,8 @@ public class MenuValidator implements IMenuValidator {
 
     @Override
     public void validate(MenuDtoInput menuDtoInput) {
-        if (menuDtoInput.getName() == null || menuDtoInput.getName().isBlank()) {
+        if (menuDtoInput.getName().isBlank()) {
             throw new IllegalArgumentException("Menu`s name is not valid");
-        }
-        if (menuDtoInput.getEnable() == null) {
-            throw new IllegalArgumentException("Menu`s enable status is not valid");
         }
     }
 

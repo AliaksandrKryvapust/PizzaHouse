@@ -183,7 +183,7 @@ class MenuServiceTest {
         final String inputVersion = "1";
         final int version = 1;
         final Instant creationDate = Instant.now();
-        final MenuDtoInput menuDtoInput = new MenuDtoInput(name, enable);
+        final MenuDtoInput menuDtoInput = MenuDtoInput.builder().name(name).enable(enable).build();
         final Menu menu = new Menu(name, enable);
         final Menu menuOutput = new Menu(id, name, enable);
         final MenuDtoCrudOutput dtoOutput = MenuDtoCrudOutput.builder().id(id).createdAt(creationDate).version(version)
@@ -229,7 +229,7 @@ class MenuServiceTest {
         final long id = 1L;
         final int version = 1;
         final Instant creationDate = Instant.now();
-        final MenuDtoInput menuDtoInput = new MenuDtoInput(name, enable);
+        final MenuDtoInput menuDtoInput = MenuDtoInput.builder().name(name).enable(enable).build();
         final Menu menu = new Menu(name, enable);
         final Menu menuOutput = new Menu(id, name, enable);
         final MenuDtoCrudOutput crudOutput = MenuDtoCrudOutput.builder().id(id).createdAt(creationDate).version(version)

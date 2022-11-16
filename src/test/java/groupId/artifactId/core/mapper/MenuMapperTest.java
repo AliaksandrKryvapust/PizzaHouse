@@ -36,7 +36,7 @@ class MenuMapperTest {
         // preconditions
         final String name = "Optional Menu";
         final boolean enable = false;
-        final MenuDtoInput menuDtoInput = new MenuDtoInput(name, enable);
+        final MenuDtoInput menuDtoInput = MenuDtoInput.builder().name(name).enable(enable).build();
 
         //test
         IMenu test = menuMapper.inputMapping(menuDtoInput);
