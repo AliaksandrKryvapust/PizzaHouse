@@ -4,7 +4,7 @@ import groupId.artifactId.core.dto.input.SelectedItemDtoInput;
 import groupId.artifactId.core.dto.output.MenuItemDtoOutput;
 import groupId.artifactId.core.dto.output.PizzaInfoDtoOutput;
 import groupId.artifactId.core.dto.output.SelectedItemDtoOutput;
-import groupId.artifactId.core.dto.output.crud.SelectedItemDtoCrudOutput;
+
 import groupId.artifactId.dao.entity.MenuItem;
 import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.SelectedItem;
@@ -44,28 +44,6 @@ class SelectedItemMapperTest {
         Assertions.assertEquals(id, test.getMenuItemId());
         Assertions.assertEquals(id, test.getOrderId());
         Assertions.assertEquals(count, test.getCount());
-    }
-
-    @Test
-    void outputCrudMapping() {
-        // preconditions
-        final long id = 1L;
-        final int version = 1;
-        final int count = 10;
-        final Instant creationDate = Instant.now();
-        final ISelectedItem selectedItem = new SelectedItem(id, id, id, count, creationDate, version);
-
-        //test
-        SelectedItemDtoCrudOutput test = selectedItemMapper.outputCrudMapping(selectedItem);
-
-        // assert
-        Assertions.assertNotNull(test);
-        Assertions.assertEquals(id, test.getId());
-        Assertions.assertEquals(id, test.getOrderId());
-        Assertions.assertEquals(id, test.getMenuItemId());
-        Assertions.assertEquals(count, test.getCount());
-        Assertions.assertEquals(creationDate, test.getCreatedAt());
-        Assertions.assertEquals(version, test.getVersion());
     }
 
     @Test

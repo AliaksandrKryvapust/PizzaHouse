@@ -3,7 +3,7 @@ package groupId.artifactId.core.mapper;
 import groupId.artifactId.core.dto.input.SelectedItemDtoInput;
 import groupId.artifactId.core.dto.output.MenuItemDtoOutput;
 import groupId.artifactId.core.dto.output.SelectedItemDtoOutput;
-import groupId.artifactId.core.dto.output.crud.SelectedItemDtoCrudOutput;
+
 import groupId.artifactId.dao.entity.SelectedItem;
 import groupId.artifactId.dao.entity.api.ISelectedItem;
 
@@ -16,11 +16,6 @@ public class SelectedItemMapper {
 
     public ISelectedItem inputMapping(SelectedItemDtoInput input, Long orderId) {
         return new SelectedItem(input.getMenuItemId(), orderId, input.getCount());
-    }
-
-    public SelectedItemDtoCrudOutput outputCrudMapping(ISelectedItem item) {
-        return new SelectedItemDtoCrudOutput(item.getId(), item.getMenuItemId(), item.getOrderId(),
-                item.getCount(), item.getCreateAt(), item.getVersion());
     }
 
     public SelectedItemDtoOutput outputMapping(ISelectedItem item) {
