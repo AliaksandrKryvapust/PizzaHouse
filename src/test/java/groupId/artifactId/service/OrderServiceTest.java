@@ -165,8 +165,8 @@ class OrderServiceTest {
         final String description = "Order accepted";
         final int version = 1;
         final Instant creationDate = Instant.now();
-        final OrderDtoInput orderDtoInput = new OrderDtoInput(singletonList(SelectedItemDtoInput.builder()
-                .menuItemId(id).count(count).build()));
+        final OrderDtoInput orderDtoInput = OrderDtoInput.builder().selectedItems(singletonList(SelectedItemDtoInput.builder()
+                .menuItemId(id).count(count).build())).build();
         final Order order = new Order(id);
         final Order orderOutput = new Order(singletonList(new SelectedItem(id, id, count)), id);
         final SelectedItem selectedItem = new SelectedItem(id, id, id, count);

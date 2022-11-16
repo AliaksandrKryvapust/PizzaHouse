@@ -68,7 +68,7 @@ public class ApiOrderServlet extends HttpServlet {
     //CREATE POSITION
     //body json
 //    {
-//        "selectedItems": [
+//        "selected_items": [
 //        {
 //            "menu_item_id": 90,
 //                "count": 2

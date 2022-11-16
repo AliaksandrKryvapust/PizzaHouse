@@ -8,8 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Collections;
-
+import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
@@ -22,8 +21,8 @@ class OrderValidatorTest {
         // preconditions
         final int count = 5;
         final String messageExpected = "Menu item id in Order is not valid";
-        final OrderDtoInput orderDtoInput = new OrderDtoInput(Collections.singletonList(SelectedItemDtoInput.builder()
-                .menuItemId(0L).count(count).build()));
+        final OrderDtoInput orderDtoInput = OrderDtoInput.builder().selectedItems(singletonList(SelectedItemDtoInput.builder()
+                .menuItemId(0L).count(count).build())).build();
 
         //test
         Exception exception = assertThrows(IllegalArgumentException.class, () -> orderValidator.validate(orderDtoInput));
@@ -37,8 +36,8 @@ class OrderValidatorTest {
         // preconditions
         final long id = 1L;
         final String messageExpected = "Menu item count in Order is not valid";
-        final OrderDtoInput orderDtoInput = new OrderDtoInput(Collections.singletonList(SelectedItemDtoInput.builder()
-                .menuItemId(id).count(0).build()));
+        final OrderDtoInput orderDtoInput = OrderDtoInput.builder().selectedItems(singletonList(SelectedItemDtoInput.builder()
+                .menuItemId(id).count(0).build())).build();
 
         //test
         Exception exception = assertThrows(IllegalArgumentException.class, () -> orderValidator.validate(orderDtoInput));

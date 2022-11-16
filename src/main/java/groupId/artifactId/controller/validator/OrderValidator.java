@@ -8,9 +8,6 @@ public class OrderValidator implements IOrderValidator {
 
     @Override
     public void validate(OrderDtoInput orderDtoInput) {
-        if (orderDtoInput.getSelectedItems() == null) {
-            throw new IllegalStateException("None of SelectedItems in OrderDtoInput have been sent as an input");
-        }
         for (SelectedItemDtoInput dto : orderDtoInput.getSelectedItems()) {
             if (dto.getMenuItemId() <= 0) {
                 throw new IllegalArgumentException("Menu item id in Order is not valid");
