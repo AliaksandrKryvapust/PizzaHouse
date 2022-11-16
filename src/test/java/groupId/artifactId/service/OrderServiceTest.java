@@ -63,9 +63,10 @@ class OrderServiceTest {
         List<ISelectedItem> selectedItems = singletonList(new SelectedItem(new MenuItem(id,
                 new PizzaInfo(id, name, description, size, creationDate, version), price, id, creationDate, version, id),
                 id, id, id, count, creationDate, version));
-        List<SelectedItemDtoOutput> outputs = singletonList(new SelectedItemDtoOutput(new MenuItemDtoOutput(id,
-                price, id, creationDate, version, id, new PizzaInfoDtoOutput(id, name, description, size, creationDate, version)),
-                id, id, id, count, creationDate, version));
+        final MenuItemDtoOutput menuItemDtoOutput = new MenuItemDtoOutput(id,
+                price, id, creationDate, version, id, new PizzaInfoDtoOutput(id, name, description, size, creationDate, version));
+        List<SelectedItemDtoOutput> outputs = singletonList(SelectedItemDtoOutput.builder().menuItem(menuItemDtoOutput)
+                .id(id).menuItemId(id).orderId(id).count(count).createdAt(creationDate).version(version).build());
         final ITicket ticket = new Ticket(new Order(selectedItems, id, creationDate, version), id, orderId, creationDate, version);
         final OrderDtoOutput orderDtoOutput = new OrderDtoOutput(outputs, id, creationDate, version);
         final TicketDtoOutput ticketDtoOutput = TicketDtoOutput.builder().order(orderDtoOutput).id(id).orderId(orderId)

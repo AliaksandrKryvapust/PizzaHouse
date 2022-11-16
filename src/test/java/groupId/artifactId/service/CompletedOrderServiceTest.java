@@ -21,6 +21,7 @@ import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 
+import static java.util.Collections.singletonList;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
@@ -49,14 +50,15 @@ class CompletedOrderServiceTest {
         List<ISelectedItem> selectedItems = Collections.singletonList(new SelectedItem(new MenuItem(id,
                 new PizzaInfo(id, name, description, size, creationDate, version), price, id, creationDate, version, id),
                 id, id, id, count, creationDate, version));
-        List<SelectedItemDtoOutput> selectedItemDtoOutputs = Collections.singletonList(new SelectedItemDtoOutput(new MenuItemDtoOutput(id,
-                price, id, creationDate, version, id, new PizzaInfoDtoOutput(id, name, description, size, creationDate, version)),
-                id, id, id, count, creationDate, version));
+        final MenuItemDtoOutput menuItemDtoOutput = new MenuItemDtoOutput(id,
+                price, id, creationDate, version, id, new PizzaInfoDtoOutput(id, name, description, size, creationDate, version));
+        List<SelectedItemDtoOutput> outputs = singletonList(SelectedItemDtoOutput.builder().menuItem(menuItemDtoOutput)
+                .id(id).menuItemId(id).orderId(id).count(count).createdAt(creationDate).version(version).build());
         List<IPizza> pizzas = Collections.singletonList(new Pizza(id, id, name, size, creationDate, version));
         List<PizzaDtoOutput> pizzaDtoOutputs = Collections.singletonList(new PizzaDtoOutput(id, id, name, size, creationDate, version));
         final ICompletedOrder completedOrder = new CompletedOrder(new Ticket(new Order(selectedItems, id, creationDate, version), id,
                 orderId, creationDate, version), pizzas, id, id, creationDate, version);
-        final OrderDtoOutput orderDtoOutput = new OrderDtoOutput(selectedItemDtoOutputs, id, creationDate, version);
+        final OrderDtoOutput orderDtoOutput = new OrderDtoOutput(outputs, id, creationDate, version);
         final TicketDtoOutput ticketDtoOutput = TicketDtoOutput.builder().order(orderDtoOutput).id(id).orderId(orderId)
                 .createdAt(creationDate).version(version).build();
         final CompletedOrderDtoOutput dtoOutput = CompletedOrderDtoOutput.builder().ticket(ticketDtoOutput)

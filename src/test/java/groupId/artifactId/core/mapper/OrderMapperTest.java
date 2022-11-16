@@ -89,9 +89,10 @@ class OrderMapperTest {
         List<ISelectedItem> selectedItems = singletonList(new SelectedItem(new MenuItem(id,
                 new PizzaInfo(id, name, description, size, creationDate, version), price, id, creationDate, version, id),
                 id, id, id, count, creationDate, version));
-        SelectedItemDtoOutput outputs = new SelectedItemDtoOutput(new MenuItemDtoOutput(id,
-                price, id, creationDate, version, id, new PizzaInfoDtoOutput(id, name, description, size, creationDate, version)),
-                id, id, id, count, creationDate, version);
+        final MenuItemDtoOutput menuItemDtoOutput = new MenuItemDtoOutput(id,
+                price, id, creationDate, version, id, new PizzaInfoDtoOutput(id, name, description, size, creationDate, version));
+        SelectedItemDtoOutput outputs = SelectedItemDtoOutput.builder().menuItem(menuItemDtoOutput)
+                .id(id).menuItemId(id).orderId(id).count(count).createdAt(creationDate).version(version).build();
         final IOrder order = new Order(selectedItems, id, creationDate, version);
         Mockito.when(selectedItemMapper.outputMapping(any(ISelectedItem.class))).thenReturn(outputs);
 

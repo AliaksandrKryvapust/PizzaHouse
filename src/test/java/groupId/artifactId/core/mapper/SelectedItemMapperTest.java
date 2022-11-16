@@ -47,7 +47,7 @@ class SelectedItemMapperTest {
     }
 
     @Test
-    void outputMappingConditionOne() {
+    void outputMapping() {
         // preconditions
         final long id = 1L;
         final int version = 1;
@@ -89,27 +89,5 @@ class SelectedItemMapperTest {
         Assertions.assertEquals(size, test.getMenuItem().getPizzaInfo().getSize());
         Assertions.assertEquals(creationDate, test.getMenuItem().getPizzaInfo().getCreatedAt());
         Assertions.assertEquals(version, test.getMenuItem().getPizzaInfo().getVersion());
-    }
-
-    @Test
-    void outputMappingConditionTwo() {
-        // preconditions
-        final long id = 1L;
-        final int version = 1;
-        final int count = 10;
-        final Instant creationDate = Instant.now();
-        final ISelectedItem selectedItem = new SelectedItem(null, id, id, id, count, creationDate, version);
-
-        //test
-        SelectedItemDtoOutput test = selectedItemMapper.outputMapping(selectedItem);
-
-        // assert
-        Assertions.assertNotNull(test);
-        Assertions.assertEquals(id, test.getId());
-        Assertions.assertEquals(id, test.getOrderId());
-        Assertions.assertEquals(id, test.getMenuItemId());
-        Assertions.assertEquals(count, test.getCount());
-        Assertions.assertEquals(creationDate, test.getCreatedAt());
-        Assertions.assertEquals(version, test.getVersion());
     }
 }
