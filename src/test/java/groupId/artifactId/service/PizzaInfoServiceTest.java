@@ -43,10 +43,11 @@ class PizzaInfoServiceTest {
         final PizzaInfoDtoInput pizzaInfoDtoInput = new PizzaInfoDtoInput(name, description, size);
         final PizzaInfo pizzaInfo = new PizzaInfo(name, description, size);
         final PizzaInfo pizzaInfoOutput = new PizzaInfo(id, name, description, size);
-        final PizzaInfoDtoOutput dtoOutput = new PizzaInfoDtoOutput(id, name, description, size, creationDate, version);
+        final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(name).description(description)
+                .size(size).createdAt(creationDate).version(version).build();
         Mockito.when(pizzaInfoMapper.inputMapping(any(PizzaInfoDtoInput.class))).thenReturn(pizzaInfo);
         Mockito.when(pizzaInfoDao.save(any(IPizzaInfo.class))).thenReturn(pizzaInfoOutput);
-        Mockito.when(pizzaInfoMapper.outputMapping(any(IPizzaInfo.class))).thenReturn(dtoOutput);
+        Mockito.when(pizzaInfoMapper.outputMapping(any(IPizzaInfo.class))).thenReturn(pizzaInfoDtoOutput);
 
         //test
         PizzaInfoDtoOutput test = pizzaInfoService.save(pizzaInfoDtoInput);
@@ -69,9 +70,10 @@ class PizzaInfoServiceTest {
         final int version = 1;
         final Instant creationDate = Instant.now();
         List<IPizzaInfo> pizzaInfos = singletonList(new PizzaInfo(id, name, description, size, creationDate, version));
-        final PizzaInfoDtoOutput dtoOutput = new PizzaInfoDtoOutput(id, name, description, size, creationDate, version);
+        final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(name).description(description)
+                .size(size).createdAt(creationDate).version(version).build();
         Mockito.when(pizzaInfoDao.get()).thenReturn(pizzaInfos);
-        Mockito.when(pizzaInfoMapper.outputMapping(any(IPizzaInfo.class))).thenReturn(dtoOutput);
+        Mockito.when(pizzaInfoMapper.outputMapping(any(IPizzaInfo.class))).thenReturn(pizzaInfoDtoOutput);
 
         //test
         List<PizzaInfoDtoOutput> test = pizzaInfoService.get();
@@ -99,9 +101,10 @@ class PizzaInfoServiceTest {
         final int version = 1;
         final Instant creationDate = Instant.now();
         final IPizzaInfo pizzaInfo = new PizzaInfo(id, name, description, size, creationDate, version);
-        final PizzaInfoDtoOutput dtoOutput = new PizzaInfoDtoOutput(id, name, description, size, creationDate, version);
+        final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(name).description(description)
+                .size(size).createdAt(creationDate).version(version).build();
         Mockito.when(pizzaInfoDao.get(id)).thenReturn(pizzaInfo);
-        Mockito.when(pizzaInfoMapper.outputMapping(any(IPizzaInfo.class))).thenReturn(dtoOutput);
+        Mockito.when(pizzaInfoMapper.outputMapping(any(IPizzaInfo.class))).thenReturn(pizzaInfoDtoOutput);
 
         //test
         PizzaInfoDtoOutput test = pizzaInfoService.get(id);
@@ -158,10 +161,11 @@ class PizzaInfoServiceTest {
         final PizzaInfoDtoInput pizzaInfoDtoInput = new PizzaInfoDtoInput(name, description, size);
         final PizzaInfo pizzaInfo = new PizzaInfo(name, description, size);
         final PizzaInfo pizzaInfoOutput = new PizzaInfo(id, name, description, size);
-        final PizzaInfoDtoOutput dtoOutput = new PizzaInfoDtoOutput(id, name, description, size, creationDate, version);
+        final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(name).description(description)
+                .size(size).createdAt(creationDate).version(version).build();
         Mockito.when(pizzaInfoMapper.inputMapping(any(PizzaInfoDtoInput.class))).thenReturn(pizzaInfo);
         Mockito.when(pizzaInfoDao.update(any(IPizzaInfo.class), any(Long.class), any(Integer.class))).thenReturn(pizzaInfoOutput);
-        Mockito.when(pizzaInfoMapper.outputMapping(any(IPizzaInfo.class))).thenReturn(dtoOutput);
+        Mockito.when(pizzaInfoMapper.outputMapping(any(IPizzaInfo.class))).thenReturn(pizzaInfoDtoOutput);
 
         //test
         PizzaInfoDtoOutput test = pizzaInfoService.update(pizzaInfoDtoInput, inputId, inputVersion);

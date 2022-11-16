@@ -78,8 +78,9 @@ class MenuItemMapperTest {
         final Instant creationDate = Instant.now();
         final IMenuItem menuItem = new MenuItem(id, new PizzaInfo(id, pizzaName, description, size, creationDate, version),
                 price, id, creationDate, version, id);
-        final PizzaInfoDtoOutput dtoOutput = new PizzaInfoDtoOutput(id, pizzaName, description, size, creationDate, version);
-        Mockito.when(pizzaInfoMapper.outputMapping(any(IPizzaInfo.class))).thenReturn(dtoOutput);
+        final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(pizzaName).description(description)
+                .size(size).createdAt(creationDate).version(version).build();
+        Mockito.when(pizzaInfoMapper.outputMapping(any(IPizzaInfo.class))).thenReturn(pizzaInfoDtoOutput);
 
         //test
         MenuItemDtoOutput test = menuItemMapper.outputMapping(menuItem);

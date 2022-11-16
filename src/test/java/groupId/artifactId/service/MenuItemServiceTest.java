@@ -126,7 +126,8 @@ class MenuItemServiceTest {
         final Instant creationDate = Instant.now();
         final IMenuItem menuItem = new MenuItem(id, new PizzaInfo(id, pizzaName, description, size, creationDate, version),
                 price, id, creationDate, version, id);
-        final PizzaInfoDtoOutput pizzaInfoDtoOutput = new PizzaInfoDtoOutput(id, pizzaName, description, size, creationDate, version);
+        final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(pizzaName).description(description)
+                .size(size).createdAt(creationDate).version(version).build();
         final MenuItemDtoOutput dtoOutput = MenuItemDtoOutput.builder().id (id).price(price).pizzaInfoId(id)
                 .createdAt(creationDate).version(version).menuId(id).pizzaInfo(pizzaInfoDtoOutput).build();
         Mockito.when(menuItemDao.getAllData(id)).thenReturn(menuItem);

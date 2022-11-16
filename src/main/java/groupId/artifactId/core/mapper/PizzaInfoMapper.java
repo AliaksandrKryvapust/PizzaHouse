@@ -15,7 +15,12 @@ public class PizzaInfoMapper {
     }
 
     public PizzaInfoDtoOutput outputMapping(IPizzaInfo pizzaInfo) {
-        return new PizzaInfoDtoOutput(pizzaInfo.getId(), pizzaInfo.getName(), pizzaInfo.getDescription(),
-                pizzaInfo.getSize(), pizzaInfo.getCreationDate(), pizzaInfo.getVersion());
+        return PizzaInfoDtoOutput.builder()
+                .id(pizzaInfo.getId())
+                .name(pizzaInfo.getName())
+                .description(pizzaInfo.getDescription())
+                .size(pizzaInfo.getSize())
+                .createdAt(pizzaInfo.getCreationDate())
+                .version(pizzaInfo.getVersion()).build();
     }
 }
