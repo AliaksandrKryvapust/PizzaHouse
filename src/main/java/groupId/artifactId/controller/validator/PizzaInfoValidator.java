@@ -9,13 +9,13 @@ public class PizzaInfoValidator implements IPizzaInfoValidator {
 
     @Override
     public void validate(PizzaInfoDtoInput pizzaInfo) {
-        if (pizzaInfo.getName() == null || pizzaInfo.getName().isBlank()) {
+        if (pizzaInfo.getName().isBlank()) {
             throw new IllegalArgumentException("Pizza`s name is not valid");
         }
-        if (pizzaInfo.getDescription() == null || pizzaInfo.getDescription().isBlank()) {
+        if (pizzaInfo.getDescription().isBlank()) {
             throw new IllegalArgumentException("Pizza`s description is not valid");
         }
-        if (pizzaInfo.getSize()==null || pizzaInfo.getSize() <= 0) {
+        if (pizzaInfo.getSize() <= 0) {
             throw new IllegalArgumentException("Pizza`s size is not valid");
         }
     }

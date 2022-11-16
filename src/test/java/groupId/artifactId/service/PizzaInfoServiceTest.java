@@ -40,7 +40,8 @@ class PizzaInfoServiceTest {
         final long id = 1L;
         final int version = 1;
         final Instant creationDate = Instant.now();
-        final PizzaInfoDtoInput pizzaInfoDtoInput = new PizzaInfoDtoInput(name, description, size);
+        final PizzaInfoDtoInput pizzaInfoDtoInput = PizzaInfoDtoInput.builder().name(name).description(description)
+                .size(size).build();
         final PizzaInfo pizzaInfo = new PizzaInfo(name, description, size);
         final PizzaInfo pizzaInfoOutput = new PizzaInfo(id, name, description, size);
         final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(name).description(description)
@@ -158,7 +159,8 @@ class PizzaInfoServiceTest {
         final String inputVersion = "1";
         final int version = 1;
         final Instant creationDate = Instant.now();
-        final PizzaInfoDtoInput pizzaInfoDtoInput = new PizzaInfoDtoInput(name, description, size);
+        final PizzaInfoDtoInput pizzaInfoDtoInput = PizzaInfoDtoInput.builder().name(name).description(description)
+                .size(size).build();
         final PizzaInfo pizzaInfo = new PizzaInfo(name, description, size);
         final PizzaInfo pizzaInfoOutput = new PizzaInfo(id, name, description, size);
         final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(name).description(description)

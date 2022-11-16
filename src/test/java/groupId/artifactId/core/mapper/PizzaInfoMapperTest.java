@@ -23,7 +23,8 @@ class PizzaInfoMapperTest {
         final String name = "ITALIANO PIZZA";
         final String description = "Mozzarella cheese, basilica, ham";
         final int size = 32;
-        final PizzaInfoDtoInput pizzaInfoDtoInput = new PizzaInfoDtoInput(name, description, size);
+        final PizzaInfoDtoInput pizzaInfoDtoInput = PizzaInfoDtoInput.builder().name(name).description(description)
+                .size(size).build();
 
         //test
         IPizzaInfo test = pizzaInfoMapper.inputMapping(pizzaInfoDtoInput);

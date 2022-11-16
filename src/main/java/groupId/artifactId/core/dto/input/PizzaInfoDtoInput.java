@@ -1,49 +1,17 @@
 package groupId.artifactId.core.dto.input;
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.ToString;
+import lombok.extern.jackson.Jacksonized;
+
+@Builder
+@Getter
+@ToString
+@Jacksonized
 public class PizzaInfoDtoInput {
-    private String name;
-    private String description;
-    private Integer size;
-
-    public PizzaInfoDtoInput() {
-    }
-
-    public PizzaInfoDtoInput(String name, String description, Integer size) {
-        this.name = name;
-        this.description = description;
-        this.size = size;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Integer getSize() {
-        return size;
-    }
-
-    public void setSize(Integer size) {
-        this.size = size;
-    }
-
-    @Override
-    public String toString() {
-        return "PizzaInfoDtoInput{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", size=" + size +
-                '}';
-    }
+    private final @NonNull String name;
+    private final @NonNull String description;
+    private final @NonNull Integer size;
 }
