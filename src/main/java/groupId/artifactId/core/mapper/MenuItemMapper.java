@@ -19,18 +19,24 @@ public class MenuItemMapper {
     }
 
     public MenuItemDtoCrudOutput outputCrudMapping(IMenuItem menuItem) {
-        return MenuItemDtoCrudOutput.builder().id(menuItem.getId()).price(menuItem.getPrice()).pizzaInfoId(menuItem.getPizzaInfoId())
-                .createdAt(menuItem.getCreationDate()).version(menuItem.getVersion()).menuId(menuItem.getMenuId()).build();
+        return MenuItemDtoCrudOutput.builder()
+                .id(menuItem.getId())
+                .price(menuItem.getPrice())
+                .pizzaInfoId(menuItem.getPizzaInfoId())
+                .createdAt(menuItem.getCreationDate())
+                .version(menuItem.getVersion())
+                .menuId(menuItem.getMenuId()).build();
     }
 
     public MenuItemDtoOutput outputMapping(IMenuItem menuItem) {
-        if (menuItem.getInfo() == null) {
-            return new MenuItemDtoOutput(menuItem.getId(), menuItem.getPrice(), menuItem.getPizzaInfoId(), menuItem.getCreationDate(),
-                    menuItem.getVersion(), menuItem.getMenuId(), new PizzaInfoDtoOutput());
-        } else {
-            PizzaInfoDtoOutput pizzaInfo = pizzaInfoMapper.outputMapping(menuItem.getInfo());
-            return new MenuItemDtoOutput(menuItem.getId(), menuItem.getPrice(), menuItem.getPizzaInfoId(), menuItem.getCreationDate(),
-                    menuItem.getVersion(), menuItem.getMenuId(), pizzaInfo);
-        }
+        PizzaInfoDtoOutput pizzaInfo = pizzaInfoMapper.outputMapping(menuItem.getInfo());
+        return MenuItemDtoOutput.builder()
+                .id(menuItem.getId())
+                .price(menuItem.getPrice())
+                .pizzaInfoId(menuItem.getPizzaInfoId())
+                .createdAt(menuItem.getCreationDate())
+                .version(menuItem.getVersion())
+                .menuId(menuItem.getMenuId())
+                .pizzaInfo(pizzaInfo).build();
     }
 }

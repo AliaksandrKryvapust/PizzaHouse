@@ -60,9 +60,10 @@ class SelectedItemMapperTest {
         final ISelectedItem selectedItem = new SelectedItem(new MenuItem(id,
                 new PizzaInfo(id, name, description, size, creationDate, version), price, id, creationDate, version, id),
                 id, id, id, count, creationDate, version);
-        final MenuItemDtoOutput output = new MenuItemDtoOutput(id,
-                price, id, creationDate, version, id, new PizzaInfoDtoOutput(id, name, description, size, creationDate, version));
-        Mockito.when(menuItemMapper.outputMapping(any(IMenuItem.class))).thenReturn(output);
+        final PizzaInfoDtoOutput pizzaInfoDtoOutput = new PizzaInfoDtoOutput(id, name, description, size, creationDate, version);
+        final MenuItemDtoOutput menuItemDtoOutput = MenuItemDtoOutput.builder().id (id).price(price).pizzaInfoId(id)
+                .createdAt(creationDate).version(version).menuId(id).pizzaInfo(pizzaInfoDtoOutput).build();
+        Mockito.when(menuItemMapper.outputMapping(any(IMenuItem.class))).thenReturn(menuItemDtoOutput);
 
         //test
         SelectedItemDtoOutput test = selectedItemMapper.outputMapping(selectedItem);

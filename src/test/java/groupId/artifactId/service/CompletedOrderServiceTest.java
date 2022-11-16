@@ -50,8 +50,9 @@ class CompletedOrderServiceTest {
         List<ISelectedItem> selectedItems = Collections.singletonList(new SelectedItem(new MenuItem(id,
                 new PizzaInfo(id, name, description, size, creationDate, version), price, id, creationDate, version, id),
                 id, id, id, count, creationDate, version));
-        final MenuItemDtoOutput menuItemDtoOutput = new MenuItemDtoOutput(id,
-                price, id, creationDate, version, id, new PizzaInfoDtoOutput(id, name, description, size, creationDate, version));
+        final PizzaInfoDtoOutput pizzaInfoDtoOutput = new PizzaInfoDtoOutput(id, name, description, size, creationDate, version);
+        final MenuItemDtoOutput menuItemDtoOutput = MenuItemDtoOutput.builder().id (id).price(price).pizzaInfoId(id)
+                .createdAt(creationDate).version(version).menuId(id).pizzaInfo(pizzaInfoDtoOutput).build();
         List<SelectedItemDtoOutput> outputs = singletonList(SelectedItemDtoOutput.builder().menuItem(menuItemDtoOutput)
                 .id(id).menuItemId(id).orderId(id).count(count).createdAt(creationDate).version(version).build());
         List<IPizza> pizzas = Collections.singletonList(new Pizza(id, id, name, size, creationDate, version));

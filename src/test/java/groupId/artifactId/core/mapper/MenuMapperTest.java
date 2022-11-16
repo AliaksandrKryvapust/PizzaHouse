@@ -84,9 +84,10 @@ class MenuMapperTest {
         List<IMenuItem> items = singletonList(new MenuItem(id, new PizzaInfo(id, pizzaName,
                 description, size, creationDate, version), price, id, creationDate, version, id));
         final IMenu menu = new Menu(items, id, creationDate, version, name, enable);
-        final MenuItemDtoOutput dtoOutput = new MenuItemDtoOutput(id, price, id, creationDate, version, id,
-                new PizzaInfoDtoOutput(id, pizzaName, description, size, creationDate, version));
-        Mockito.when(menuItemMapper.outputMapping(any(IMenuItem.class))).thenReturn(dtoOutput);
+        final PizzaInfoDtoOutput pizzaInfoDtoOutput = new PizzaInfoDtoOutput(id, pizzaName, description, size, creationDate, version);
+        final MenuItemDtoOutput menuItemDtoOutput = MenuItemDtoOutput.builder().id (id).price(price).pizzaInfoId(id)
+                .createdAt(creationDate).version(version).menuId(id).pizzaInfo(pizzaInfoDtoOutput).build();
+        Mockito.when(menuItemMapper.outputMapping(any(IMenuItem.class))).thenReturn(menuItemDtoOutput);
 
         //test
         MenuDtoOutput test = menuMapper.outputMapping(menu);

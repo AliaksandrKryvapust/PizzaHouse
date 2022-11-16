@@ -107,9 +107,11 @@ class MenuServiceTest {
         List<IMenuItem> items = singletonList(new MenuItem(id, new PizzaInfo(id, pizzaName,
                 description, size, creationDate, version), price, id, creationDate, version, id));
         final IMenu menu = new Menu(items, id, creationDate, version, name, enable);
+        final PizzaInfoDtoOutput pizzaInfoDtoOutput = new PizzaInfoDtoOutput(id, pizzaName, description, size, creationDate, version);
+        final MenuItemDtoOutput menuItemDtoOutput = MenuItemDtoOutput.builder().id (id).price(price).pizzaInfoId(id)
+                .createdAt(creationDate).version(version).menuId(id).pizzaInfo(pizzaInfoDtoOutput).build();
         final MenuDtoOutput dtoOutput = new MenuDtoOutput(id, creationDate,
-                version, name, enable, singletonList(new MenuItemDtoOutput(id, price, id, creationDate, version, id,
-                new PizzaInfoDtoOutput(id, pizzaName, description, size, creationDate, version))));
+                version, name, enable, singletonList(menuItemDtoOutput));
         Mockito.when(menuDao.getAllData(id)).thenReturn(menu);
         Mockito.when(menuMapper.outputMapping(any(IMenu.class))).thenReturn(dtoOutput);
 

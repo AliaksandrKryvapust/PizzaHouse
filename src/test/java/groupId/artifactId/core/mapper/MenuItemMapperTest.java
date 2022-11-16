@@ -67,7 +67,7 @@ class MenuItemMapperTest {
     }
 
     @Test
-    void outputMappingConditionOne() {
+    void outputMapping() {
         // preconditions
         final long id = 1L;
         final double price = 20.0;
@@ -99,27 +99,5 @@ class MenuItemMapperTest {
         Assertions.assertEquals(size, test.getPizzaInfo().getSize());
         Assertions.assertEquals(version, test.getPizzaInfo().getVersion());
         Assertions.assertEquals(creationDate, test.getPizzaInfo().getCreatedAt());
-    }
-
-    @Test
-    void outputMappingConditionTwo() {
-        // preconditions
-        final long id = 1L;
-        final double price = 20.0;
-        final int version = 1;
-        final Instant creationDate = Instant.now();
-        final IMenuItem menuItem = new MenuItem(id, null, price, id, creationDate, version, id);
-
-        //test
-        MenuItemDtoOutput test = menuItemMapper.outputMapping(menuItem);
-
-        // assert
-        Assertions.assertNotNull(test);
-        Assertions.assertEquals(id, test.getId());
-        Assertions.assertEquals(id, test.getPizzaInfoId());
-        Assertions.assertEquals(id, test.getMenuId());
-        Assertions.assertEquals(price, test.getPrice());
-        Assertions.assertEquals(version, test.getVersion());
-        Assertions.assertEquals(creationDate, test.getCreatedAt());
     }
 }
