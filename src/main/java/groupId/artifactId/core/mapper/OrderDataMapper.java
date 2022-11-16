@@ -43,8 +43,13 @@ public class OrderDataMapper {
             stageDtoOutputs.add(output);
         }
         TicketDtoOutput ticketDtoOutPut = ticketMapper.outputMapping(orderData.getTicket());
-        return OrderDataDtoOutput.builder().ticket(ticketDtoOutPut).orderHistory(stageDtoOutputs).id(orderData.getId())
-                .ticketId(orderData.getTicketId()).done(orderData.isDone()).createdAt(orderData.getCreationDate())
+        return OrderDataDtoOutput.builder()
+                .ticket(ticketDtoOutPut)
+                .orderHistory(stageDtoOutputs)
+                .id(orderData.getId())
+                .ticketId(orderData.getTicketId())
+                .done(orderData.isDone())
+                .createdAt(orderData.getCreationDate())
                 .version(orderData.getVersion()).build();
     }
 }
