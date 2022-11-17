@@ -89,9 +89,6 @@ public class MenuDao implements IMenuDao {
                 statement.setString(1, menu.getName());
                 statement.setBoolean(2, menu.getEnable());
                 rows += statement.executeUpdate();
-                if (rows == 0) {
-                    throw new NoContentException("menu table insert failed, check preconditions and FK values");
-                }
                 if (rows > 1) {
                     throw new IllegalStateException("Incorrect menu table update, more than 1 row affected");
                 }
@@ -101,7 +98,11 @@ public class MenuDao implements IMenuDao {
                 }
             }
         } catch (SQLException e) {
-            throw new DaoException("Failed to save new Menu" + menu, e);
+            if (e.getMessage().contains("menu_pkey")) {
+                throw new NoContentException("menu table insert failed, check preconditions and FK values: " + menu);
+            } else {
+                throw new DaoException("Failed to save new Menu" + menu, e);
+            }
         }
 
     }

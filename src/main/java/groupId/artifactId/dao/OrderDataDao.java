@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static groupId.artifactId.core.Constants.ORDER_DATA_FK;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
 public class OrderDataDao implements IOrderDataDao {
@@ -55,9 +56,6 @@ public class OrderDataDao implements IOrderDataDao {
                 statement.setLong(1, orderData.getTicketId());
                 statement.setBoolean(2, orderData.isDone());
                 rows += statement.executeUpdate();
-                if (rows == 0) {
-                    throw new NoContentException("order data table insert failed, check preconditions and FK values");
-                }
                 if (rows > 1) {
                     throw new IllegalStateException("Incorrect order data table update, more than 1 row affected");
                 }
@@ -67,7 +65,12 @@ public class OrderDataDao implements IOrderDataDao {
                 }
             }
         } catch (SQLException e) {
-            throw new DaoException("Failed to save new Order data" + orderData, e);
+            if (e.getMessage().contains(ORDER_DATA_FK)) {
+                throw new NoContentException("order data table insert failed, check preconditions and FK values: "
+                        + orderData);
+            } else {
+                throw new DaoException("Failed to save new Order data" + orderData, e);
+            }
         }
     }
 

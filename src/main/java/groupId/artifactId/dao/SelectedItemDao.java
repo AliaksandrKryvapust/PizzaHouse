@@ -16,6 +16,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static groupId.artifactId.core.Constants.SELECTED_ITEM_FK;
+import static groupId.artifactId.core.Constants.SELECTED_ITEM_FK2;
+
 public class SelectedItemDao implements ISelectedItemDao {
     private final DataSource dataSource;
     private static final String INSERT_SELECTED_ITEM_SQL = "INSERT INTO pizza_manager.selected_item (menu_item_id, order_id, count) " +
@@ -48,9 +51,6 @@ public class SelectedItemDao implements ISelectedItemDao {
                 statement.setLong(2, selectedItem.getOrderId());
                 statement.setInt(3, selectedItem.getCount());
                 rows += statement.executeUpdate();
-                if (rows == 0) {
-                    throw new NoContentException("selected item table insert failed, check preconditions and FK values");
-                }
                 if (rows > 1) {
                     throw new IllegalStateException("Incorrect selected item table update, more than 1 row affected");
                 }
@@ -61,7 +61,12 @@ public class SelectedItemDao implements ISelectedItemDao {
                 }
             }
         } catch (SQLException e) {
-            throw new DaoException("Failed to save new Selected item" + selectedItem, e);
+            if (e.getMessage().contains(SELECTED_ITEM_FK) || e.getMessage().contains(SELECTED_ITEM_FK2)) {
+                throw new NoContentException("selected item table insert failed, check preconditions and FK values: "
+                        + selectedItem);
+            } else {
+                throw new DaoException("Failed to save new Selected item" + selectedItem, e);
+            }
         }
     }
 

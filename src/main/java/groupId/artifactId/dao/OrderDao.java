@@ -47,9 +47,6 @@ public class OrderDao implements IOrderDao {
             try (PreparedStatement statement = con.prepareStatement(INSERT_ORDER_SQL, Statement.RETURN_GENERATED_KEYS)) {
                 long rows = 0;
                 rows += statement.executeUpdate();
-                if (rows == 0) {
-                    throw new NoContentException("order table insert failed, check preconditions and FK values");
-                }
                 if (rows > 1) {
                     throw new IllegalStateException("Incorrect order table update, more than 1 row affected");
                 }
@@ -59,7 +56,11 @@ public class OrderDao implements IOrderDao {
                 }
             }
         } catch (SQLException e) {
-            throw new DaoException("Failed to save new Order" + order, e);
+            if (e.getMessage().contains("order_pkey")) {
+                throw new NoContentException("order table insert failed, check preconditions and FK values: " + order);
+            } else {
+                throw new DaoException("Failed to save new Order" + order, e);
+            }
         }
     }
 

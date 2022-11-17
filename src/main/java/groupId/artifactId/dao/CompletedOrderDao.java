@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static groupId.artifactId.core.Constants.COMPLETED_ORDER_FK;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
 public class CompletedOrderDao implements ICompletedOrderDao {
@@ -63,9 +64,6 @@ public class CompletedOrderDao implements ICompletedOrderDao {
                 long rows = 0;
                 statement.setLong(1, completedOrder.getTicketId());
                 rows += statement.executeUpdate();
-                if (rows == 0) {
-                    throw new NoContentException("completed order table insert failed, check preconditions and FK values");
-                }
                 if (rows > 1) {
                     throw new IllegalStateException("Incorrect completed order table update, more than 1 row affected");
                 }
@@ -75,7 +73,12 @@ public class CompletedOrderDao implements ICompletedOrderDao {
                 }
             }
         } catch (SQLException e) {
-            throw new DaoException("Failed to save new Completed Order:" + completedOrder, e);
+            if (e.getMessage().contains(COMPLETED_ORDER_FK)) {
+                throw new NoContentException("completed order table insert failed, check preconditions and FK values: "
+                + completedOrder);
+            } else {
+                throw new DaoException("Failed to save new Completed Order:" + completedOrder, e);
+            }
         }
     }
 

@@ -12,6 +12,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static groupId.artifactId.core.Constants.TICKET_FK;
+
 public class TicketDao implements ITicketDao {
 
     private static final String INSERT_TICKET_SQL = "INSERT INTO pizza_manager.ticket (order_id) VALUES (?);";
@@ -44,9 +46,6 @@ public class TicketDao implements ITicketDao {
                 long rows = 0;
                 statement.setLong(1, ticket.getOrderId());
                 rows += statement.executeUpdate();
-                if (rows == 0) {
-                    throw new NoContentException("ticket table insert failed, check preconditions and FK values");
-                }
                 if (rows > 1) {
                     throw new IllegalStateException("Incorrect ticket table update, more than 1 row affected");
                 }
@@ -56,7 +55,11 @@ public class TicketDao implements ITicketDao {
                 }
             }
         } catch (SQLException e) {
-            throw new DaoException("Failed to save new Ticket" + ticket, e);
+            if (e.getMessage().contains(TICKET_FK)) {
+                throw new NoContentException("ticket table insert failed, check preconditions and FK values: " + ticket);
+            } else {
+                throw new DaoException("Failed to save new Ticket" + ticket, e);
+            }
         }
     }
 

@@ -11,6 +11,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static groupId.artifactId.core.Constants.PIZZA_FK;
+
 public class PizzaDao implements IPizzaDao {
     private static final String INSERT_PIZZA_SQL = "INSERT INTO pizza_manager.pizza (completed_order_id,name, size) "
             + "VALUES (?, ?, ?);";
@@ -36,9 +38,6 @@ public class PizzaDao implements IPizzaDao {
                 statement.setString(2, pizza.getName());
                 statement.setInt(3, pizza.getSize());
                 rows += statement.executeUpdate();
-                if (rows == 0) {
-                    throw new NoContentException("pizza table insert failed, check preconditions and FK values");
-                }
                 if (rows > 1) {
                     throw new IllegalStateException("Incorrect pizza table update, more than 1 row affected");
                 }
@@ -49,7 +48,11 @@ public class PizzaDao implements IPizzaDao {
                 }
             }
         } catch (SQLException e) {
-            throw new DaoException("Failed to save new Pizza" + pizza, e);
+            if (e.getMessage().contains(PIZZA_FK)) {
+                throw new NoContentException("pizza table insert failed, check preconditions and FK values: " + pizza);
+            } else {
+                throw new DaoException("Failed to save new Pizza" + pizza, e);
+            }
         }
     }
 

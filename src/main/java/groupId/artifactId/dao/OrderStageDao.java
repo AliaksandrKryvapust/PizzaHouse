@@ -11,6 +11,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static groupId.artifactId.core.Constants.ORDER_STAGE_FK;
+
 public class OrderStageDao implements IOrderStageDao {
     private static final String INSERT_ORDER_STAGE_SQL = "INSERT INTO pizza_manager.order_stage (order_data_id, description) " +
             "VALUES (?, ?);";
@@ -37,9 +39,6 @@ public class OrderStageDao implements IOrderStageDao {
                 statement.setLong(1, orderStage.getOrderDataId());
                 statement.setString(2, orderStage.getDescription());
                 rows += statement.executeUpdate();
-                if (rows == 0) {
-                    throw new NoContentException("order_stage table insert failed,  check preconditions and FK values");
-                }
                 if (rows > 1) {
                     throw new IllegalStateException("Incorrect order_stage table update, more than 1 row affected");
                 }
@@ -50,7 +49,11 @@ public class OrderStageDao implements IOrderStageDao {
                 }
             }
         } catch (SQLException e) {
-            throw new DaoException("Failed to save new Order Stage" + orderStage, e);
+            if (e.getMessage().contains(ORDER_STAGE_FK)) {
+                throw new NoContentException("order_stage table insert failed,  check preconditions and FK values");
+            } else {
+                throw new DaoException("Failed to save new Order Stage" + orderStage, e);
+            }
         }
     }
 

@@ -14,6 +14,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static groupId.artifactId.core.Constants.*;
+
 public class MenuItemDao implements IMenuItemDao {
     private final DataSource dataSource;
     private static final String INSERT_MENU_ITEM_SQL = "INSERT INTO pizza_manager.menu_item (price, pizza_info_id, menu_id)" +
@@ -46,9 +48,6 @@ public class MenuItemDao implements IMenuItemDao {
                 statement.setLong(2, menuItem.getPizzaInfoId());
                 statement.setLong(3, menuItem.getMenuId());
                 rows += statement.executeUpdate();
-                if (rows == 0) {
-                    throw new NoContentException("menu_item table insert failed, check preconditions and FK values");
-                }
                 if (rows > 1) {
                     throw new IllegalStateException("Incorrect menu_item table update, more than 1 row affected");
                 }
@@ -59,7 +58,13 @@ public class MenuItemDao implements IMenuItemDao {
                 }
             }
         } catch (SQLException e) {
-            throw new DaoException("Failed to save new MenuItem" + menuItem, e);
+            if (e.getMessage().contains(MENU_ITEM_FK) || e.getMessage().contains(MENU_ITEM_FK2)
+                    || e.getMessage().contains(MENU_ITEM_UK)) {
+                throw new NoContentException("menu_item table insert failed, check preconditions and FK values: "
+                + menuItem);
+            } else {
+                throw new DaoException("Failed to save new MenuItem" + menuItem, e);
+            }
         }
     }
 
