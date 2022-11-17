@@ -31,6 +31,8 @@ public class MenuItemService implements IMenuItemService {
             return menuItemMapper.outputCrudMapping(menuItem);
         } catch (DaoException e) {
             throw new ServiceException(e.getMessage(), e);
+        } catch (NoContentException e) {
+            throw new NoContentException(e.getMessage());
         } catch (IllegalStateException e) {
             throw new IllegalStateException(e);
         } catch (Exception e) {

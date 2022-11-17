@@ -32,6 +32,8 @@ public class PizzaInfoService implements IPizzaInfoService {
             return pizzaInfoMapper.outputMapping(pizzaInfo);
         } catch (DaoException e) {
             throw new ServiceException(e.getMessage(), e);
+        } catch (NoContentException e) {
+            throw new NoContentException(e.getMessage());
         } catch (IllegalStateException e) {
             throw new IllegalStateException(e);
         } catch (Exception e) {
