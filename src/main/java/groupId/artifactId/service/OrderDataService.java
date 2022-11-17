@@ -152,6 +152,9 @@ public class OrderDataService implements IOrderDataService {
 
     @Override
     public OrderDataDtoCrudOutput update(OrderDataDtoInput type, String id, String version) {
+        if (!isIdValid(Long.valueOf(id))) {
+            throw new NoContentException("Order Data Id is not valid");
+        }
         try {
             IOrderData input = orderDataMapper.inputMapping(type);
             IOrderData orderData;

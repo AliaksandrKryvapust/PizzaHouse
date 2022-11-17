@@ -90,6 +90,9 @@ public class MenuService implements IMenuService {
 
     @Override
     public MenuDtoCrudOutput update(MenuDtoInput menuDtoInput, String id, String version) {
+        if (!isIdValid(Long.valueOf(id))) {
+            throw new NoContentException("Menu Id is not valid");
+        }
         try {
             IMenu menu = this.dao.update(menuMapper.inputMapping(menuDtoInput), Long.valueOf(id), Integer.valueOf(version));
             return menuMapper.outputCrudMapping(menu);

@@ -94,6 +94,9 @@ public class PizzaInfoService implements IPizzaInfoService {
 
     @Override
     public PizzaInfoDtoOutput update(PizzaInfoDtoInput pizzaInfoDtoInput, String id, String version) {
+        if (!isIdValid(Long.valueOf(id))) {
+            throw new NoContentException("Pizza Info Id is not valid");
+        }
         try {
             IPizzaInfo pizzaInfo = this.dao.update(pizzaInfoMapper.inputMapping(pizzaInfoDtoInput),
                     Long.valueOf(id), Integer.valueOf(version));

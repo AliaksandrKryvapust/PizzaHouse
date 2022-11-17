@@ -95,8 +95,12 @@ public class MenuItemService implements IMenuItemService {
 
     @Override
     public MenuItemDtoCrudOutput update(MenuItemDtoInput menuItemDtoInput, String id, String version) {
+        if (!isIdValid(Long.valueOf(id))) {
+            throw new NoContentException("Menu Item Id is not valid");
+        }
         try {
-            IMenuItem menuItem = this.dao.update(menuItemMapper.inputMapping(menuItemDtoInput), Long.valueOf(id), Integer.valueOf(version));
+            IMenuItem menuItem = this.dao.update(menuItemMapper.inputMapping(menuItemDtoInput), Long.valueOf(id),
+                    Integer.valueOf(version));
             return menuItemMapper.outputCrudMapping(menuItem);
         } catch (DaoException e) {
             throw new ServiceException(e.getMessage(), e);
