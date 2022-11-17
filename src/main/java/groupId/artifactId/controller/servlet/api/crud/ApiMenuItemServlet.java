@@ -7,6 +7,7 @@ import groupId.artifactId.controller.validator.api.IMenuItemValidator;
 import groupId.artifactId.core.Constants;
 import groupId.artifactId.core.dto.input.MenuItemDtoInput;
 import groupId.artifactId.core.dto.output.crud.MenuItemDtoCrudOutput;
+import groupId.artifactId.exceptions.NoContentException;
 import groupId.artifactId.exceptions.OptimisticLockException;
 import groupId.artifactId.service.IoC.MenuItemServiceSingleton;
 import groupId.artifactId.service.IoC.MenuServiceSingleton;
@@ -52,19 +53,18 @@ public class ApiMenuItemServlet extends HttpServlet {
             resp.setCharacterEncoding(Constants.ENCODING);
             String id = req.getParameter(Constants.PARAMETER_ID);
             if (id != null) {
-                if (menuItemService.isIdValid(Long.valueOf(id))) {
-                    resp.getWriter().write(jsonConverter.fromMenuItemToCrudJson(menuItemService.get(Long.valueOf(id))));
-                    resp.setStatus(HttpServletResponse.SC_OK);
-                } else {
-                    resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
-                }
+                resp.getWriter().write(jsonConverter.fromMenuItemToCrudJson(menuItemService.get(Long.valueOf(id))));
             } else {
                 resp.getWriter().write(jsonConverter.fromMenuItemListToJson(menuItemService.get()));
-                resp.setStatus(HttpServletResponse.SC_OK);
             }
+            resp.setStatus(HttpServletResponse.SC_OK);
+        } catch (NoContentException e) {
+            resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            logger.error("/api/menu_item there is no content to fulfill doGet method " + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            logger.error("/api/menu_item crashed during doGet method"  + e.getMessage() + "\t" + e.getCause() +
+            logger.error("/api/menu_item crashed during doGet method" + e.getMessage() + "\t" + e.getCause() +
                     "\tresponse status: " + resp.getStatus());
         }
     }
