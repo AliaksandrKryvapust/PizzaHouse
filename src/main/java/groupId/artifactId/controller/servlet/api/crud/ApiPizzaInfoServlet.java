@@ -111,22 +111,24 @@ public class ApiPizzaInfoServlet extends HttpServlet {
             String id = req.getParameter(Constants.PARAMETER_ID);
             String version = req.getParameter(Constants.PARAMETER_VERSION);
             if (id != null && version != null) {
-                if (pizzaInfoService.isIdValid(Long.valueOf(id))) {
-                    PizzaInfoDtoInput pizzaInfo = jsonConverter.fromJsonToPizzaInfo(req.getInputStream());
-                    try {
-                        pizzaInfoValidator.validate(pizzaInfo);
-                    } catch (IllegalArgumentException e) {
-                        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    }
-                    PizzaInfoDtoOutput pizzaInfoDto = pizzaInfoService.update(pizzaInfo, id, version);
-                    resp.getWriter().write(jsonConverter.fromPizzaInfoToJson(pizzaInfoDto));
-                    resp.setStatus(HttpServletResponse.SC_CREATED);
-                } else {
-                    resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+                PizzaInfoDtoInput pizzaInfo = jsonConverter.fromJsonToPizzaInfo(req.getInputStream());
+                try {
+                    pizzaInfoValidator.validate(pizzaInfo);
+                } catch (IllegalArgumentException e) {
+                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    logger.error("/api/pizza_info input is not valid " + e.getMessage() + "\t" + e.getCause() +
+                            "\tresponse status: " + resp.getStatus());
                 }
+                PizzaInfoDtoOutput pizzaInfoDto = pizzaInfoService.update(pizzaInfo, id, version);
+                resp.getWriter().write(jsonConverter.fromPizzaInfoToJson(pizzaInfoDto));
+                resp.setStatus(HttpServletResponse.SC_CREATED);
             } else {
                 resp.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
             }
+        } catch (NoContentException e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            logger.error("/api/pizza_info there is no content to fulfill doPut method " + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         } catch (OptimisticLockException e) {
             resp.setStatus(HttpServletResponse.SC_CONFLICT);
             logger.error("/api/pizza_info optimistic lock during doPut method" + e.getMessage() + "\t" + e.getCause() +

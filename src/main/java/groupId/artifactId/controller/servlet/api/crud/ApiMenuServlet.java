@@ -110,22 +110,24 @@ public class ApiMenuServlet extends HttpServlet {
             String id = req.getParameter(Constants.PARAMETER_ID);
             String version = req.getParameter(Constants.PARAMETER_VERSION);
             if (id != null && version != null) {
-                if (menuService.isIdValid(Long.valueOf(id))) {
-                    MenuDtoInput menu = jsonConverter.fromJsonToMenu(req.getInputStream());
-                    try {
-                        menuValidator.validate(menu);
-                    } catch (IllegalArgumentException e) {
-                        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    }
-                    MenuDtoCrudOutput menuDto = menuService.update(menu, id, version);
-                    resp.getWriter().write(jsonConverter.fromMenuToCrudJson(menuDto));
-                    resp.setStatus(HttpServletResponse.SC_CREATED);
-                } else {
-                    resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+                MenuDtoInput menu = jsonConverter.fromJsonToMenu(req.getInputStream());
+                try {
+                    menuValidator.validate(menu);
+                } catch (IllegalArgumentException e) {
+                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    logger.error("/api/menu input is not valid " + e.getMessage() + "\t" + e.getCause() +
+                            "\tresponse status: " + resp.getStatus());
                 }
+                MenuDtoCrudOutput menuDto = menuService.update(menu, id, version);
+                resp.getWriter().write(jsonConverter.fromMenuToCrudJson(menuDto));
+                resp.setStatus(HttpServletResponse.SC_CREATED);
             } else {
                 resp.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
             }
+        } catch (NoContentException e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            logger.error("/api/menu there is no content to fulfill doPut method " + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         } catch (OptimisticLockException e) {
             resp.setStatus(HttpServletResponse.SC_CONFLICT);
             logger.error("/api/menu optimistic lock during doPut method" + e.getMessage() + "\t" + e.getCause() +

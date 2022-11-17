@@ -110,22 +110,24 @@ public class ApiOrderDataServlet extends HttpServlet {
             String id = req.getParameter(Constants.PARAMETER_ID);
             String version = req.getParameter(Constants.PARAMETER_VERSION);
             if (id != null && version != null) {
-                if (orderDataService.isIdValid(Long.valueOf(id))) {
-                    OrderDataDtoInput orderData = jsonConverter.fromJsonToOrderData(req.getInputStream());
-                    try {
-                        orderDataValidator.validate(orderData);
-                    } catch (IllegalArgumentException e) {
-                        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    }
-                    OrderDataDtoCrudOutput output = orderDataService.update(orderData, id, version);
-                    resp.getWriter().write(jsonConverter.fromOrderDataCrudToJson(output));
-                    resp.setStatus(HttpServletResponse.SC_CREATED);
-                } else {
-                    resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+                OrderDataDtoInput orderData = jsonConverter.fromJsonToOrderData(req.getInputStream());
+                try {
+                    orderDataValidator.validate(orderData);
+                } catch (IllegalArgumentException e) {
+                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    logger.error("/api/order_data input is not valid " + e.getMessage() + "\t" + e.getCause() +
+                            "\tresponse status: " + resp.getStatus());
                 }
+                OrderDataDtoCrudOutput output = orderDataService.update(orderData, id, version);
+                resp.getWriter().write(jsonConverter.fromOrderDataCrudToJson(output));
+                resp.setStatus(HttpServletResponse.SC_CREATED);
             } else {
                 resp.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
             }
+        } catch (NoContentException e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            logger.error("/api/order_data there is no content to fulfill doPut method " + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         } catch (OptimisticLockException e) {
             resp.setStatus(HttpServletResponse.SC_CONFLICT);
             logger.error("/api/order_data optimistic lock during doPost method" + e.getMessage() + "\t" + e.getCause() +
