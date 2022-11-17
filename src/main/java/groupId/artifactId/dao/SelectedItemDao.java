@@ -127,7 +127,7 @@ public class SelectedItemDao implements ISelectedItemDao {
                     return this.allDataMapper(resultSet);
                 }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw new DaoException("Failed to get Selected items with menu items by id:" + id, e);
         }
     }
@@ -159,8 +159,12 @@ public class SelectedItemDao implements ISelectedItemDao {
         IMenuItem menuItem = new MenuItem(resultSet.getLong("miid"), pizzaInfo, resultSet.getDouble("price"),
                 resultSet.getLong("pizza_info_id"), resultSet.getTimestamp("micd").toInstant(),
                 resultSet.getInt("miver"), resultSet.getLong("meid"));
-        return new SelectedItem(menuItem, resultSet.getLong("siid"),
+        ISelectedItem selectedItem = new SelectedItem(menuItem, resultSet.getLong("siid"),
                 resultSet.getLong("menu_item_id"), resultSet.getLong("order_id"), resultSet.getInt("count"),
                 resultSet.getTimestamp("sicd").toInstant(), resultSet.getInt("siiv"));
+        if (selectedItem.getItem() == null || selectedItem.getId() == null) {
+            throw new NoContentException("There is no Selected Item with such id");
+        }
+        return selectedItem;
     }
 }

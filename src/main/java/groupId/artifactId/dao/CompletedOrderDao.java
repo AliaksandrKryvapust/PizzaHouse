@@ -48,7 +48,7 @@ public class CompletedOrderDao implements ICompletedOrderDao {
                     return this.allDataMapper(resultSet);
                 }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw new DaoException("Failed to get Completed Order by Ticket id:" + id, e);
         }
     }
@@ -150,6 +150,9 @@ public class CompletedOrderDao implements ICompletedOrderDao {
                         resultSet.getTimestamp("cocd").toInstant(),
                         resultSet.getInt("ver"));
             }
+        }
+        if (completedOrder.getItems() == null || completedOrder.getTicket() == null || completedOrder.getId() == null) {
+            throw new NoContentException("There is no Completed Order with such id");
         }
         return completedOrder;
     }

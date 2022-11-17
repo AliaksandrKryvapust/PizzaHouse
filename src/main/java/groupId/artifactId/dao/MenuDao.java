@@ -161,7 +161,7 @@ public class MenuDao implements IMenuDao {
                     return this.allDataMapper(resultSet);
                 }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw new DaoException("Failed to get Menu by id:" + id, e);
         }
     }
@@ -217,6 +217,9 @@ public class MenuDao implements IMenuDao {
                         resultSet.getInt("ver"), resultSet.getString("name"),
                         resultSet.getBoolean("enabled"));
             }
+        }
+        if (menu.getItems() == null || menu.getId() == null) {
+            throw new NoContentException("There is no Menu with such id");
         }
         return menu;
     }

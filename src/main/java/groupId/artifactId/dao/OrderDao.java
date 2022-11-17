@@ -127,7 +127,7 @@ public class OrderDao implements IOrderDao {
                     return this.allDataMapper(resultSet);
                 }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw new DaoException("Failed to get Order with selected items by id:" + id, e);
         }
     }
@@ -169,6 +169,9 @@ public class OrderDao implements IOrderDao {
                 order = new Order(items, resultSet.getLong("id"), resultSet.getTimestamp("cd").toInstant(),
                         resultSet.getInt("ver"));
             }
+        }
+        if (order.getSelectedItems()==null || order.getId()==null){
+            throw new NoContentException("There is no Order with such id");
         }
         return order;
     }

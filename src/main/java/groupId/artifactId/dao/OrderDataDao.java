@@ -140,7 +140,7 @@ public class OrderDataDao implements IOrderDataDao {
                     return this.allDataMapper(resultSet);
                 }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw new DaoException("Failed to get Order Stage by Ticket id:" + id, e);
         }
     }
@@ -228,6 +228,9 @@ public class OrderDataDao implements IOrderDataDao {
                         resultSet.getBoolean("done"), resultSet.getTimestamp("odcd").toInstant(),
                         resultSet.getInt("ver"));
             }
+        }
+        if (orderData.getOrderHistory()==null || orderData.getTicket()==null || orderData.getId()==null){
+            throw new NoContentException("There is no Order Data with such id");
         }
         return orderData;
     }

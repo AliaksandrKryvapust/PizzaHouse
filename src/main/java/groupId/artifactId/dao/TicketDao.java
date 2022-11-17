@@ -124,7 +124,7 @@ public class TicketDao implements ITicketDao {
                     return this.allDataMapper(resultSet);
                 }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw new DaoException("Failed to get Ticket with selected items by id:" + id, e);
         }
     }
@@ -169,6 +169,9 @@ public class TicketDao implements ITicketDao {
                 ticket = new Ticket(order, resultSet.getLong("tid"), resultSet.getLong("id"),
                         resultSet.getTimestamp("tcd").toInstant(), resultSet.getInt("tver"));
             }
+        }
+        if (ticket.getOrder() == null || ticket.getId() == null) {
+            throw new NoContentException("There is no Ticket with such id");
         }
         return ticket;
     }

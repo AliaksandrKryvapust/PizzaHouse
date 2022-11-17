@@ -155,7 +155,7 @@ public class MenuItemDao implements IMenuItemDao {
                     return this.allDataMapper(resultSet);
                 }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw new DaoException("Failed to get Menu Item with pizza info by id:" + id, e);
         }
     }
@@ -183,8 +183,12 @@ public class MenuItemDao implements IMenuItemDao {
         IPizzaInfo pizzaInfo =  new PizzaInfo(resultSet.getLong("pizza_info_id"), resultSet.getString("name"),
                 resultSet.getString("description"), resultSet.getInt("size"),
                 resultSet.getTimestamp("picd").toInstant(), resultSet.getInt("piv"));
-        return new MenuItem(resultSet.getLong("id"), pizzaInfo, resultSet.getDouble("price"),
+        MenuItem menuItem = new MenuItem(resultSet.getLong("id"), pizzaInfo, resultSet.getDouble("price"),
                 resultSet.getLong("pizza_info_id"), resultSet.getTimestamp("cd").toInstant(),
                 resultSet.getInt("ver"), resultSet.getLong("menu_id"));
+        if (menuItem.getInfo()==null || menuItem.getId()==null){
+            throw new NoContentException("There is no Menu Item with such id");
+        }
+        return menuItem;
     }
 }
