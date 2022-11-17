@@ -15,6 +15,7 @@ import groupId.artifactId.dao.entity.api.IOrder;
 import groupId.artifactId.dao.entity.api.ISelectedItem;
 import groupId.artifactId.dao.entity.api.ITicket;
 import groupId.artifactId.exceptions.DaoException;
+import groupId.artifactId.exceptions.NoContentException;
 import groupId.artifactId.exceptions.OptimisticLockException;
 import groupId.artifactId.exceptions.ServiceException;
 import groupId.artifactId.service.api.IOrderDataService;
@@ -131,6 +132,8 @@ public class OrderService implements IOrderService {
             return ticketMapper.outputCrudMapping(this.ticketDao.get(id));
         } catch (DaoException e) {
             throw new ServiceException(e.getMessage(), e);
+        } catch (NoContentException e) {
+            throw new NoContentException(e.getMessage());
         } catch (Exception e) {
             throw new ServiceException("Failed to get Ticket at Service by id" + id, e);
         }

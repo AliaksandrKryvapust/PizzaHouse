@@ -6,6 +6,7 @@ import groupId.artifactId.core.mapper.PizzaInfoMapper;
 import groupId.artifactId.dao.api.IPizzaInfoDao;
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
 import groupId.artifactId.exceptions.DaoException;
+import groupId.artifactId.exceptions.NoContentException;
 import groupId.artifactId.exceptions.OptimisticLockException;
 import groupId.artifactId.exceptions.ServiceException;
 import groupId.artifactId.service.api.IPizzaInfoService;
@@ -60,6 +61,8 @@ public class PizzaInfoService implements IPizzaInfoService {
             return pizzaInfoMapper.outputMapping(this.dao.get(id));
         } catch (DaoException e) {
             throw new ServiceException(e.getMessage(), e);
+        } catch (NoContentException e) {
+            throw new NoContentException(e.getMessage());
         } catch (Exception e) {
             throw new ServiceException("Failed to get Pizza Info at Service by id" + id, e);
         }

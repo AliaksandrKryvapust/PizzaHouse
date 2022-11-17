@@ -13,6 +13,7 @@ import groupId.artifactId.dao.entity.api.ICompletedOrder;
 import groupId.artifactId.dao.entity.api.IOrderData;
 import groupId.artifactId.dao.entity.api.IOrderStage;
 import groupId.artifactId.exceptions.DaoException;
+import groupId.artifactId.exceptions.NoContentException;
 import groupId.artifactId.exceptions.OptimisticLockException;
 import groupId.artifactId.exceptions.ServiceException;
 import groupId.artifactId.service.api.ICompletedOrderService;
@@ -109,6 +110,8 @@ public class OrderDataService implements IOrderDataService {
                     id.getId(), id.getTicketId(), id.isDone()));
         } catch (DaoException e) {
             throw new ServiceException(e.getMessage(), e);
+        } catch (NoContentException e) {
+            throw new NoContentException(e.getMessage());
         } catch (IllegalStateException e) {
             throw new IllegalStateException(e);
         } catch (Exception e) {
@@ -138,6 +141,8 @@ public class OrderDataService implements IOrderDataService {
             return orderDataMapper.outputCrudMapping(this.orderDataDao.get(id));
         } catch (DaoException e) {
             throw new ServiceException(e.getMessage(), e);
+        } catch (NoContentException e) {
+            throw new NoContentException(e.getMessage());
         } catch (Exception e) {
             throw new ServiceException("Failed to get Order Data at Service by id" + id, e);
         }
