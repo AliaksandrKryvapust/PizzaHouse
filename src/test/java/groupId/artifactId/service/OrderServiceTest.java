@@ -248,33 +248,26 @@ class OrderServiceTest {
     @Test
     void delete() {
         final String inputId = "1";
-        final String version = "1";
         final String delete = "false";
         ArgumentCaptor<Long> valueId = ArgumentCaptor.forClass(Long.class);
-        ArgumentCaptor<Integer> valueVersion = ArgumentCaptor.forClass(Integer.class);
         ArgumentCaptor<Boolean> valueDelete = ArgumentCaptor.forClass(Boolean.class);
         ArgumentCaptor<Long> valueIdT = ArgumentCaptor.forClass(Long.class);
-        ArgumentCaptor<Integer> valueVersionT = ArgumentCaptor.forClass(Integer.class);
         ArgumentCaptor<Boolean> valueDeleteT = ArgumentCaptor.forClass(Boolean.class);
         ArgumentCaptor<Long> valueIdO = ArgumentCaptor.forClass(Long.class);
-        ArgumentCaptor<Integer> valueVersionO = ArgumentCaptor.forClass(Integer.class);
         ArgumentCaptor<Boolean> valueDeleteO = ArgumentCaptor.forClass(Boolean.class);
 
         //test
-        orderService.delete(inputId, version, delete);
-        Mockito.verify(selectedItemDao, times(1)).delete(valueId.capture(), valueVersion.capture(), valueDelete.capture());
-        Mockito.verify(ticketDao, times(1)).delete(valueIdT.capture(), valueVersionT.capture(), valueDeleteT.capture());
-        Mockito.verify(orderDao, times(1)).delete(valueIdO.capture(), valueVersionO.capture(), valueDeleteO.capture());
+        orderService.delete(inputId, delete);
+        Mockito.verify(selectedItemDao, times(1)).delete(valueId.capture(), valueDelete.capture());
+        Mockito.verify(ticketDao, times(1)).delete(valueIdT.capture(), valueDeleteT.capture());
+        Mockito.verify(orderDao, times(1)).delete(valueIdO.capture(), valueDeleteO.capture());
 
         // assert
         Assertions.assertEquals(Long.valueOf(inputId), valueId.getValue());
-        Assertions.assertEquals(Integer.valueOf(version), valueVersion.getValue());
         Assertions.assertEquals(Boolean.valueOf(delete), valueDelete.getValue());
         Assertions.assertEquals(Long.valueOf(inputId), valueIdT.getValue());
-        Assertions.assertEquals(Integer.valueOf(version), valueVersionT.getValue());
         Assertions.assertEquals(Boolean.valueOf(delete), valueDeleteT.getValue());
         Assertions.assertEquals(Long.valueOf(inputId), valueIdO.getValue());
-        Assertions.assertEquals(Integer.valueOf(version), valueVersionO.getValue());
         Assertions.assertEquals(Boolean.valueOf(delete), valueDeleteO.getValue());
     }
 }

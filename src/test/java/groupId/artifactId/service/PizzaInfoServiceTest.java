@@ -184,19 +184,16 @@ class PizzaInfoServiceTest {
     @Test
     void delete() {
         final String inputId = "1";
-        final String version = "1";
         final String delete = "false";
         ArgumentCaptor<Long> valueId = ArgumentCaptor.forClass(Long.class);
-        ArgumentCaptor<Integer> valueVersion = ArgumentCaptor.forClass(Integer.class);
         ArgumentCaptor<Boolean> valueDelete = ArgumentCaptor.forClass(Boolean.class);
 
         //test
-        pizzaInfoService.delete(inputId, version, delete);
-        Mockito.verify(pizzaInfoDao, times(1)).delete(valueId.capture(), valueVersion.capture(), valueDelete.capture());
+        pizzaInfoService.delete(inputId, delete);
+        Mockito.verify(pizzaInfoDao, times(1)).delete(valueId.capture(), valueDelete.capture());
 
         // assert
         Assertions.assertEquals(Long.valueOf(inputId), valueId.getValue());
-        Assertions.assertEquals(Integer.valueOf(version), valueVersion.getValue());
         Assertions.assertEquals(Boolean.valueOf(delete), valueDelete.getValue());
     }
 }
