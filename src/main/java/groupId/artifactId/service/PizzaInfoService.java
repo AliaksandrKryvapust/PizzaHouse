@@ -113,15 +113,13 @@ public class PizzaInfoService implements IPizzaInfoService {
     }
 
     @Override
-    public void delete(String id, String version, String delete) {
+    public void delete(String id, String delete) {
         try {
-            this.dao.delete(Long.valueOf(id), Integer.valueOf(version), Boolean.valueOf(delete));
+            this.dao.delete(Long.valueOf(id), Boolean.valueOf(delete));
         } catch (DaoException e) {
             throw new ServiceException(e.getMessage(), e);
         } catch (IllegalStateException e) {
             throw new IllegalStateException(e);
-        } catch (OptimisticLockException e) {
-            throw new OptimisticLockException(e.getMessage());
         } catch (Exception e) {
             throw new ServiceException("Failed to delete Pizza Info with id:" + id, e);
         }

@@ -144,17 +144,15 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public void delete(String id, String version, String delete) {
+    public void delete(String id, String delete) {
         try {
-            this.selectedItemDao.delete(Long.valueOf(id), Integer.valueOf(version), Boolean.valueOf(delete));
-            this.ticketDao.delete(Long.valueOf(id), Integer.valueOf(version), Boolean.valueOf(delete));
-            this.orderDao.delete(Long.valueOf(id), Integer.valueOf(version), Boolean.valueOf(delete));
+            this.selectedItemDao.delete(Long.valueOf(id), Boolean.valueOf(delete));
+            this.ticketDao.delete(Long.valueOf(id), Boolean.valueOf(delete));
+            this.orderDao.delete(Long.valueOf(id), Boolean.valueOf(delete));
         } catch (DaoException e) {
             throw new ServiceException(e.getMessage(), e);
         } catch (IllegalStateException e) {
             throw new IllegalStateException(e);
-        } catch (OptimisticLockException e) {
-            throw new OptimisticLockException(e.getMessage());
         } catch (Exception e) {
             throw new ServiceException("Failed to delete Order with id:" + id, e);
         }

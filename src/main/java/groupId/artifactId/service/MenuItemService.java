@@ -114,15 +114,13 @@ public class MenuItemService implements IMenuItemService {
     }
 
     @Override
-    public void delete(String id, String version, String delete) {
+    public void delete(String id, String delete) {
         try {
-            this.dao.delete(Long.valueOf(id), Integer.valueOf(version), Boolean.valueOf(delete));
+            this.dao.delete(Long.valueOf(id), Boolean.valueOf(delete));
         } catch (DaoException e) {
             throw new ServiceException(e.getMessage(), e);
         } catch (IllegalStateException e) {
             throw new IllegalStateException(e);
-        } catch (OptimisticLockException e) {
-            throw new OptimisticLockException(e.getMessage());
         } catch (Exception e) {
             throw new ServiceException("Failed to delete Menu item with id:" + id, e);
         }
