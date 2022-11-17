@@ -4,6 +4,7 @@ import groupId.artifactId.dao.api.IOrderStageDao;
 import groupId.artifactId.dao.entity.OrderStage;
 import groupId.artifactId.dao.entity.api.IOrderStage;
 import groupId.artifactId.exceptions.DaoException;
+import groupId.artifactId.exceptions.NoContentException;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -77,10 +78,13 @@ public class OrderStageDao implements IOrderStageDao {
                 statement.setLong(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     resultSet.next();
+                    if (!resultSet.isLast()) {
+                        throw new NoContentException("There is no Order Stage with id:" + id);
+                    }
                     return this.mapper(resultSet);
                 }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw new DaoException("Failed to get Order stage by id:" + id, e);
         }
     }

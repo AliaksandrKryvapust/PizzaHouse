@@ -10,6 +10,7 @@ import groupId.artifactId.dao.entity.api.IOrder;
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
 import groupId.artifactId.dao.entity.api.ISelectedItem;
 import groupId.artifactId.exceptions.DaoException;
+import groupId.artifactId.exceptions.NoContentException;
 import groupId.artifactId.exceptions.OptimisticLockException;
 
 import javax.sql.DataSource;
@@ -86,10 +87,13 @@ public class OrderDao implements IOrderDao {
                 statement.setLong(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     resultSet.next();
+                    if (!resultSet.isLast()) {
+                        throw new NoContentException("There is no Order with id:" + id);
+                    }
                     return this.mapper(resultSet);
                 }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw new DaoException("Failed to get Order by id:" + id, e);
         }
     }

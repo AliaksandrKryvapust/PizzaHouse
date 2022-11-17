@@ -4,6 +4,7 @@ import groupId.artifactId.dao.api.IPizzaInfoDao;
 import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
 import groupId.artifactId.exceptions.DaoException;
+import groupId.artifactId.exceptions.NoContentException;
 import groupId.artifactId.exceptions.OptimisticLockException;
 
 import javax.sql.DataSource;
@@ -91,10 +92,13 @@ public class PizzaInfoDao implements IPizzaInfoDao {
                 statement.setLong(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     resultSet.next();
+                    if (!resultSet.isLast()) {
+                        throw new NoContentException("There is no Pizza Info with id:" + id);
+                    }
                     return this.mapper(resultSet);
                 }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw new DaoException("Failed to get Pizza Info by id:" + id, e);
         }
     }

@@ -4,6 +4,7 @@ import groupId.artifactId.dao.api.IOrderDataDao;
 import groupId.artifactId.dao.entity.*;
 import groupId.artifactId.dao.entity.api.*;
 import groupId.artifactId.exceptions.DaoException;
+import groupId.artifactId.exceptions.NoContentException;
 import groupId.artifactId.exceptions.OptimisticLockException;
 
 import javax.sql.DataSource;
@@ -94,10 +95,13 @@ public class OrderDataDao implements IOrderDataDao {
                 statement.setLong(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     resultSet.next();
+                    if (!resultSet.isLast()) {
+                        throw new NoContentException("There is no Order Data with id:" + id);
+                    }
                     return this.mapper(resultSet);
                 }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw new DaoException("Failed to get Order Data by id:" + id, e);
         }
     }
@@ -148,10 +152,13 @@ public class OrderDataDao implements IOrderDataDao {
                 statement.setLong(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     resultSet.next();
+                    if (!resultSet.isLast()) {
+                        throw new NoContentException("There is no Order Data with ticket id:" + id);
+                    }
                     return this.mapper(resultSet);
                 }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw new DaoException("Failed to get Order Data by ticket id:" + id, e);
         }
     }
@@ -179,7 +186,7 @@ public class OrderDataDao implements IOrderDataDao {
                     return resultSet.next();
                 }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw new DaoException("Failed to select Order Data with ticket id:" + id, e);
         }
     }

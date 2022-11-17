@@ -4,6 +4,7 @@ import groupId.artifactId.dao.api.IPizzaDao;
 import groupId.artifactId.dao.entity.Pizza;
 import groupId.artifactId.dao.entity.api.IPizza;
 import groupId.artifactId.exceptions.DaoException;
+import groupId.artifactId.exceptions.NoContentException;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -76,10 +77,13 @@ public class PizzaDao implements IPizzaDao {
                 statement.setLong(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     resultSet.next();
+                    if (!resultSet.isLast()) {
+                        throw new NoContentException("There is no Pizza with id:" + id);
+                    }
                     return this.mapper(resultSet);
                 }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw new DaoException("Failed to get Pizza by id:" + id, e);
         }
     }
