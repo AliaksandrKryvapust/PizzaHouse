@@ -340,6 +340,7 @@ class OrderDataServiceTest {
                 id, id, creationDate, version), singletonList(new OrderStage()),
                 id, id, done, creationDate, version);
         final OrderStage orderStage = new OrderStage(id, id, description);
+        Mockito.when(orderDataService.isIdValid(any(Long.class))).thenReturn(true);
         Mockito.when(orderDataMapper.inputMapping(any(OrderDataDtoInput.class))).thenReturn(orderData);
         Mockito.when(orderDataDao.update(any(IOrderData.class), any(Long.class), any(Integer.class))).thenReturn(orderDataUpdate);
         Mockito.when(completedOrderMapper.inputMapping(any(IOrderData.class))).thenReturn(completedOrder);
@@ -383,6 +384,7 @@ class OrderDataServiceTest {
         final IOrderData orderData = new OrderData(stages, id, done);
         final OrderDataDtoCrudOutput orderDataDtoOutput = OrderDataDtoCrudOutput.builder().id(id).ticketId(id).done(done)
                 .createdAt(creationDate).version(version).build();
+        Mockito.when(orderDataService.isIdValid(any(Long.class))).thenReturn(true);
         Mockito.when(orderDataMapper.inputMapping(any(OrderDataDtoInput.class))).thenReturn(orderData);
         Mockito.when(orderStageDao.doesStageExist(any(Long.class), any(String.class))).thenReturn(true);
         Mockito.when(orderDataMapper.outputCrudMapping(any(IOrderData.class))).thenReturn(orderDataDtoOutput);

@@ -165,6 +165,7 @@ class PizzaInfoServiceTest {
         final PizzaInfo pizzaInfoOutput = new PizzaInfo(id, name, description, size);
         final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(name).description(description)
                 .size(size).createdAt(creationDate).version(version).build();
+        Mockito.when(pizzaInfoService.isIdValid(any(Long.class))).thenReturn(true);
         Mockito.when(pizzaInfoMapper.inputMapping(any(PizzaInfoDtoInput.class))).thenReturn(pizzaInfo);
         Mockito.when(pizzaInfoDao.update(any(IPizzaInfo.class), any(Long.class), any(Integer.class))).thenReturn(pizzaInfoOutput);
         Mockito.when(pizzaInfoMapper.outputMapping(any(IPizzaInfo.class))).thenReturn(pizzaInfoDtoOutput);

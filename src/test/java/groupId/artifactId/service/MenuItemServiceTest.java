@@ -178,6 +178,7 @@ class MenuItemServiceTest {
         final MenuItem menuItem = new MenuItem(id, price, id, id);
         final MenuItemDtoCrudOutput dtoCrudOutput = MenuItemDtoCrudOutput.builder().id(id).price(price).pizzaInfoId(id)
                 .menuId(id).build();
+        Mockito.when(menuItemService.isIdValid(any(Long.class))).thenReturn(true);
         Mockito.when(menuItemMapper.inputMapping(any(MenuItemDtoInput.class))).thenReturn(new MenuItem(price, id, id));
         Mockito.when(menuItemDao.update(any(IMenuItem.class), any(Long.class), any(Integer.class))).thenReturn(menuItem);
         Mockito.when(menuItemMapper.outputCrudMapping(any(IMenuItem.class))).thenReturn(dtoCrudOutput);
