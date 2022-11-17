@@ -195,7 +195,8 @@ class OrderDataServiceTest {
         final String description = "Order accepted";
         final Instant creationDate = Instant.now();
         final int version = 3;
-        final OrderDataDtoInput orderDataDtoInput = new OrderDataDtoInput(id, done, description);
+        final OrderDataDtoInput orderDataDtoInput = OrderDataDtoInput.builder().ticketId(id).done(done)
+                .description(description).build();
         List<IOrderStage> stages = singletonList(new OrderStage(description));
         final IOrderData orderData = new OrderData(stages, id, done);
         final OrderDataDtoCrudOutput dtoOutput = OrderDataDtoCrudOutput.builder().id(id).ticketId(id).done(done)
@@ -226,7 +227,8 @@ class OrderDataServiceTest {
         final String description = "Order accepted";
         final Instant creationDate = Instant.now();
         final int version = 3;
-        final OrderDataDtoInput orderDataDtoInput = new OrderDataDtoInput(id, done, description);
+        final OrderDataDtoInput orderDataDtoInput = OrderDataDtoInput.builder().ticketId(id).done(done)
+                .description(description).build();
         List<IOrderStage> stages = singletonList(new OrderStage(description));
         final IOrderData orderData = new OrderData(stages, id, done);
         final OrderDataDtoCrudOutput dtoOutput = OrderDataDtoCrudOutput.builder().id(id).ticketId(id).done(done)
@@ -320,7 +322,8 @@ class OrderDataServiceTest {
         final double price = 20.0;
         final int version = 1;
         final Instant creationDate = Instant.now();
-        final OrderDataDtoInput orderDataDtoInput = new OrderDataDtoInput(id, done, description);
+        final OrderDataDtoInput orderDataDtoInput = OrderDataDtoInput.builder().ticketId(id).done(done)
+                .description(description).build();
         List<IOrderStage> stages = singletonList(new OrderStage(description));
         final IOrderData orderData = new OrderData(stages, id, done);
         final IOrderData orderDataUpdate = new OrderData(id, id, done);
@@ -374,7 +377,8 @@ class OrderDataServiceTest {
         final String description = "Order accepted";
         final int version = 1;
         final Instant creationDate = Instant.now();
-        final OrderDataDtoInput orderDataDtoInput = new OrderDataDtoInput(id, done, description);
+        final OrderDataDtoInput orderDataDtoInput = OrderDataDtoInput.builder().ticketId(id).done(done)
+                .description(description).build();
         List<IOrderStage> stages = singletonList(new OrderStage(description));
         final IOrderData orderData = new OrderData(stages, id, done);
         final OrderDataDtoCrudOutput orderDataDtoOutput = OrderDataDtoCrudOutput.builder().id(id).ticketId(id).done(done)

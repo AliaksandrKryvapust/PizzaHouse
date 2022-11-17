@@ -20,7 +20,8 @@ class OrderDataValidatorTest {
         final boolean done = false;
         final String description = "Order accepted";
         final String messageExpected = "None of Ticket id in OrderDataDtoInput have been sent as an input";
-        final OrderDataDtoInput orderDataDtoInput = new OrderDataDtoInput(null, done, description);
+        final OrderDataDtoInput orderDataDtoInput = OrderDataDtoInput.builder().ticketId(0L).done(done)
+                .description(description).build();
 
         //test
         Exception exception = assertThrows(IllegalArgumentException.class, () -> orderDataValidator.validate(orderDataDtoInput));
@@ -33,24 +34,11 @@ class OrderDataValidatorTest {
     void validatePreconditionTwo() {
         // preconditions
         final long id = 1L;
-        final String description = "Order accepted";
-        final String messageExpected = "None of OrderData done status have been sent as an input";
-        final OrderDataDtoInput orderDataDtoInput = new OrderDataDtoInput(id, null, description);
-
-        //test
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> orderDataValidator.validate(orderDataDtoInput));
-
-        // assert
-        Assertions.assertEquals(messageExpected, exception.getMessage());
-    }
-
-    @Test
-    void validatePreconditionThree() {
-        // preconditions
-        final long id = 1L;
         final boolean done = false;
+        final String description = "";
         final String messageExpected = "None of Order Stage description have been sent as an input";
-        final OrderDataDtoInput orderDataDtoInput = new OrderDataDtoInput(id, done, null);
+        final OrderDataDtoInput orderDataDtoInput = OrderDataDtoInput.builder().ticketId(id).done(done)
+                .description(description).build();
 
         //test
         Exception exception = assertThrows(IllegalArgumentException.class, () -> orderDataValidator.validate(orderDataDtoInput));

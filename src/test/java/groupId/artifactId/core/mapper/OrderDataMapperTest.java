@@ -37,7 +37,8 @@ class OrderDataMapperTest {
         final long id = 1L;
         final boolean done = false;
         final String description = "Order accepted";
-        final OrderDataDtoInput orderDataDtoInput = new OrderDataDtoInput(id, done, description);
+        final OrderDataDtoInput orderDataDtoInput = OrderDataDtoInput.builder().ticketId(id).done(done)
+                .description(description).build();
         final IOrderStage stages = new OrderStage(description);
         Mockito.when(orderStageMapper.inputMapping(any(String.class))).thenReturn(stages);
 

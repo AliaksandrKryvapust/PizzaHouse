@@ -10,13 +10,10 @@ public class OrderDataValidator implements IOrderDataValidator {
 
     @Override
     public void validate(OrderDataDtoInput orderDataDtoInput) {
-        if (orderDataDtoInput.getTicketId() == null || orderDataDtoInput.getTicketId() < 0) {
+        if (orderDataDtoInput.getTicketId() <= 0) {
             throw new IllegalArgumentException("None of Ticket id in OrderDataDtoInput have been sent as an input");
         }
-        if (orderDataDtoInput.getDone() == null) {
-            throw new IllegalArgumentException("None of OrderData done status have been sent as an input");
-        }
-        if (orderDataDtoInput.getDescription() == null || orderDataDtoInput.getDescription().isBlank()) {
+        if (orderDataDtoInput.getDescription().isBlank()) {
             throw new IllegalArgumentException("None of Order Stage description have been sent as an input");
         }
     }

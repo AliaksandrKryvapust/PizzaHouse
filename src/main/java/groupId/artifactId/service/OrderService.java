@@ -97,7 +97,8 @@ public class OrderService implements IOrderService {
                 items.add(output);
             }
             ITicket ticket = this.ticketDao.save(new Ticket(orderId.getId()));
-            orderDataService.save(new OrderDataDtoInput(ticket.getId(), false, "Order accepted"));
+            orderDataService.save(OrderDataDtoInput.builder().ticketId(ticket.getId()).done(false)
+                    .description("Order accepted").build());
             return ticketMapper.outputCrudMapping(new Ticket(new Order(items, orderId.getId()), ticket.getId(), ticket.getOrderId()));
         } catch (DaoException e) {
             throw new ServiceException(e.getMessage(), e);

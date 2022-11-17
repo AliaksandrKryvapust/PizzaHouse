@@ -120,7 +120,7 @@ public class OrderDataDao implements IOrderDataDao {
                 if (rows > 1) {
                     throw new IllegalStateException("Incorrect order data table update, more than 1 row affected");
                 }
-                return new OrderData(id, orderData.isDone());
+                return new OrderData(id, orderData.getTicketId(), orderData.isDone());
             }
         } catch (SQLException e) {
             throw new DaoException("Failed to update Order data" + orderData + " with id:" + id, e);
