@@ -90,7 +90,7 @@ public class MenuDao implements IMenuDao {
                 statement.setBoolean(2, menu.getEnable());
                 rows += statement.executeUpdate();
                 if (rows == 0) {
-                    throw new SQLException("menu table insert failed, no rows affected");
+                    throw new NoContentException("menu table insert failed, check preconditions and FK values");
                 }
                 if (rows > 1) {
                     throw new IllegalStateException("Incorrect menu table update, more than 1 row affected");

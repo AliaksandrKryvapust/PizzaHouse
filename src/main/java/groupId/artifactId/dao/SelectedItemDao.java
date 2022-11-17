@@ -49,7 +49,7 @@ public class SelectedItemDao implements ISelectedItemDao {
                 statement.setInt(3, selectedItem.getCount());
                 rows += statement.executeUpdate();
                 if (rows == 0) {
-                    throw new SQLException("selected item table insert failed, no rows affected");
+                    throw new NoContentException("selected item table insert failed, check preconditions and FK values");
                 }
                 if (rows > 1) {
                     throw new IllegalStateException("Incorrect selected item table update, more than 1 row affected");

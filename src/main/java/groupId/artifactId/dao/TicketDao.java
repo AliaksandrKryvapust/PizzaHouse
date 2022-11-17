@@ -45,7 +45,7 @@ public class TicketDao implements ITicketDao {
                 statement.setLong(1, ticket.getOrderId());
                 rows += statement.executeUpdate();
                 if (rows == 0) {
-                    throw new SQLException("ticket table insert failed, no rows affected");
+                    throw new NoContentException("ticket table insert failed, check preconditions and FK values");
                 }
                 if (rows > 1) {
                     throw new IllegalStateException("Incorrect ticket table update, more than 1 row affected");

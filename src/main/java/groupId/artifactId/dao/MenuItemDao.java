@@ -47,7 +47,7 @@ public class MenuItemDao implements IMenuItemDao {
                 statement.setLong(3, menuItem.getMenuId());
                 rows += statement.executeUpdate();
                 if (rows == 0) {
-                    throw new SQLException("menu_item table insert failed, no rows affected");
+                    throw new NoContentException("menu_item table insert failed, check preconditions and FK values");
                 }
                 if (rows > 1) {
                     throw new IllegalStateException("Incorrect menu_item table update, more than 1 row affected");

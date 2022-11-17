@@ -37,7 +37,7 @@ public class PizzaDao implements IPizzaDao {
                 statement.setInt(3, pizza.getSize());
                 rows += statement.executeUpdate();
                 if (rows == 0) {
-                    throw new SQLException("pizza table insert failed, no rows affected");
+                    throw new NoContentException("pizza table insert failed, check preconditions and FK values");
                 }
                 if (rows > 1) {
                     throw new IllegalStateException("Incorrect pizza table update, more than 1 row affected");
