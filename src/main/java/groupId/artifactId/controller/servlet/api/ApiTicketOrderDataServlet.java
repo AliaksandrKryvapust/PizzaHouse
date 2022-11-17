@@ -3,6 +3,7 @@ package groupId.artifactId.controller.servlet.api;
 import groupId.artifactId.controller.utils.IoC.JsonConverterSingleton;
 import groupId.artifactId.controller.utils.JsonConverter;
 import groupId.artifactId.core.Constants;
+import groupId.artifactId.exceptions.NoContentException;
 import groupId.artifactId.service.IoC.OrderDataServiceSingleton;
 import groupId.artifactId.service.api.IOrderDataService;
 import org.slf4j.Logger;
@@ -34,15 +35,15 @@ public class ApiTicketOrderDataServlet extends HttpServlet {
             resp.setCharacterEncoding(Constants.ENCODING);
             String id = req.getParameter(Constants.PARAMETER_ID);
             if (id != null) {
-                if (orderDataService.isTicketIdValid(Long.valueOf(id))) {
-                    resp.getWriter().write(jsonConverter.fromOrderDataToJson(orderDataService.getAllData(Long.valueOf(id))));
-                    resp.setStatus(HttpServletResponse.SC_OK);
-                } else {
-                    resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
-                }
+                resp.getWriter().write(jsonConverter.fromOrderDataToJson(orderDataService.getAllData(Long.valueOf(id))));
+                resp.setStatus(HttpServletResponse.SC_OK);
             } else {
                 resp.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
             }
+        } catch (NoContentException e) {
+            resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            logger.error("/api/ticket/order_data there is no content to fulfill doGet method " + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             logger.error("/api/ticket/order_data crashed during doGet method" + e.getMessage() + "\t" + e.getCause() +
