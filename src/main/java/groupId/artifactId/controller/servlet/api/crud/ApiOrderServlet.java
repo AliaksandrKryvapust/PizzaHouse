@@ -8,10 +8,7 @@ import groupId.artifactId.core.Constants;
 import groupId.artifactId.core.dto.input.OrderDtoInput;
 import groupId.artifactId.core.dto.output.crud.TicketDtoCrudOutput;
 import groupId.artifactId.exceptions.NoContentException;
-import groupId.artifactId.exceptions.OptimisticLockException;
-import groupId.artifactId.service.IoC.MenuItemServiceSingleton;
 import groupId.artifactId.service.IoC.OrderServiceSingleton;
-import groupId.artifactId.service.api.IMenuItemService;
 import groupId.artifactId.service.api.IOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,7 +97,6 @@ public class ApiOrderServlet extends HttpServlet {
 
     //DELETE POSITION
     //need param id  (id = 1)
-    //need param version/date_update - optimistic lock (version=1)
     //param delete - true/false completely delete (delete=false)
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
@@ -108,11 +104,10 @@ public class ApiOrderServlet extends HttpServlet {
             resp.setCharacterEncoding(Constants.ENCODING);
             resp.setContentType(Constants.CONTENT_TYPE);
             String id = req.getParameter(Constants.PARAMETER_ID);
-            String version = req.getParameter(Constants.PARAMETER_VERSION);
             String delete = req.getParameter(Constants.PARAMETER_DELETE);
-            if (id != null && version != null && delete != null) {
+            if (id != null && delete != null) {
                 if (orderService.isTicketIdValid(Long.valueOf(id))) {
-                    orderService.delete(id, version, delete);
+                    orderService.delete(id, delete);
                     resp.setStatus(HttpServletResponse.SC_OK);
                 } else {
                     resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
@@ -120,10 +115,6 @@ public class ApiOrderServlet extends HttpServlet {
             } else {
                 resp.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
             }
-        } catch (OptimisticLockException e) {
-            resp.setStatus(HttpServletResponse.SC_CONFLICT);
-            logger.error("/api/order optimistic lock during doDelete method" + e.getMessage() + "\t" + e.getCause() +
-                    "\tresponse status: " + resp.getStatus());
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             logger.error("/api/order crashed during doDelete method" + e.getMessage() + "\t" + e.getCause() +
