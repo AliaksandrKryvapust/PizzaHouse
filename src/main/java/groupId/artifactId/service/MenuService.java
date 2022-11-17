@@ -7,6 +7,7 @@ import groupId.artifactId.core.mapper.MenuMapper;
 import groupId.artifactId.dao.api.IMenuDao;
 import groupId.artifactId.dao.entity.api.IMenu;
 import groupId.artifactId.exceptions.DaoException;
+import groupId.artifactId.exceptions.NoContentException;
 import groupId.artifactId.exceptions.OptimisticLockException;
 import groupId.artifactId.exceptions.ServiceException;
 import groupId.artifactId.service.api.IMenuService;
@@ -45,6 +46,8 @@ public class MenuService implements IMenuService {
             return menuMapper.outputCrudMapping(this.dao.get(id));
         } catch (DaoException e) {
             throw new ServiceException(e.getMessage(), e);
+        } catch (NoContentException e) {
+            throw new NoContentException(e.getMessage());
         } catch (Exception e) {
             throw new ServiceException("Failed to get Menu at Service by id" + id, e);
         }

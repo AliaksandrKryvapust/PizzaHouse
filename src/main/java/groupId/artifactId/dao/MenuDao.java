@@ -8,6 +8,7 @@ import groupId.artifactId.dao.entity.api.IMenu;
 import groupId.artifactId.dao.entity.api.IMenuItem;
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
 import groupId.artifactId.exceptions.DaoException;
+import groupId.artifactId.exceptions.NoContentException;
 import groupId.artifactId.exceptions.OptimisticLockException;
 
 import javax.sql.DataSource;
@@ -66,10 +67,13 @@ public class MenuDao implements IMenuDao {
                 statement.setLong(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     resultSet.next();
+                    if (!resultSet.isLast()) {
+                        throw new NoContentException("There is no Menu with id:" + id);
+                    }
                     return this.mapper(resultSet);
                 }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw new DaoException("Failed to get Menu by id:" + id, e);
         }
     }

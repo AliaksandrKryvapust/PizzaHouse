@@ -7,6 +7,7 @@ import groupId.artifactId.controller.validator.api.IMenuValidator;
 import groupId.artifactId.core.Constants;
 import groupId.artifactId.core.dto.input.MenuDtoInput;
 import groupId.artifactId.core.dto.output.crud.MenuDtoCrudOutput;
+import groupId.artifactId.exceptions.NoContentException;
 import groupId.artifactId.exceptions.OptimisticLockException;
 import groupId.artifactId.service.IoC.MenuServiceSingleton;
 import groupId.artifactId.service.api.IMenuService;
@@ -44,16 +45,15 @@ public class ApiMenuServlet extends HttpServlet {
             resp.setCharacterEncoding(Constants.ENCODING);
             String id = req.getParameter(Constants.PARAMETER_ID);
             if (id != null) {
-                if (menuService.isIdValid(Long.valueOf(id))) {
-                    resp.getWriter().write(jsonConverter.fromMenuToCrudJson(menuService.get(Long.valueOf(id))));
-                    resp.setStatus(HttpServletResponse.SC_OK);
-                } else {
-                    resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
-                }
+                resp.getWriter().write(jsonConverter.fromMenuToCrudJson(menuService.get(Long.valueOf(id))));
             } else {
                 resp.getWriter().write(jsonConverter.fromMenuListToJson(menuService.get()));
-                resp.setStatus(HttpServletResponse.SC_OK);
             }
+            resp.setStatus(HttpServletResponse.SC_OK);
+        } catch (NoContentException e) {
+            resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            logger.error("/api/menu there is no content to fulfill doGet method " + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             logger.error("/api/menu crashed during doGet method" + e.getMessage() + "\t" + e.getCause() +
