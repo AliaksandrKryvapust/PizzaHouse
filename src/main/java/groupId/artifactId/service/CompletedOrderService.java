@@ -10,6 +10,7 @@ import groupId.artifactId.dao.entity.Pizza;
 import groupId.artifactId.dao.entity.api.ICompletedOrder;
 import groupId.artifactId.dao.entity.api.IPizza;
 import groupId.artifactId.exceptions.DaoException;
+import groupId.artifactId.exceptions.NoContentException;
 import groupId.artifactId.exceptions.ServiceException;
 import groupId.artifactId.service.api.ICompletedOrderService;
 
@@ -48,17 +49,6 @@ public class CompletedOrderService implements ICompletedOrderService {
             throw new ServiceException(e.getMessage(), e);
         } catch (Exception e) {
             throw new ServiceException("Failed to getAllDataRow at Completed order Service by id" + id, e);
-        }
-    }
-
-    @Override
-    public Boolean isOrderIdValid(Long id) {
-        try {
-            return this.completedOrderDao.exist(id);
-        } catch (DaoException e) {
-            throw new ServiceException(e.getMessage(), e);
-        } catch (Exception e) {
-            throw new ServiceException("Failed to check Order state at Completed order Service by id" + id, e);
         }
     }
 
@@ -113,6 +103,8 @@ public class CompletedOrderService implements ICompletedOrderService {
     public CompletedOrderDtoCrudOutput get(Long id) {
         try {
             return completedOrderMapper.outputCrudMapping(this.completedOrderDao.get(id));
+        } catch (NoContentException e) {
+            throw new NoContentException(e.getMessage());
         } catch (DaoException e) {
             throw new ServiceException(e.getMessage(), e);
         } catch (Exception e) {

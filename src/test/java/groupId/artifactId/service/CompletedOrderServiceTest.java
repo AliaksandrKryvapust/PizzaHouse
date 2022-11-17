@@ -194,20 +194,6 @@ class CompletedOrderServiceTest {
     }
 
     @Test
-    void isOrderIdValid() {
-        // preconditions
-        final long id = 1L;
-        Mockito.when(completedOrderDao.exist(id)).thenReturn(true);
-
-        //test
-        Boolean test = completedOrderService.isOrderIdValid(id);
-
-        // assert
-        Assertions.assertNotNull(test);
-        Assertions.assertEquals(true, test);
-    }
-
-    @Test
     void isPizzaIdValid() {
         // preconditions
         final long id = 1L;

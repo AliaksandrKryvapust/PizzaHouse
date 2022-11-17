@@ -7,8 +7,5 @@ import groupId.artifactId.dao.entity.api.ICompletedOrder;
 public interface ICompletedOrderService extends IService<CompletedOrderDtoCrudOutput, ICompletedOrder> {
     CompletedOrderDtoOutput getAllData(Long id);
     ICompletedOrder getAllDataRow(Long id);
-
-    Boolean isOrderIdValid(Long id);
-
     Boolean isPizzaIdValid(Long id);
 }

@@ -4,6 +4,7 @@ import groupId.artifactId.dao.api.ICompletedOrderDao;
 import groupId.artifactId.dao.entity.*;
 import groupId.artifactId.dao.entity.api.*;
 import groupId.artifactId.exceptions.DaoException;
+import groupId.artifactId.exceptions.NoContentException;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -49,20 +50,6 @@ public class CompletedOrderDao implements ICompletedOrderDao {
             }
         } catch (Exception e) {
             throw new DaoException("Failed to get Completed Order by Ticket id:" + id, e);
-        }
-    }
-
-    @Override
-    public Boolean exist(Long id) {
-        try (Connection con = dataSource.getConnection()) {
-            try (PreparedStatement statement = con.prepareStatement(SELECT_COMPLETED_ORDER_BY_ID_SQL)) {
-                statement.setLong(1, id);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    return resultSet.next();
-                }
-            }
-        } catch (Exception e) {
-            throw new DaoException("Failed to select Completed Order with id:" + id, e);
         }
     }
 
@@ -116,10 +103,13 @@ public class CompletedOrderDao implements ICompletedOrderDao {
                 statement.setLong(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     resultSet.next();
+                    if (!resultSet.isLast()) {
+                        throw new NoContentException("There is no Completed Order with id:" + id);
+                    }
                     return this.mapper(resultSet);
                 }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw new DaoException("Failed to get Completed Order by id:" + id, e);
         }
     }
