@@ -49,6 +49,8 @@ public class OrderService implements IOrderService {
             return ticketMapper.outputMapping(this.ticketDao.getAllData(id));
         } catch (DaoException e) {
             throw new ServiceException(e.getMessage(), e);
+        } catch (NoContentException e) {
+            throw new NoContentException(e.getMessage());
         } catch (Exception e) {
             throw new ServiceException("Failed to getAll data from Ticket at Service by id" + id, e);
         }

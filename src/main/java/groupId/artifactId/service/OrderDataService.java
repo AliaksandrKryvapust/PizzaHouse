@@ -45,6 +45,8 @@ public class OrderDataService implements IOrderDataService {
             return orderDataMapper.outputMapping(this.orderDataDao.getAllData(id));
         } catch (DaoException e) {
             throw new ServiceException(e.getMessage(), e);
+        } catch (NoContentException e) {
+            throw new NoContentException(e.getMessage());
         } catch (Exception e) {
             throw new ServiceException("Failed to getAll data from Order Data at Service by id" + id, e);
         }

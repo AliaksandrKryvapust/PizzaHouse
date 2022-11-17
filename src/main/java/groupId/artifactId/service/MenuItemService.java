@@ -73,6 +73,8 @@ public class MenuItemService implements IMenuItemService {
             return menuItemMapper.outputMapping(this.dao.getAllData(id));
         } catch (DaoException e) {
             throw new ServiceException(e.getMessage(), e);
+        } catch (NoContentException e) {
+            throw new NoContentException(e.getMessage());
         } catch (Exception e) {
             throw new ServiceException("Failed to getAll data from Menu Item at Service by id" + id, e);
         }

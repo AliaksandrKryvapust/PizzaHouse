@@ -36,6 +36,8 @@ public class CompletedOrderService implements ICompletedOrderService {
             return completedOrderMapper.outputMapping(this.completedOrderDao.getAllData(id));
         } catch (DaoException e) {
             throw new ServiceException(e.getMessage(), e);
+        } catch (NoContentException e) {
+            throw new NoContentException(e.getMessage());
         } catch (Exception e) {
             throw new ServiceException("Failed to getAllData at Completed order Service by id" + id, e);
         }
@@ -47,6 +49,8 @@ public class CompletedOrderService implements ICompletedOrderService {
             return this.completedOrderDao.getAllData(id);
         } catch (DaoException e) {
             throw new ServiceException(e.getMessage(), e);
+        } catch (NoContentException e) {
+            throw new NoContentException(e.getMessage());
         } catch (Exception e) {
             throw new ServiceException("Failed to getAllDataRow at Completed order Service by id" + id, e);
         }
