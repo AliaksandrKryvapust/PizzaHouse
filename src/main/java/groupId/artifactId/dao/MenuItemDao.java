@@ -30,7 +30,7 @@ public class MenuItemDao implements IMenuItemDao {
             "menu_item.creation_date AS cd, menu_item.version AS ver, menu_id, name, description, size," +
             "pi.creation_date AS picd, pi.version AS piv, menu_id FROM pizza_manager.menu_item " +
             "INNER JOIN pizza_manager.pizza_info pi on menu_item.pizza_info_id = pi.id WHERE menu_item.id=?;";
-    private static final String DELETE_MENU_ITEM_SQL = "DELETE FROM pizza_manager.menu_item WHERE id=? AND version=?;";
+    private static final String DELETE_MENU_ITEM_SQL = "DELETE FROM pizza_manager.menu_item WHERE id=?;";
 
     public MenuItemDao(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -114,16 +114,12 @@ public class MenuItemDao implements IMenuItemDao {
     }
 
     @Override
-    public void delete(Long id, Integer version, Boolean delete){
+    public void delete(Long id, Boolean delete){
         try (Connection con = dataSource.getConnection()) {
             try (PreparedStatement statement = con.prepareStatement(DELETE_MENU_ITEM_SQL)) {
                 long rows = 0;
                 statement.setLong(1, id);
-                statement.setInt(2, version);
                 rows += statement.executeUpdate();
-                if (rows == 0) {
-                    throw new OptimisticLockException("menu_item table delete failed,version does not match update denied");
-                }
                 if (rows > 1) {
                     throw new IllegalStateException("Incorrect pizza_info table delete, more than 1 row affected");
                 }

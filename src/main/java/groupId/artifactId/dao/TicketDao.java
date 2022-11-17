@@ -5,7 +5,6 @@ import groupId.artifactId.dao.entity.*;
 import groupId.artifactId.dao.entity.api.*;
 import groupId.artifactId.exceptions.DaoException;
 import groupId.artifactId.exceptions.NoContentException;
-import groupId.artifactId.exceptions.OptimisticLockException;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -29,7 +28,7 @@ public class TicketDao implements ITicketDao {
             "INNER JOIN pizza_manager.selected_item si on ord.id = si.order_id " +
             "INNER JOIN pizza_manager.menu_item mi on mi.id = si.menu_item_id " +
             "INNER JOIN pizza_manager.pizza_info pi on pi.id = mi.pizza_info_id WHERE ord.id=? ORDER BY siid, miid, pizza_info_id;";
-    private static final String DELETE_TICKET_SQL = "DELETE FROM pizza_manager.ticket WHERE id=? AND version=?;";
+    private static final String DELETE_TICKET_SQL = "DELETE FROM pizza_manager.ticket WHERE id=?;";
     private final DataSource dataSource;
 
     public TicketDao(DataSource dataSource) {
@@ -99,16 +98,12 @@ public class TicketDao implements ITicketDao {
     }
 
     @Override
-    public void delete(Long id, Integer version, Boolean delete) {
+    public void delete(Long id, Boolean delete) {
         try (Connection con = dataSource.getConnection()) {
             try (PreparedStatement statement = con.prepareStatement(DELETE_TICKET_SQL)) {
                 long rows = 0;
                 statement.setLong(1, id);
-                statement.setInt(2, version);
                 rows += statement.executeUpdate();
-                if (rows == 0) {
-                    throw new OptimisticLockException("ticket table delete failed,version does not match update denied");
-                }
                 if (rows > 1) {
                     throw new IllegalStateException("Incorrect ticket table delete, more than 1 row affected");
                 }

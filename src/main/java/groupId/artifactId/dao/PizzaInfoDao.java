@@ -23,7 +23,7 @@ public class PizzaInfoDao implements IPizzaInfoDao {
     private static final String SELECT_PIZZA_INFO_BY_ID_SQL = "SELECT id, name, description, size, creation_date, " +
             "version FROM pizza_manager.pizza_info WHERE id=?;";
     private static final String SELECT_PIZZA_INFO_BY_NAME_SQL = "SELECT name FROM pizza_manager.pizza_info WHERE name=?;";
-    private static final String DELETE_PIZZA_INFO_SQL = "DELETE FROM pizza_manager.pizza_info WHERE id=? AND version=?;";
+    private static final String DELETE_PIZZA_INFO_SQL = "DELETE FROM pizza_manager.pizza_info WHERE id=?;";
 
     public PizzaInfoDao(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -106,16 +106,12 @@ public class PizzaInfoDao implements IPizzaInfoDao {
     }
 
     @Override
-    public void delete(Long id, Integer version, Boolean delete) {
+    public void delete(Long id, Boolean delete) {
         try (Connection con = dataSource.getConnection()) {
             try (PreparedStatement statement = con.prepareStatement(DELETE_PIZZA_INFO_SQL)) {
                 long rows = 0;
                 statement.setLong(1, id);
-                statement.setInt(2, version);
                 rows += statement.executeUpdate();
-                if (rows == 0) {
-                    throw new OptimisticLockException("pizza_info table delete failed,version does not match update denied");
-                }
                 if (rows > 1) {
                     throw new IllegalStateException("Incorrect pizza_info table delete, more than 1 row affected");
                 }

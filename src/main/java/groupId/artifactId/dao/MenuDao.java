@@ -37,7 +37,7 @@ public class MenuDao implements IMenuDao {
     private static final String INSERT_MENU_SQL = "INSERT INTO pizza_manager.menu (name, enabled)\n VALUES (?, ?)";
     private static final String UPDATE_MENU_SQL = "UPDATE pizza_manager.menu SET version=version+1, name=?, enabled=? " +
             "WHERE id=? AND version=?";
-    private static final String DELETE_MENU_SQL = "DELETE FROM pizza_manager.menu WHERE id=? AND version=?;";
+    private static final String DELETE_MENU_SQL = "DELETE FROM pizza_manager.menu WHERE id=?;";
 
     public MenuDao(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -134,16 +134,12 @@ public class MenuDao implements IMenuDao {
     }
 
     @Override
-    public void delete(Long id, Integer version, Boolean delete) {
+    public void delete(Long id, Boolean delete) {
         try (Connection con = dataSource.getConnection()) {
             try (PreparedStatement statement = con.prepareStatement(DELETE_MENU_SQL)) {
                 long rows = 0;
                 statement.setLong(1, id);
-                statement.setInt(2, version);
                 rows += statement.executeUpdate();
-                if (rows == 0) {
-                    throw new OptimisticLockException("menu table delete failed,version does not match update denied");
-                }
                 if (rows > 1) {
                     throw new IllegalStateException("Incorrect menu table delete, more than 1 row affected");
                 }

@@ -31,7 +31,7 @@ public class OrderDao implements IOrderDao {
             "pi.creation_date AS picd, pi.version AS piv FROM pizza_manager.order_table AS ord " +
             "INNER JOIN pizza_manager.selected_item si on ord.id = si.order_id INNER JOIN menu_item mi on mi.id = si.menu_item_id" +
             " JOIN pizza_info pi on pi.id = mi.pizza_info_id WHERE ord.id=? ORDER BY siid, miid, pizza_info_id;";
-    private static final String DELETE_ORDER_SQL = "DELETE FROM pizza_manager.order_table WHERE id=? AND version=?;";
+    private static final String DELETE_ORDER_SQL = "DELETE FROM pizza_manager.order_table WHERE id=?;";
     private final DataSource dataSource;
 
     public OrderDao(DataSource dataSource) {
@@ -100,16 +100,12 @@ public class OrderDao implements IOrderDao {
     }
 
     @Override
-    public void delete(Long id, Integer version, Boolean delete) {
+    public void delete(Long id, Boolean delete) {
         try (Connection con = dataSource.getConnection()) {
             try (PreparedStatement statement = con.prepareStatement(DELETE_ORDER_SQL)) {
                 long rows = 0;
                 statement.setLong(1, id);
-                statement.setInt(2, version);
                 rows += statement.executeUpdate();
-                if (rows == 0) {
-                    throw new OptimisticLockException("order table delete failed,version does not match update denied");
-                }
                 if (rows > 1) {
                     throw new IllegalStateException("Incorrect order table delete, more than 1 row affected");
                 }

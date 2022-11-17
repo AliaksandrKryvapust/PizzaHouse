@@ -9,7 +9,6 @@ import groupId.artifactId.dao.entity.api.IPizzaInfo;
 import groupId.artifactId.dao.entity.api.ISelectedItem;
 import groupId.artifactId.exceptions.DaoException;
 import groupId.artifactId.exceptions.NoContentException;
-import groupId.artifactId.exceptions.OptimisticLockException;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -33,7 +32,7 @@ public class SelectedItemDao implements ISelectedItemDao {
             "pi.creation_date AS picd, pi.version AS piv FROM pizza_manager.selected_item si " +
             " INNER JOIN menu_item mi on mi.id = si.menu_item_id" +
             " JOIN pizza_info pi on pi.id = mi.pizza_info_id WHERE si.id=? ORDER BY siid, miid, pizza_info_id;";
-    private static final String DELETE_SELECTED_ITEM_SQL = "DELETE FROM pizza_manager.selected_item WHERE order_id=? AND version=?;";
+    private static final String DELETE_SELECTED_ITEM_SQL = "DELETE FROM pizza_manager.selected_item WHERE order_id=?;";
 
     public SelectedItemDao(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -106,15 +105,14 @@ public class SelectedItemDao implements ISelectedItemDao {
     }
 
     @Override
-    public void delete(Long id, Integer version, Boolean delete) {
+    public void delete(Long id, Boolean delete) {
         try (Connection con = dataSource.getConnection()) {
             try (PreparedStatement statement = con.prepareStatement(DELETE_SELECTED_ITEM_SQL)) {
                 long rows = 0;
                 statement.setLong(1, id);
-                statement.setInt(2, version);
                 rows += statement.executeUpdate();
-                if (rows == 0) {
-                    throw new OptimisticLockException("selected item table delete failed,version does not match update denied");
+                if (rows > 1) {
+                    throw new IllegalStateException("Incorrect ticket table delete, more than 1 row affected");
                 }
             }
         } catch (SQLException e) {
