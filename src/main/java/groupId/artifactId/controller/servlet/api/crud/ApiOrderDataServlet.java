@@ -7,6 +7,7 @@ import groupId.artifactId.controller.validator.api.IOrderDataValidator;
 import groupId.artifactId.core.Constants;
 import groupId.artifactId.core.dto.input.OrderDataDtoInput;
 import groupId.artifactId.core.dto.output.crud.OrderDataDtoCrudOutput;
+import groupId.artifactId.exceptions.NoContentException;
 import groupId.artifactId.exceptions.OptimisticLockException;
 import groupId.artifactId.service.IoC.OrderDataServiceSingleton;
 import groupId.artifactId.service.api.IOrderDataService;
@@ -42,16 +43,15 @@ public class ApiOrderDataServlet extends HttpServlet {
             resp.setCharacterEncoding(Constants.ENCODING);
             String id = req.getParameter(Constants.PARAMETER_ID);
             if (id != null) {
-                if (orderDataService.isIdValid(Long.valueOf(id))) {
-                    resp.getWriter().write(jsonConverter.fromOrderDataCrudToJson(orderDataService.get(Long.valueOf(id))));
-                    resp.setStatus(HttpServletResponse.SC_OK);
-                } else {
-                    resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
-                }
+                resp.getWriter().write(jsonConverter.fromOrderDataCrudToJson(orderDataService.get(Long.valueOf(id))));
             } else {
                 resp.getWriter().write(jsonConverter.fromOrderDataListToJson(orderDataService.get()));
-                resp.setStatus(HttpServletResponse.SC_OK);
             }
+            resp.setStatus(HttpServletResponse.SC_OK);
+        } catch (NoContentException e) {
+            resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            logger.error("/api/order_data there is no content to fulfill doGet method " + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             logger.error("/api/order_data crashed during doGet method" + e.getMessage() + "\t" + e.getCause() +

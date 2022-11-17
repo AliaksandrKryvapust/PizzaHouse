@@ -7,6 +7,7 @@ import groupId.artifactId.controller.validator.api.IPizzaInfoValidator;
 import groupId.artifactId.core.Constants;
 import groupId.artifactId.core.dto.input.PizzaInfoDtoInput;
 import groupId.artifactId.core.dto.output.PizzaInfoDtoOutput;
+import groupId.artifactId.exceptions.NoContentException;
 import groupId.artifactId.exceptions.OptimisticLockException;
 import groupId.artifactId.service.IoC.PizzaInfoServiceSingleton;
 import groupId.artifactId.service.api.IPizzaInfoService;
@@ -44,16 +45,15 @@ public class ApiPizzaInfoServlet extends HttpServlet {
             resp.setCharacterEncoding(Constants.ENCODING);
             String id = req.getParameter(Constants.PARAMETER_ID);
             if (id != null) {
-                if (pizzaInfoService.isIdValid(Long.valueOf(id))) {
-                    resp.getWriter().write(jsonConverter.fromPizzaInfoToJson(pizzaInfoService.get(Long.valueOf(id))));
-                    resp.setStatus(HttpServletResponse.SC_OK);
-                } else {
-                    resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
-                }
+                resp.getWriter().write(jsonConverter.fromPizzaInfoToJson(pizzaInfoService.get(Long.valueOf(id))));
             } else {
                 resp.getWriter().write(jsonConverter.fromPizzaInfoListToJson(pizzaInfoService.get()));
-                resp.setStatus(HttpServletResponse.SC_OK);
             }
+            resp.setStatus(HttpServletResponse.SC_OK);
+        } catch (NoContentException e) {
+            resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            logger.error("/api/pizza_info there is no content to fulfill doGet method " + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             logger.error("/api/pizza_info crashed during doGet method" + e.getMessage() + "\t" + e.getCause() +

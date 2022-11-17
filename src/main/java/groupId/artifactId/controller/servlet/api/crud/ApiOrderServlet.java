@@ -9,6 +9,7 @@ import groupId.artifactId.core.dto.input.OrderDtoInput;
 import groupId.artifactId.core.dto.input.SelectedItemDtoInput;
 import groupId.artifactId.core.dto.output.crud.TicketDtoCrudOutput;
 import groupId.artifactId.exceptions.IncorrectOrderInputException;
+import groupId.artifactId.exceptions.NoContentException;
 import groupId.artifactId.exceptions.OptimisticLockException;
 import groupId.artifactId.service.IoC.MenuItemServiceSingleton;
 import groupId.artifactId.service.IoC.OrderServiceSingleton;
@@ -48,16 +49,15 @@ public class ApiOrderServlet extends HttpServlet {
             resp.setCharacterEncoding(Constants.ENCODING);
             String id = req.getParameter(Constants.PARAMETER_ID);
             if (id != null) {
-                if (orderService.isTicketIdValid(Long.valueOf(id))) {
-                    resp.getWriter().write(jsonConverter.fromTicketCrudToJson(orderService.get(Long.valueOf(id))));
-                    resp.setStatus(HttpServletResponse.SC_OK);
-                } else {
-                    resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
-                }
+                resp.getWriter().write(jsonConverter.fromTicketCrudToJson(orderService.get(Long.valueOf(id))));
             } else {
                 resp.getWriter().write(jsonConverter.fromTicketListToJson(orderService.get()));
-                resp.setStatus(HttpServletResponse.SC_OK);
             }
+            resp.setStatus(HttpServletResponse.SC_OK);
+        } catch (NoContentException e) {
+            resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            logger.error("/api/order there is no content to fulfill doGet method " + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             logger.error("/api/order crashed during doGet method" + e.getMessage() + "\t" + e.getCause() +
