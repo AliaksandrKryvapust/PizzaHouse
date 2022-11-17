@@ -73,18 +73,20 @@ public class ApiMenuServlet extends HttpServlet {
             resp.setCharacterEncoding(Constants.ENCODING);
             resp.setContentType(Constants.CONTENT_TYPE);
             MenuDtoInput menu = jsonConverter.fromJsonToMenu(req.getInputStream());
-            if (!menuService.exist(menu.getName())) {
-                try {
-                    menuValidator.validate(menu);
-                } catch (IllegalArgumentException e) {
-                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                }
-                MenuDtoCrudOutput menuDto = menuService.save(menu);
-                resp.getWriter().write(jsonConverter.fromMenuToCrudJson(menuDto));
-                resp.setStatus(HttpServletResponse.SC_CREATED);
-            } else {
-                resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            try {
+                menuValidator.validate(menu);
+            } catch (IllegalArgumentException e) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                logger.error("/api/menu input is not valid " + e.getMessage() + "\t" + e.getCause() +
+                        "\tresponse status: " + resp.getStatus());
             }
+            MenuDtoCrudOutput menuDto = menuService.save(menu);
+            resp.getWriter().write(jsonConverter.fromMenuToCrudJson(menuDto));
+            resp.setStatus(HttpServletResponse.SC_CREATED);
+        } catch (NoContentException e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            logger.error("/api/menu there is no content to fulfill doPost method " + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             logger.error("/api/menu crashed during doPost method" + e.getMessage() + "\t" + e.getCause() +

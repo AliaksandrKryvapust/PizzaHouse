@@ -74,18 +74,20 @@ public class ApiPizzaInfoServlet extends HttpServlet {
             resp.setCharacterEncoding(Constants.ENCODING);
             resp.setContentType(Constants.CONTENT_TYPE);
             PizzaInfoDtoInput pizzaInfo = jsonConverter.fromJsonToPizzaInfo(req.getInputStream());
-            if (!pizzaInfoService.exist(pizzaInfo.getName())) {
-                try {
-                    pizzaInfoValidator.validate(pizzaInfo);
-                } catch (IllegalArgumentException e) {
-                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                }
-                PizzaInfoDtoOutput pizzaInfoDto = pizzaInfoService.save(pizzaInfo);
-                resp.getWriter().write(jsonConverter.fromPizzaInfoToJson(pizzaInfoDto));
-                resp.setStatus(HttpServletResponse.SC_CREATED);
-            } else {
-                resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            try {
+                pizzaInfoValidator.validate(pizzaInfo);
+            } catch (IllegalArgumentException e) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                logger.error("/api/pizza_info input is not valid " + e.getMessage() + "\t" + e.getCause() +
+                        "\tresponse status: " + resp.getStatus());
             }
+            PizzaInfoDtoOutput pizzaInfoDto = pizzaInfoService.save(pizzaInfo);
+            resp.getWriter().write(jsonConverter.fromPizzaInfoToJson(pizzaInfoDto));
+            resp.setStatus(HttpServletResponse.SC_CREATED);
+        } catch (NoContentException e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            logger.error("/api/pizza_info there is no content to fulfill doPost method " + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             logger.error("/api/pizza_info crashed during doPost method" + e.getMessage() + "\t" + e.getCause() +

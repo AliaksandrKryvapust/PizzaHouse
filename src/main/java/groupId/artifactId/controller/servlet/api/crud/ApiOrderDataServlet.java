@@ -76,10 +76,16 @@ public class ApiOrderDataServlet extends HttpServlet {
                 orderDataValidator.validate(orderData);
             } catch (IllegalArgumentException e) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                logger.error("/api/order_data input is not valid " + e.getMessage() + "\t" + e.getCause() +
+                        "\tresponse status: " + resp.getStatus());
             }
             OrderDataDtoCrudOutput output = orderDataService.save(orderData);
             resp.getWriter().write(jsonConverter.fromOrderDataCrudToJson(output));
             resp.setStatus(HttpServletResponse.SC_CREATED);
+        } catch (NoContentException e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            logger.error("/api/order_data there is no content to fulfill doPost method " + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             logger.error("/api/order_data crashed during doPost method" + e.getMessage() + "\t" + e.getCause() +
