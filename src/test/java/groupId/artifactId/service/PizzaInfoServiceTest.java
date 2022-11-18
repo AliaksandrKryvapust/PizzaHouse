@@ -42,8 +42,8 @@ class PizzaInfoServiceTest {
         final Instant creationDate = Instant.now();
         final PizzaInfoDtoInput pizzaInfoDtoInput = PizzaInfoDtoInput.builder().name(name).description(description)
                 .size(size).build();
-        final PizzaInfo pizzaInfo = new PizzaInfo(name, description, size);
-        final PizzaInfo pizzaInfoOutput = new PizzaInfo(id, name, description, size);
+        final PizzaInfo pizzaInfo = PizzaInfo.builder().name(name).description(description).size(size).build();
+        final PizzaInfo pizzaInfoOutput = PizzaInfo.builder().id(id).name(name).description(description).size(size).build();
         final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(name).description(description)
                 .size(size).createdAt(creationDate).version(version).build();
         Mockito.when(pizzaInfoMapper.inputMapping(any(PizzaInfoDtoInput.class))).thenReturn(pizzaInfo);
@@ -70,7 +70,8 @@ class PizzaInfoServiceTest {
         final long id = 1L;
         final int version = 1;
         final Instant creationDate = Instant.now();
-        List<IPizzaInfo> pizzaInfos = singletonList(new PizzaInfo(id, name, description, size, creationDate, version));
+        List<IPizzaInfo> pizzaInfos = singletonList(PizzaInfo.builder().id(id).name(name).description(description).size(size)
+                .creationDate(creationDate).version(version).build());
         final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(name).description(description)
                 .size(size).createdAt(creationDate).version(version).build();
         Mockito.when(pizzaInfoDao.get()).thenReturn(pizzaInfos);
@@ -101,7 +102,8 @@ class PizzaInfoServiceTest {
         final long id = 1L;
         final int version = 1;
         final Instant creationDate = Instant.now();
-        final IPizzaInfo pizzaInfo = new PizzaInfo(id, name, description, size, creationDate, version);
+        final IPizzaInfo pizzaInfo = PizzaInfo.builder().id(id).name(name).description(description).size(size)
+                .creationDate(creationDate).version(version).build();
         final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(name).description(description)
                 .size(size).createdAt(creationDate).version(version).build();
         Mockito.when(pizzaInfoDao.get(id)).thenReturn(pizzaInfo);
@@ -161,8 +163,9 @@ class PizzaInfoServiceTest {
         final Instant creationDate = Instant.now();
         final PizzaInfoDtoInput pizzaInfoDtoInput = PizzaInfoDtoInput.builder().name(name).description(description)
                 .size(size).build();
-        final PizzaInfo pizzaInfo = new PizzaInfo(name, description, size);
-        final PizzaInfo pizzaInfoOutput = new PizzaInfo(id, name, description, size);
+        final PizzaInfo pizzaInfo = PizzaInfo.builder().name(name).description(description).size(size).build();
+        final PizzaInfo pizzaInfoOutput = PizzaInfo.builder().id(id).name(name).description(description).size(size)
+                .creationDate(creationDate).version(version).build();
         final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(name).description(description)
                 .size(size).createdAt(creationDate).version(version).build();
         Mockito.when(pizzaInfoService.isIdValid(any(Long.class))).thenReturn(true);

@@ -329,13 +329,15 @@ class OrderDataServiceTest {
         final IOrderData orderDataUpdate = new OrderData(id, id, done);
         final OrderDataDtoCrudOutput orderDataDtoOutput = OrderDataDtoCrudOutput.builder().id(id).ticketId(id).done(done)
                 .createdAt(creationDate).version(version).build();
+        final PizzaInfo pizzaInfo = PizzaInfo.builder().id(id).name(name).description(pizzaDescription).size(size)
+                .creationDate(creationDate).version(version).build();
         final CompletedOrder completedOrder = new CompletedOrder(new Ticket(new Order(singletonList(new SelectedItem(
-                new MenuItem(id, new PizzaInfo(name, pizzaDescription, size), price, id, creationDate, version, id),
+                new MenuItem(id, pizzaInfo, price, id, creationDate, version, id),
                 id, id, id, count, creationDate, version)), id, creationDate, version),
                 id, id, creationDate, version), singletonList(new Pizza(
                 id, id, name, size, creationDate, version)), id, id, creationDate, version);
         final OrderData orderDataOutput = new OrderData(new Ticket(new Order(singletonList(new SelectedItem(
-                new MenuItem(id, new PizzaInfo(name, pizzaDescription, size), price, id, creationDate, version, id),
+                new MenuItem(id, pizzaInfo, price, id, creationDate, version, id),
                 id, id, id, count, creationDate, version)), id, creationDate, version),
                 id, id, creationDate, version), singletonList(new OrderStage()),
                 id, id, done, creationDate, version);

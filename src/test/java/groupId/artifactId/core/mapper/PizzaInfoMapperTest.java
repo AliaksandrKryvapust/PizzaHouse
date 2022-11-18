@@ -45,7 +45,8 @@ class PizzaInfoMapperTest {
         final long id = 1L;
         final int version = 1;
         final Instant creationDate = Instant.now();
-        final IPizzaInfo pizzaInfo = new PizzaInfo(id, name, description, size, creationDate, version);
+        final IPizzaInfo pizzaInfo = PizzaInfo.builder().id(id).name(name).description(description).size(size)
+                .creationDate(creationDate).version(version).build();
 
         //test
         PizzaInfoDtoOutput test = pizzaInfoMapper.outputMapping(pizzaInfo);
