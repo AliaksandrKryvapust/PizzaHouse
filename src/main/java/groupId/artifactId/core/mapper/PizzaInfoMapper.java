@@ -10,8 +10,10 @@ public class PizzaInfoMapper {
     }
 
     public IPizzaInfo inputMapping(PizzaInfoDtoInput pizzaInfoDtoInput) {
-        return new PizzaInfo(pizzaInfoDtoInput.getName(), pizzaInfoDtoInput.getDescription(),
-                pizzaInfoDtoInput.getSize());
+        return PizzaInfo.builder()
+                .name(pizzaInfoDtoInput.getName())
+                .description(pizzaInfoDtoInput.getDescription())
+                .size(pizzaInfoDtoInput.getSize()).build();
     }
 
     public PizzaInfoDtoOutput outputMapping(IPizzaInfo pizzaInfo) {
