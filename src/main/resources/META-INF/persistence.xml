@@ -4,7 +4,7 @@
              http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
              version="2.1">
 
-    <persistence-unit name="persistenceUnitName" transaction-type="RESOURCE_LOCAL">
+    <persistence-unit name="pizzeria" transaction-type="RESOURCE_LOCAL">
         <description>Hibernate Entity Manager</description>
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
@@ -19,6 +19,8 @@
 
             <property name="hibernate.show_sql" value="true"/> <!-- Show SQL in console -->
             <property name="hibernate.format_sql" value="true"/> <!-- Show SQL formatted -->
+            <property name="hibernate.physical_naming_strategy"
+                      value="groupId.artifactId.dao.api.CustomNamingStrategy"/>
         </properties>
 
     </persistence-unit>
