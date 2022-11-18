@@ -1,10 +1,11 @@
 package groupId.artifactId.dao.entity;
 
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
-
 import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.GeneratedColumn;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 @Getter
@@ -12,7 +13,7 @@ import java.time.Instant;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "pizza_info")
+@Table(name = "pizza_info", schema = "pizza_manager")
 public class PizzaInfo implements IPizzaInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
