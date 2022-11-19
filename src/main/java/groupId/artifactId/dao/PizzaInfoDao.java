@@ -4,12 +4,14 @@ import groupId.artifactId.dao.api.IPizzaInfoDao;
 import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
 import groupId.artifactId.exceptions.DaoException;
+import groupId.artifactId.exceptions.NoContentException;
 import groupId.artifactId.exceptions.OptimisticLockException;
-
 import jakarta.persistence.EntityManager;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PizzaInfoDao implements IPizzaInfoDao {
     //    private final DataSource dataSource;
@@ -20,7 +22,7 @@ public class PizzaInfoDao implements IPizzaInfoDao {
             "version=version+1 WHERE id=? AND version=?;";
     private static final String SELECT_PIZZA_INFO_SQL = "SELECT id, name, description, size, creation_date, version " +
             "FROM pizza_manager.pizza_info ORDER BY id";
-    private static final String SELECT_PIZZA_INFO = "SELECT pizzaInfo from PizzaInfo pizzaInfo";
+    private static final String SELECT_PIZZA_INFO = "SELECT pizzaInfo from PizzaInfo pizzaInfo ORDER BY id";
     private static final String SELECT_PIZZA_INFO_BY_ID_SQL = "SELECT id, name, description, size, creation_date, " +
             "version FROM pizza_manager.pizza_info WHERE id=?;";
     private static final String SELECT_PIZZA_INFO_BY_NAME_SQL = "SELECT name FROM pizza_manager.pizza_info WHERE name=?;";
@@ -133,32 +135,18 @@ public class PizzaInfoDao implements IPizzaInfoDao {
         }
     }
 
-//    @Override
-//    public IPizzaInfo get(Long id) {
-//        try (Connection con = dataSource.getConnection()) {
-//            try (PreparedStatement statement = con.prepareStatement(SELECT_PIZZA_INFO_BY_ID_SQL)) {
-//                statement.setLong(1, id);
-//                try (ResultSet resultSet = statement.executeQuery()) {
-//                    resultSet.next();
-//                    if (!resultSet.isLast()) {
-//                        throw new NoContentException("There is no Pizza Info with id:" + id);
-//                    }
-//                    return this.mapper(resultSet);
-//                }
-//            }
-//        } catch (SQLException e) {
-//            throw new DaoException("Failed to get Pizza Info by id:" + id, e);
-//        }
-//    }
-
     @Override
     public IPizzaInfo get(Long id) {
         try {
             PizzaInfo pizzaInfo = entityManager.find(PizzaInfo.class, id);
-            entityManager.detach(pizzaInfo);
+            if (pizzaInfo == null) {
+                throw new NoContentException("There is no Pizza Info with id:" + id);
+            }
             return pizzaInfo;
+        } catch (NoContentException e) {
+            throw new NoContentException(e.getMessage());
         } catch (Exception e) {
-            throw new DaoException("Failed to get Pizza Info by id:" + id, e);
+            throw new DaoException("Failed to get Pizza Info from Data Base by id:" + id + "cause: " + e.getMessage(), e);
         }
     }
 
@@ -190,34 +178,19 @@ public class PizzaInfoDao implements IPizzaInfoDao {
         }
     }
 
-//    @Override
-//    public List<IPizzaInfo> get() {
-//        try (Connection con = dataSource.getConnection()) {
-//            List<IPizzaInfo> iPizzaInfos = new ArrayList<>();
-//            try (PreparedStatement statement = con.prepareStatement(SELECT_PIZZA_INFO_SQL)) {
-//                try (ResultSet resultSet = statement.executeQuery()) {
-//                    while (resultSet.next()) {
-//                        iPizzaInfos.add(this.mapper(resultSet));
-//                    }
-//                }
-//                return iPizzaInfos;
-//            }
-//        } catch (Exception e) {
-//            throw new DaoException("Failed to get List of pizza Info", e);
-//        }
-//    }
-
     @Override
     public List<IPizzaInfo> get() {
         try {
             List<?> iPizzaInfos = entityManager.createQuery(SELECT_PIZZA_INFO).getResultList();
-            if (iPizzaInfos instanceof IPizzaInfo) {
-                return (List<IPizzaInfo>) iPizzaInfos;
+            List<IPizzaInfo> output = iPizzaInfos.stream().filter((i) -> i instanceof IPizzaInfo)
+                    .map(IPizzaInfo.class::cast).collect(Collectors.toList());
+            if (!output.isEmpty()) {
+                return output;
             } else {
                 throw new IllegalStateException("Failed to get List of pizza Info");
             }
         } catch (Exception e) {
-            throw new DaoException("Failed to get List of pizza Info", e);
+            throw new DaoException("Failed to get List of pizza Info\tcause:" + e.getMessage(), e);
         }
     }
     @Override
