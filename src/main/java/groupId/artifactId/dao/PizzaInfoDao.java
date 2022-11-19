@@ -35,36 +35,6 @@ public class PizzaInfoDao implements IPizzaInfoDao {
         this.entityManager = entityManager;
     }
 
-    //    @Override
-//    public IPizzaInfo save(IPizzaInfo info) {
-//        if (info.getId() != null || info.getVersion() != null) {
-//            throw new IllegalStateException("PizzaInfo id & version should be empty");
-//        }
-//        try (Connection con = dataSource.getConnection()) {
-//            try (PreparedStatement statement = con.prepareStatement(INSERT_PIZZA_INFO_SQL, Statement.RETURN_GENERATED_KEYS)) {
-//                long rows = 0;
-//                statement.setString(1, info.getName());
-//                statement.setString(2, info.getDescription());
-//                statement.setLong(3, info.getSize());
-//                rows += statement.executeUpdate();
-//                if (rows > 1) {
-//                    throw new IllegalStateException("Incorrect pizza_info table update, more than 1 row affected");
-//                }
-//                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-//                    generatedKeys.next();
-//                    return new PizzaInfo(generatedKeys.getLong(1), info.getName(),
-//                            info.getDescription(), info.getSize());
-//                }
-//            }
-//        } catch (SQLException e) {
-//            if (e.getMessage().contains("pizza_info_pkey")) {
-//                throw new NoContentException("pizza_info table insert failed,  check preconditions and FK values: "
-//                        + info);
-//            } else {
-//                throw new DaoException("Failed to save new PizzaInfo" + info, e);
-//            }
-//        }
-//    }
     @Override
     public IPizzaInfo save(IPizzaInfo info) {
         if (info.getId() != null || info.getVersion() != null) {
@@ -75,10 +45,13 @@ public class PizzaInfoDao implements IPizzaInfoDao {
             entityManager.persist(info);
             entityManager.getTransaction().commit();
             return info;
-        } catch (IllegalStateException e) {
-            throw new IllegalStateException(e.getMessage());
         } catch (Exception e) {
-            throw new DaoException("Failed to save new PizzaInfo" + info, e);
+            if (e.getMessage().contains("pizza_info_pkey")) {
+                throw new NoContentException("pizza_info table insert failed,  check preconditions and FK values: "
+                        + info);
+            } else {
+                throw new DaoException("Failed to save new PizzaInfo" + info + "\t cause" + e.getMessage(), e);
+            }
         }
     }
 
@@ -131,7 +104,7 @@ public class PizzaInfoDao implements IPizzaInfoDao {
         } catch (IllegalStateException e) {
             throw new IllegalStateException(e.getMessage());
         } catch (Exception e) {
-            throw new DaoException("Failed to update pizza_info" + info + " by id:" + id, e);
+            throw new DaoException("Failed to update pizza_info" + info + " by id:" + id , e);
         }
     }
 
