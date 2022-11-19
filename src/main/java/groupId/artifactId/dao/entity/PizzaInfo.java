@@ -2,14 +2,12 @@ package groupId.artifactId.dao.entity;
 
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.GenerationTime;
 
 import java.time.Instant;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,12 +18,15 @@ public class PizzaInfo implements IPizzaInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+    @Setter
     private String name;
+    @Setter
     private String description;
+    @Setter
     private Integer size;
     @Generated(GenerationTime.INSERT)
     private Instant creationDate;
-    @Generated(GenerationTime.INSERT)
+    @Version
     private Integer version;
 
     @Override
