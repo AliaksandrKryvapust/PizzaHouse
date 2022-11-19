@@ -9,6 +9,7 @@ public class Constants {
     public static final String MENU_ITEM_FK = "menu_item_menu_FK";
     public static final String MENU_ITEM_FK2 = "menu_item_pizza_info_FK";
     public static final String MENU_ITEM_UK = "pizza_info_id_menu_id_UK";
+    public static final String PIZZA_INFO_UK = "pizza_info_UK";
     public static final String COMPLETED_ORDER_FK = "completed_order_ticket_FK";
     public static final String ORDER_DATA_FK = "order_data_ticket_FK";
     public static final String ORDER_STAGE_FK = "order_stage_order_data_FK";

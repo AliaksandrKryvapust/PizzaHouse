@@ -96,6 +96,11 @@ public class MenuItemDao implements IMenuItemDao {
     }
 
     @Override
+    public IMenuItem getLock(Long id) {
+        return null;
+    }
+
+    @Override
     public IMenuItem get(Long id) {
         try (Connection con = dataSource.getConnection()) {
             try (PreparedStatement statement = con.prepareStatement(SELECT_MENU_ITEM_BY_ID_SQL)) {
