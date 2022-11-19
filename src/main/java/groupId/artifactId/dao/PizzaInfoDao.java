@@ -5,8 +5,9 @@ import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
 import groupId.artifactId.exceptions.DaoException;
 import groupId.artifactId.exceptions.NoContentException;
-import groupId.artifactId.exceptions.OptimisticLockException;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
+import jakarta.persistence.OptimisticLockException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -88,23 +89,30 @@ public class PizzaInfoDao implements IPizzaInfoDao {
             throw new IllegalStateException("PizzaInfo id & version should be empty");
         }
         try {
-            IPizzaInfo pizzaInfo = this.get(id);
-            entityManager.detach(pizzaInfo);
-            if (!pizzaInfo.getVersion().equals(version)) {
-                throw new OptimisticLockException("pizza_info table update failed, version does not match update denied");
+            PizzaInfo currentEntity = (PizzaInfo) this.get(id);
+            if (currentEntity == null) {
+                throw new NoContentException("Pizza Info Id is not valid");
             }
-            PizzaInfo pizzaInfoUpdate = new PizzaInfo(pizzaInfo.getId(), info.getName(), info.getDescription(),
-                    info.getSize(), pizzaInfo.getCreationDate(), pizzaInfo.getVersion());
             entityManager.getTransaction().begin();
-            entityManager.merge(pizzaInfoUpdate);
+            entityManager.lock(currentEntity, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+            entityManager.detach(currentEntity);
+            if (!currentEntity.getVersion().equals(version)) {
+                throw new OptimisticLockException();
+            }
+            currentEntity.setName(info.getName());
+            currentEntity.setDescription(info.getDescription());
+            currentEntity.setSize(info.getSize());
+            entityManager.merge(currentEntity);
             entityManager.getTransaction().commit();
-            return pizzaInfoUpdate;
+            return currentEntity;
+        } catch (NoContentException e) {
+            throw new NoContentException(e.getMessage());
         } catch (OptimisticLockException e) {
-            throw new OptimisticLockException(e.getMessage());
-        } catch (IllegalStateException e) {
-            throw new IllegalStateException(e.getMessage());
+            entityManager.getTransaction().rollback();
+            throw new OptimisticLockException("pizza_info table update failed, version does not match update denied");
         } catch (Exception e) {
-            throw new DaoException("Failed to update pizza_info" + info + " by id:" + id , e);
+            entityManager.getTransaction().rollback();
+            throw new DaoException("Failed to update pizza_info" + info + " by id:" + id + "\t cause" + e.getMessage(), e);
         }
     }
 
