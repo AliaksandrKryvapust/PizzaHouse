@@ -6,6 +6,8 @@ import groupId.artifactId.core.mapper.PizzaInfoMapper;
 import groupId.artifactId.dao.PizzaInfoDao;
 import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,6 +32,10 @@ class PizzaInfoServiceTest {
     private PizzaInfoDao pizzaInfoDao;
     @Mock
     private PizzaInfoMapper pizzaInfoMapper;
+    @Mock
+    EntityManager entityManager;
+    @Mock
+    EntityTransaction transaction;
 
     @Test
     void save() {
@@ -46,6 +52,7 @@ class PizzaInfoServiceTest {
         final PizzaInfo pizzaInfoOutput = PizzaInfo.builder().id(id).name(name).description(description).size(size).build();
         final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(name).description(description)
                 .size(size).createdAt(creationDate).version(version).build();
+        Mockito.when(entityManager.getTransaction()).thenReturn(transaction);
         Mockito.when(pizzaInfoMapper.inputMapping(any(PizzaInfoDtoInput.class))).thenReturn(pizzaInfo);
         Mockito.when(pizzaInfoDao.save(any(IPizzaInfo.class))).thenReturn(pizzaInfoOutput);
         Mockito.when(pizzaInfoMapper.outputMapping(any(IPizzaInfo.class))).thenReturn(pizzaInfoDtoOutput);
@@ -123,34 +130,6 @@ class PizzaInfoServiceTest {
     }
 
     @Test
-    void isIdValid() {
-        // preconditions
-        final long id = 1L;
-        Mockito.when(pizzaInfoDao.exist(id)).thenReturn(true);
-
-        //test
-        Boolean test = pizzaInfoService.isIdValid(id);
-
-        // assert
-        Assertions.assertNotNull(test);
-        Assertions.assertEquals(true, test);
-    }
-
-    @Test
-    void exist() {
-        // preconditions
-        final String name = "name";
-        Mockito.when(pizzaInfoDao.doesPizzaExist(name)).thenReturn(true);
-
-        //test
-        Boolean test = pizzaInfoService.exist(name);
-
-        // assert
-        Assertions.assertNotNull(test);
-        Assertions.assertEquals(true, test);
-    }
-
-    @Test
     void update() {
         // preconditions
         final String name = "ITALIANO PIZZA";
@@ -168,7 +147,7 @@ class PizzaInfoServiceTest {
                 .creationDate(creationDate).version(version).build();
         final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(name).description(description)
                 .size(size).createdAt(creationDate).version(version).build();
-        Mockito.when(pizzaInfoService.isIdValid(any(Long.class))).thenReturn(true);
+        Mockito.when(entityManager.getTransaction()).thenReturn(transaction);
         Mockito.when(pizzaInfoMapper.inputMapping(any(PizzaInfoDtoInput.class))).thenReturn(pizzaInfo);
         Mockito.when(pizzaInfoDao.update(any(IPizzaInfo.class), any(Long.class), any(Integer.class))).thenReturn(pizzaInfoOutput);
         Mockito.when(pizzaInfoMapper.outputMapping(any(IPizzaInfo.class))).thenReturn(pizzaInfoDtoOutput);
@@ -190,6 +169,7 @@ class PizzaInfoServiceTest {
         final String delete = "false";
         ArgumentCaptor<Long> valueId = ArgumentCaptor.forClass(Long.class);
         ArgumentCaptor<Boolean> valueDelete = ArgumentCaptor.forClass(Boolean.class);
+        Mockito.when(entityManager.getTransaction()).thenReturn(transaction);
 
         //test
         pizzaInfoService.delete(inputId, delete);
