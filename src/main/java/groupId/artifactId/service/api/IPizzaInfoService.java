@@ -5,8 +5,4 @@ import groupId.artifactId.core.dto.output.PizzaInfoDtoOutput;
 
 public interface IPizzaInfoService extends IService<PizzaInfoDtoOutput, PizzaInfoDtoInput>,
         IServiceUpdate<PizzaInfoDtoOutput, PizzaInfoDtoInput>, IServiceDelete {
-
-    Boolean isIdValid(Long id);
-
-    Boolean exist(String name);
 }
