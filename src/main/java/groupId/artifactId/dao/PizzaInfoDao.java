@@ -14,6 +14,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static groupId.artifactId.core.Constants.PIZZA_INFO_UK;
+
 public class PizzaInfoDao implements IPizzaInfoDao {
     //    private final DataSource dataSource;
     private final EntityManager entityManager;
@@ -42,12 +44,10 @@ public class PizzaInfoDao implements IPizzaInfoDao {
             throw new IllegalStateException("PizzaInfo id & version should be empty");
         }
         try {
-            entityManager.getTransaction().begin();
             entityManager.persist(info);
-            entityManager.getTransaction().commit();
             return info;
         } catch (Exception e) {
-            if (e.getMessage().contains("pizza_info_pkey")) {
+            if (e.getMessage().contains(PIZZA_INFO_UK)) {
                 throw new NoContentException("pizza_info table insert failed,  check preconditions and FK values: "
                         + info);
             } else {
@@ -56,45 +56,14 @@ public class PizzaInfoDao implements IPizzaInfoDao {
         }
     }
 
-//    @Override
-//    public IPizzaInfo update(IPizzaInfo info, Long id, Integer version) {
-//        if (info.getId() != null || info.getVersion() != null) {
-//            throw new IllegalStateException("PizzaInfo id & version should be empty");
-//        }
-//        try (Connection con = dataSource.getConnection()) {
-//            try (PreparedStatement statement = con.prepareStatement(UPDATE_PIZZA_INFO_SQL)) {
-//                long rows = 0;
-//                statement.setString(1, info.getName());
-//                statement.setString(2, info.getDescription());
-//                statement.setLong(3, info.getSize());
-//                statement.setLong(4, id);
-//                statement.setInt(5, version);
-//                rows += statement.executeUpdate();
-//                if (rows == 0) {
-//                    throw new OptimisticLockException("pizza_info table update failed, version does not match update denied");
-//                }
-//                if (rows > 1) {
-//                    throw new IllegalStateException("Incorrect pizza_info table update, more than 1 row affected");
-//                }
-//                return new PizzaInfo(id, info.getName(), info.getDescription(), info.getSize());
-//            }
-//        } catch (SQLException e) {
-//            throw new DaoException("Failed to update pizza_info" + info + " by id:" + id, e);
-//        }
-//    }
-
     @Override
     public IPizzaInfo update(IPizzaInfo info, Long id, Integer version) {
         if (info.getId() != null || info.getVersion() != null) {
             throw new IllegalStateException("PizzaInfo id & version should be empty");
         }
         try {
-            PizzaInfo currentEntity = (PizzaInfo) this.get(id);
-            if (currentEntity == null) {
-                throw new NoContentException("Pizza Info Id is not valid");
-            }
-            entityManager.getTransaction().begin();
-            entityManager.lock(currentEntity, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+            PizzaInfo currentEntity = (PizzaInfo) this.getLock(id);
+//            entityManager.lock(currentEntity, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
             entityManager.detach(currentEntity);
             if (!currentEntity.getVersion().equals(version)) {
                 throw new OptimisticLockException();
@@ -103,15 +72,12 @@ public class PizzaInfoDao implements IPizzaInfoDao {
             currentEntity.setDescription(info.getDescription());
             currentEntity.setSize(info.getSize());
             entityManager.merge(currentEntity);
-            entityManager.getTransaction().commit();
             return currentEntity;
         } catch (NoContentException e) {
             throw new NoContentException(e.getMessage());
         } catch (OptimisticLockException e) {
-            entityManager.getTransaction().rollback();
             throw new OptimisticLockException("pizza_info table update failed, version does not match update denied");
         } catch (Exception e) {
-            entityManager.getTransaction().rollback();
             throw new DaoException("Failed to update pizza_info" + info + " by id:" + id + "\t cause" + e.getMessage(), e);
         }
     }
@@ -131,31 +97,18 @@ public class PizzaInfoDao implements IPizzaInfoDao {
         }
     }
 
-//    @Override
-//    public void delete(Long id, Boolean delete) {
-//        try (Connection con = dataSource.getConnection()) {
-//            try (PreparedStatement statement = con.prepareStatement(DELETE_PIZZA_INFO_SQL)) {
-//                long rows = 0;
-//                statement.setLong(1, id);
-//                rows += statement.executeUpdate();
-//                if (rows > 1) {
-//                    throw new IllegalStateException("Incorrect pizza_info table delete, more than 1 row affected");
-//                }
-//            }
-//        } catch (Exception e) {
-//            throw new DaoException("Failed to delete pizza info with id:" + id, e);
-//        }
-//    }
-
     @Override
     public void delete(Long id, Boolean delete) {
         try {
-            entityManager.getTransaction().begin();
             PizzaInfo pizzaInfo = entityManager.find(PizzaInfo.class, id);
+            if (pizzaInfo == null) {
+                throw new NoContentException("There is no Pizza Info with id:" + id);
+            }
             entityManager.remove(pizzaInfo);
-            entityManager.getTransaction().commit();
+        } catch (NoContentException e) {
+            throw new NoContentException(e.getMessage());
         } catch (Exception e) {
-            throw new DaoException("Failed to delete pizza info with id:" + id, e);
+            throw new DaoException("Failed to delete pizza info with id:" + id + "\tcause: " + e.getMessage(), e);
         }
     }
 
@@ -171,7 +124,7 @@ public class PizzaInfoDao implements IPizzaInfoDao {
                 throw new IllegalStateException("Failed to get List of pizza Info");
             }
         } catch (Exception e) {
-            throw new DaoException("Failed to get List of pizza Info\tcause:" + e.getMessage(), e);
+            throw new DaoException("Failed to get List of pizza Info\tcause: " + e.getMessage(), e);
         }
     }
     @Override
@@ -202,6 +155,20 @@ public class PizzaInfoDao implements IPizzaInfoDao {
 //            throw new DaoException("Failed to select Pizza Info with name:" + name, e);
 //        }
         return true;
+    }
+
+    private IPizzaInfo getLock(Long id) {
+        try {
+            PizzaInfo pizzaInfo = entityManager.find(PizzaInfo.class, id, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+            if (pizzaInfo == null) {
+                throw new NoContentException("There is no Pizza Info with id:" + id);
+            }
+            return pizzaInfo;
+        } catch (NoContentException e) {
+            throw new NoContentException(e.getMessage());
+        } catch (Exception e) {
+            throw new DaoException("Failed to get Lock of Pizza Info from Data Base by id:" + id + "cause: " + e.getMessage(), e);
+        }
     }
 
     private IPizzaInfo mapper(ResultSet resultSet) throws SQLException {
