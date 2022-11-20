@@ -39,8 +39,6 @@ public class ApiOrderDataServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            resp.setContentType(Constants.CONTENT_TYPE);
-            resp.setCharacterEncoding(Constants.ENCODING);
             String id = req.getParameter(Constants.PARAMETER_ID);
             if (id != null) {
                 resp.getWriter().write(jsonConverter.fromOrderDataCrudToJson(orderDataService.get(Long.valueOf(id))));
@@ -69,8 +67,6 @@ public class ApiOrderDataServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            resp.setCharacterEncoding(Constants.ENCODING);
-            resp.setContentType(Constants.CONTENT_TYPE);
             OrderDataDtoInput orderData = jsonConverter.fromJsonToOrderData(req.getInputStream());
             try {
                 orderDataValidator.validate(orderData);
@@ -105,8 +101,6 @@ public class ApiOrderDataServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            resp.setCharacterEncoding(Constants.ENCODING);
-            resp.setContentType(Constants.CONTENT_TYPE);
             String id = req.getParameter(Constants.PARAMETER_ID);
             String version = req.getParameter(Constants.PARAMETER_VERSION);
             if (id != null && version != null) {

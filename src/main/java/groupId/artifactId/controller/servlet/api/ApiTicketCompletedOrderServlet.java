@@ -31,8 +31,6 @@ public class ApiTicketCompletedOrderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            resp.setContentType(Constants.CONTENT_TYPE);
-            resp.setCharacterEncoding(Constants.ENCODING);
             String id = req.getParameter(Constants.PARAMETER_ID);
             if (id != null) {
                 resp.getWriter().write(jsonConverter.fromCompletedOrderToJson(completedOrderService.getAllData(Long.valueOf(id))));

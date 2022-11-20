@@ -41,8 +41,6 @@ public class ApiMenuServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            resp.setContentType(Constants.CONTENT_TYPE);
-            resp.setCharacterEncoding(Constants.ENCODING);
             String id = req.getParameter(Constants.PARAMETER_ID);
             if (id != null) {
                 resp.getWriter().write(jsonConverter.fromMenuToCrudJson(menuService.get(Long.valueOf(id))));
@@ -70,8 +68,6 @@ public class ApiMenuServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            resp.setCharacterEncoding(Constants.ENCODING);
-            resp.setContentType(Constants.CONTENT_TYPE);
             MenuDtoInput menu = jsonConverter.fromJsonToMenu(req.getInputStream());
             try {
                 menuValidator.validate(menu);
@@ -105,8 +101,6 @@ public class ApiMenuServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            resp.setCharacterEncoding(Constants.ENCODING);
-            resp.setContentType(Constants.CONTENT_TYPE);
             String id = req.getParameter(Constants.PARAMETER_ID);
             String version = req.getParameter(Constants.PARAMETER_VERSION);
             if (id != null && version != null) {
@@ -145,8 +139,6 @@ public class ApiMenuServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            resp.setCharacterEncoding(Constants.ENCODING);
-            resp.setContentType(Constants.CONTENT_TYPE);
             String id = req.getParameter(Constants.PARAMETER_ID);
             String delete = req.getParameter(Constants.PARAMETER_DELETE);
             if (id != null && delete != null) {
