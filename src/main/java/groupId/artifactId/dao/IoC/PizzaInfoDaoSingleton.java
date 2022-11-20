@@ -8,14 +8,6 @@ public class PizzaInfoDaoSingleton {
     private volatile static PizzaInfoDaoSingleton firstInstance = null;
     private final IPizzaInfoDao pizzaInfoDao;
 
-//    public PizzaInfoDaoSingleton() {
-//        try {
-//            this.pizzaInfoDao = new PizzaInfoDao(DataSourceCreator.getInstance());
-//        } catch (PropertyVetoException e) {
-//            throw new RuntimeException("Unable to get Data Source class for PizzaInfoDao", e);
-//        }
-//    }
-
     public PizzaInfoDaoSingleton() {
         this.pizzaInfoDao = new PizzaInfoDao(EntityManagerFactoryHibernate.getInstance());
     }
