@@ -3,4 +3,12 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
          http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
     <display-name>it_acad_HW_Interfaces</display-name>
+    <filter>
+        <filter-name>ContentTypeAndEncodingFilter</filter-name>
+        <filter-class>groupId.artifactId.controller.filter.api.ContentTypeAndEncodingFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>ContentTypeAndEncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 </web-app>
