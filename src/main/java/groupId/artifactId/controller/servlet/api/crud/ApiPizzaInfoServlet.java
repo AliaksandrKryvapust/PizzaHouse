@@ -8,9 +8,9 @@ import groupId.artifactId.core.Constants;
 import groupId.artifactId.core.dto.input.PizzaInfoDtoInput;
 import groupId.artifactId.core.dto.output.PizzaInfoDtoOutput;
 import groupId.artifactId.exceptions.NoContentException;
-import groupId.artifactId.exceptions.OptimisticLockException;
 import groupId.artifactId.service.IoC.PizzaInfoServiceSingleton;
 import groupId.artifactId.service.api.IPizzaInfoService;
+import jakarta.persistence.OptimisticLockException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -150,15 +150,15 @@ public class ApiPizzaInfoServlet extends HttpServlet {
             String id = req.getParameter(Constants.PARAMETER_ID);
             String delete = req.getParameter(Constants.PARAMETER_DELETE);
             if (id != null && delete != null) {
-                if (pizzaInfoService.isIdValid(Long.valueOf(id))) {
-                    pizzaInfoService.delete(id, delete);
-                    resp.setStatus(HttpServletResponse.SC_OK);
-                } else {
-                    resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
-                }
+                pizzaInfoService.delete(id, delete);
+                resp.setStatus(HttpServletResponse.SC_OK);
             } else {
                 resp.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
             }
+        } catch (NoContentException e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            logger.error("/api/pizza_info there is no content to fulfill doDelete method " + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             logger.error("/api/pizza_info crashed during doDelete method" + e.getMessage() + "\t" + e.getCause() +
