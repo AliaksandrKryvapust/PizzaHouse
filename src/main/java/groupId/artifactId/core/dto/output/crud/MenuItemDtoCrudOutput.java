@@ -11,7 +11,7 @@ public class MenuItemDtoCrudOutput {
     private final @NonNull Long id;
     private final @NonNull Double price;
     private final @NonNull Long pizzaInfoId;
-    private final Instant createdAt;
-    private final Integer version;
+    private final @NonNull Instant createdAt;
+    private final @NonNull Integer version;
     private final @NonNull Long menuId;
 }
