@@ -48,7 +48,8 @@ class PizzaInfoServiceTest {
         final Instant creationDate = Instant.now();
         final PizzaInfoDtoInput pizzaInfoDtoInput = PizzaInfoDtoInput.builder().name(name).description(description)
                 .size(size).build();
-        final PizzaInfo pizzaInfo = PizzaInfo.builder().name(name).description(description).size(size).build();
+        final PizzaInfo pizzaInfo = PizzaInfo.builder().id(id).name(name).description(description).size(size)
+                .creationDate(creationDate).version(version).build();
         final PizzaInfo pizzaInfoOutput = PizzaInfo.builder().id(id).name(name).description(description).size(size).build();
         final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(name).description(description)
                 .size(size).createdAt(creationDate).version(version).build();
@@ -66,6 +67,8 @@ class PizzaInfoServiceTest {
         Assertions.assertEquals(name, test.getName());
         Assertions.assertEquals(description, test.getDescription());
         Assertions.assertEquals(size, test.getSize());
+        Assertions.assertEquals(version, test.getVersion());
+        Assertions.assertEquals(creationDate, test.getCreatedAt());
     }
 
     @Test
@@ -142,7 +145,8 @@ class PizzaInfoServiceTest {
         final Instant creationDate = Instant.now();
         final PizzaInfoDtoInput pizzaInfoDtoInput = PizzaInfoDtoInput.builder().name(name).description(description)
                 .size(size).build();
-        final PizzaInfo pizzaInfo = PizzaInfo.builder().name(name).description(description).size(size).build();
+        final PizzaInfo pizzaInfo = PizzaInfo.builder().id(id).name(name).description(description).size(size)
+                .creationDate(creationDate).version(version).build();
         final PizzaInfo pizzaInfoOutput = PizzaInfo.builder().id(id).name(name).description(description).size(size)
                 .creationDate(creationDate).version(version).build();
         final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(name).description(description)
@@ -161,6 +165,8 @@ class PizzaInfoServiceTest {
         Assertions.assertEquals(name, test.getName());
         Assertions.assertEquals(description, test.getDescription());
         Assertions.assertEquals(size, test.getSize());
+        Assertions.assertEquals(version, test.getVersion());
+        Assertions.assertEquals(creationDate, test.getCreatedAt());
     }
 
     @Test
