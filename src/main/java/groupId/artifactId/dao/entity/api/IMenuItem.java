@@ -5,15 +5,10 @@ import java.time.Instant;
 public interface IMenuItem {
     Long getId();
 
-    IPizzaInfo getInfo();
+    IPizzaInfo getPizzaInfo();
 
     Double getPrice();
-
-    Long getPizzaInfoId();
-
     Instant getCreationDate();
-
     Integer getVersion();
-
     Long getMenuId();
 }
