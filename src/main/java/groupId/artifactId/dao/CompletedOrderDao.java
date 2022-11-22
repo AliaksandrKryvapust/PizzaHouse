@@ -130,12 +130,12 @@ public class CompletedOrderDao implements ICompletedOrderDao {
         ITicket ticket;
         ICompletedOrder completedOrder = new CompletedOrder();
         while (resultSet.next()) {
-            IPizzaInfo pizzaInfo = new PizzaInfo(resultSet.getLong("pizza_info_id"), resultSet.getString("pin"),
+            PizzaInfo pizzaInfo = new PizzaInfo(resultSet.getLong("pizza_info_id"), resultSet.getString("pin"),
                     resultSet.getString("pid"), resultSet.getInt("pis"),
                     resultSet.getTimestamp("picd").toInstant(), resultSet.getInt("piver"));
             IMenuItem menuItem = new MenuItem(resultSet.getLong("menu_item_id"), pizzaInfo, resultSet.getDouble("price"),
-                    resultSet.getLong("pizza_info_id"), resultSet.getTimestamp("micd").toInstant(),
-                    resultSet.getInt("miver"), resultSet.getLong("menu_id"));
+                     resultSet.getLong("menu_id"),
+                    resultSet.getTimestamp("micd").toInstant(), resultSet.getInt("miver"));
             ISelectedItem selectedItem = new SelectedItem(menuItem, resultSet.getLong("siid"),
                     resultSet.getLong("menu_item_id"), resultSet.getLong("tid"), resultSet.getInt("count"),
                     resultSet.getTimestamp("sicd").toInstant(), resultSet.getInt("siver"));

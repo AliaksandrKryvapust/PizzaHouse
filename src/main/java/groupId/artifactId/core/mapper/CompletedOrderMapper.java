@@ -25,7 +25,8 @@ public class CompletedOrderMapper {
         ITicket ticket = orderData.getTicket();
         List<IPizza> temp = new ArrayList<>();
         for (ISelectedItem selectedItem : ticket.getOrder().getSelectedItems()) {
-            IPizza pizza = new Pizza(selectedItem.getItem().getInfo().getName(), selectedItem.getItem().getInfo().getSize());
+            IPizza pizza = new Pizza(selectedItem.getItem().getPizzaInfo().getName(),
+                    selectedItem.getItem().getPizzaInfo().getSize());
             temp.add(pizza);
         }
         return new CompletedOrder(ticket, temp, orderData.getTicketId());
