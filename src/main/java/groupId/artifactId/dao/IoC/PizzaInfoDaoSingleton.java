@@ -9,7 +9,7 @@ public class PizzaInfoDaoSingleton {
     private final IPizzaInfoDao pizzaInfoDao;
 
     public PizzaInfoDaoSingleton() {
-        this.pizzaInfoDao = new PizzaInfoDao(EntityManagerFactoryHibernate.getInstance());
+        this.pizzaInfoDao = new PizzaInfoDao(EntityManagerFactoryHibernate.getEntityManager());
     }
 
     public static IPizzaInfoDao getInstance() {

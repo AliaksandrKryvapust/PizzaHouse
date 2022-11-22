@@ -12,7 +12,7 @@ public class PizzaInfoServiceSingleton {
 
     public PizzaInfoServiceSingleton() {
         this.pizzaInfoService = new PizzaInfoService(PizzaInfoDaoSingleton.getInstance(), new PizzaInfoMapper(),
-                EntityManagerFactoryHibernate.getInstance());
+                EntityManagerFactoryHibernate.getEntityManager());
     }
 
     public static IPizzaInfoService getInstance() {
