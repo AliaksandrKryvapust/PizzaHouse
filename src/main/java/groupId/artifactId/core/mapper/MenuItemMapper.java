@@ -6,6 +6,7 @@ import groupId.artifactId.core.dto.output.PizzaInfoDtoOutput;
 import groupId.artifactId.core.dto.output.crud.MenuItemDtoCrudOutput;
 import groupId.artifactId.dao.entity.MenuItem;
 import groupId.artifactId.dao.entity.api.IMenuItem;
+import groupId.artifactId.dao.entity.api.IPizzaInfo;
 
 public class MenuItemMapper {
     private final PizzaInfoMapper pizzaInfoMapper;
@@ -14,26 +15,27 @@ public class MenuItemMapper {
         this.pizzaInfoMapper = pizzaInfoMapper;
     }
 
-    public IMenuItem inputMapping(MenuItemDtoInput menuItemDtoInput) {
-        return new MenuItem(menuItemDtoInput.getPrice(), menuItemDtoInput.getPizzaInfoId(), menuItemDtoInput.getMenuId());
+    public IMenuItem inputMapping(MenuItemDtoInput menuItemDtoInput, IPizzaInfo pizzaInfo) {
+        return MenuItem.builder().price(menuItemDtoInput.getPrice())
+                .pizzaInfo(pizzaInfo)
+                .menuId(menuItemDtoInput.getMenuId()).build();
     }
 
     public MenuItemDtoCrudOutput outputCrudMapping(IMenuItem menuItem) {
         return MenuItemDtoCrudOutput.builder()
                 .id(menuItem.getId())
                 .price(menuItem.getPrice())
-                .pizzaInfoId(menuItem.getPizzaInfoId())
+                .pizzaInfoId(menuItem.getPizzaInfo().getId())
                 .createdAt(menuItem.getCreationDate())
                 .version(menuItem.getVersion())
                 .menuId(menuItem.getMenuId()).build();
     }
 
     public MenuItemDtoOutput outputMapping(IMenuItem menuItem) {
-        PizzaInfoDtoOutput pizzaInfo = pizzaInfoMapper.outputMapping(menuItem.getInfo());
+        PizzaInfoDtoOutput pizzaInfo = pizzaInfoMapper.outputMapping(menuItem.getPizzaInfo());
         return MenuItemDtoOutput.builder()
                 .id(menuItem.getId())
                 .price(menuItem.getPrice())
-                .pizzaInfoId(menuItem.getPizzaInfoId())
                 .createdAt(menuItem.getCreationDate())
                 .version(menuItem.getVersion())
                 .menuId(menuItem.getMenuId())
