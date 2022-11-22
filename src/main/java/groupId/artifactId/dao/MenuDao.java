@@ -202,12 +202,12 @@ public class MenuDao implements IMenuDao {
         List<IMenuItem> items = new ArrayList<>();
         IMenu menu = new Menu();
         while (resultSet.next()) {
-            IPizzaInfo pizzaInfo = new PizzaInfo(resultSet.getLong("pizza_info_id"), resultSet.getString("pin"),
+            PizzaInfo pizzaInfo = new PizzaInfo(resultSet.getLong("pizza_info_id"), resultSet.getString("pin"),
                     resultSet.getString("description"), resultSet.getInt("size"),
                     resultSet.getTimestamp("picd").toInstant(), resultSet.getInt("piv"));
             IMenuItem item = new MenuItem(resultSet.getLong("miid"), pizzaInfo, resultSet.getDouble("price"),
-                    resultSet.getLong("pizza_info_id"), resultSet.getTimestamp("micd").toInstant(),
-                    resultSet.getInt("miv"), resultSet.getLong("menu_id"));
+                     resultSet.getLong("menu_id"),
+                    resultSet.getTimestamp("micd").toInstant(), resultSet.getInt("miv"));
             items.add(item);
             if (resultSet.isLast()) {
                 menu = new Menu(items, resultSet.getLong("mid"), resultSet.getTimestamp("cr").toInstant(),

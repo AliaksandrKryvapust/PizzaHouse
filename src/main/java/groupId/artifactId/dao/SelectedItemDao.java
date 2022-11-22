@@ -156,12 +156,12 @@ public class SelectedItemDao implements ISelectedItemDao {
     }
 
     private ISelectedItem allDataMapper(ResultSet resultSet) throws SQLException {
-        IPizzaInfo pizzaInfo = new PizzaInfo(resultSet.getLong("pizza_info_id"), resultSet.getString("name"),
+        PizzaInfo pizzaInfo = new PizzaInfo(resultSet.getLong("pizza_info_id"), resultSet.getString("name"),
                 resultSet.getString("description"), resultSet.getInt("size"),
                 resultSet.getTimestamp("picd").toInstant(), resultSet.getInt("piv"));
         IMenuItem menuItem = new MenuItem(resultSet.getLong("miid"), pizzaInfo, resultSet.getDouble("price"),
-                resultSet.getLong("pizza_info_id"), resultSet.getTimestamp("micd").toInstant(),
-                resultSet.getInt("miver"), resultSet.getLong("meid"));
+                 resultSet.getLong("meid"),
+                resultSet.getTimestamp("micd").toInstant(), resultSet.getInt("miver"));
         ISelectedItem selectedItem = new SelectedItem(menuItem, resultSet.getLong("siid"),
                 resultSet.getLong("menu_item_id"), resultSet.getLong("order_id"), resultSet.getInt("count"),
                 resultSet.getTimestamp("sicd").toInstant(), resultSet.getInt("siiv"));
