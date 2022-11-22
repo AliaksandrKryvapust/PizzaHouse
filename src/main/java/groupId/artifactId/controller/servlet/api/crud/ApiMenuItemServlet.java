@@ -6,11 +6,12 @@ import groupId.artifactId.controller.validator.IoC.MenuItemValidatorSingleton;
 import groupId.artifactId.controller.validator.api.IMenuItemValidator;
 import groupId.artifactId.core.Constants;
 import groupId.artifactId.core.dto.input.MenuItemDtoInput;
+import groupId.artifactId.core.dto.output.MenuItemDtoOutput;
 import groupId.artifactId.core.dto.output.crud.MenuItemDtoCrudOutput;
 import groupId.artifactId.exceptions.NoContentException;
-import groupId.artifactId.exceptions.OptimisticLockException;
 import groupId.artifactId.service.IoC.MenuItemServiceSingleton;
 import groupId.artifactId.service.api.IMenuItemService;
+import jakarta.persistence.OptimisticLockException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +44,7 @@ public class ApiMenuItemServlet extends HttpServlet {
         try {
             String id = req.getParameter(Constants.PARAMETER_ID);
             if (id != null) {
-                resp.getWriter().write(jsonConverter.fromMenuItemToCrudJson(menuItemService.get(Long.valueOf(id))));
+                resp.getWriter().write(jsonConverter.fromMenuItemToJson(menuItemService.get(Long.valueOf(id))));
             } else {
                 resp.getWriter().write(jsonConverter.fromMenuItemListToJson(menuItemService.get()));
             }
@@ -69,16 +70,16 @@ public class ApiMenuItemServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            MenuItemDtoInput menuItem = jsonConverter.fromJsonToMenuItem(req.getInputStream());
+            MenuItemDtoInput menuItemDtoInput = jsonConverter.fromJsonToMenuItem(req.getInputStream());
             try {
-                menuItemValidator.validate(menuItem);
+                menuItemValidator.validate(menuItemDtoInput);
             } catch (IllegalArgumentException e) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 logger.error("/api/menu_item input is not valid " + e.getMessage() + "\t" + e.getCause() +
                         "\tresponse status: " + resp.getStatus());
             }
-            MenuItemDtoCrudOutput menuItemDto = menuItemService.save(menuItem);
-            resp.getWriter().write(jsonConverter.fromMenuItemToCrudJson(menuItemDto));
+            MenuItemDtoOutput dtoCrudOutput = menuItemService.save(menuItemDtoInput);
+            resp.getWriter().write(jsonConverter.fromMenuItemToJson(dtoCrudOutput));
             resp.setStatus(HttpServletResponse.SC_CREATED);
         } catch (NoContentException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -106,16 +107,16 @@ public class ApiMenuItemServlet extends HttpServlet {
             String id = req.getParameter(Constants.PARAMETER_ID);
             String version = req.getParameter(Constants.PARAMETER_VERSION);
             if (id != null && version != null) {
-                MenuItemDtoInput menuItem = jsonConverter.fromJsonToMenuItem(req.getInputStream());
+                MenuItemDtoInput dtoInput = jsonConverter.fromJsonToMenuItem(req.getInputStream());
                 try {
-                    menuItemValidator.validate(menuItem);
+                    menuItemValidator.validate(dtoInput);
                 } catch (IllegalArgumentException e) {
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                     logger.error("/api/menu_item input is not valid " + e.getMessage() + "\t" + e.getCause() +
                             "\tresponse status: " + resp.getStatus());
                 }
-                MenuItemDtoCrudOutput menuItemDto = menuItemService.update(menuItem, id, version);
-                resp.getWriter().write(jsonConverter.fromMenuItemToCrudJson(menuItemDto));
+                MenuItemDtoCrudOutput crudOutput = menuItemService.update(dtoInput, id, version);
+                resp.getWriter().write(jsonConverter.fromMenuItemToCrudJson(crudOutput));
                 resp.setStatus(HttpServletResponse.SC_CREATED);
             } else {
                 resp.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
@@ -130,7 +131,7 @@ public class ApiMenuItemServlet extends HttpServlet {
                     "\tresponse status: " + resp.getStatus());
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            logger.error("/api/menu_item crashed during doPut method " + e.getMessage() + "\t" + e.getCause() +
+            logger.error("/api/menu_item crashed during doPut method" + e.getMessage() + "\t" + e.getCause() +
                     "\tresponse status: " + resp.getStatus());
         }
     }
@@ -144,15 +145,15 @@ public class ApiMenuItemServlet extends HttpServlet {
             String id = req.getParameter(Constants.PARAMETER_ID);
             String delete = req.getParameter(Constants.PARAMETER_DELETE);
             if (id != null && delete != null) {
-                if (menuItemService.isIdValid(Long.valueOf(id))) {
-                    menuItemService.delete(id, delete);
-                    resp.setStatus(HttpServletResponse.SC_OK);
-                } else {
-                    resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
-                }
+                menuItemService.delete(id, delete);
+                resp.setStatus(HttpServletResponse.SC_OK);
             } else {
                 resp.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
             }
+        } catch (NoContentException e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            logger.error("/api/menu_item there is no content to fulfill doDelete method " + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             logger.error("/api/menu_item crashed during doDelete method" + e.getMessage() + "\t" + e.getCause() +
