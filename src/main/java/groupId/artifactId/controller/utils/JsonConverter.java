@@ -44,7 +44,7 @@ public class JsonConverter {
         }
     }
 
-    public String fromMenuItemListToJson(List<MenuItemDtoCrudOutput> items) {
+    public String fromMenuItemListToJson(List<MenuItemDtoOutput> items) {
         try {
             return mapper.writeValueAsString(items);
         } catch (JsonProcessingException e) {
