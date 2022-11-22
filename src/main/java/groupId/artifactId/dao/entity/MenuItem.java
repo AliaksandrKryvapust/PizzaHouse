@@ -19,8 +19,9 @@ public class MenuItem implements IMenuItem {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-    @OneToOne(targetEntity = PizzaInfo.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(targetEntity = PizzaInfo.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "pizza_info_id", referencedColumnName = "id")
+    @Setter
     private IPizzaInfo pizzaInfo;
     @Setter
     private Double price;
