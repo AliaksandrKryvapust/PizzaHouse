@@ -5,20 +5,17 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 public class EntityManagerFactoryHibernate {
-    private static EntityManagerFactoryHibernate instance = null;
-    private final EntityManager entityManager;
+    private static final EntityManagerFactory entityManagerFactory;
 
-    public EntityManagerFactoryHibernate() {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("pizzeria");
-        this.entityManager = entityManagerFactory.createEntityManager();
+    static {
+        entityManagerFactory = Persistence.createEntityManagerFactory("hibernate");
     }
 
-    public static EntityManager getInstance() {
-        synchronized (EntityManagerFactoryHibernate.class) {
-            if (instance == null) {
-                instance = new EntityManagerFactoryHibernate();
-            }
-            return instance.entityManager;
-        }
+    public static EntityManager getEntityManager() {
+        return entityManagerFactory.createEntityManager();
+    }
+
+    public static void close() {
+        entityManagerFactory.close();
     }
 }
