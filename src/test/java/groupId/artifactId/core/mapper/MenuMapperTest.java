@@ -19,9 +19,9 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
 
-import static java.util.Collections.singletonList;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
@@ -81,12 +81,14 @@ class MenuMapperTest {
         final String description = "Mozzarella cheese, basilica, ham";
         final int size = 32;
         final Instant creationDate = Instant.now();
-        List<IMenuItem> items = singletonList(new MenuItem(id, new PizzaInfo(id, pizzaName,
-                description, size, creationDate, version), price, id, creationDate, version, id));
-        final IMenu menu = new Menu(items, id, creationDate, version, name, enable);
+        final PizzaInfo pizzaInfo = PizzaInfo.builder().id(id).name(name).description(description).size(size)
+                .creationDate(creationDate).version(version).build();
+        final List<IMenuItem> menuItems = Collections.singletonList(MenuItem.builder().id(id).pizzaInfo(pizzaInfo).price(price)
+                .creationDate(creationDate).version(version).menuId(id).build());
+        final IMenu menu = new Menu(menuItems, id, creationDate, version, name, enable);
         final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(pizzaName).description(description)
                 .size(size).createdAt(creationDate).version(version).build();
-        final MenuItemDtoOutput menuItemDtoOutput = MenuItemDtoOutput.builder().id(id).price(price).pizzaInfoId(id)
+        final MenuItemDtoOutput menuItemDtoOutput = MenuItemDtoOutput.builder().id(id).price(price)
                 .createdAt(creationDate).version(version).menuId(id).pizzaInfo(pizzaInfoDtoOutput).build();
         Mockito.when(menuItemMapper.outputMapping(any(IMenuItem.class))).thenReturn(menuItemDtoOutput);
 
@@ -105,7 +107,6 @@ class MenuMapperTest {
             Assertions.assertNotNull(output);
             Assertions.assertNotNull(output.getPizzaInfo());
             Assertions.assertEquals(id, output.getId());
-            Assertions.assertEquals(id, output.getPizzaInfoId());
             Assertions.assertEquals(id, output.getMenuId());
             Assertions.assertEquals(price, output.getPrice());
             Assertions.assertEquals(version, output.getVersion());

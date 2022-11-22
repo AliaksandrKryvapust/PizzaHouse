@@ -47,12 +47,15 @@ class CompletedOrderServiceTest {
         final String description = "Mozzarella cheese, basilica, ham";
         final int size = 32;
         final Instant creationDate = Instant.now();
-        List<ISelectedItem> selectedItems = Collections.singletonList(new SelectedItem(new MenuItem(id,
-                new PizzaInfo(id, name, description, size, creationDate, version), price, id, creationDate, version, id),
+        final PizzaInfo pizzaInfo = PizzaInfo.builder().id(id).name(name).description(description).size(size)
+                .creationDate(creationDate).version(version).build();
+        final MenuItem menuItem = MenuItem.builder().id(id).pizzaInfo(pizzaInfo).price(price)
+                .creationDate(creationDate).version(version).menuId(id).build();
+        List<ISelectedItem> selectedItems = Collections.singletonList(new SelectedItem(menuItem,
                 id, id, id, count, creationDate, version));
         final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(name).description(description)
                 .size(size).createdAt(creationDate).version(version).build();
-        final MenuItemDtoOutput menuItemDtoOutput = MenuItemDtoOutput.builder().id (id).price(price).pizzaInfoId(id)
+        final MenuItemDtoOutput menuItemDtoOutput = MenuItemDtoOutput.builder().id (id).price(price)
                 .createdAt(creationDate).version(version).menuId(id).pizzaInfo(pizzaInfoDtoOutput).build();
         List<SelectedItemDtoOutput> outputs = singletonList(SelectedItemDtoOutput.builder().menuItem(menuItemDtoOutput)
                 .id(id).menuItemId(id).orderId(id).count(count).createdAt(creationDate).version(version).build());
@@ -100,7 +103,6 @@ class CompletedOrderServiceTest {
             Assertions.assertEquals(version, output.getVersion());
             Assertions.assertEquals(id, output.getMenuItem().getId());
             Assertions.assertEquals(price, output.getMenuItem().getPrice());
-            Assertions.assertEquals(id, output.getMenuItem().getPizzaInfoId());
             Assertions.assertEquals(id, output.getMenuItem().getMenuId());
             Assertions.assertEquals(creationDate, output.getMenuItem().getCreatedAt());
             Assertions.assertEquals(version, output.getMenuItem().getVersion());
@@ -133,8 +135,11 @@ class CompletedOrderServiceTest {
         final String description = "Mozzarella cheese, basilica, ham";
         final int size = 32;
         final Instant creationDate = Instant.now();
-        List<ISelectedItem> selectedItems = Collections.singletonList(new SelectedItem(new MenuItem(id,
-                new PizzaInfo(id, name, description, size, creationDate, version), price, id, creationDate, version, id),
+        final PizzaInfo pizzaInfo = PizzaInfo.builder().id(id).name(name).description(description).size(size)
+                .creationDate(creationDate).version(version).build();
+        final MenuItem menuItem = MenuItem.builder().id(id).pizzaInfo(pizzaInfo).price(price)
+                .creationDate(creationDate).version(version).menuId(id).build();
+        List<ISelectedItem> selectedItems = Collections.singletonList(new SelectedItem(menuItem,
                 id, id, id, count, creationDate, version));
         List<IPizza> pizzas = Collections.singletonList(new Pizza(id, id, name, size, creationDate, version));
         final ICompletedOrder completedOrder = new CompletedOrder(new Ticket(new Order(selectedItems, id, creationDate, version), id,
@@ -163,7 +168,7 @@ class CompletedOrderServiceTest {
         Assertions.assertEquals(version, test.getTicket().getOrder().getVersion());
         for (ISelectedItem output : test.getTicket().getOrder().getSelectedItems()) {
             Assertions.assertNotNull(output.getItem());
-            Assertions.assertNotNull(output.getItem().getInfo());
+            Assertions.assertNotNull(output.getItem().getPizzaInfo());
             Assertions.assertEquals(id, output.getId());
             Assertions.assertEquals(id, output.getOrderId());
             Assertions.assertEquals(id, output.getMenuItemId());
@@ -172,16 +177,15 @@ class CompletedOrderServiceTest {
             Assertions.assertEquals(version, output.getVersion());
             Assertions.assertEquals(id, output.getItem().getId());
             Assertions.assertEquals(price, output.getItem().getPrice());
-            Assertions.assertEquals(id, output.getItem().getPizzaInfoId());
             Assertions.assertEquals(id, output.getItem().getMenuId());
             Assertions.assertEquals(creationDate, output.getItem().getCreationDate());
             Assertions.assertEquals(version, output.getItem().getVersion());
-            Assertions.assertEquals(id, output.getItem().getInfo().getId());
-            Assertions.assertEquals(name, output.getItem().getInfo().getName());
-            Assertions.assertEquals(description, output.getItem().getInfo().getDescription());
-            Assertions.assertEquals(size, output.getItem().getInfo().getSize());
-            Assertions.assertEquals(creationDate, output.getItem().getInfo().getCreationDate());
-            Assertions.assertEquals(version, output.getItem().getInfo().getVersion());
+            Assertions.assertEquals(id, output.getItem().getPizzaInfo().getId());
+            Assertions.assertEquals(name, output.getItem().getPizzaInfo().getName());
+            Assertions.assertEquals(description, output.getItem().getPizzaInfo().getDescription());
+            Assertions.assertEquals(size, output.getItem().getPizzaInfo().getSize());
+            Assertions.assertEquals(creationDate, output.getItem().getPizzaInfo().getCreationDate());
+            Assertions.assertEquals(version, output.getItem().getPizzaInfo().getVersion());
         }
         for (IPizza output : test.getItems()) {
             Assertions.assertEquals(id, output.getId());
