@@ -42,10 +42,13 @@ class CompletedOrderMapperTest {
         final int size = 32;
         final boolean done = false;
         final Instant creationDate = Instant.now();
-        List<ISelectedItem> selectedItems = singletonList(new SelectedItem(new MenuItem(id,
-                new PizzaInfo(id, name, description, size, creationDate, version), price, id, creationDate, version, id),
+        final PizzaInfo pizzaInfo = PizzaInfo.builder().id(id).name(name).description(description).size(size)
+                .creationDate(creationDate).version(version).build();
+        final MenuItem menuItem = MenuItem.builder().id(id).pizzaInfo(pizzaInfo).price(price)
+                .creationDate(creationDate).version(version).menuId(id).build();
+        final List<ISelectedItem> selectedItems = singletonList(new SelectedItem(menuItem,
                 id, id, id, count, creationDate, version));
-        List<IOrderStage> orderStages = singletonList(new OrderStage(id, id, stageDescription, creationDate, version));
+        final List<IOrderStage> orderStages = singletonList(new OrderStage(id, id, stageDescription, creationDate, version));
         final IOrderData orderData = new OrderData(new Ticket(new Order(selectedItems, id, creationDate, version), id,
                 orderId, creationDate, version), orderStages, id, id, done, creationDate, version);
 
@@ -105,15 +108,18 @@ class CompletedOrderMapperTest {
         final String description = "Mozzarella cheese, basilica, ham";
         final int size = 32;
         final Instant creationDate = Instant.now();
-        List<ISelectedItem> selectedItems = Collections.singletonList(new SelectedItem(new MenuItem(id,
-                new PizzaInfo(id, name, description, size, creationDate, version), price, id, creationDate, version, id),
+        final PizzaInfo pizzaInfo = PizzaInfo.builder().id(id).name(name).description(description).size(size)
+                .creationDate(creationDate).version(version).build();
+        final MenuItem menuItem = MenuItem.builder().id(id).pizzaInfo(pizzaInfo).price(price)
+                .creationDate(creationDate).version(version).menuId(id).build();
+        List<ISelectedItem> selectedItems = Collections.singletonList(new SelectedItem(menuItem,
                 id, id, id, count, creationDate, version));
         List<IPizza> pizzas = Collections.singletonList(new Pizza(id, id, name, size, creationDate, version));
         final ICompletedOrder completedOrder = new CompletedOrder(new Ticket(new Order(selectedItems, id, creationDate, version), id,
                 orderId, creationDate, version), pizzas, id, id, creationDate, version);
         final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(name).description(description)
                 .size(size).createdAt(creationDate).version(version).build();
-        final MenuItemDtoOutput menuItemDtoOutput = MenuItemDtoOutput.builder().id(id).price(price).pizzaInfoId(id)
+        final MenuItemDtoOutput menuItemDtoOutput = MenuItemDtoOutput.builder().id(id).price(price)
                 .createdAt(creationDate).version(version).menuId(id).pizzaInfo(pizzaInfoDtoOutput).build();
         List<SelectedItemDtoOutput> outputs = singletonList(SelectedItemDtoOutput.builder().menuItem(menuItemDtoOutput)
                 .id(id).menuItemId(id).orderId(id).count(count).createdAt(creationDate).version(version).build());
@@ -156,7 +162,6 @@ class CompletedOrderMapperTest {
             Assertions.assertEquals(version, output.getVersion());
             Assertions.assertEquals(id, output.getMenuItem().getId());
             Assertions.assertEquals(price, output.getMenuItem().getPrice());
-            Assertions.assertEquals(id, output.getMenuItem().getPizzaInfoId());
             Assertions.assertEquals(id, output.getMenuItem().getMenuId());
             Assertions.assertEquals(creationDate, output.getMenuItem().getCreatedAt());
             Assertions.assertEquals(version, output.getMenuItem().getVersion());

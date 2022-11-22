@@ -56,12 +56,14 @@ class SelectedItemMapperTest {
         final String description = "Mozzarella cheese, basilica, ham";
         final int size = 32;
         final Instant creationDate = Instant.now();
-        final ISelectedItem selectedItem = new SelectedItem(new MenuItem(id,
-                new PizzaInfo(id, name, description, size, creationDate, version), price, id, creationDate, version, id),
-                id, id, id, count, creationDate, version);
+        final PizzaInfo pizzaInfo = PizzaInfo.builder().id(id).name(name).description(description).size(size)
+                .creationDate(creationDate).version(version).build();
+        final MenuItem menuItem = MenuItem.builder().id(id).pizzaInfo(pizzaInfo).price(price)
+                .creationDate(creationDate).version(version).menuId(id).build();
+        final ISelectedItem selectedItem = new SelectedItem(menuItem, id, id, id, count, creationDate, version);
         final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(name).description(description)
                 .size(size).createdAt(creationDate).version(version).build();
-        final MenuItemDtoOutput menuItemDtoOutput = MenuItemDtoOutput.builder().id (id).price(price).pizzaInfoId(id)
+        final MenuItemDtoOutput menuItemDtoOutput = MenuItemDtoOutput.builder().id(id).price(price)
                 .createdAt(creationDate).version(version).menuId(id).pizzaInfo(pizzaInfoDtoOutput).build();
         Mockito.when(menuItemMapper.outputMapping(any(IMenuItem.class))).thenReturn(menuItemDtoOutput);
 
@@ -80,7 +82,6 @@ class SelectedItemMapperTest {
         Assertions.assertEquals(version, test.getVersion());
         Assertions.assertEquals(id, test.getMenuItem().getId());
         Assertions.assertEquals(price, test.getMenuItem().getPrice());
-        Assertions.assertEquals(id, test.getMenuItem().getPizzaInfoId());
         Assertions.assertEquals(id, test.getMenuItem().getMenuId());
         Assertions.assertEquals(creationDate, test.getMenuItem().getCreatedAt());
         Assertions.assertEquals(version, test.getMenuItem().getVersion());
