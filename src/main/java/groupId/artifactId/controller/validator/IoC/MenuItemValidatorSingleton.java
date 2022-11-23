@@ -8,7 +8,7 @@ public class MenuItemValidatorSingleton {
     private volatile static MenuItemValidatorSingleton firstInstance = null;
 
     public MenuItemValidatorSingleton() {
-        this.menuItemValidator = new MenuItemValidator();
+        this.menuItemValidator = new MenuItemValidator(PizzaInfoValidatorSingleton.getInstance());
     }
 
     public static IMenuItemValidator getInstance() {
