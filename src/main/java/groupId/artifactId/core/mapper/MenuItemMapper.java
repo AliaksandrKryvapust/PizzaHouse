@@ -3,7 +3,6 @@ package groupId.artifactId.core.mapper;
 import groupId.artifactId.core.dto.input.MenuItemDtoInput;
 import groupId.artifactId.core.dto.output.MenuItemDtoOutput;
 import groupId.artifactId.core.dto.output.PizzaInfoDtoOutput;
-import groupId.artifactId.core.dto.output.crud.MenuItemDtoCrudOutput;
 import groupId.artifactId.dao.entity.MenuItem;
 import groupId.artifactId.dao.entity.api.IMenuItem;
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
@@ -20,16 +19,6 @@ public class MenuItemMapper {
         return MenuItem.builder().price(menuItemDtoInput.getPrice())
                 .pizzaInfo(pizzaInfo)
                 .menuId(menuItemDtoInput.getMenuId()).build();
-    }
-
-    public MenuItemDtoCrudOutput outputCrudMapping(IMenuItem menuItem) {
-        return MenuItemDtoCrudOutput.builder()
-                .id(menuItem.getId())
-                .price(menuItem.getPrice())
-                .pizzaInfoId(menuItem.getPizzaInfo().getId())
-                .createdAt(menuItem.getCreationDate())
-                .version(menuItem.getVersion())
-                .menuId(menuItem.getMenuId()).build();
     }
 
     public MenuItemDtoOutput outputMapping(IMenuItem menuItem) {

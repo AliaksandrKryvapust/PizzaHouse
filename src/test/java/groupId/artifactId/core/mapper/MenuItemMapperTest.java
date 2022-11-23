@@ -4,7 +4,6 @@ import groupId.artifactId.core.dto.input.MenuItemDtoInput;
 import groupId.artifactId.core.dto.input.PizzaInfoDtoInput;
 import groupId.artifactId.core.dto.output.MenuItemDtoOutput;
 import groupId.artifactId.core.dto.output.PizzaInfoDtoOutput;
-import groupId.artifactId.core.dto.output.crud.MenuItemDtoCrudOutput;
 import groupId.artifactId.dao.entity.MenuItem;
 import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.api.IMenuItem;
@@ -56,36 +55,6 @@ class MenuItemMapperTest {
         Assertions.assertEquals(id, test.getPizzaInfo().getId());
         Assertions.assertEquals(price, test.getPrice());
     }
-
-    @Test
-    void outputCrudMapping() {
-        // preconditions
-        final long id = 1L;
-        final double price = 20.0;
-        final int version = 1;
-        final Instant creationDate = Instant.now();
-        final PizzaInfo pizzaInfo = PizzaInfo.builder().id(id).build();
-        final MenuItem menuItem = MenuItem.builder()
-                .id(id)
-                .price(price)
-                .pizzaInfo(pizzaInfo)
-                .creationDate(creationDate)
-                .version(version)
-                .menuId(id).build();
-
-        //test
-        MenuItemDtoCrudOutput test = menuItemMapper.outputCrudMapping(menuItem);
-
-        // assert
-        Assertions.assertNotNull(test);
-        Assertions.assertEquals(id, test.getId());
-        Assertions.assertEquals(id, test.getMenuId());
-        Assertions.assertEquals(price, test.getPrice());
-        Assertions.assertEquals(id, test.getPizzaInfoId());
-        Assertions.assertEquals(version, test.getVersion());
-        Assertions.assertEquals(creationDate, test.getCreatedAt());
-    }
-
     @Test
     void outputMapping() {
         // preconditions

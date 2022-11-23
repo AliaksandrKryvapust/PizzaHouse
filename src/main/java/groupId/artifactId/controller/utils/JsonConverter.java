@@ -52,14 +52,6 @@ public class JsonConverter {
         }
     }
 
-    public String fromMenuItemToCrudJson(MenuItemDtoCrudOutput item) {
-        try {
-            return mapper.writeValueAsString(item);
-        } catch (JsonProcessingException e) {
-            throw new IncorrectJsonParseException("failed to write MenuItemDtoCrudOutput as json", e);
-        }
-    }
-
     public String fromMenuItemToJson(MenuItemDtoOutput item) {
         try {
             return mapper.writeValueAsString(item);
