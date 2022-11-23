@@ -15,7 +15,7 @@
             <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost/pizzeria"/> <!-- BD Mane -->
             <property name="javax.persistence.jdbc.user" value="postgres"/> <!-- DB User -->
             <property name="javax.persistence.jdbc.password" value="postgres"/> <!-- DB Password -->
-
+            <property name="hibernate.id.new_generator_mappings" value="true"/> <!--directs how identity or sequence columns are generated when using @GeneratedValue-->
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/> <!-- DB Dialect -->
             <!--            Warning! Can rewrite the table-->
             <property name="hibernate.hbm2ddl.auto" value="update"/> <!-- create / create-drop / update -->
