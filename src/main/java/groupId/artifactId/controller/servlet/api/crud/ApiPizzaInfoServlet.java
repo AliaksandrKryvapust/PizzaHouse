@@ -10,7 +10,7 @@ import groupId.artifactId.core.dto.output.PizzaInfoDtoOutput;
 import groupId.artifactId.exceptions.NoContentException;
 import groupId.artifactId.service.IoC.PizzaInfoServiceSingleton;
 import groupId.artifactId.service.api.IPizzaInfoService;
-import jakarta.persistence.OptimisticLockException;
+import javax.persistence.OptimisticLockException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
