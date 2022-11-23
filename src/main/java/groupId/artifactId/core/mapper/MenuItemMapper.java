@@ -15,7 +15,8 @@ public class MenuItemMapper {
         this.pizzaInfoMapper = pizzaInfoMapper;
     }
 
-    public IMenuItem inputMapping(MenuItemDtoInput menuItemDtoInput, IPizzaInfo pizzaInfo) {
+    public IMenuItem inputMapping(MenuItemDtoInput menuItemDtoInput) {
+        IPizzaInfo pizzaInfo = pizzaInfoMapper.inputMapping(menuItemDtoInput.getPizzaInfoDtoInput());
         return MenuItem.builder().price(menuItemDtoInput.getPrice())
                 .pizzaInfo(pizzaInfo)
                 .menuId(menuItemDtoInput.getMenuId()).build();
