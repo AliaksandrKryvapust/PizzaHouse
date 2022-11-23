@@ -21,6 +21,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import java.time.Instant;
 import java.util.List;
 
@@ -234,7 +236,7 @@ class MenuServiceTest {
         final MenuDtoCrudOutput crudOutput = MenuDtoCrudOutput.builder().id(id).createdAt(creationDate).version(version)
                 .name(name).enable(enable).build();
         Mockito.when(menuMapper.inputMapping(any(MenuDtoInput.class))).thenReturn(menu);
-        Mockito.when(menuDao.save(any(IMenu.class))).thenReturn(menuOutput);
+        Mockito.when(menuDao.save(any(IMenu.class), any(EntityManager.class))).thenReturn(menuOutput);
         Mockito.when(menuMapper.outputCrudMapping(any(IMenu.class))).thenReturn(crudOutput);
 
         //test

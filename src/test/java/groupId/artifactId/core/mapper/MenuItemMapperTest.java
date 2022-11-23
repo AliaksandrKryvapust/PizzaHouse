@@ -1,6 +1,7 @@
 package groupId.artifactId.core.mapper;
 
 import groupId.artifactId.core.dto.input.MenuItemDtoInput;
+import groupId.artifactId.core.dto.input.PizzaInfoDtoInput;
 import groupId.artifactId.core.dto.output.MenuItemDtoOutput;
 import groupId.artifactId.core.dto.output.PizzaInfoDtoOutput;
 import groupId.artifactId.core.dto.output.crud.MenuItemDtoCrudOutput;
@@ -37,13 +38,17 @@ class MenuItemMapperTest {
         final int size = 32;
         final int version = 1;
         final Instant creationDate = Instant.now();
-
-        final MenuItemDtoInput menuDtoInput = MenuItemDtoInput.builder().price(price).pizzaInfoId(id).menuId(id).build();
+        final PizzaInfoDtoInput pizzaInfoDtoInput = PizzaInfoDtoInput.builder().name(pizzaName).description(description)
+                .size(size).build();
+        final MenuItemDtoInput menuDtoInput = MenuItemDtoInput.builder().price(price).pizzaInfoId(id).menuId(id)
+                .pizzaInfoDtoInput(pizzaInfoDtoInput).build();
         final PizzaInfo pizzaInfo = PizzaInfo.builder().id(id).name(pizzaName).description(description).size(size)
                 .creationDate(creationDate).version(version).build();
+        Mockito.when(pizzaInfoMapper.inputMapping(any(PizzaInfoDtoInput.class))).thenReturn(pizzaInfo);
+
 
         //test
-        IMenuItem test = menuItemMapper.inputMapping(menuDtoInput, pizzaInfo);
+        IMenuItem test = menuItemMapper.inputMapping(menuDtoInput);
 
         // assert
         Assertions.assertNotNull(test);

@@ -24,6 +24,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import java.time.Instant;
 import java.util.List;
 
@@ -47,6 +49,7 @@ class OrderServiceTest {
     private TicketMapper ticketMapper;
     @Mock
     private OrderMapper orderMapper;
+
 
     @Test
     void getAllData() {
@@ -176,10 +179,10 @@ class OrderServiceTest {
                 .version(version).build();
         final OrderDataDtoCrudOutput dtoCrudOutput = OrderDataDtoCrudOutput.builder()
                 .id(id).ticketId(id).done(done).build();
-        Mockito.when(orderDao.save(any(IOrder.class))).thenReturn(order);
+        Mockito.when(orderDao.save(any(IOrder.class), any(EntityManager.class))).thenReturn(order);
         Mockito.when(orderMapper.inputMapping(any(OrderDtoInput.class), any(Long.class))).thenReturn(orderOutput);
-        Mockito.when(selectedItemDao.save(any(ISelectedItem.class))).thenReturn(selectedItem);
-        Mockito.when(ticketDao.save(any(ITicket.class))).thenReturn(ticket);
+        Mockito.when(selectedItemDao.save(any(ISelectedItem.class), any(EntityManager.class))).thenReturn(selectedItem);
+        Mockito.when(ticketDao.save(any(ITicket.class), any(EntityManager.class))).thenReturn(ticket);
         Mockito.when(orderDataService.save(any(OrderDataDtoInput.class))).thenReturn(dtoCrudOutput);
         ArgumentCaptor<OrderDataDtoInput> value = ArgumentCaptor.forClass(OrderDataDtoInput.class);
         Mockito.when(ticketMapper.outputCrudMapping(any(ITicket.class))).thenReturn(crudOutput);

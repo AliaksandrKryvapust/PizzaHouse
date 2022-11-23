@@ -1,18 +1,17 @@
 package groupId.artifactId.service;
 
 import groupId.artifactId.core.dto.input.MenuItemDtoInput;
+import groupId.artifactId.core.dto.input.PizzaInfoDtoInput;
 import groupId.artifactId.core.dto.output.MenuItemDtoOutput;
 import groupId.artifactId.core.dto.output.PizzaInfoDtoOutput;
 import groupId.artifactId.core.dto.output.crud.MenuItemDtoCrudOutput;
 import groupId.artifactId.core.mapper.MenuItemMapper;
 import groupId.artifactId.dao.MenuItemDao;
-import groupId.artifactId.dao.PizzaInfoDao;
 import groupId.artifactId.dao.entity.MenuItem;
 import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.api.IMenuItem;
-import groupId.artifactId.dao.entity.api.IPizzaInfo;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,8 +35,6 @@ class MenuItemServiceTest {
     @Mock
     private MenuItemDao menuItemDao;
     @Mock
-    private PizzaInfoDao pizzaInfoDao;
-    @Mock
     private MenuItemMapper menuItemMapper;
     @Mock
     EntityManager entityManager;
@@ -57,17 +54,19 @@ class MenuItemServiceTest {
         final PizzaInfo pizzaInfo = PizzaInfo.builder().id(id).name(pizzaName).description(description).size(size)
                 .creationDate(creationDate).version(version).build();
         final IMenuItem menuItemInput = MenuItem.builder().price(price).menuId(id).build();
-        final MenuItemDtoInput menuDtoInput = MenuItemDtoInput.builder().price(price).pizzaInfoId(id).menuId(id).build();
-        final MenuItem menuItemOutput =  MenuItem.builder().id(id).price(price).pizzaInfo(pizzaInfo)
+        final PizzaInfoDtoInput pizzaInfoDtoInput = PizzaInfoDtoInput.builder().name(pizzaName).description(description)
+                .size(size).build();
+        final MenuItemDtoInput menuDtoInput = MenuItemDtoInput.builder().price(price).pizzaInfoId(id).menuId(id)
+                .pizzaInfoDtoInput(pizzaInfoDtoInput).build();
+        final MenuItem menuItemOutput = MenuItem.builder().id(id).price(price).pizzaInfo(pizzaInfo)
                 .creationDate(creationDate).version(version).menuId(id).build();
         final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(pizzaName).description(description)
                 .size(size).createdAt(creationDate).version(version).build();
-        final MenuItemDtoOutput dtoOutput = MenuItemDtoOutput.builder().id (id).price(price)
+        final MenuItemDtoOutput dtoOutput = MenuItemDtoOutput.builder().id(id).price(price)
                 .createdAt(creationDate).version(version).menuId(id).pizzaInfo(pizzaInfoDtoOutput).build();
         Mockito.when(entityManager.getTransaction()).thenReturn(transaction);
-        Mockito.when(pizzaInfoDao.get(any(Long.class))).thenReturn(pizzaInfo);
-        Mockito.when(menuItemMapper.inputMapping(any(MenuItemDtoInput.class), any(IPizzaInfo.class))).thenReturn(menuItemInput);
-        Mockito.when(menuItemDao.save(any(IMenuItem.class))).thenReturn(menuItemOutput);
+        Mockito.when(menuItemMapper.inputMapping(any(MenuItemDtoInput.class))).thenReturn(menuItemInput);
+        Mockito.when(menuItemDao.save(any(IMenuItem.class), any(EntityManager.class))).thenReturn(menuItemOutput);
         Mockito.when(menuItemMapper.outputMapping(any(IMenuItem.class))).thenReturn(dtoOutput);
 
         //test
@@ -185,15 +184,17 @@ class MenuItemServiceTest {
         final Instant creationDate = Instant.now();
         final PizzaInfo pizzaInfo = PizzaInfo.builder().id(id).name(pizzaName).description(description).size(size)
                 .creationDate(creationDate).version(version).build();
-        final MenuItemDtoInput menuDtoInput = MenuItemDtoInput.builder().price(price).pizzaInfoId(id).menuId(id).build();
+        final PizzaInfoDtoInput pizzaInfoDtoInput = PizzaInfoDtoInput.builder().name(pizzaName).description(description)
+                .size(size).build();
+        final MenuItemDtoInput menuDtoInput = MenuItemDtoInput.builder().price(price).pizzaInfoId(id).menuId(id)
+                .pizzaInfoDtoInput(pizzaInfoDtoInput).build();
         final MenuItem menuItem = MenuItem.builder().id(id).price(price).pizzaInfo(pizzaInfo)
                 .creationDate(creationDate).version(version).menuId(id).build();
         final MenuItem menuItemInput = MenuItem.builder().price(price).pizzaInfo(pizzaInfo).menuId(id).build();
         final MenuItemDtoCrudOutput dtoCrudOutput = MenuItemDtoCrudOutput.builder().id(id).price(price).pizzaInfoId(id)
                 .createdAt(creationDate).version(version).menuId(id).build();
         Mockito.when(entityManager.getTransaction()).thenReturn(transaction);
-        Mockito.when(pizzaInfoDao.get(any(Long.class))).thenReturn(pizzaInfo);
-        Mockito.when(menuItemMapper.inputMapping(any(MenuItemDtoInput.class), any(IPizzaInfo.class))).thenReturn(menuItemInput);
+        Mockito.when(menuItemMapper.inputMapping(any(MenuItemDtoInput.class))).thenReturn(menuItemInput);
         Mockito.when(menuItemDao.update(any(IMenuItem.class), any(Long.class), any(Integer.class))).thenReturn(menuItem);
         Mockito.when(menuItemMapper.outputCrudMapping(any(IMenuItem.class))).thenReturn(dtoCrudOutput);
 

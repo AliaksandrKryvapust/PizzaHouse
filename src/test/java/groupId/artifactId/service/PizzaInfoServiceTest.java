@@ -6,8 +6,8 @@ import groupId.artifactId.core.mapper.PizzaInfoMapper;
 import groupId.artifactId.dao.PizzaInfoDao;
 import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -55,7 +55,7 @@ class PizzaInfoServiceTest {
                 .size(size).createdAt(creationDate).version(version).build();
         Mockito.when(entityManager.getTransaction()).thenReturn(transaction);
         Mockito.when(pizzaInfoMapper.inputMapping(any(PizzaInfoDtoInput.class))).thenReturn(pizzaInfo);
-        Mockito.when(pizzaInfoDao.save(any(IPizzaInfo.class))).thenReturn(pizzaInfoOutput);
+        Mockito.when(pizzaInfoDao.save(any(IPizzaInfo.class), any(EntityManager.class))).thenReturn(pizzaInfoOutput);
         Mockito.when(pizzaInfoMapper.outputMapping(any(IPizzaInfo.class))).thenReturn(pizzaInfoDtoOutput);
 
         //test

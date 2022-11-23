@@ -17,6 +17,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
@@ -223,8 +225,8 @@ class CompletedOrderServiceTest {
         final Pizza pizza = new Pizza(id, id, name, size);
         final CompletedOrderDtoCrudOutput dtoCrudOutput = CompletedOrderDtoCrudOutput.builder().id(id).ticketId(id)
         .createdAt(creationDate).version(version).build();
-        Mockito.when(completedOrderDao.save(any(ICompletedOrder.class))).thenReturn(new CompletedOrder(id, id));
-        Mockito.when(pizzaDao.save(any(IPizza.class))).thenReturn(pizza);
+        Mockito.when(completedOrderDao.save(any(ICompletedOrder.class), any(EntityManager.class))).thenReturn(new CompletedOrder(id, id));
+        Mockito.when(pizzaDao.save(any(IPizza.class), any(EntityManager.class))).thenReturn(pizza);
         Mockito.when(completedOrderMapper.outputCrudMapping(any(ICompletedOrder.class))).thenReturn(dtoCrudOutput);
 
         //test

@@ -18,6 +18,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import java.time.Instant;
 import java.util.List;
 
@@ -207,8 +209,8 @@ class OrderDataServiceTest {
         final OrderStage orderStage = new OrderStage(id, id, description);
         Mockito.when(orderDataMapper.inputMapping(any(OrderDataDtoInput.class))).thenReturn(orderData);
         Mockito.when(orderDataDao.doesTicketExist(any(Long.class))).thenReturn(false);
-        Mockito.when(orderDataDao.save(any(IOrderData.class))).thenReturn(orderDataOutput);
-        Mockito.when(orderStageDao.save(any(IOrderStage.class))).thenReturn(orderStage);
+        Mockito.when(orderDataDao.save(any(IOrderData.class), any(EntityManager.class))).thenReturn(orderDataOutput);
+        Mockito.when(orderStageDao.save(any(IOrderStage.class), any(EntityManager.class))).thenReturn(orderStage);
         Mockito.when(orderDataMapper.outputCrudMapping(any(IOrderData.class))).thenReturn(dtoOutput);
 
         //test
@@ -240,7 +242,7 @@ class OrderDataServiceTest {
         Mockito.when(orderDataMapper.inputMapping(any(OrderDataDtoInput.class))).thenReturn(orderData);
         Mockito.when(orderDataDao.doesTicketExist(any(Long.class))).thenReturn(true);
         Mockito.when(orderDataDao.getDataByTicket(any(Long.class))).thenReturn(orderDataOutput);
-        Mockito.when(orderStageDao.save(any(IOrderStage.class))).thenReturn(orderStage);
+        Mockito.when(orderStageDao.save(any(IOrderStage.class), any(EntityManager.class))).thenReturn(orderStage);
         Mockito.when(orderDataMapper.outputCrudMapping(any(IOrderData.class))).thenReturn(dtoOutput);
 
         //test
@@ -351,7 +353,7 @@ class OrderDataServiceTest {
         Mockito.when(orderDataDao.getAllData(any(Long.class))).thenReturn(orderDataOutput);
         ArgumentCaptor<ICompletedOrder> value = ArgumentCaptor.forClass(ICompletedOrder.class);
         Mockito.when(orderStageDao.doesStageExist(eq(Long.valueOf(inputId)), eq(description))).thenReturn(false);
-        Mockito.when(orderStageDao.save(any(IOrderStage.class))).thenReturn(orderStage);
+        Mockito.when(orderStageDao.save(any(IOrderStage.class), any(EntityManager.class))).thenReturn(orderStage);
         Mockito.when(orderDataMapper.outputCrudMapping(any(IOrderData.class))).thenReturn(orderDataDtoOutput);
 
         //test
