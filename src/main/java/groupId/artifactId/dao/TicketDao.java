@@ -2,10 +2,14 @@ package groupId.artifactId.dao;
 
 import groupId.artifactId.dao.api.ITicketDao;
 import groupId.artifactId.dao.entity.*;
-import groupId.artifactId.dao.entity.api.*;
+import groupId.artifactId.dao.entity.api.IMenuItem;
+import groupId.artifactId.dao.entity.api.IOrder;
+import groupId.artifactId.dao.entity.api.ISelectedItem;
+import groupId.artifactId.dao.entity.api.ITicket;
 import groupId.artifactId.exceptions.DaoException;
 import groupId.artifactId.exceptions.NoContentException;
 
+import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
@@ -36,7 +40,7 @@ public class TicketDao implements ITicketDao {
     }
 
     @Override
-    public ITicket save(ITicket ticket) {
+    public ITicket save(ITicket ticket, EntityManager entityTransaction) {
         if (ticket.getId() != null || ticket.getVersion() != null) {
             throw new IllegalStateException("Ticket id & version should be empty");
         }

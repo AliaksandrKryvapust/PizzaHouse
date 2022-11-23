@@ -5,10 +5,10 @@ import groupId.artifactId.dao.entity.MenuItem;
 import groupId.artifactId.dao.entity.api.IMenuItem;
 import groupId.artifactId.exceptions.DaoException;
 import groupId.artifactId.exceptions.NoContentException;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.LockModeType;
-import jakarta.persistence.OptimisticLockException;
 
+import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
+import javax.persistence.OptimisticLockException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,12 +23,12 @@ public class MenuItemDao implements IMenuItemDao {
     }
 
     @Override
-    public IMenuItem save(IMenuItem menuItem) {
+    public IMenuItem save(IMenuItem menuItem, EntityManager entityTransaction) {
         if (menuItem.getId() != null || menuItem.getVersion() != null) {
             throw new IllegalStateException("MenuItem id & version should be empty");
         }
         try {
-            entityManager.persist(menuItem);
+            entityTransaction.persist(menuItem);
             return menuItem;
         } catch (Exception e) {
             if (e.getMessage().contains(MENU_ITEM_UK) || e.getMessage().contains(MENU_ITEM_FK)
