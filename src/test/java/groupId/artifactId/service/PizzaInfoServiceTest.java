@@ -153,7 +153,8 @@ class PizzaInfoServiceTest {
                 .size(size).createdAt(creationDate).version(version).build();
         Mockito.when(entityManager.getTransaction()).thenReturn(transaction);
         Mockito.when(pizzaInfoMapper.inputMapping(any(PizzaInfoDtoInput.class))).thenReturn(pizzaInfo);
-        Mockito.when(pizzaInfoDao.update(any(IPizzaInfo.class), any(Long.class), any(Integer.class))).thenReturn(pizzaInfoOutput);
+        Mockito.when(pizzaInfoDao.update(any(IPizzaInfo.class), any(Long.class), any(Integer.class),
+                any(EntityManager.class))).thenReturn(pizzaInfoOutput);
         Mockito.when(pizzaInfoMapper.outputMapping(any(IPizzaInfo.class))).thenReturn(pizzaInfoDtoOutput);
 
         //test

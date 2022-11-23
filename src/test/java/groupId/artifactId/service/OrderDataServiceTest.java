@@ -348,7 +348,8 @@ class OrderDataServiceTest {
         final OrderStage orderStage = new OrderStage(id, id, description);
         Mockito.when(orderDataService.isIdValid(any(Long.class))).thenReturn(true);
         Mockito.when(orderDataMapper.inputMapping(any(OrderDataDtoInput.class))).thenReturn(orderData);
-        Mockito.when(orderDataDao.update(any(IOrderData.class), any(Long.class), any(Integer.class))).thenReturn(orderDataUpdate);
+        Mockito.when(orderDataDao.update(any(IOrderData.class), any(Long.class), any(Integer.class),
+                any(EntityManager.class))).thenReturn(orderDataUpdate);
         Mockito.when(completedOrderMapper.inputMapping(any(IOrderData.class))).thenReturn(completedOrder);
         Mockito.when(orderDataDao.getAllData(any(Long.class))).thenReturn(orderDataOutput);
         ArgumentCaptor<ICompletedOrder> value = ArgumentCaptor.forClass(ICompletedOrder.class);

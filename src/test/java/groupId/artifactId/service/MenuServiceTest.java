@@ -193,7 +193,8 @@ class MenuServiceTest {
                 .name(name).enable(enable).build();
         Mockito.when(menuService.isIdValid(any(Long.class))).thenReturn(true);
         Mockito.when(menuMapper.inputMapping(any(MenuDtoInput.class))).thenReturn(menu);
-        Mockito.when(menuDao.update(any(IMenu.class), any(Long.class), any(Integer.class))).thenReturn(menuOutput);
+        Mockito.when(menuDao.update(any(IMenu.class), any(Long.class), any(Integer.class), any(EntityManager.class)))
+                .thenReturn(menuOutput);
         Mockito.when(menuMapper.outputCrudMapping(any(IMenu.class))).thenReturn(dtoOutput);
 
         //test
