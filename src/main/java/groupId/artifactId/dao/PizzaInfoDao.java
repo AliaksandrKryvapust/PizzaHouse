@@ -41,13 +41,12 @@ public class PizzaInfoDao implements IPizzaInfoDao {
     }
 
     @Override
-    public IPizzaInfo update(IPizzaInfo info, Long id, Integer version) {
+    public IPizzaInfo update(IPizzaInfo info, Long id, Integer version, EntityManager entityTransaction) {
         if (info.getId() != null || info.getVersion() != null) {
             throw new IllegalStateException("PizzaInfo id & version should be empty");
         }
         try {
             PizzaInfo currentEntity = (PizzaInfo) this.getLock(id);
-//            entityManager.lock(currentEntity, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
             entityManager.detach(currentEntity);
             if (!currentEntity.getVersion().equals(version)) {
                 throw new OptimisticLockException();

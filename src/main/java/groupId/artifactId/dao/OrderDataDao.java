@@ -111,7 +111,7 @@ public class OrderDataDao implements IOrderDataDao {
     }
 
     @Override
-    public IOrderData update(IOrderData orderData, Long id, Integer version) {
+    public IOrderData update(IOrderData orderData, Long id, Integer version, EntityManager entityTransaction) {
         if (orderData.getId() != null || orderData.getVersion() != null) {
             throw new IllegalStateException("Order Data id & version should be empty");
         }

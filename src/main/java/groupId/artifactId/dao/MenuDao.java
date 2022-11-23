@@ -108,7 +108,7 @@ public class MenuDao implements IMenuDao {
     }
 
     @Override
-    public IMenu update(IMenu menu, Long id, Integer version) {
+    public IMenu update(IMenu menu, Long id, Integer version, EntityManager entityTransaction) {
         if (menu.getId() != null || menu.getVersion() != null) {
             throw new IllegalStateException("Menu id & version should be empty");
         }
