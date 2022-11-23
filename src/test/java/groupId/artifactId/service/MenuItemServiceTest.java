@@ -191,24 +191,33 @@ class MenuItemServiceTest {
         final MenuItem menuItem = MenuItem.builder().id(id).price(price).pizzaInfo(pizzaInfo)
                 .creationDate(creationDate).version(version).menuId(id).build();
         final MenuItem menuItemInput = MenuItem.builder().price(price).pizzaInfo(pizzaInfo).menuId(id).build();
-        final MenuItemDtoCrudOutput dtoCrudOutput = MenuItemDtoCrudOutput.builder().id(id).price(price).pizzaInfoId(id)
-                .createdAt(creationDate).version(version).menuId(id).build();
+        final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(pizzaName).description(description)
+                .size(size).createdAt(creationDate).version(version).build();
+        final MenuItemDtoOutput dtoOutput = MenuItemDtoOutput.builder().id (id).price(price)
+                .createdAt(creationDate).version(version).menuId(id).pizzaInfo(pizzaInfoDtoOutput).build();
         Mockito.when(entityManager.getTransaction()).thenReturn(transaction);
         Mockito.when(menuItemMapper.inputMapping(any(MenuItemDtoInput.class))).thenReturn(menuItemInput);
-        Mockito.when(menuItemDao.update(any(IMenuItem.class), any(Long.class), any(Integer.class))).thenReturn(menuItem);
-        Mockito.when(menuItemMapper.outputCrudMapping(any(IMenuItem.class))).thenReturn(dtoCrudOutput);
+        Mockito.when(menuItemDao.update(any(IMenuItem.class), any(Long.class), any(Integer.class),
+                any(EntityManager.class))).thenReturn(menuItem);
+        Mockito.when(menuItemMapper.outputMapping(any(IMenuItem.class))).thenReturn(dtoOutput);
 
         //test
-        MenuItemDtoCrudOutput test = menuItemService.update(menuDtoInput, inputId, inputVersion);
+        MenuItemDtoOutput test = menuItemService.update(menuDtoInput, inputId, inputVersion);
 
         // assert
         Assertions.assertNotNull(test);
+        Assertions.assertNotNull(test.getPizzaInfo());
         Assertions.assertEquals(id, test.getId());
-        Assertions.assertEquals(id, test.getPizzaInfoId());
         Assertions.assertEquals(id, test.getMenuId());
         Assertions.assertEquals(price, test.getPrice());
         Assertions.assertEquals(version, test.getVersion());
         Assertions.assertEquals(creationDate, test.getCreatedAt());
+        Assertions.assertEquals(id, test.getPizzaInfo().getId());
+        Assertions.assertEquals(pizzaName, test.getPizzaInfo().getName());
+        Assertions.assertEquals(description, test.getPizzaInfo().getDescription());
+        Assertions.assertEquals(size, test.getPizzaInfo().getSize());
+        Assertions.assertEquals(version, test.getPizzaInfo().getVersion());
+        Assertions.assertEquals(creationDate, test.getPizzaInfo().getCreatedAt());
     }
 
     @Test
