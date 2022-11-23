@@ -2,7 +2,6 @@ package groupId.artifactId.service;
 
 import groupId.artifactId.core.dto.input.MenuItemDtoInput;
 import groupId.artifactId.core.dto.output.MenuItemDtoOutput;
-import groupId.artifactId.core.dto.output.crud.MenuItemDtoCrudOutput;
 import groupId.artifactId.core.mapper.MenuItemMapper;
 import groupId.artifactId.dao.api.IMenuItemDao;
 import groupId.artifactId.dao.entity.api.IMenuItem;
@@ -35,21 +34,16 @@ public class MenuItemService implements IMenuItemService {
             entityManager.getTransaction().commit();
             return menuItemMapper.outputMapping(menuItem);
         } catch (DaoException e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
-            }
             throw new ServiceException(e.getMessage(), e);
         } catch (NoContentException e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
-            }
             throw new NoContentException(e.getMessage());
         } catch (Exception e) {
+            throw new ServiceException("Failed to save Menu Item at Service" + menuItemDtoInput + "\tcause:"
+                    + e.getMessage(), e);
+        } finally {
             if (entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().rollback();
             }
-            throw new ServiceException("Failed to save Menu Item at Service" + menuItemDtoInput + "\tcause:"
-                    + e.getMessage(), e);
         }
     }
 
@@ -84,34 +78,26 @@ public class MenuItemService implements IMenuItemService {
     }
 
     @Override
-    public MenuItemDtoCrudOutput update(MenuItemDtoInput menuItemDtoInput, String id, String version) {
+    public MenuItemDtoOutput update(MenuItemDtoInput menuItemDtoInput, String id, String version) {
         try {
             entityManager.getTransaction().begin();
             IMenuItem menuItem = this.menuItemDao.update(menuItemMapper.inputMapping(menuItemDtoInput),
-                    Long.valueOf(id), Integer.valueOf(version));
+                    Long.valueOf(id), Integer.valueOf(version), this.entityManager);
             entityManager.getTransaction().commit();
-            return menuItemMapper.outputCrudMapping(menuItem);
+            return menuItemMapper.outputMapping(menuItem);
         } catch (DaoException e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
-            }
             throw new ServiceException(e.getMessage(), e);
         } catch (OptimisticLockException e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
-            }
             throw new OptimisticLockException(e.getMessage());
         } catch (NoContentException e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
-            }
             throw new NoContentException(e.getMessage());
         } catch (Exception e) {
+            throw new ServiceException("Failed to update Menu Item at Service " + menuItemDtoInput + "by id:" + id
+                    + "\tcause" + e.getMessage(), e);
+        } finally {
             if (entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().rollback();
             }
-            throw new ServiceException("Failed to update Menu Item at Service " + menuItemDtoInput + "by id:" + id
-                    + "\tcause" + e.getMessage(), e);
         }
     }
 
