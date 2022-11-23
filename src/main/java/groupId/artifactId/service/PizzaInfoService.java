@@ -85,7 +85,7 @@ public class PizzaInfoService implements IPizzaInfoService {
         try {
             entityManager.getTransaction().begin();
             IPizzaInfo pizzaInfo = this.dao.update(pizzaInfoMapper.inputMapping(pizzaInfoDtoInput),
-                    Long.valueOf(id), Integer.valueOf(version));
+                    Long.valueOf(id), Integer.valueOf(version), EntityManagerFactoryHibernate.getEntityManager());
             entityManager.getTransaction().commit();
             return pizzaInfoMapper.outputMapping(pizzaInfo);
         } catch (DaoException e) {

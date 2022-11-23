@@ -5,5 +5,5 @@ import groupId.artifactId.core.dto.output.MenuItemDtoOutput;
 import groupId.artifactId.core.dto.output.crud.MenuItemDtoCrudOutput;
 
 public interface IMenuItemService extends IService<MenuItemDtoOutput, MenuItemDtoInput>,
-        IServiceUpdate<MenuItemDtoCrudOutput, MenuItemDtoInput>, IServiceDelete {
+        IServiceUpdate<MenuItemDtoOutput, MenuItemDtoInput>, IServiceDelete {
 }

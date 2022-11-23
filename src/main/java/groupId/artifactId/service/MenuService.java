@@ -95,7 +95,7 @@ public class MenuService implements IMenuService {
             throw new NoContentException("Menu Id is not valid");
         }
         try {
-            IMenu menu = this.dao.update(menuMapper.inputMapping(menuDtoInput), Long.valueOf(id), Integer.valueOf(version));
+            IMenu menu = this.dao.update(menuMapper.inputMapping(menuDtoInput), Long.valueOf(id), Integer.valueOf(version), EntityManagerFactoryHibernate.getEntityManager());
             return menuMapper.outputCrudMapping(menu);
         } catch (DaoException e) {
             throw new ServiceException(e.getMessage(), e);

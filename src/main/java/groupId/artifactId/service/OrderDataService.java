@@ -161,7 +161,7 @@ public class OrderDataService implements IOrderDataService {
             IOrderData orderData;
             IOrderStage stage;
             if (input.isDone()) {
-                orderData = this.orderDataDao.update(input, Long.valueOf(id), Integer.valueOf(version));
+                orderData = this.orderDataDao.update(input, Long.valueOf(id), Integer.valueOf(version), EntityManagerFactoryHibernate.getEntityManager());
                 ICompletedOrder completedOrder = completedOrderMapper.inputMapping(this.orderDataDao
                         .getAllData(type.getTicketId()));
                 completedOrderService.save(completedOrder);
