@@ -5,10 +5,10 @@ import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
 import groupId.artifactId.exceptions.DaoException;
 import groupId.artifactId.exceptions.NoContentException;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.LockModeType;
-import jakarta.persistence.OptimisticLockException;
 
+import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
+import javax.persistence.OptimisticLockException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,12 +23,12 @@ public class PizzaInfoDao implements IPizzaInfoDao {
     }
 
     @Override
-    public IPizzaInfo save(IPizzaInfo info) {
+    public IPizzaInfo save(IPizzaInfo info, EntityManager entityTransaction) {
         if (info.getId() != null || info.getVersion() != null) {
             throw new IllegalStateException("PizzaInfo id & version should be empty");
         }
         try {
-            entityManager.persist(info);
+            entityTransaction.persist(info);
             return info;
         } catch (Exception e) {
             if (e.getMessage().contains(PIZZA_INFO_UK)) {

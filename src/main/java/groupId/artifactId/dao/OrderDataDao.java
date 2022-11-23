@@ -7,6 +7,7 @@ import groupId.artifactId.exceptions.DaoException;
 import groupId.artifactId.exceptions.NoContentException;
 import groupId.artifactId.exceptions.OptimisticLockException;
 
+import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -46,7 +47,7 @@ public class OrderDataDao implements IOrderDataDao {
     }
 
     @Override
-    public IOrderData save(IOrderData orderData) {
+    public IOrderData save(IOrderData orderData, EntityManager entityTransaction) {
         if (orderData.getId() != null || orderData.getVersion() != null) {
             throw new IllegalStateException("OrderData id & version should be empty");
         }

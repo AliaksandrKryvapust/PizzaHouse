@@ -6,6 +6,7 @@ import groupId.artifactId.dao.entity.api.IPizza;
 import groupId.artifactId.exceptions.DaoException;
 import groupId.artifactId.exceptions.NoContentException;
 
+import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class PizzaDao implements IPizzaDao {
     }
 
     @Override
-    public IPizza save(IPizza pizza) {
+    public IPizza save(IPizza pizza, EntityManager entityTransaction) {
         if (pizza.getId() != null || pizza.getVersion() != null) {
             throw new IllegalStateException("Pizza id & version should be empty");
         }

@@ -5,11 +5,11 @@ import groupId.artifactId.dao.entity.MenuItem;
 import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.SelectedItem;
 import groupId.artifactId.dao.entity.api.IMenuItem;
-import groupId.artifactId.dao.entity.api.IPizzaInfo;
 import groupId.artifactId.dao.entity.api.ISelectedItem;
 import groupId.artifactId.exceptions.DaoException;
 import groupId.artifactId.exceptions.NoContentException;
 
+import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public class SelectedItemDao implements ISelectedItemDao {
     }
 
     @Override
-    public ISelectedItem save(ISelectedItem selectedItem) {
+    public ISelectedItem save(ISelectedItem selectedItem, EntityManager entityTransaction) {
         if (selectedItem.getId() != null || selectedItem.getVersion() != null) {
             throw new IllegalStateException("Selected Item id & version should be empty");
         }

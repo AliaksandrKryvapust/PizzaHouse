@@ -7,11 +7,11 @@ import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.SelectedItem;
 import groupId.artifactId.dao.entity.api.IMenuItem;
 import groupId.artifactId.dao.entity.api.IOrder;
-import groupId.artifactId.dao.entity.api.IPizzaInfo;
 import groupId.artifactId.dao.entity.api.ISelectedItem;
 import groupId.artifactId.exceptions.DaoException;
 import groupId.artifactId.exceptions.NoContentException;
 
+import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public class OrderDao implements IOrderDao {
     }
 
     @Override
-    public IOrder save(IOrder order) {
+    public IOrder save(IOrder order, EntityManager entityTransaction) {
         if (order.getId() != null || order.getVersion() != null) {
             throw new IllegalStateException("Order id & version should be empty");
         }

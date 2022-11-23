@@ -6,6 +6,7 @@ import groupId.artifactId.dao.entity.api.*;
 import groupId.artifactId.exceptions.DaoException;
 import groupId.artifactId.exceptions.NoContentException;
 
+import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -55,7 +56,7 @@ public class CompletedOrderDao implements ICompletedOrderDao {
     }
 
     @Override
-    public ICompletedOrder save(ICompletedOrder completedOrder) {
+    public ICompletedOrder save(ICompletedOrder completedOrder, EntityManager entityTransaction) {
         if (completedOrder.getId() != null || completedOrder.getVersion() != null) {
             throw new IllegalStateException("CompletedOrder id & version should be empty");
         }
