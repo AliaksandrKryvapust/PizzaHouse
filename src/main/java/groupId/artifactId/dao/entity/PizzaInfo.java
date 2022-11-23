@@ -1,7 +1,7 @@
 package groupId.artifactId.dao.entity;
 
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.GenerationTime;
@@ -9,6 +9,7 @@ import org.hibernate.annotations.GenerationTime;
 import java.time.Instant;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -16,7 +17,7 @@ import java.time.Instant;
 @Table(name = "pizza_info", schema = "pizza_manager")
 public class PizzaInfo implements IPizzaInfo {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Setter
     private String name;
