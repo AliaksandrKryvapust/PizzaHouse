@@ -6,6 +6,7 @@ import groupId.artifactId.dao.entity.api.IOrderStage;
 import groupId.artifactId.exceptions.DaoException;
 import groupId.artifactId.exceptions.NoContentException;
 
+import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class OrderStageDao implements IOrderStageDao {
     }
 
     @Override
-    public IOrderStage save(IOrderStage orderStage) {
+    public IOrderStage save(IOrderStage orderStage, EntityManager entityTransaction) {
         if (orderStage.getId() != null || orderStage.getVersion() != null) {
             throw new IllegalStateException("Order Stage id & version should be empty");
         }

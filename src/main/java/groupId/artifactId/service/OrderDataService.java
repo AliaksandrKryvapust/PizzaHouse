@@ -5,6 +5,7 @@ import groupId.artifactId.core.dto.output.OrderDataDtoOutput;
 import groupId.artifactId.core.dto.output.crud.OrderDataDtoCrudOutput;
 import groupId.artifactId.core.mapper.CompletedOrderMapper;
 import groupId.artifactId.core.mapper.OrderDataMapper;
+import groupId.artifactId.dao.api.EntityManagerFactoryHibernate;
 import groupId.artifactId.dao.api.IOrderDataDao;
 import groupId.artifactId.dao.api.IOrderStageDao;
 import groupId.artifactId.dao.entity.OrderData;
@@ -103,11 +104,11 @@ public class OrderDataService implements IOrderDataService {
             IOrderData input = orderDataMapper.inputMapping(type);
             IOrderData id;
             if (!this.orderDataDao.doesTicketExist(type.getTicketId())) {
-                id = this.orderDataDao.save(input);
+                id = this.orderDataDao.save(input,EntityManagerFactoryHibernate.getEntityManager());
             } else {
                 id = this.orderDataDao.getDataByTicket(type.getTicketId());
             }
-            IOrderStage stage = this.orderStageDao.save(new OrderStage(id.getId(), input.getOrderHistory().get(0).getDescription()));
+            IOrderStage stage = this.orderStageDao.save(new OrderStage(id.getId(), input.getOrderHistory().get(0).getDescription()), EntityManagerFactoryHibernate.getEntityManager());
             return orderDataMapper.outputCrudMapping(new OrderData(Collections.singletonList(stage),
                     id.getId(), id.getTicketId(), id.isDone()));
         } catch (DaoException e) {
@@ -169,7 +170,7 @@ public class OrderDataService implements IOrderDataService {
             }
             if (!this.orderStageDao.doesStageExist(orderData.getId(), input.getOrderHistory().get(0).getDescription())) {
                 stage = this.orderStageDao.save(new OrderStage(Long.valueOf(id),
-                        input.getOrderHistory().get(0).getDescription()));
+                        input.getOrderHistory().get(0).getDescription()),EntityManagerFactoryHibernate.getEntityManager());
             } else {
                 stage = input.getOrderHistory().get(0);
             }

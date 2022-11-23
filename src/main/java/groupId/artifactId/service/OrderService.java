@@ -6,6 +6,7 @@ import groupId.artifactId.core.dto.output.TicketDtoOutput;
 import groupId.artifactId.core.dto.output.crud.TicketDtoCrudOutput;
 import groupId.artifactId.core.mapper.OrderMapper;
 import groupId.artifactId.core.mapper.TicketMapper;
+import groupId.artifactId.dao.api.EntityManagerFactoryHibernate;
 import groupId.artifactId.dao.api.IOrderDao;
 import groupId.artifactId.dao.api.ISelectedItemDao;
 import groupId.artifactId.dao.api.ITicketDao;
@@ -92,14 +93,14 @@ public class OrderService implements IOrderService {
     @Override
     public TicketDtoCrudOutput save(OrderDtoInput orderDtoInput) {
         try {
-            IOrder orderId = this.orderDao.save(new Order());
+            IOrder orderId = this.orderDao.save(new Order(), EntityManagerFactoryHibernate.getEntityManager());
             IOrder input = orderMapper.inputMapping(orderDtoInput, orderId.getId());
             List<ISelectedItem> items = new ArrayList<>();
             for (ISelectedItem selectedItem : input.getSelectedItems()) {
-                ISelectedItem output = this.selectedItemDao.save(selectedItem);
+                ISelectedItem output = this.selectedItemDao.save(selectedItem, EntityManagerFactoryHibernate.getEntityManager());
                 items.add(output);
             }
-            ITicket ticket = this.ticketDao.save(new Ticket(orderId.getId()));
+            ITicket ticket = this.ticketDao.save(new Ticket(orderId.getId()),EntityManagerFactoryHibernate.getEntityManager());
             orderDataService.save(OrderDataDtoInput.builder().ticketId(ticket.getId()).done(false)
                     .description("Order accepted").build());
             return ticketMapper.outputCrudMapping(new Ticket(new Order(items, orderId.getId()), ticket.getId(), ticket.getOrderId()));

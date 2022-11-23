@@ -3,14 +3,15 @@ package groupId.artifactId.service;
 import groupId.artifactId.core.dto.input.PizzaInfoDtoInput;
 import groupId.artifactId.core.dto.output.PizzaInfoDtoOutput;
 import groupId.artifactId.core.mapper.PizzaInfoMapper;
+import groupId.artifactId.dao.api.EntityManagerFactoryHibernate;
 import groupId.artifactId.dao.api.IPizzaInfoDao;
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
 import groupId.artifactId.exceptions.DaoException;
 import groupId.artifactId.exceptions.NoContentException;
 import groupId.artifactId.exceptions.ServiceException;
 import groupId.artifactId.service.api.IPizzaInfoService;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.OptimisticLockException;
+import javax.persistence.EntityManager;
+import javax.persistence.OptimisticLockException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ public class PizzaInfoService implements IPizzaInfoService {
     public PizzaInfoDtoOutput save(PizzaInfoDtoInput pizzaInfoDtoInput) {
         try {
             entityManager.getTransaction().begin();
-            IPizzaInfo pizzaInfo = this.dao.save(pizzaInfoMapper.inputMapping(pizzaInfoDtoInput));
+            IPizzaInfo pizzaInfo = this.dao.save(pizzaInfoMapper.inputMapping(pizzaInfoDtoInput), EntityManagerFactoryHibernate.getEntityManager());
             entityManager.getTransaction().commit();
             return pizzaInfoMapper.outputMapping(pizzaInfo);
         } catch (DaoException e) {

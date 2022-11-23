@@ -4,6 +4,7 @@ import groupId.artifactId.core.dto.input.MenuDtoInput;
 import groupId.artifactId.core.dto.output.MenuDtoOutput;
 import groupId.artifactId.core.dto.output.crud.MenuDtoCrudOutput;
 import groupId.artifactId.core.mapper.MenuMapper;
+import groupId.artifactId.dao.api.EntityManagerFactoryHibernate;
 import groupId.artifactId.dao.api.IMenuDao;
 import groupId.artifactId.dao.entity.api.IMenu;
 import groupId.artifactId.exceptions.DaoException;
@@ -123,7 +124,7 @@ public class MenuService implements IMenuService {
     @Override
     public MenuDtoCrudOutput save(MenuDtoInput menuDtoInput) {
         try {
-            IMenu menu = this.dao.save(menuMapper.inputMapping(menuDtoInput));
+            IMenu menu = this.dao.save(menuMapper.inputMapping(menuDtoInput), EntityManagerFactoryHibernate.getEntityManager());
             return menuMapper.outputCrudMapping(menu);
         } catch (DaoException e) {
             throw new ServiceException(e.getMessage(), e);

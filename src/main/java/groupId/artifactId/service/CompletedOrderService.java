@@ -3,6 +3,7 @@ package groupId.artifactId.service;
 import groupId.artifactId.core.dto.output.CompletedOrderDtoOutput;
 import groupId.artifactId.core.dto.output.crud.CompletedOrderDtoCrudOutput;
 import groupId.artifactId.core.mapper.CompletedOrderMapper;
+import groupId.artifactId.dao.api.EntityManagerFactoryHibernate;
 import groupId.artifactId.dao.api.ICompletedOrderDao;
 import groupId.artifactId.dao.api.IPizzaDao;
 import groupId.artifactId.dao.entity.CompletedOrder;
@@ -70,10 +71,10 @@ public class CompletedOrderService implements ICompletedOrderService {
     @Override
     public CompletedOrderDtoCrudOutput save(ICompletedOrder type) {
         try {
-            ICompletedOrder completedOrder = this.completedOrderDao.save(type);
+            ICompletedOrder completedOrder = this.completedOrderDao.save(type, EntityManagerFactoryHibernate.getEntityManager());
             List<IPizza> pizzas = new ArrayList<>();// completedOrderId needed
             for (IPizza pizza : type.getItems()) {
-                IPizza output = this.pizzaDao.save(new Pizza(completedOrder.getId(), pizza.getName(), pizza.getSize()));
+                IPizza output = this.pizzaDao.save(new Pizza(completedOrder.getId(), pizza.getName(), pizza.getSize()), EntityManagerFactoryHibernate.getEntityManager());
                 pizzas.add(output);
             }
             return completedOrderMapper.outputCrudMapping(new CompletedOrder(completedOrder.getTicket(), pizzas,
