@@ -10,7 +10,6 @@ import org.hibernate.annotations.GenerationTime;
 import java.time.Instant;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
