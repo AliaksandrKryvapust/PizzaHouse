@@ -2,6 +2,7 @@ package groupId.artifactId.dao;
 
 import groupId.artifactId.dao.api.IMenuItemDao;
 import groupId.artifactId.dao.entity.MenuItem;
+import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.api.IMenuItem;
 import groupId.artifactId.exceptions.DaoException;
 import groupId.artifactId.exceptions.NoContentException;
@@ -27,6 +28,9 @@ public class MenuItemDao implements IMenuItemDao {
         if (menuItem.getId() != null || menuItem.getVersion() != null) {
             throw new IllegalStateException("MenuItem id & version should be empty");
         }
+        if (menuItem.getPizzaInfo().getId() != null || menuItem.getPizzaInfo().getVersion() != null) {
+            throw new IllegalStateException("Pizza Info id & version should be empty");
+        }
         try {
             entityTransaction.persist(menuItem);
             return menuItem;
@@ -42,20 +46,26 @@ public class MenuItemDao implements IMenuItemDao {
     }
 
     @Override
-    public IMenuItem update(IMenuItem menuItem, Long id, Integer version) {
+    public IMenuItem update(IMenuItem menuItem, Long id, Integer version, EntityManager entityTransaction) {
         if (menuItem.getId() != null || menuItem.getVersion() != null) {
             throw new IllegalStateException("MenuItem id & version should be empty");
         }
+        if (menuItem.getPizzaInfo().getId() != null || menuItem.getPizzaInfo().getVersion() != null) {
+            throw new IllegalStateException("Pizza Info id & version should be empty");
+        }
         try {
-            MenuItem currentEntity = (MenuItem) this.getLock(id);
-            entityManager.detach(currentEntity);
+            MenuItem currentEntity = (MenuItem) this.getLock(id, entityTransaction);
             if (!currentEntity.getVersion().equals(version)) {
                 throw new OptimisticLockException();
             }
+            PizzaInfo currentPizzaInfo = (PizzaInfo) currentEntity.getPizzaInfo();
+            currentPizzaInfo.setName(menuItem.getPizzaInfo().getName());
+            currentPizzaInfo.setDescription(menuItem.getPizzaInfo().getDescription());
+            currentPizzaInfo.setSize(menuItem.getPizzaInfo().getSize());
             currentEntity.setPrice(menuItem.getPrice());
-//            currentEntity.setPizzaInfoId(menuItem.getPizzaInfoId());
             currentEntity.setMenuId(menuItem.getMenuId());
-            entityManager.merge(currentEntity);
+            currentEntity.setPizzaInfo(currentPizzaInfo);
+            entityTransaction.refresh(currentEntity,LockModeType.OPTIMISTIC_FORCE_INCREMENT);
             return currentEntity;
         } catch (NoContentException e) {
             throw new NoContentException(e.getMessage());
@@ -118,9 +128,9 @@ public class MenuItemDao implements IMenuItemDao {
         }
     }
 
-    private IMenuItem getLock(Long id) {
+    private IMenuItem getLock(Long id, EntityManager entityTransaction) {
         try {
-            MenuItem menuItem = entityManager.find(MenuItem.class, id, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+            MenuItem menuItem = entityTransaction.find(MenuItem.class, id, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
             if (menuItem == null) {
                 throw new NoContentException("There is no Menu Item with id:" + id);
             }
