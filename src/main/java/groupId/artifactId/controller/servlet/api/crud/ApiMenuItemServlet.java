@@ -7,14 +7,13 @@ import groupId.artifactId.controller.validator.api.IMenuItemValidator;
 import groupId.artifactId.core.Constants;
 import groupId.artifactId.core.dto.input.MenuItemDtoInput;
 import groupId.artifactId.core.dto.output.MenuItemDtoOutput;
-import groupId.artifactId.core.dto.output.crud.MenuItemDtoCrudOutput;
 import groupId.artifactId.exceptions.NoContentException;
 import groupId.artifactId.service.IoC.MenuItemServiceSingleton;
 import groupId.artifactId.service.api.IMenuItemService;
-import javax.persistence.OptimisticLockException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.OptimisticLockException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -115,8 +114,8 @@ public class ApiMenuItemServlet extends HttpServlet {
                     logger.error("/api/menu_item input is not valid " + e.getMessage() + "\t" + e.getCause() +
                             "\tresponse status: " + resp.getStatus());
                 }
-                MenuItemDtoCrudOutput crudOutput = menuItemService.update(dtoInput, id, version);
-                resp.getWriter().write(jsonConverter.fromMenuItemToCrudJson(crudOutput));
+                MenuItemDtoOutput crudOutput = menuItemService.update(dtoInput, id, version);
+                resp.getWriter().write(jsonConverter.fromMenuItemToJson(crudOutput));
                 resp.setStatus(HttpServletResponse.SC_CREATED);
             } else {
                 resp.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
