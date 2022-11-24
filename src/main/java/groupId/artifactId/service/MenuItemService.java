@@ -105,23 +105,18 @@ public class MenuItemService implements IMenuItemService {
     public void delete(String id, String delete) {
         try {
             entityManager.getTransaction().begin();
-            this.menuItemDao.delete(Long.valueOf(id), Boolean.valueOf(delete));
+            this.menuItemDao.delete(Long.valueOf(id), Boolean.valueOf(delete), this.entityManager);
             entityManager.getTransaction().commit();
         } catch (DaoException e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
-            }
             throw new ServiceException(e.getMessage(), e);
         } catch (NoContentException e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
-            }
             throw new NoContentException(e.getMessage());
         } catch (Exception e) {
+            throw new ServiceException("Failed to delete Menu Item with id:" + id, e);
+        } finally {
             if (entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().rollback();
             }
-            throw new ServiceException("Failed to delete Menu Item with id:" + id, e);
         }
     }
 }
