@@ -108,7 +108,7 @@ public class PizzaInfoService implements IPizzaInfoService {
     public void delete(String id, String delete) {
         try {
             entityManager.getTransaction().begin();
-            this.dao.delete(Long.valueOf(id), Boolean.valueOf(delete));
+            this.dao.delete(Long.valueOf(id), Boolean.valueOf(delete), this.entityManager);
             entityManager.getTransaction().commit();
         } catch (DaoException e) {
             entityManager.getTransaction().rollback();

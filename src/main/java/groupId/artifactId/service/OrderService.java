@@ -147,9 +147,9 @@ public class OrderService implements IOrderService {
     @Override
     public void delete(String id, String delete) {
         try {
-            this.selectedItemDao.delete(Long.valueOf(id), Boolean.valueOf(delete));
-            this.ticketDao.delete(Long.valueOf(id), Boolean.valueOf(delete));
-            this.orderDao.delete(Long.valueOf(id), Boolean.valueOf(delete));
+            this.selectedItemDao.delete(Long.valueOf(id), Boolean.valueOf(delete), EntityManagerFactoryHibernate.getEntityManager());
+            this.ticketDao.delete(Long.valueOf(id), Boolean.valueOf(delete), EntityManagerFactoryHibernate.getEntityManager());
+            this.orderDao.delete(Long.valueOf(id), Boolean.valueOf(delete), EntityManagerFactoryHibernate.getEntityManager());
         } catch (DaoException e) {
             throw new ServiceException(e.getMessage(), e);
         } catch (IllegalStateException e) {

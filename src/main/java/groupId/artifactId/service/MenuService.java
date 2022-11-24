@@ -111,7 +111,7 @@ public class MenuService implements IMenuService {
     @Override
     public void delete(String id, String delete) {
         try {
-            this.dao.delete(Long.valueOf(id), Boolean.valueOf(delete));
+            this.dao.delete(Long.valueOf(id), Boolean.valueOf(delete), EntityManagerFactoryHibernate.getEntityManager());
         } catch (DaoException e) {
             throw new ServiceException(e.getMessage(), e);
         } catch (IllegalStateException e) {
