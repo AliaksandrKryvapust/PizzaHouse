@@ -22,6 +22,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import java.time.Instant;
 import java.util.List;
 
@@ -37,6 +38,10 @@ class MenuServiceTest {
     private MenuDao menuDao;
     @Mock
     private MenuMapper menuMapper;
+    @Mock
+    private EntityManager entityManager;
+    @Mock
+    private EntityTransaction transaction;
 
     @Test
     void get() {
@@ -46,7 +51,8 @@ class MenuServiceTest {
         final long id = 1L;
         final int version = 1;
         final Instant creationDate = Instant.now();
-        List<IMenu> menus = singletonList(new Menu(id, creationDate, version, name, enable));
+        List<IMenu> menus = singletonList(Menu.builder().id(id).creationDate(creationDate).version(version).name(name)
+                .enable(enable).build());
         final MenuDtoCrudOutput crudOutput = MenuDtoCrudOutput.builder().id(id).createdAt(creationDate).version(version)
                 .name(name).enable(enable).build();
         Mockito.when(menuDao.get()).thenReturn(menus);
@@ -75,7 +81,8 @@ class MenuServiceTest {
         final long id = 1L;
         final int version = 1;
         final Instant creationDate = Instant.now();
-        final IMenu menu = new Menu(id, creationDate, version, name, enable);
+        final IMenu menu = Menu.builder().id(id).creationDate(creationDate).version(version).name(name)
+                .enable(enable).build();
         final MenuDtoCrudOutput crudOutput = MenuDtoCrudOutput.builder().id(id).createdAt(creationDate).version(version)
                 .name(name).enable(enable).build();
         Mockito.when(menuDao.get(id)).thenReturn(menu);
@@ -107,16 +114,17 @@ class MenuServiceTest {
         final Instant creationDate = Instant.now();
         final PizzaInfo pizzaInfo = PizzaInfo.builder().id(id).name(name).description(description).size(size)
                 .creationDate(creationDate).version(version).build();
-        final  List<IMenuItem> items = singletonList(MenuItem.builder().id(id).pizzaInfo(pizzaInfo).price(price)
-                .creationDate(creationDate).version(version).menuId(id).build());
-        final IMenu menu = new Menu(items, id, creationDate, version, name, enable);
+        final List<IMenuItem> items = singletonList(MenuItem.builder().id(id).pizzaInfo(pizzaInfo).price(price)
+                .creationDate(creationDate).version(version).build());
+        final IMenu menu = Menu.builder().id(id).creationDate(creationDate).version(version).name(name)
+                .enable(enable).items(items).build();
         final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(pizzaName).description(description)
                 .size(size).createdAt(creationDate).version(version).build();
         final MenuItemDtoOutput menuItemDtoOutput = MenuItemDtoOutput.builder().id(id).price(price)
-                .createdAt(creationDate).version(version).menuId(id).pizzaInfo(pizzaInfoDtoOutput).build();
+                .createdAt(creationDate).version(version).pizzaInfo(pizzaInfoDtoOutput).build();
         final MenuDtoOutput dtoOutput = MenuDtoOutput.builder().id(id).createdAt(creationDate).version(version)
                 .name(name).enable(enable).items(singletonList(menuItemDtoOutput)).build();
-        Mockito.when(menuDao.getAllData(id)).thenReturn(menu);
+        Mockito.when(menuDao.get(id)).thenReturn(menu);
         Mockito.when(menuMapper.outputMapping(any(IMenu.class))).thenReturn(dtoOutput);
 
         //test
@@ -134,7 +142,6 @@ class MenuServiceTest {
             Assertions.assertNotNull(output);
             Assertions.assertNotNull(output.getPizzaInfo());
             Assertions.assertEquals(id, output.getId());
-            Assertions.assertEquals(id, output.getMenuId());
             Assertions.assertEquals(price, output.getPrice());
             Assertions.assertEquals(version, output.getVersion());
             Assertions.assertEquals(creationDate, output.getCreatedAt());
@@ -148,34 +155,6 @@ class MenuServiceTest {
     }
 
     @Test
-    void isIdValid() {
-        // preconditions
-        final long id = 1L;
-        Mockito.when(menuDao.exist(id)).thenReturn(true);
-
-        //test
-        Boolean test = menuService.isIdValid(id);
-
-        // assert
-        Assertions.assertNotNull(test);
-        Assertions.assertEquals(true, test);
-    }
-
-    @Test
-    void exist() {
-        // preconditions
-        final String name = "name";
-        Mockito.when(menuDao.doesMenuExist(name)).thenReturn(true);
-
-        //test
-        Boolean test = menuService.exist(name);
-
-        // assert
-        Assertions.assertNotNull(test);
-        Assertions.assertEquals(true, test);
-    }
-
-    @Test
     void update() {
         // preconditions
         final String name = "Optional Menu";
@@ -186,11 +165,12 @@ class MenuServiceTest {
         final int version = 1;
         final Instant creationDate = Instant.now();
         final MenuDtoInput menuDtoInput = MenuDtoInput.builder().name(name).enable(enable).build();
-        final Menu menu = new Menu(name, enable);
-        final Menu menuOutput = new Menu(id, name, enable);
+        final Menu menu = Menu.builder().name(name).enable(enable).build();
+        final Menu menuOutput = Menu.builder().id(id).creationDate(creationDate).version(version).name(name)
+                .enable(enable).build();
         final MenuDtoCrudOutput dtoOutput = MenuDtoCrudOutput.builder().id(id).createdAt(creationDate).version(version)
                 .name(name).enable(enable).build();
-        Mockito.when(menuService.isIdValid(any(Long.class))).thenReturn(true);
+        Mockito.when(entityManager.getTransaction()).thenReturn(transaction);
         Mockito.when(menuMapper.inputMapping(any(MenuDtoInput.class))).thenReturn(menu);
         Mockito.when(menuDao.update(any(IMenu.class), any(Long.class), any(Integer.class), any(EntityManager.class)))
                 .thenReturn(menuOutput);
@@ -204,6 +184,8 @@ class MenuServiceTest {
         Assertions.assertEquals(id, test.getId());
         Assertions.assertEquals(name, test.getName());
         Assertions.assertEquals(enable, test.getEnable());
+        Assertions.assertEquals(version, test.getVersion());
+        Assertions.assertEquals(creationDate, test.getCreatedAt());
     }
 
     @Test
@@ -212,6 +194,7 @@ class MenuServiceTest {
         final String delete = "false";
         ArgumentCaptor<Long> valueId = ArgumentCaptor.forClass(Long.class);
         ArgumentCaptor<Boolean> valueDelete = ArgumentCaptor.forClass(Boolean.class);
+        Mockito.when(entityManager.getTransaction()).thenReturn(transaction);
 
         //test
         menuService.delete(inputId, delete);
@@ -231,10 +214,12 @@ class MenuServiceTest {
         final int version = 1;
         final Instant creationDate = Instant.now();
         final MenuDtoInput menuDtoInput = MenuDtoInput.builder().name(name).enable(enable).build();
-        final Menu menu = new Menu(name, enable);
-        final Menu menuOutput = new Menu(id, name, enable);
+        final Menu menu = Menu.builder().name(name).enable(enable).build();
+        final Menu menuOutput = Menu.builder().id(id).creationDate(creationDate).version(version).name(name)
+                .enable(enable).build();
         final MenuDtoCrudOutput crudOutput = MenuDtoCrudOutput.builder().id(id).createdAt(creationDate).version(version)
                 .name(name).enable(enable).build();
+        Mockito.when(entityManager.getTransaction()).thenReturn(transaction);
         Mockito.when(menuMapper.inputMapping(any(MenuDtoInput.class))).thenReturn(menu);
         Mockito.when(menuDao.save(any(IMenu.class), any(EntityManager.class))).thenReturn(menuOutput);
         Mockito.when(menuMapper.outputCrudMapping(any(IMenu.class))).thenReturn(crudOutput);
@@ -247,5 +232,7 @@ class MenuServiceTest {
         Assertions.assertEquals(id, test.getId());
         Assertions.assertEquals(name, test.getName());
         Assertions.assertEquals(enable, test.getEnable());
+        Assertions.assertEquals(version, test.getVersion());
+        Assertions.assertEquals(creationDate, test.getCreatedAt());
     }
 }

@@ -65,12 +65,12 @@ class OrderServiceTest {
         final PizzaInfo pizzaInfo = PizzaInfo.builder().id(id).name(name).description(description).size(size)
                 .creationDate(creationDate).version(version).build();
         final MenuItem menuItem = MenuItem.builder().id(id).pizzaInfo(pizzaInfo).price(price)
-                .creationDate(creationDate).version(version).menuId(id).build();
+                .creationDate(creationDate).version(version).build();
         List<ISelectedItem> selectedItems = singletonList(new SelectedItem(menuItem, id, id, id, count, creationDate, version));
         final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(name).description(description)
                 .size(size).createdAt(creationDate).version(version).build();
         final MenuItemDtoOutput menuItemDtoOutput = MenuItemDtoOutput.builder().id(id).price(price)
-                .createdAt(creationDate).version(version).menuId(id).pizzaInfo(pizzaInfoDtoOutput).build();
+                .createdAt(creationDate).version(version).pizzaInfo(pizzaInfoDtoOutput).build();
         List<SelectedItemDtoOutput> outputs = singletonList(SelectedItemDtoOutput.builder().menuItem(menuItemDtoOutput)
                 .id(id).menuItemId(id).orderId(id).count(count).createdAt(creationDate).version(version).build());
         final ITicket ticket = new Ticket(new Order(selectedItems, id, creationDate, version), id, orderId, creationDate, version);
@@ -105,7 +105,6 @@ class OrderServiceTest {
             Assertions.assertEquals(version, output.getVersion());
             Assertions.assertEquals(id, output.getMenuItem().getId());
             Assertions.assertEquals(price, output.getMenuItem().getPrice());
-            Assertions.assertEquals(id, output.getMenuItem().getMenuId());
             Assertions.assertEquals(creationDate, output.getMenuItem().getCreatedAt());
             Assertions.assertEquals(version, output.getMenuItem().getVersion());
             Assertions.assertEquals(id, output.getMenuItem().getPizzaInfo().getId());
