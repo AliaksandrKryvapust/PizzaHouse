@@ -25,7 +25,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import java.time.Instant;
 import java.util.List;
 
@@ -262,9 +261,9 @@ class OrderServiceTest {
 
         //test
         orderService.delete(inputId, delete);
-        Mockito.verify(selectedItemDao, times(1)).delete(valueId.capture(), valueDelete.capture());
-        Mockito.verify(ticketDao, times(1)).delete(valueIdT.capture(), valueDeleteT.capture());
-        Mockito.verify(orderDao, times(1)).delete(valueIdO.capture(), valueDeleteO.capture());
+        Mockito.verify(selectedItemDao, times(1)).delete(valueId.capture(), valueDelete.capture(), any(EntityManager.class));
+        Mockito.verify(ticketDao, times(1)).delete(valueIdT.capture(), valueDeleteT.capture(), any(EntityManager.class));
+        Mockito.verify(orderDao, times(1)).delete(valueIdO.capture(), valueDeleteO.capture(), any(EntityManager.class));
 
         // assert
         Assertions.assertEquals(Long.valueOf(inputId), valueId.getValue());

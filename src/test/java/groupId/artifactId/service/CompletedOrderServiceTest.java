@@ -18,7 +18,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;

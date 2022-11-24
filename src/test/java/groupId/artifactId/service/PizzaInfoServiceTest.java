@@ -6,8 +6,6 @@ import groupId.artifactId.core.mapper.PizzaInfoMapper;
 import groupId.artifactId.dao.PizzaInfoDao;
 import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,6 +15,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import java.time.Instant;
 import java.util.List;
 
@@ -180,7 +180,7 @@ class PizzaInfoServiceTest {
 
         //test
         pizzaInfoService.delete(inputId, delete);
-        Mockito.verify(pizzaInfoDao, times(1)).delete(valueId.capture(), valueDelete.capture());
+        Mockito.verify(pizzaInfoDao, times(1)).delete(valueId.capture(), valueDelete.capture(), any(EntityManager.class));
 
         // assert
         Assertions.assertEquals(Long.valueOf(inputId), valueId.getValue());

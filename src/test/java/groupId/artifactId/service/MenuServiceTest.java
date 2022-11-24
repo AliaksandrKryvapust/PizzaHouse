@@ -22,7 +22,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import java.time.Instant;
 import java.util.List;
 
@@ -216,7 +215,7 @@ class MenuServiceTest {
 
         //test
         menuService.delete(inputId, delete);
-        Mockito.verify(menuDao, times(1)).delete(valueId.capture(), valueDelete.capture());
+        Mockito.verify(menuDao, times(1)).delete(valueId.capture(), valueDelete.capture(), any(EntityManager.class));
 
         // assert
         Assertions.assertEquals(Long.valueOf(inputId), valueId.getValue());
