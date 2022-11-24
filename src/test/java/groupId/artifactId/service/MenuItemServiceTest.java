@@ -229,7 +229,7 @@ class MenuItemServiceTest {
 
         //test
         menuItemService.delete(inputId, delete);
-        Mockito.verify(menuItemDao, times(1)).delete(valueId.capture(), valueDelete.capture());
+        Mockito.verify(menuItemDao, times(1)).delete(valueId.capture(), valueDelete.capture(), any(EntityManager.class));
 
         // assert
         Assertions.assertEquals(Long.valueOf(inputId), valueId.getValue());
