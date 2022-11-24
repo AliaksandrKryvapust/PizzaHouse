@@ -25,8 +25,6 @@ public class MenuItem implements IMenuItem {
     private IPizzaInfo pizzaInfo;
     @Setter
     private Double price;
-    @Setter
-    private Long menuId;
     @Generated(GenerationTime.INSERT)
     private Instant creationDate;
     @Version
@@ -38,7 +36,6 @@ public class MenuItem implements IMenuItem {
                 "id=" + id +
                 ", pizzaInfo=" + pizzaInfo +
                 ", price=" + price +
-                ", menuId=" + menuId +
                 ", creationDate=" + creationDate +
                 ", version=" + version +
                 '}';
