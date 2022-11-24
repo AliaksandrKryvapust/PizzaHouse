@@ -39,7 +39,7 @@ class MenuItemMapperTest {
         final Instant creationDate = Instant.now();
         final PizzaInfoDtoInput pizzaInfoDtoInput = PizzaInfoDtoInput.builder().name(pizzaName).description(description)
                 .size(size).build();
-        final MenuItemDtoInput menuDtoInput = MenuItemDtoInput.builder().price(price).menuId(id)
+        final MenuItemDtoInput menuDtoInput = MenuItemDtoInput.builder().price(price)
                 .pizzaInfoDtoInput(pizzaInfoDtoInput).build();
         final PizzaInfo pizzaInfo = PizzaInfo.builder().id(id).name(pizzaName).description(description).size(size)
                 .creationDate(creationDate).version(version).build();
@@ -52,7 +52,6 @@ class MenuItemMapperTest {
         // assert
         Assertions.assertNotNull(test);
         Assertions.assertNotNull(test.getPizzaInfo());
-        Assertions.assertEquals(id, test.getMenuId());
         Assertions.assertEquals(price, test.getPrice());
         Assertions.assertEquals(pizzaName, test.getPizzaInfo().getName());
         Assertions.assertEquals(description, test.getPizzaInfo().getDescription());
@@ -71,7 +70,7 @@ class MenuItemMapperTest {
         final PizzaInfo pizzaInfo = PizzaInfo.builder().id(id).name(pizzaName).description(description).size(size)
                 .creationDate(creationDate).version(version).build();
         final MenuItem menuItem = MenuItem.builder().id(id).pizzaInfo(pizzaInfo).price(price)
-                .creationDate(creationDate).version(version).menuId(id).build();
+                .creationDate(creationDate).version(version).build();
         final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(pizzaName).description(description)
                 .size(size).createdAt(creationDate).version(version).build();
         Mockito.when(pizzaInfoMapper.outputMapping(any(IPizzaInfo.class))).thenReturn(pizzaInfoDtoOutput);
@@ -83,7 +82,6 @@ class MenuItemMapperTest {
         Assertions.assertNotNull(test);
         Assertions.assertNotNull(test.getPizzaInfo());
         Assertions.assertEquals(id, test.getId());
-        Assertions.assertEquals(id, test.getMenuId());
         Assertions.assertEquals(price, test.getPrice());
         Assertions.assertEquals(version, test.getVersion());
         Assertions.assertEquals(creationDate, test.getCreatedAt());

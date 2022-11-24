@@ -55,7 +55,7 @@ class MenuMapperTest {
         final long id = 1L;
         final int version = 1;
         final Instant creationDate = Instant.now();
-        final IMenu menu = new Menu(id, creationDate, version, name, enable);
+        final IMenu menu = Menu.builder().id(id).creationDate(creationDate).version(version).name(name).enable(enable).build();
 
         //test
         MenuDtoCrudOutput test = menuMapper.outputCrudMapping(menu);
@@ -84,12 +84,13 @@ class MenuMapperTest {
         final PizzaInfo pizzaInfo = PizzaInfo.builder().id(id).name(name).description(description).size(size)
                 .creationDate(creationDate).version(version).build();
         final List<IMenuItem> menuItems = Collections.singletonList(MenuItem.builder().id(id).pizzaInfo(pizzaInfo).price(price)
-                .creationDate(creationDate).version(version).menuId(id).build());
-        final IMenu menu = new Menu(menuItems, id, creationDate, version, name, enable);
+                .creationDate(creationDate).version(version).build());
+        final IMenu menu = Menu.builder().id(id).creationDate(creationDate).version(version).name(name).enable(enable)
+                .items(menuItems).build();
         final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(pizzaName).description(description)
                 .size(size).createdAt(creationDate).version(version).build();
         final MenuItemDtoOutput menuItemDtoOutput = MenuItemDtoOutput.builder().id(id).price(price)
-                .createdAt(creationDate).version(version).menuId(id).pizzaInfo(pizzaInfoDtoOutput).build();
+                .createdAt(creationDate).version(version).pizzaInfo(pizzaInfoDtoOutput).build();
         Mockito.when(menuItemMapper.outputMapping(any(IMenuItem.class))).thenReturn(menuItemDtoOutput);
 
         //test
@@ -107,7 +108,6 @@ class MenuMapperTest {
             Assertions.assertNotNull(output);
             Assertions.assertNotNull(output.getPizzaInfo());
             Assertions.assertEquals(id, output.getId());
-            Assertions.assertEquals(id, output.getMenuId());
             Assertions.assertEquals(price, output.getPrice());
             Assertions.assertEquals(version, output.getVersion());
             Assertions.assertEquals(creationDate, output.getCreatedAt());
