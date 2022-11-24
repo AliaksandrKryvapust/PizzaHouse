@@ -60,22 +60,6 @@ public class JsonConverter {
         }
     }
 
-    public String fromPizzaInfoListToJson(List<PizzaInfoDtoOutput> items) {
-        try {
-            return mapper.writeValueAsString(items);
-        } catch (JsonProcessingException e) {
-            throw new IncorrectJsonParseException("failed to write List PizzaInfoDtoOutput as json", e);
-        }
-    }
-
-    public String fromPizzaInfoToJson(PizzaInfoDtoOutput pizzaInfo) {
-        try {
-            return mapper.writeValueAsString(pizzaInfo);
-        } catch (JsonProcessingException e) {
-            throw new IncorrectJsonParseException("failed to write PizzaInfoDtoOutput as json", e);
-        }
-    }
-
     public String fromTicketCrudToJson(TicketDtoCrudOutput ticket) {
         try {
             return mapper.writeValueAsString(ticket);
@@ -162,14 +146,6 @@ public class JsonConverter {
             return mapper.readValue(servletInputStream, MenuItemDtoInput.class);
         } catch (IOException e) {
             throw new IncorrectJsonParseException("failed to read servletInputStream of MenuItemDtoOutput.class", e);
-        }
-    }
-
-    public PizzaInfoDtoInput fromJsonToPizzaInfo(ServletInputStream servletInputStream) {
-        try {
-            return mapper.readValue(servletInputStream, PizzaInfoDtoInput.class);
-        } catch (IOException e) {
-            throw new IncorrectJsonParseException("failed to read servletInputStream of PizzaInfoDtoInput.class", e);
         }
     }
 
