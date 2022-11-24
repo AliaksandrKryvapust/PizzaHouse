@@ -1,21 +1,15 @@
 package groupId.artifactId.dao.IoC;
 
 import groupId.artifactId.dao.MenuDao;
-import groupId.artifactId.dao.api.DataSourceCreator;
+import groupId.artifactId.dao.api.EntityManagerFactoryHibernate;
 import groupId.artifactId.dao.api.IMenuDao;
-
-import java.beans.PropertyVetoException;
 
 public class MenuDaoSingleton {
     private final IMenuDao menuDao;
     private volatile static MenuDaoSingleton firstInstance = null;
 
     public MenuDaoSingleton() {
-        try {
-            this.menuDao = new MenuDao(DataSourceCreator.getInstance());
-        } catch (PropertyVetoException e) {
-            throw new RuntimeException("Unable to get Data Source class for MenuDao", e);
-        }
+        this.menuDao = new MenuDao(EntityManagerFactoryHibernate.getEntityManager());
     }
 
     public static IMenuDao getInstance() {

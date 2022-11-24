@@ -7,8 +7,4 @@ import groupId.artifactId.core.dto.output.crud.MenuDtoCrudOutput;
 public interface IMenuService extends IService<MenuDtoCrudOutput, MenuDtoInput>, IServiceUpdate<MenuDtoCrudOutput, MenuDtoInput>,
         IServiceDelete {
     MenuDtoOutput getAllData(Long id);
-
-    Boolean isIdValid(Long id);
-
-    Boolean exist(String name);
 }

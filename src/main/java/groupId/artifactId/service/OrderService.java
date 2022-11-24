@@ -17,7 +17,6 @@ import groupId.artifactId.dao.entity.api.ISelectedItem;
 import groupId.artifactId.dao.entity.api.ITicket;
 import groupId.artifactId.exceptions.DaoException;
 import groupId.artifactId.exceptions.NoContentException;
-import groupId.artifactId.exceptions.OptimisticLockException;
 import groupId.artifactId.exceptions.ServiceException;
 import groupId.artifactId.service.api.IOrderDataService;
 import groupId.artifactId.service.api.IOrderService;

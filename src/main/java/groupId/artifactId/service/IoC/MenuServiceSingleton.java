@@ -4,6 +4,7 @@ import groupId.artifactId.core.mapper.MenuItemMapper;
 import groupId.artifactId.core.mapper.MenuMapper;
 import groupId.artifactId.core.mapper.PizzaInfoMapper;
 import groupId.artifactId.dao.IoC.MenuDaoSingleton;
+import groupId.artifactId.dao.api.EntityManagerFactoryHibernate;
 import groupId.artifactId.service.MenuService;
 import groupId.artifactId.service.api.IMenuService;
 
@@ -12,7 +13,8 @@ public class MenuServiceSingleton {
     private volatile static MenuServiceSingleton firstInstance = null;
 
     public MenuServiceSingleton() {
-        this.menuService = new MenuService(MenuDaoSingleton.getInstance(), new MenuMapper(new MenuItemMapper(new PizzaInfoMapper())));
+        this.menuService = new MenuService(MenuDaoSingleton.getInstance(),
+                new MenuMapper(new MenuItemMapper(new PizzaInfoMapper())), EntityManagerFactoryHibernate.getEntityManager());
     }
 
     public static IMenuService getInstance() {
