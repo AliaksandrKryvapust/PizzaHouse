@@ -2,79 +2,54 @@ package groupId.artifactId.dao;
 
 import groupId.artifactId.dao.api.IMenuDao;
 import groupId.artifactId.dao.entity.Menu;
-import groupId.artifactId.dao.entity.MenuItem;
-import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.api.IMenu;
-import groupId.artifactId.dao.entity.api.IMenuItem;
 import groupId.artifactId.exceptions.DaoException;
 import groupId.artifactId.exceptions.NoContentException;
-import groupId.artifactId.exceptions.OptimisticLockException;
 
 import javax.persistence.EntityManager;
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import javax.persistence.OptimisticLockException;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static java.sql.Statement.RETURN_GENERATED_KEYS;
+import static groupId.artifactId.core.Constants.MENU_UK;
 
 
 public class MenuDao implements IMenuDao {
-    private final DataSource dataSource;
-    private static final String SELECT_MENU_BY_ID_SQL = "SELECT id, created_at, version, name, enabled " +
-            "FROM pizza_manager.menu WHERE id=?;";
-    private static final String SELECT_MENU_SQL = "SELECT id, created_at, version, name, enabled " +
-            "FROM pizza_manager.menu ORDER BY id;";
-    private static final String SELECT_MENU_BY_NAME_SQL = "SELECT name FROM pizza_manager.pizza_info WHERE name=?;";
-    private static final String SELECT_MENU_ALL_DATA_SQL = "SELECT m.id AS mid, m.created_at AS cr, m.version AS ver, m.name AS name," +
-            "enabled, menu_item.id AS miid, price, pizza_info_id, menu_item.creation_date AS micd, menu_item.version AS miv, " +
-            "menu_id, pi.name AS pin, description, size, pi.creation_date AS picd, pi.version AS piv, menu_id " +
-            "FROM pizza_manager.menu_item INNER JOIN pizza_manager.menu m on menu_item.menu_id = m.id " +
-            "INNER JOIN pizza_manager.pizza_info pi on menu_item.pizza_info_id = pi.id WHERE m.id=? ORDER BY miid;";
-    private static final String INSERT_MENU_SQL = "INSERT INTO pizza_manager.menu (name, enabled)\n VALUES (?, ?)";
-    private static final String UPDATE_MENU_SQL = "UPDATE pizza_manager.menu SET version=version+1, name=?, enabled=? " +
-            "WHERE id=? AND version=?";
-    private static final String DELETE_MENU_SQL = "DELETE FROM pizza_manager.menu WHERE id=?;";
+    private static final String SELECT_MENU = "SELECT menu from Menu menu ORDER BY id";
+    private final EntityManager entityManager;
 
-    public MenuDao(DataSource dataSource) {
-        this.dataSource = dataSource;
+    public MenuDao(EntityManager entityManager) {
+        this.entityManager = entityManager;
     }
 
     @Override
     public List<IMenu> get() {
-        try (Connection con = dataSource.getConnection()) {
-            List<IMenu> menus = new ArrayList<>();
-            try (PreparedStatement statement = con.prepareStatement(SELECT_MENU_SQL)) {
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        menus.add(this.mapper(resultSet));
-                    }
-                }
+        try {
+            List<?> iMenu = entityManager.createQuery(SELECT_MENU).getResultList();
+            List<IMenu> output = iMenu.stream().filter((i) -> i instanceof IMenu)
+                    .map(IMenu.class::cast).collect(Collectors.toList());
+            if (!output.isEmpty()) {
+                return output;
+            } else {
+                throw new IllegalStateException("Failed to get List of menu");
             }
-            return menus;
         } catch (Exception e) {
-            throw new DaoException("Failed to get List of Menu", e);
+            throw new DaoException("Failed to get List of menu\tcause: " + e.getMessage(), e);
         }
     }
 
     @Override
     public IMenu get(Long id) {
-        try (Connection con = dataSource.getConnection()) {
-            try (PreparedStatement statement = con.prepareStatement(SELECT_MENU_BY_ID_SQL)) {
-                statement.setLong(1, id);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    resultSet.next();
-                    if (!resultSet.isLast()) {
-                        throw new NoContentException("There is no Menu with id:" + id);
-                    }
-                    return this.mapper(resultSet);
-                }
+        try {
+            Menu menu = entityManager.find(Menu.class, id);
+            if (menu == null) {
+                throw new NoContentException("There is no Menu with id:" + id);
             }
-        } catch (SQLException e) {
-            throw new DaoException("Failed to get Menu by id:" + id, e);
+            return menu;
+        } catch (NoContentException e) {
+            throw new NoContentException(e.getMessage());
+        } catch (Exception e) {
+            throw new DaoException("Failed to get Menu from Data Base by id:" + id + "cause: " + e.getMessage(), e);
         }
     }
 
@@ -83,28 +58,17 @@ public class MenuDao implements IMenuDao {
         if (menu.getId() != null || menu.getVersion() != null) {
             throw new IllegalStateException("Menu id & version should be empty");
         }
-        try (Connection con = dataSource.getConnection()) {
-            try (PreparedStatement statement = con.prepareStatement(INSERT_MENU_SQL, RETURN_GENERATED_KEYS)) {
-                long rows = 0;
-                statement.setString(1, menu.getName());
-                statement.setBoolean(2, menu.getEnable());
-                rows += statement.executeUpdate();
-                if (rows > 1) {
-                    throw new IllegalStateException("Incorrect menu table update, more than 1 row affected");
-                }
-                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                    generatedKeys.next();
-                    return new Menu(generatedKeys.getLong(1), menu.getName(), menu.getEnable());
-                }
-            }
-        } catch (SQLException e) {
-            if (e.getMessage().contains("menu_pkey")) {
-                throw new NoContentException("menu table insert failed, check preconditions and FK values: " + menu);
+        try {
+            entityTransaction.persist(menu);
+            return menu;
+        } catch (Exception e) {
+            if (e.getMessage().contains(MENU_UK)) {
+                throw new NoContentException("menu table insert failed,  check preconditions and FK values: "
+                        + menu);
             } else {
-                throw new DaoException("Failed to save new Menu" + menu, e);
+                throw new DaoException("Failed to save new Menu" + menu + "\t cause" + e.getMessage(), e);
             }
         }
-
     }
 
     @Override
@@ -112,112 +76,57 @@ public class MenuDao implements IMenuDao {
         if (menu.getId() != null || menu.getVersion() != null) {
             throw new IllegalStateException("Menu id & version should be empty");
         }
-        try (Connection con = dataSource.getConnection()) {
-            try (PreparedStatement statement = con.prepareStatement(UPDATE_MENU_SQL)) {
-                long rows = 0;
-                statement.setString(1, menu.getName());
-                statement.setBoolean(2, menu.getEnable());
-                statement.setLong(3, id);
-                statement.setInt(4, version);
-                rows += statement.executeUpdate();
-                if (rows == 0) {
-                    throw new OptimisticLockException("menu table update failed, version does not match update denied");
-                }
-                if (rows > 1) {
-                    throw new IllegalStateException("Incorrect menu table update, more than 1 row affected");
-                }
-                return new Menu(id, menu.getName(), menu.getEnable());
+        try {
+            Menu currentEntity = (Menu) this.getLock(id, entityTransaction);
+            if (!currentEntity.getVersion().equals(version)) {
+                throw new OptimisticLockException();
             }
-            } catch (SQLException e) {
-            throw new DaoException("Failed to update Menu" + menu + " with id:" + id, e);
+            currentEntity.setName(menu.getName());
+            currentEntity.setEnable(menu.getEnable());
+            entityTransaction.merge(currentEntity);
+            return currentEntity;
+        } catch (NoContentException e) {
+            throw new NoContentException(e.getMessage());
+        } catch (OptimisticLockException e) {
+            throw new OptimisticLockException("menu table update failed, version does not match update denied");
+        } catch (Exception e) {
+            if (e.getMessage().contains(MENU_UK)) {
+                throw new NoContentException("menu table update failed,  check preconditions and FK values: "
+                        + menu);
+            } else {
+                throw new DaoException("Failed to update menu" + menu + " by id:" + id + "\t cause" + e.getMessage(), e);
             }
+        }
     }
 
     @Override
     public void delete(Long id, Boolean delete, EntityManager entityTransaction) {
-        try (Connection con = dataSource.getConnection()) {
-            try (PreparedStatement statement = con.prepareStatement(DELETE_MENU_SQL)) {
-                long rows = 0;
-                statement.setLong(1, id);
-                rows += statement.executeUpdate();
-                if (rows > 1) {
-                    throw new IllegalStateException("Incorrect menu table delete, more than 1 row affected");
-                }
+        try {
+            Menu menu = (Menu) this.getLock(id, entityTransaction);
+            if (delete) {
+                entityTransaction.remove(menu);
+            } else {
+                menu.setEnable(false);
+                entityTransaction.merge(menu);
             }
-        } catch (SQLException e) {
-            throw new DaoException("Failed to delete Menu with id:" + id, e);
-        }
-    }
-
-    @Override
-    public IMenu getAllData(Long id) {
-        try (Connection con = dataSource.getConnection()) {
-            try (PreparedStatement statement = con.prepareStatement(SELECT_MENU_ALL_DATA_SQL)) {
-                statement.setLong(1, id);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    return this.allDataMapper(resultSet);
-                }
-            }
-        } catch (SQLException e) {
-            throw new DaoException("Failed to get Menu by id:" + id, e);
-        }
-    }
-
-    @Override
-    public Boolean exist(Long id) {
-        try (Connection con = dataSource.getConnection()) {
-            try (PreparedStatement statement = con.prepareStatement(SELECT_MENU_BY_ID_SQL)) {
-                statement.setLong(1, id);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    return resultSet.next();
-                }
-            }
+        } catch (NoContentException e) {
+            throw new NoContentException(e.getMessage());
         } catch (Exception e) {
-            throw new DaoException("Failed to select Menu with id:" + id, e);
+            throw new DaoException("Failed to delete Menu with id:" + id + "\tcause: " + e.getMessage(), e);
         }
     }
 
-    @Override
-    public Boolean doesMenuExist(String name) {
-        try (Connection con = dataSource.getConnection()) {
-            try (PreparedStatement statement = con.prepareStatement(SELECT_MENU_BY_NAME_SQL)) {
-                statement.setString(1, name);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    return resultSet.next();
-                }
+    private IMenu getLock(Long id, EntityManager entityTransaction) {
+        try {
+            Menu menu = entityTransaction.find(Menu.class, id);
+            if (menu == null) {
+                throw new NoContentException("There is no Menu with id:" + id);
             }
+            return menu;
+        } catch (NoContentException e) {
+            throw new NoContentException(e.getMessage());
         } catch (Exception e) {
-            throw new DaoException("Failed to select Menu with name:" + name, e);
+            throw new DaoException("Failed to get Lock of Menu from Data Base by id:" + id + "cause: " + e.getMessage(), e);
         }
-    }
-
-    private IMenu mapper(ResultSet resultSet) throws SQLException {
-        List<IMenuItem> items = new ArrayList<>();
-        return new Menu(items, resultSet.getLong("id"), resultSet.getTimestamp("created_at").toInstant(),
-                resultSet.getInt("version"), resultSet.getString("name"),
-                resultSet.getBoolean("enabled"));
-    }
-
-    private IMenu allDataMapper(ResultSet resultSet) throws SQLException {
-        List<IMenuItem> items = new ArrayList<>();
-        IMenu menu = new Menu();
-        while (resultSet.next()) {
-            PizzaInfo pizzaInfo = new PizzaInfo(resultSet.getLong("pizza_info_id"), resultSet.getString("pin"),
-                    resultSet.getString("description"), resultSet.getInt("size"),
-                    resultSet.getTimestamp("picd").toInstant(), resultSet.getInt("piv"));
-            IMenuItem item = new MenuItem(resultSet.getLong("miid"), pizzaInfo, resultSet.getDouble("price"),
-                     resultSet.getLong("menu_id"),
-                    resultSet.getTimestamp("micd").toInstant(), resultSet.getInt("miv"));
-            items.add(item);
-            if (resultSet.isLast()) {
-                menu = new Menu(items, resultSet.getLong("mid"), resultSet.getTimestamp("cr").toInstant(),
-                        resultSet.getInt("ver"), resultSet.getString("name"),
-                        resultSet.getBoolean("enabled"));
-            }
-        }
-        if (menu.getItems() == null || menu.getId() == null) {
-            throw new NoContentException("There is no Menu with such id");
-        }
-        return menu;
     }
 }
