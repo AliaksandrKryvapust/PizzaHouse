@@ -65,7 +65,7 @@ public class MenuItemDao implements IMenuItemDao {
             currentEntity.setPrice(menuItem.getPrice());
             currentEntity.setMenuId(menuItem.getMenuId());
             currentEntity.setPizzaInfo(currentPizzaInfo);
-            entityTransaction.refresh(currentEntity,LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+            entityTransaction.merge(currentEntity);
             return currentEntity;
         } catch (NoContentException e) {
             throw new NoContentException(e.getMessage());
@@ -98,13 +98,15 @@ public class MenuItemDao implements IMenuItemDao {
     }
 
     @Override
-    public void delete(Long id, Boolean delete) {
+    public void delete(Long id, Boolean delete, EntityManager entityTransaction) {
         try {
-            MenuItem menuItem = entityManager.find(MenuItem.class, id);
-            if (menuItem == null) {
-                throw new NoContentException("There is no Menu Item with id:" + id);
+            MenuItem menuItem = (MenuItem) this.getLock(id, entityTransaction);
+            if (delete){
+                entityTransaction.remove(menuItem);
+            } else {
+                menuItem.setMenuId(null);
+                entityTransaction.merge(menuItem);
             }
-            entityManager.remove(menuItem);
         } catch (NoContentException e) {
             throw new NoContentException(e.getMessage());
         } catch (Exception e) {
@@ -130,7 +132,7 @@ public class MenuItemDao implements IMenuItemDao {
 
     private IMenuItem getLock(Long id, EntityManager entityTransaction) {
         try {
-            MenuItem menuItem = entityTransaction.find(MenuItem.class, id, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+            MenuItem menuItem = entityTransaction.find(MenuItem.class, id);
             if (menuItem == null) {
                 throw new NoContentException("There is no Menu Item with id:" + id);
             }
