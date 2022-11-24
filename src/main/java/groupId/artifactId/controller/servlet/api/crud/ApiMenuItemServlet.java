@@ -137,7 +137,7 @@ public class ApiMenuItemServlet extends HttpServlet {
 
     //DELETE POSITION
     //need param id  (id = 76)
-    //param delete - true/false completely delete (delete=false)
+    //param delete - true completely delete/false delete menu_id (delete=false)
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
         try {
