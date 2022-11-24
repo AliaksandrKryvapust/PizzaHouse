@@ -99,7 +99,7 @@ public class OrderDao implements IOrderDao {
     }
 
     @Override
-    public void delete(Long id, Boolean delete) {
+    public void delete(Long id, Boolean delete, EntityManager entityTransaction) {
         try (Connection con = dataSource.getConnection()) {
             try (PreparedStatement statement = con.prepareStatement(DELETE_ORDER_SQL)) {
                 long rows = 0;

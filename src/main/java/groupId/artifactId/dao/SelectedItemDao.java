@@ -105,7 +105,7 @@ public class SelectedItemDao implements ISelectedItemDao {
     }
 
     @Override
-    public void delete(Long id, Boolean delete) {
+    public void delete(Long id, Boolean delete, EntityManager entityTransaction) {
         try (Connection con = dataSource.getConnection()) {
             try (PreparedStatement statement = con.prepareStatement(DELETE_SELECTED_ITEM_SQL)) {
                 long rows = 0;

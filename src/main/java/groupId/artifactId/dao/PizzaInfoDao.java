@@ -86,7 +86,7 @@ public class PizzaInfoDao implements IPizzaInfoDao {
     }
 
     @Override
-    public void delete(Long id, Boolean delete) {
+    public void delete(Long id, Boolean delete, EntityManager entityTransaction) {
         try {
             PizzaInfo pizzaInfo = entityManager.find(PizzaInfo.class, id);
             if (pizzaInfo == null) {
