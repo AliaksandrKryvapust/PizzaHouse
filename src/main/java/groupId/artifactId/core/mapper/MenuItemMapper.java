@@ -17,8 +17,7 @@ public class MenuItemMapper {
     public IMenuItem inputMapping(MenuItemDtoInput menuItemDtoInput) {
         IPizzaInfo pizzaInfo = pizzaInfoMapper.inputMapping(menuItemDtoInput.getPizzaInfoDtoInput());
         return MenuItem.builder().price(menuItemDtoInput.getPrice())
-                .pizzaInfo(pizzaInfo)
-                .menuId(menuItemDtoInput.getMenuId()).build();
+                .pizzaInfo(pizzaInfo).build();
     }
 
     public MenuItemDtoOutput outputMapping(IMenuItem menuItem) {
@@ -28,7 +27,6 @@ public class MenuItemMapper {
                 .price(menuItem.getPrice())
                 .createdAt(menuItem.getCreationDate())
                 .version(menuItem.getVersion())
-                .menuId(menuItem.getMenuId())
                 .pizzaInfo(pizzaInfo).build();
     }
 }
