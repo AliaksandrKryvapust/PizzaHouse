@@ -19,7 +19,9 @@ public class MenuMapper {
     }
 
     public IMenu inputMapping(MenuDtoInput menuDtoInput) {
-        return new Menu(menuDtoInput.getName(), menuDtoInput.getEnable());
+        return Menu.builder()
+                .name(menuDtoInput.getName())
+                .enable(menuDtoInput.getEnable()).build();
     }
 
     public MenuDtoCrudOutput outputCrudMapping(IMenu menu) {
