@@ -8,7 +8,6 @@ import groupId.artifactId.exceptions.DaoException;
 import groupId.artifactId.exceptions.NoContentException;
 
 import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
 import javax.persistence.OptimisticLockException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -63,7 +62,6 @@ public class MenuItemDao implements IMenuItemDao {
             currentPizzaInfo.setDescription(menuItem.getPizzaInfo().getDescription());
             currentPizzaInfo.setSize(menuItem.getPizzaInfo().getSize());
             currentEntity.setPrice(menuItem.getPrice());
-            currentEntity.setMenuId(menuItem.getMenuId());
             currentEntity.setPizzaInfo(currentPizzaInfo);
             entityTransaction.merge(currentEntity);
             return currentEntity;
@@ -103,9 +101,9 @@ public class MenuItemDao implements IMenuItemDao {
             MenuItem menuItem = (MenuItem) this.getLock(id, entityTransaction);
             if (delete){
                 entityTransaction.remove(menuItem);
-            } else {
-                menuItem.setMenuId(null);
-                entityTransaction.merge(menuItem);
+//            } else {
+//                menuItem.setMenuId(null);
+//                entityTransaction.merge(menuItem);
             }
         } catch (NoContentException e) {
             throw new NoContentException(e.getMessage());

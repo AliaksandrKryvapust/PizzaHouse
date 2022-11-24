@@ -213,7 +213,6 @@ public class OrderDataDao implements IOrderDataDao {
                     resultSet.getString("pid"), resultSet.getInt("size"),
                     resultSet.getTimestamp("picd").toInstant(), resultSet.getInt("piver"));
             IMenuItem menuItem = new MenuItem(resultSet.getLong("menu_item_id"), pizzaInfo, resultSet.getDouble("price"),
-                    resultSet.getLong("menu_id"),
                     resultSet.getTimestamp("micd").toInstant(), resultSet.getInt("miver"));
             ISelectedItem selectedItem = new SelectedItem(menuItem, resultSet.getLong("siid"),
                     resultSet.getLong("menu_item_id"), resultSet.getLong("tid"), resultSet.getInt("count"),
