@@ -15,6 +15,5 @@ public class MenuItemDtoOutput {
     private final @NonNull Double price;
     private final @NonNull Instant createdAt;
     private final @NonNull Integer version;
-    private final @NonNull Long menuId;
     private final @NonNull PizzaInfoDtoOutput pizzaInfo;
 }
