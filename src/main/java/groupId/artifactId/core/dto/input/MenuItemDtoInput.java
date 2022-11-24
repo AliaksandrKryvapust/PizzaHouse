@@ -12,7 +12,6 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 public class MenuItemDtoInput {
     private final @NonNull Double price;
-    private final @NonNull Long pizzaInfoId;
     private final @NonNull Long menuId;
     private final @NonNull PizzaInfoDtoInput pizzaInfoDtoInput;
 }
