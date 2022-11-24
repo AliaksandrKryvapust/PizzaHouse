@@ -39,7 +39,7 @@ class MenuItemMapperTest {
         final Instant creationDate = Instant.now();
         final PizzaInfoDtoInput pizzaInfoDtoInput = PizzaInfoDtoInput.builder().name(pizzaName).description(description)
                 .size(size).build();
-        final MenuItemDtoInput menuDtoInput = MenuItemDtoInput.builder().price(price).pizzaInfoId(id).menuId(id)
+        final MenuItemDtoInput menuDtoInput = MenuItemDtoInput.builder().price(price).menuId(id)
                 .pizzaInfoDtoInput(pizzaInfoDtoInput).build();
         final PizzaInfo pizzaInfo = PizzaInfo.builder().id(id).name(pizzaName).description(description).size(size)
                 .creationDate(creationDate).version(version).build();
@@ -51,9 +51,12 @@ class MenuItemMapperTest {
 
         // assert
         Assertions.assertNotNull(test);
+        Assertions.assertNotNull(test.getPizzaInfo());
         Assertions.assertEquals(id, test.getMenuId());
-        Assertions.assertEquals(id, test.getPizzaInfo().getId());
         Assertions.assertEquals(price, test.getPrice());
+        Assertions.assertEquals(pizzaName, test.getPizzaInfo().getName());
+        Assertions.assertEquals(description, test.getPizzaInfo().getDescription());
+        Assertions.assertEquals(size, test.getPizzaInfo().getSize());
     }
     @Test
     void outputMapping() {

@@ -55,7 +55,7 @@ class MenuItemServiceTest {
         final IMenuItem menuItemInput = MenuItem.builder().price(price).menuId(id).build();
         final PizzaInfoDtoInput pizzaInfoDtoInput = PizzaInfoDtoInput.builder().name(pizzaName).description(description)
                 .size(size).build();
-        final MenuItemDtoInput menuDtoInput = MenuItemDtoInput.builder().price(price).pizzaInfoId(id).menuId(id)
+        final MenuItemDtoInput menuDtoInput = MenuItemDtoInput.builder().price(price).menuId(id)
                 .pizzaInfoDtoInput(pizzaInfoDtoInput).build();
         final MenuItem menuItemOutput = MenuItem.builder().id(id).price(price).pizzaInfo(pizzaInfo)
                 .creationDate(creationDate).version(version).menuId(id).build();
@@ -185,7 +185,7 @@ class MenuItemServiceTest {
                 .creationDate(creationDate).version(version).build();
         final PizzaInfoDtoInput pizzaInfoDtoInput = PizzaInfoDtoInput.builder().name(pizzaName).description(description)
                 .size(size).build();
-        final MenuItemDtoInput menuDtoInput = MenuItemDtoInput.builder().price(price).pizzaInfoId(id).menuId(id)
+        final MenuItemDtoInput menuDtoInput = MenuItemDtoInput.builder().price(price).menuId(id)
                 .pizzaInfoDtoInput(pizzaInfoDtoInput).build();
         final MenuItem menuItem = MenuItem.builder().id(id).price(price).pizzaInfo(pizzaInfo)
                 .creationDate(creationDate).version(version).menuId(id).build();
