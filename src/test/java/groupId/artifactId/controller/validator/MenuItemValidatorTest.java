@@ -31,7 +31,7 @@ class MenuItemValidatorTest {
         final String messageFirstArg = "MenuItem`s price is not valid";
         final PizzaInfoDtoInput pizzaInfoDtoInput = PizzaInfoDtoInput.builder().name(pizzaName).description(description)
                 .size(size).build();
-        final MenuItemDtoInput menuDtoInput = MenuItemDtoInput.builder().price(price).menuId(id)
+        final MenuItemDtoInput menuDtoInput = MenuItemDtoInput.builder().price(price)
                 .pizzaInfoDtoInput(pizzaInfoDtoInput).build();
         doNothing().when(pizzaInfoValidator).validate(any(PizzaInfoDtoInput.class));
 
@@ -40,27 +40,5 @@ class MenuItemValidatorTest {
 
         // assert
         Assertions.assertEquals(messageFirstArg, exception.getMessage());
-    }
-
-    @Test()
-    void validatePreconditionThree() {
-        // preconditions
-        final double price = 20.0;
-        final String pizzaName = "ITALIANO PIZZA";
-        final String description = "Mozzarella cheese, basilica, ham";
-        final int size = 32;
-        final long menuItemId = -1L;
-        final String messageThirdArg = "MenuItem`s menu id price is not valid";
-        final PizzaInfoDtoInput pizzaInfoDtoInput = PizzaInfoDtoInput.builder().name(pizzaName).description(description)
-                .size(size).build();
-        final MenuItemDtoInput menuDtoInput = MenuItemDtoInput.builder().price(price).menuId(menuItemId)
-                .pizzaInfoDtoInput(pizzaInfoDtoInput).build();
-        doNothing().when(pizzaInfoValidator).validate(any(PizzaInfoDtoInput.class));
-
-        //test
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> menuItemValidator.validate(menuDtoInput));
-
-        // assert
-        Assertions.assertEquals(messageThirdArg, exception.getMessage());
     }
 }
