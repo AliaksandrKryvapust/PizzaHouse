@@ -142,15 +142,15 @@ public class ApiMenuServlet extends HttpServlet {
             String id = req.getParameter(Constants.PARAMETER_ID);
             String delete = req.getParameter(Constants.PARAMETER_DELETE);
             if (id != null && delete != null) {
-                if (menuService.isIdValid(Long.valueOf(id))) {
-                    menuService.delete(id, delete);
-                    resp.setStatus(HttpServletResponse.SC_OK);
-                } else {
-                    resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
-                }
+                menuService.delete(id, delete);
+                resp.setStatus(HttpServletResponse.SC_OK);
             } else {
                 resp.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
             }
+        } catch (NoContentException e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            logger.error("/api/menu there is no content to fulfill doDelete method " + e.getMessage() + "\t" + e.getCause() +
+                    "\tresponse status: " + resp.getStatus());
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             logger.error("/api/menu crashed during doDelete method" + e.getMessage() + "\t" + e.getCause() +
