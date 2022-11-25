@@ -1,6 +1,8 @@
 package groupId.artifactId.core.mapper;
 
 import groupId.artifactId.core.dto.input.MenuDtoInput;
+import groupId.artifactId.core.dto.input.MenuItemDtoInput;
+import groupId.artifactId.core.dto.input.PizzaInfoDtoInput;
 import groupId.artifactId.core.dto.output.MenuDtoOutput;
 import groupId.artifactId.core.dto.output.MenuItemDtoOutput;
 import groupId.artifactId.core.dto.output.PizzaInfoDtoOutput;
@@ -32,7 +34,7 @@ class MenuMapperTest {
     private MenuItemMapper menuItemMapper;
 
     @Test
-    void inputMapping() {
+    void inputMappingConditionOne() {
         // preconditions
         final String name = "Optional Menu";
         final boolean enable = false;
@@ -45,6 +47,42 @@ class MenuMapperTest {
         Assertions.assertNotNull(test);
         Assertions.assertEquals(name, test.getName());
         Assertions.assertEquals(enable, test.getEnable());
+    }
+
+    @Test
+    void inputMappingConditionTwo() {
+        // preconditions
+        final String name = "Optional Menu";
+        final boolean enable = false;
+        final double price = 18.0;
+        final String pizzaName = "ITALIANO PIZZA";
+        final String description = "Mozzarella cheese, basilica, ham";
+        final int size = 32;
+        final PizzaInfoDtoInput pizzaInfoDtoInput = PizzaInfoDtoInput.builder().name(pizzaName).description(description).size(size)
+                .build();
+        final List<MenuItemDtoInput> menuItemsInput = Collections.singletonList(MenuItemDtoInput.builder()
+                .pizzaInfoDtoInput(pizzaInfoDtoInput).price(price).build());
+        final MenuDtoInput menuDtoInput = MenuDtoInput.builder().name(name).enable(enable).items(menuItemsInput).build();
+        final PizzaInfo pizzaInfo = PizzaInfo.builder().name(pizzaName).description(description).size(size).build();
+        final IMenuItem menuItems = MenuItem.builder().pizzaInfo(pizzaInfo).price(price).build();
+        Mockito.when(menuItemMapper.inputMapping(any(MenuItemDtoInput.class))).thenReturn(menuItems);
+
+        //test
+        IMenu test = menuMapper.inputMapping(menuDtoInput);
+
+        // assert
+        Assertions.assertNotNull(test);
+        Assertions.assertNotNull(test.getItems());
+        Assertions.assertEquals(name, test.getName());
+        Assertions.assertEquals(enable, test.getEnable());
+        for (IMenuItem input : test.getItems()) {
+            Assertions.assertNotNull(input);
+            Assertions.assertNotNull(input.getPizzaInfo());
+            Assertions.assertEquals(price, input.getPrice());
+            Assertions.assertEquals(pizzaName, input.getPizzaInfo().getName());
+            Assertions.assertEquals(description, input.getPizzaInfo().getDescription());
+            Assertions.assertEquals(size, input.getPizzaInfo().getSize());
+        }
     }
 
     @Test
