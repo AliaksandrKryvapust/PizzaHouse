@@ -13,7 +13,8 @@ public class MenuItemServiceSingleton {
 
     public MenuItemServiceSingleton() {
         this.menuItemService = new MenuItemService(MenuItemDaoSingleton.getInstance(),
-                new MenuItemMapper(new PizzaInfoMapper()), EntityManagerFactoryHibernate.getEntityManager());
+                new MenuItemMapper(new PizzaInfoMapper()), EntityManagerFactoryHibernate.getEntityManager(),
+                MenuServiceSingleton.getInstance());
     }
 
     public static IMenuItemService getInstance() {
