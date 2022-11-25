@@ -160,8 +160,8 @@ public class TicketDao implements ITicketDao {
                     resultSet.getTimestamp("picd").toInstant(), resultSet.getInt("piv"));
             IMenuItem menuItem = new MenuItem(resultSet.getLong("miid"), pizzaInfo, resultSet.getDouble("price"),
                     resultSet.getTimestamp("micd").toInstant(), resultSet.getInt("miver"));
-            ISelectedItem selectedItem = new SelectedItem(menuItem, resultSet.getLong("siid"),
-                    resultSet.getLong("menu_item_id"), resultSet.getLong("id"), resultSet.getInt("count"),
+            ISelectedItem selectedItem = new SelectedItem( resultSet.getLong("siid"), menuItem,
+                     resultSet.getLong("id"), resultSet.getInt("count"),
                     resultSet.getTimestamp("sicd").toInstant(), resultSet.getInt("siiv"));
             items.add(selectedItem);
             if (resultSet.isLast()) {

@@ -136,8 +136,8 @@ public class CompletedOrderDao implements ICompletedOrderDao {
                     resultSet.getTimestamp("picd").toInstant(), resultSet.getInt("piver"));
             IMenuItem menuItem = new MenuItem(resultSet.getLong("menu_item_id"), pizzaInfo, resultSet.getDouble("price"),
                     resultSet.getTimestamp("micd").toInstant(), resultSet.getInt("miver"));
-            ISelectedItem selectedItem = new SelectedItem(menuItem, resultSet.getLong("siid"),
-                    resultSet.getLong("menu_item_id"), resultSet.getLong("tid"), resultSet.getInt("count"),
+            ISelectedItem selectedItem = new SelectedItem( resultSet.getLong("siid"),menuItem,
+                    resultSet.getLong("tid"), resultSet.getInt("count"),
                     resultSet.getTimestamp("sicd").toInstant(), resultSet.getInt("siver"));
             items.add(selectedItem);
             IPizza pizza = new Pizza(resultSet.getLong("pizzaid"), resultSet.getLong("id"),
