@@ -60,8 +60,8 @@ class OrderDataServiceTest {
                 .creationDate(creationDate).version(version).build();
         final MenuItem menuItem = MenuItem.builder().id(id).pizzaInfo(pizzaInfo).price(price)
                 .creationDate(creationDate).version(version).build();
-        List<ISelectedItem> selectedItems = singletonList(new SelectedItem(menuItem,
-                id, id, id, count, creationDate, version));
+        List<ISelectedItem> selectedItems = singletonList(SelectedItem.builder().id(id).menuItem(menuItem).orderId(id).count(count)
+                .createAt(creationDate).version(version).build());
         final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(name).description(description)
                 .size(size).createdAt(creationDate).version(version).build();
         final MenuItemDtoOutput menuItemDtoOutput = MenuItemDtoOutput.builder().id(id).price(price)
@@ -335,12 +335,12 @@ class OrderDataServiceTest {
                 .creationDate(creationDate).version(version).build();
         final MenuItem menuItem = MenuItem.builder().id(id).pizzaInfo(pizzaInfo).price(price)
                 .creationDate(creationDate).version(version).build();
-        final CompletedOrder completedOrder = new CompletedOrder(new Ticket(new Order(singletonList(new SelectedItem(
-                menuItem, id, id, id, count, creationDate, version)), id, creationDate, version),
+        final SelectedItem selectedItem = SelectedItem.builder().id(id).menuItem(menuItem).orderId(id).count(count)
+                .createAt(creationDate).version(version).build();
+        final CompletedOrder completedOrder = new CompletedOrder(new Ticket(new Order(singletonList(selectedItem), id, creationDate, version),
                 id, id, creationDate, version), singletonList(new Pizza(
                 id, id, name, size, creationDate, version)), id, id, creationDate, version);
-        final OrderData orderDataOutput = new OrderData(new Ticket(new Order(singletonList(new SelectedItem(
-                menuItem, id, id, id, count, creationDate, version)), id, creationDate, version),
+        final OrderData orderDataOutput = new OrderData(new Ticket(new Order(singletonList(selectedItem), id, creationDate, version),
                 id, id, creationDate, version), singletonList(new OrderStage()),
                 id, id, done, creationDate, version);
         final OrderStage orderStage = new OrderStage(id, id, description);

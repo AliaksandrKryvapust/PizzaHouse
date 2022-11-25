@@ -41,7 +41,7 @@ class OrderMapperTest {
         final int count = 5;
         final OrderDtoInput orderDtoInput = OrderDtoInput.builder().selectedItems(singletonList(SelectedItemDtoInput.builder()
                 .menuItemId(id).count(count).build())).build();
-        final ISelectedItem selectedItem = new SelectedItem(id, id, count);
+        final ISelectedItem selectedItem = SelectedItem.builder().id(id).orderId(id).count(count).build();
         Mockito.when(selectedItemMapper.inputMapping(any(SelectedItemDtoInput.class), any(Long.class))).thenReturn(selectedItem);
 
         //test
@@ -53,7 +53,6 @@ class OrderMapperTest {
         Assertions.assertEquals(id, test.getId());
         for (ISelectedItem item : test.getSelectedItems()) {
             Assertions.assertEquals(id, item.getOrderId());
-            Assertions.assertEquals(id, item.getMenuItemId());
             Assertions.assertEquals(count, item.getCount());
         }
     }
@@ -91,8 +90,8 @@ class OrderMapperTest {
                 .creationDate(creationDate).version(version).build();
         final MenuItem menuItem = MenuItem.builder().id(id).pizzaInfo(pizzaInfo).price(price)
                 .creationDate(creationDate).version(version).build();
-        List<ISelectedItem> selectedItems = singletonList(new SelectedItem(menuItem,
-                id, id, id, count, creationDate, version));
+        List<ISelectedItem> selectedItems = singletonList(SelectedItem.builder().id(id).menuItem(menuItem).orderId(id).count(count)
+                .createAt(creationDate).version(version).build());
         final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(name).description(description)
                 .size(size).createdAt(creationDate).version(version).build();
         final MenuItemDtoOutput menuItemDtoOutput = MenuItemDtoOutput.builder().id(id).price(price)

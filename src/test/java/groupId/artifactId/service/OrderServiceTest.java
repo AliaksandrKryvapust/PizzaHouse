@@ -66,7 +66,8 @@ class OrderServiceTest {
                 .creationDate(creationDate).version(version).build();
         final MenuItem menuItem = MenuItem.builder().id(id).pizzaInfo(pizzaInfo).price(price)
                 .creationDate(creationDate).version(version).build();
-        List<ISelectedItem> selectedItems = singletonList(new SelectedItem(menuItem, id, id, id, count, creationDate, version));
+        List<ISelectedItem> selectedItems = singletonList(SelectedItem.builder().id(id).menuItem(menuItem).orderId(id).count(count)
+                .createAt(creationDate).version(version).build());
         final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(name).description(description)
                 .size(size).createdAt(creationDate).version(version).build();
         final MenuItemDtoOutput menuItemDtoOutput = MenuItemDtoOutput.builder().id(id).price(price)
@@ -165,13 +166,22 @@ class OrderServiceTest {
         final int count = 5;
         final boolean done = false;
         final String description = "Order accepted";
+        final double price = 18.0;
+        final String name = "ITALIANO PIZZA";
+        final String pizzaDescription = "Mozzarella cheese, basilica, ham";
+        final int size = 32;
         final int version = 1;
         final Instant creationDate = Instant.now();
         final OrderDtoInput orderDtoInput = OrderDtoInput.builder().selectedItems(singletonList(SelectedItemDtoInput.builder()
                 .menuItemId(id).count(count).build())).build();
         final Order order = new Order(id);
-        final Order orderOutput = new Order(singletonList(new SelectedItem(id, id, count)), id);
-        final SelectedItem selectedItem = new SelectedItem(id, id, id, count);
+        final PizzaInfo pizzaInfo = PizzaInfo.builder().id(id).name(name).description(pizzaDescription).size(size)
+                .creationDate(creationDate).version(version).build();
+        final MenuItem menuItem = MenuItem.builder().id(id).pizzaInfo(pizzaInfo).price(price)
+                .creationDate(creationDate).version(version).build();
+        final SelectedItem selectedItem = SelectedItem.builder().id(id).menuItem(menuItem).orderId(id).count(count)
+                .createAt(creationDate).version(version).build();
+        final Order orderOutput = new Order(singletonList(selectedItem), id);
         final Ticket ticket = new Ticket(id, id);
         final TicketDtoCrudOutput crudOutput = TicketDtoCrudOutput.builder().id(id).orderId(id).createAt(creationDate)
                 .version(version).build();

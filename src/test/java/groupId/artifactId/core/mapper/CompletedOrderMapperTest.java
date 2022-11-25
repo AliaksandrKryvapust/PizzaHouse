@@ -46,8 +46,8 @@ class CompletedOrderMapperTest {
                 .creationDate(creationDate).version(version).build();
         final MenuItem menuItem = MenuItem.builder().id(id).pizzaInfo(pizzaInfo).price(price)
                 .creationDate(creationDate).version(version).build();
-        final List<ISelectedItem> selectedItems = singletonList(new SelectedItem(menuItem,
-                id, id, id, count, creationDate, version));
+        final List<ISelectedItem> selectedItems = singletonList(SelectedItem.builder().id(id).menuItem(menuItem).orderId(id).count(count)
+                .createAt(creationDate).version(version).build());
         final List<IOrderStage> orderStages = singletonList(new OrderStage(id, id, stageDescription, creationDate, version));
         final IOrderData orderData = new OrderData(new Ticket(new Order(selectedItems, id, creationDate, version), id,
                 orderId, creationDate, version), orderStages, id, id, done, creationDate, version);
@@ -70,7 +70,6 @@ class CompletedOrderMapperTest {
         for (ISelectedItem output : test.getTicket().getOrder().getSelectedItems()) {
             Assertions.assertEquals(id, output.getId());
             Assertions.assertEquals(id, output.getOrderId());
-            Assertions.assertEquals(id, output.getMenuItemId());
             Assertions.assertEquals(count, output.getCount());
             Assertions.assertEquals(creationDate, output.getCreateAt());
             Assertions.assertEquals(version, output.getVersion());
@@ -112,8 +111,8 @@ class CompletedOrderMapperTest {
                 .creationDate(creationDate).version(version).build();
         final MenuItem menuItem = MenuItem.builder().id(id).pizzaInfo(pizzaInfo).price(price)
                 .creationDate(creationDate).version(version).build();
-        List<ISelectedItem> selectedItems = Collections.singletonList(new SelectedItem(menuItem,
-                id, id, id, count, creationDate, version));
+        List<ISelectedItem> selectedItems = Collections.singletonList(SelectedItem.builder().id(id).menuItem(menuItem).orderId(id).count(count)
+                .createAt(creationDate).version(version).build());
         List<IPizza> pizzas = Collections.singletonList(new Pizza(id, id, name, size, creationDate, version));
         final ICompletedOrder completedOrder = new CompletedOrder(new Ticket(new Order(selectedItems, id, creationDate, version), id,
                 orderId, creationDate, version), pizzas, id, id, creationDate, version);
