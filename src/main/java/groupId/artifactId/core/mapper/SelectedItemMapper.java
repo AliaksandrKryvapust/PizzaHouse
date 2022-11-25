@@ -14,15 +14,15 @@ public class SelectedItemMapper {
     }
 
     public ISelectedItem inputMapping(SelectedItemDtoInput input, Long orderId) {
-        return new SelectedItem(input.getMenuItemId(), orderId, input.getCount());
+        return SelectedItem.builder().count(input.getCount()).build();
     }
 
     public SelectedItemDtoOutput outputMapping(ISelectedItem item) {
-        MenuItemDtoOutput menuItem = menuItemMapper.outputMapping(item.getItem());
+        MenuItemDtoOutput menuItem = menuItemMapper.outputMapping(item.getMenuItem());
         return SelectedItemDtoOutput.builder()
                 .menuItem(menuItem)
                 .id(item.getId())
-                .menuItemId(item.getMenuItemId())
+                .menuItemId(item.getMenuItem().getId())
                 .orderId(item.getOrderId())
                 .count(item.getCount())
                 .createdAt(item.getCreateAt())
