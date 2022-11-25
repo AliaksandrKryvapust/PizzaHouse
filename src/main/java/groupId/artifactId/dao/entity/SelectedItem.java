@@ -2,124 +2,40 @@ package groupId.artifactId.dao.entity;
 
 import groupId.artifactId.dao.entity.api.IMenuItem;
 import groupId.artifactId.dao.entity.api.ISelectedItem;
+import lombok.*;
+import org.hibernate.annotations.GenerationTime;
 
+import javax.persistence.*;
 import java.time.Instant;
 
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity
+@Table(name = "selected_item", schema = "pizza_manager")
 public class SelectedItem implements ISelectedItem {
-    private IMenuItem menuItem;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long menuItemId;
+    @OneToOne(targetEntity = MenuItem.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "menu_item_id", referencedColumnName = "id")
+    @Setter
+    private IMenuItem menuItem;
+    @Setter
     private Long orderId;
+    @Setter
     private Integer count;
+    @org.hibernate.annotations.Generated(GenerationTime.INSERT)
     private Instant createAt;
+    @Version
     private Integer version;
-
-    public SelectedItem() {
-    }
-
-    public SelectedItem(Long menuItemId, Long orderId, Integer count) {
-        this.menuItemId = menuItemId;
-        this.orderId = orderId;
-        this.count = count;
-    }
-
-    public SelectedItem(Long id, Long menuItemId, Long orderId, Integer count) {
-        this.id = id;
-        this.menuItemId = menuItemId;
-        this.orderId = orderId;
-        this.count = count;
-    }
-
-    public SelectedItem(Long id, Long menuItemId, Long orderId, Integer count, Instant createAt, Integer version) {
-        this.id = id;
-        this.menuItemId = menuItemId;
-        this.orderId = orderId;
-        this.count = count;
-        this.createAt = createAt;
-        this.version = version;
-    }
-
-    public SelectedItem(IMenuItem menuItem, Long id, Long menuItemId, Long orderId, Integer count,
-                        Instant createAt, Integer version) {
-        this.menuItem = menuItem;
-        this.id = id;
-        this.menuItemId = menuItemId;
-        this.orderId = orderId;
-        this.count = count;
-        this.createAt = createAt;
-        this.version = version;
-    }
-
-    @Override
-    public IMenuItem getItem() {
-        return menuItem;
-    }
-
-    public void setMenuItem(IMenuItem menuItem) {
-        this.menuItem = menuItem;
-    }
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Override
-    public Long getMenuItemId() {
-        return menuItemId;
-    }
-
-    public void setMenuItemId(Long menuItemId) {
-        this.menuItemId = menuItemId;
-    }
-
-    @Override
-    public Long getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
-    }
-
-    @Override
-    public Integer getCount() {
-        return count;
-    }
-
-    public void setCount(Integer count) {
-        this.count = count;
-    }
-
-    @Override
-    public Instant getCreateAt() {
-        return createAt;
-    }
-
-    public void setCreateAt(Instant createAt) {
-        this.createAt = createAt;
-    }
-
-    @Override
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
 
     @Override
     public String toString() {
         return "SelectedItem{" +
                 "menuItem=" + menuItem +
                 ", id=" + id +
-                ", menuItemId=" + menuItemId +
-                ", orderId=" + orderId +
                 ", count=" + count +
                 ", createAt=" + createAt +
                 ", version=" + version +
