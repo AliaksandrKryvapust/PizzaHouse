@@ -101,9 +101,6 @@ public class MenuItemDao implements IMenuItemDao {
             MenuItem menuItem = (MenuItem) this.getLock(id, entityTransaction);
             if (delete){
                 entityTransaction.remove(menuItem);
-//            } else {
-//                menuItem.setMenuId(null);
-//                entityTransaction.merge(menuItem);
             }
         } catch (NoContentException e) {
             throw new NoContentException(e.getMessage());
