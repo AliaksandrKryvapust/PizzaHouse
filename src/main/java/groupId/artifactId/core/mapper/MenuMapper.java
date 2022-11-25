@@ -1,6 +1,7 @@
 package groupId.artifactId.core.mapper;
 
 import groupId.artifactId.core.dto.input.MenuDtoInput;
+import groupId.artifactId.core.dto.input.MenuItemDtoInput;
 import groupId.artifactId.core.dto.output.MenuDtoOutput;
 import groupId.artifactId.core.dto.output.MenuItemDtoOutput;
 import groupId.artifactId.core.dto.output.crud.MenuDtoCrudOutput;
@@ -19,9 +20,22 @@ public class MenuMapper {
     }
 
     public IMenu inputMapping(MenuDtoInput menuDtoInput) {
-        return Menu.builder()
-                .name(menuDtoInput.getName())
-                .enable(menuDtoInput.getEnable()).build();
+        if (menuDtoInput.getItems() == null || menuDtoInput.getItems().isEmpty()) {
+            return Menu.builder()
+                    .name(menuDtoInput.getName())
+                    .enable(menuDtoInput.getEnable()).build();
+        } else {
+            List<IMenuItem> menuItems = new ArrayList<>();
+            for (MenuItemDtoInput dtoInput : menuDtoInput.getItems()) {
+                IMenuItem menuItem = menuItemMapper.inputMapping(dtoInput);
+                menuItems.add(menuItem);
+            }
+            return Menu.builder()
+                    .name(menuDtoInput.getName())
+                    .enable(menuDtoInput.getEnable())
+                    .items(menuItems).build();
+        }
+
     }
 
     public MenuDtoCrudOutput outputCrudMapping(IMenu menu) {
