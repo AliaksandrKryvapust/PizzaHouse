@@ -12,6 +12,7 @@ import groupId.artifactId.exceptions.NoContentException;
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 import java.sql.*;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,8 +21,8 @@ import static groupId.artifactId.core.Constants.SELECTED_ITEM_FK2;
 
 public class SelectedItemDao implements ISelectedItemDao {
     private final DataSource dataSource;
-    private static final String INSERT_SELECTED_ITEM_SQL = "INSERT INTO pizza_manager.selected_item (menu_item_id, order_id, count) " +
-            "VALUES (?, ?, ?);";
+    private static final String INSERT_SELECTED_ITEM_SQL = "INSERT INTO pizza_manager.selected_item (order_id, count) " +
+            "VALUES (?, ?);";
     private static final String SELECT_SELECTED_ITEM_SQL = "SELECT id, menu_item_id, order_id, count,  creation_date, version " +
             "FROM pizza_manager.selected_item ORDER BY id;";
     private static final String SELECT_SELECTED_ITEM_BY_ID_SQL = "SELECT id, menu_item_id, order_id, count," +
@@ -46,7 +47,6 @@ public class SelectedItemDao implements ISelectedItemDao {
         try (Connection con = dataSource.getConnection()) {
             try (PreparedStatement statement = con.prepareStatement(INSERT_SELECTED_ITEM_SQL, Statement.RETURN_GENERATED_KEYS)) {
                 long rows = 0;
-                statement.setLong(1, selectedItem.getMenuItemId());
                 statement.setLong(2, selectedItem.getOrderId());
                 statement.setInt(3, selectedItem.getCount());
                 rows += statement.executeUpdate();
@@ -55,8 +55,8 @@ public class SelectedItemDao implements ISelectedItemDao {
                 }
                 try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                     generatedKeys.next();
-                    return new SelectedItem(generatedKeys.getLong(1), selectedItem.getMenuItemId(),
-                            selectedItem.getOrderId(), selectedItem.getCount());
+                    return new SelectedItem(generatedKeys.getLong(1), new MenuItem(),
+                            selectedItem.getOrderId(), selectedItem.getCount(), Instant.now(), 0);
                 }
             }
         } catch (SQLException e) {
@@ -150,7 +150,7 @@ public class SelectedItemDao implements ISelectedItemDao {
     }
 
     private ISelectedItem mapper(ResultSet resultSet) throws SQLException {
-        return new SelectedItem(resultSet.getLong("id"), resultSet.getLong("menu_item_id"),
+        return new SelectedItem(resultSet.getLong("id"), new MenuItem(),
                 resultSet.getLong("order_id"), resultSet.getInt("count"),
                 resultSet.getTimestamp("creation_date").toInstant(), resultSet.getInt("version"));
     }
@@ -161,10 +161,10 @@ public class SelectedItemDao implements ISelectedItemDao {
                 resultSet.getTimestamp("picd").toInstant(), resultSet.getInt("piv"));
         IMenuItem menuItem = new MenuItem(resultSet.getLong("miid"), pizzaInfo, resultSet.getDouble("price"),
                 resultSet.getTimestamp("micd").toInstant(), resultSet.getInt("miver"));
-        ISelectedItem selectedItem = new SelectedItem(menuItem, resultSet.getLong("siid"),
-                resultSet.getLong("menu_item_id"), resultSet.getLong("order_id"), resultSet.getInt("count"),
+        ISelectedItem selectedItem = new SelectedItem(resultSet.getLong("siid"), menuItem,
+                 resultSet.getLong("order_id"), resultSet.getInt("count"),
                 resultSet.getTimestamp("sicd").toInstant(), resultSet.getInt("siiv"));
-        if (selectedItem.getItem() == null || selectedItem.getId() == null) {
+        if (selectedItem.getMenuItem() == null || selectedItem.getId() == null) {
             throw new NoContentException("There is no Selected Item with such id");
         }
         return selectedItem;
