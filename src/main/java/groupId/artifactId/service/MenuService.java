@@ -6,6 +6,7 @@ import groupId.artifactId.core.dto.output.crud.MenuDtoCrudOutput;
 import groupId.artifactId.core.mapper.MenuMapper;
 import groupId.artifactId.dao.api.IMenuDao;
 import groupId.artifactId.dao.entity.api.IMenu;
+import groupId.artifactId.dao.entity.api.IMenuItem;
 import groupId.artifactId.exceptions.DaoException;
 import groupId.artifactId.exceptions.NoContentException;
 import groupId.artifactId.exceptions.ServiceException;
@@ -36,6 +37,18 @@ public class MenuService implements IMenuService {
                 temp.add(dtoCrudOutput);
             }
             return temp;
+        } catch (DaoException e) {
+            throw new ServiceException(e.getMessage(), e);
+        } catch (Exception e) {
+            throw new ServiceException("Failed to get List of Menu`s at Service\tcause" + e.getMessage(), e);
+        }
+    }
+
+
+    @Override
+    public IMenu getRow(Long id, EntityManager entityTransaction) {
+        try {
+            return this.dao.getLock(id, entityTransaction);
         } catch (DaoException e) {
             throw new ServiceException(e.getMessage(), e);
         } catch (Exception e) {
@@ -87,6 +100,26 @@ public class MenuService implements IMenuService {
             throw new NoContentException(e.getMessage());
         } catch (Exception e) {
             throw new ServiceException("Failed to update Menu at Service " + menuDtoInput + "by id:" + id
+                    + "\tcause" + e.getMessage(), e);
+        } finally {
+            if (entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
+            }
+        }
+    }
+
+    @Override
+    public IMenu updateItem(IMenu menu, IMenuItem menuItem, EntityManager entityTransaction) {
+        try {
+            return this.dao.updateItems(menu, menuItem, entityTransaction);
+        } catch (DaoException e) {
+            throw new ServiceException(e.getMessage(), e);
+        } catch (javax.persistence.OptimisticLockException e) {
+            throw new OptimisticLockException(e.getMessage());
+        } catch (NoContentException e) {
+            throw new NoContentException(e.getMessage());
+        } catch (Exception e) {
+            throw new ServiceException("Failed to update Menu at Service " + menu + "by menuItem:" + menuItem
                     + "\tcause" + e.getMessage(), e);
         } finally {
             if (entityManager.getTransaction().isActive()) {
