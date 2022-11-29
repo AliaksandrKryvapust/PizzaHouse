@@ -345,4 +345,5 @@ class MenuItemServiceTest {
         Assertions.assertEquals(Long.valueOf(inputId), valueId.getValue());
         Assertions.assertEquals(Boolean.valueOf(delete), valueDelete.getValue());
     }
+
 }
