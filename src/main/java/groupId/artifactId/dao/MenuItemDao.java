@@ -16,6 +16,7 @@ import static groupId.artifactId.core.Constants.*;
 
 public class MenuItemDao implements IMenuItemDao {
     private static final String SELECT_MENU_ITEM = "SELECT menuItem from MenuItem menuItem ORDER BY id";
+    private static final String SELECT_MENU_ITEMS_BY_IDS = "SELECT menuItem FROM MenuItem menuItem WHERE menuItem.id IN :ids";
     private final EntityManager entityManager;
 
     public MenuItemDao(EntityManager entityManager) {
@@ -125,7 +126,8 @@ public class MenuItemDao implements IMenuItemDao {
         }
     }
 
-    private IMenuItem getLock(Long id, EntityManager entityTransaction) {
+    @Override
+    public IMenuItem getLock(Long id, EntityManager entityTransaction) {
         try {
             MenuItem menuItem = entityTransaction.find(MenuItem.class, id);
             if (menuItem == null) {
@@ -136,6 +138,23 @@ public class MenuItemDao implements IMenuItemDao {
             throw new NoContentException(e.getMessage());
         } catch (Exception e) {
             throw new DaoException("Failed to get Lock of Menu Item from Data Base by id:" + id + "cause: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<IMenuItem> getAllLock(List<Long> ids, EntityManager entityTransaction) {
+        try {
+            List<?> iMenuItems = entityTransaction.createQuery(SELECT_MENU_ITEMS_BY_IDS)
+                    .setParameter("ids", ids).getResultList();
+            List<IMenuItem> output = iMenuItems.stream().filter((i) -> i instanceof IMenuItem)
+                    .map(IMenuItem.class::cast).collect(Collectors.toList());
+            if (!output.isEmpty()) {
+                return output;
+            } else {
+                throw new IllegalStateException("Failed to get List of menu Item");
+            }
+        } catch (Exception e) {
+            throw new DaoException("Failed to get List of menu Item\tcause: " + e.getMessage(), e);
         }
     }
 }
