@@ -12,10 +12,7 @@ import java.time.Instant;
 @ToString
 public class SelectedItemDtoOutput {
     private final @NonNull MenuItemDtoOutput menuItem;
-    private final @NonNull Long id;
-    private final @NonNull Long menuItemId;
-    private final @NonNull Long orderId;
+    private final Long id;
     private final @NonNull Integer count;
-    private final @NonNull Instant createdAt;
-    private final @NonNull Integer version;
+    private final Instant createdAt;
 }
