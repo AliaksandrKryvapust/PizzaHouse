@@ -34,7 +34,6 @@ public class OrderDataDao implements IOrderDataDao {
             "si.version AS siver, price, pizza_info_id, mi.creation_date AS micd, mi.version AS miver, menu_id, name, " +
             "pi.description AS pid, size, pi.creation_date AS picd, pi.version AS piver " +
             "FROM pizza_manager.order_data INNER JOIN  pizza_manager.order_stage os on order_data.id = os.order_data_id " +
-            "INNER JOIN pizza_manager.ticket t on t.id = order_data.ticket_id INNER JOIN pizza_manager.order_table ot on ot.id = t.order_id " +
             "INNER JOIN pizza_manager.selected_item si on ot.id = si.order_id INNER JOIN pizza_manager.menu_item mi on mi.id = si.menu_item_id " +
             "INNER JOIN pizza_manager.pizza_info pi on pi.id = mi.pizza_info_id  WHERE order_data.ticket_id=? " +
             "ORDER BY id, odti, osid, tid, siid, menu_item_id, pizza_info_id;";
@@ -214,19 +213,18 @@ public class OrderDataDao implements IOrderDataDao {
                     resultSet.getTimestamp("picd").toInstant(), resultSet.getInt("piver"));
             IMenuItem menuItem = new MenuItem(resultSet.getLong("menu_item_id"), pizzaInfo, resultSet.getDouble("price"),
                     resultSet.getTimestamp("micd").toInstant(), resultSet.getInt("miver"));
-            ISelectedItem selectedItem = new SelectedItem(resultSet.getLong("siid"), menuItem,
-                     resultSet.getLong("tid"), resultSet.getInt("count"),
-                    resultSet.getTimestamp("sicd").toInstant(), resultSet.getInt("siver"));
+            ISelectedItem selectedItem = SelectedItem.builder().id(resultSet.getLong("siid")).menuItem(menuItem)
+                            .count(resultSet.getInt("count"))
+                    .createAt(resultSet.getTimestamp("sicd").toInstant()).build();
             items.add(selectedItem);
             IOrderStage orderStage = new OrderStage(resultSet.getLong("osid"), resultSet.getLong("id"),
                     resultSet.getString("osd"), resultSet.getTimestamp("oscd").toInstant(),
                     resultSet.getInt("osver"));
             stages.add(orderStage);
             if (resultSet.isLast()) {
-                order = new Order(items, resultSet.getLong("tid"), resultSet.getTimestamp("ocd").toInstant(),
-                        resultSet.getInt("over"));
-                ticket = new Ticket(order, resultSet.getLong("odti"), resultSet.getLong("tid"),
-                        resultSet.getTimestamp("tcd").toInstant(), resultSet.getInt("tver"));
+                order = new Order(resultSet.getLong("tid"), items);
+                ticket = new Ticket( resultSet.getLong("odti"), order,
+                        resultSet.getTimestamp("tcd").toInstant());
                 orderData = new OrderData(ticket, stages, resultSet.getLong("id"), resultSet.getLong("odti"),
                         resultSet.getBoolean("done"), resultSet.getTimestamp("odcd").toInstant(),
                         resultSet.getInt("ver"));

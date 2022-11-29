@@ -31,7 +31,6 @@ public class CompletedOrderDao implements ICompletedOrderDao {
             "si.version AS siver, price, pizza_info_id, mi.creation_date AS micd, mi.version AS miver, menu_id, pi.name AS pin, " +
             "pi.description AS pid, pi.size AS pis, pi.creation_date AS picd, pi.version AS piver " +
             "FROM pizza_manager.completed_order INNER JOIN  pizza_manager.pizza ON completed_order.id = pizza.completed_order_id " +
-            "INNER JOIN pizza_manager.ticket t on t.id = completed_order.ticket_id INNER JOIN pizza_manager.order_table ot on ot.id = t.order_id " +
             "INNER JOIN pizza_manager.selected_item si on ot.id = si.order_id INNER JOIN pizza_manager.menu_item mi on mi.id = si.menu_item_id " +
             "INNER JOIN pizza_manager.pizza_info pi on pi.id = mi.pizza_info_id  WHERE completed_order.ticket_id=? " +
             "ORDER BY id, pizzaid, tid, siid, menu_item_id, pizza_info_id;";
@@ -136,19 +135,18 @@ public class CompletedOrderDao implements ICompletedOrderDao {
                     resultSet.getTimestamp("picd").toInstant(), resultSet.getInt("piver"));
             IMenuItem menuItem = new MenuItem(resultSet.getLong("menu_item_id"), pizzaInfo, resultSet.getDouble("price"),
                     resultSet.getTimestamp("micd").toInstant(), resultSet.getInt("miver"));
-            ISelectedItem selectedItem = new SelectedItem( resultSet.getLong("siid"),menuItem,
-                    resultSet.getLong("tid"), resultSet.getInt("count"),
-                    resultSet.getTimestamp("sicd").toInstant(), resultSet.getInt("siver"));
+            ISelectedItem selectedItem = SelectedItem.builder().id(resultSet.getLong("siid")).menuItem(menuItem)
+                    .count(resultSet.getInt("count"))
+                    .createAt(resultSet.getTimestamp("sicd").toInstant()).build();
             items.add(selectedItem);
             IPizza pizza = new Pizza(resultSet.getLong("pizzaid"), resultSet.getLong("id"),
                     resultSet.getString("pn"), resultSet.getInt("ps"),
                     resultSet.getTimestamp("pcd").toInstant(), resultSet.getInt("pver"));
             pizzas.add(pizza);
             if (resultSet.isLast()) {
-                order = new Order(items, resultSet.getLong("tid"), resultSet.getTimestamp("ocd").toInstant(),
-                        resultSet.getInt("over"));
-                ticket = new Ticket(order, resultSet.getLong("coti"), resultSet.getLong("tid"),
-                        resultSet.getTimestamp("tcd").toInstant(), resultSet.getInt("tver"));
+                order = new Order( resultSet.getLong("tid"), items);
+                ticket = new Ticket(resultSet.getLong("coti"), order,
+                        resultSet.getTimestamp("tcd").toInstant());
                 completedOrder = new CompletedOrder(ticket, pizzas, resultSet.getLong("id"), resultSet.getLong("coti"),
                         resultSet.getTimestamp("cocd").toInstant(),
                         resultSet.getInt("ver"));
