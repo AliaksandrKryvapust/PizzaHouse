@@ -19,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Instant;
 
+import static java.util.Collections.singletonList;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,15 +34,36 @@ class SelectedItemMapperTest {
         // preconditions
         final long id = 1L;
         final int count = 5;
+        final double price = 18.0;
+        final String name = "ITALIANO PIZZA";
+        final String description = "Mozzarella cheese, basilica, ham";
+        final int size = 32;
+        final int version = 1;
+        final Instant creationDate = Instant.now();
         final SelectedItemDtoInput dtoInput = SelectedItemDtoInput.builder().menuItemId(id).count(count).build();
+        final PizzaInfo pizzaInfo = PizzaInfo.builder().id(id).name(name).description(description).size(size)
+                .creationDate(creationDate).version(version).build();
+        final MenuItem menuItem = MenuItem.builder().id(id).pizzaInfo(pizzaInfo).price(price)
+                .creationDate(creationDate).version(version).build();
 
         //test
-        ISelectedItem test = selectedItemMapper.inputMapping(dtoInput, id);
+        ISelectedItem test = selectedItemMapper.inputMapping(dtoInput, singletonList(menuItem));
 
         // assert
         Assertions.assertNotNull(test);
-//        Assertions.assertEquals(id, test.getOrderId());
+        Assertions.assertNotNull(test.getMenuItem());
+        Assertions.assertNotNull(test.getMenuItem().getPizzaInfo());
         Assertions.assertEquals(count, test.getCount());
+        Assertions.assertEquals(id, test.getMenuItem().getId());
+        Assertions.assertEquals(price, test.getMenuItem().getPrice());
+        Assertions.assertEquals(creationDate, test.getMenuItem().getCreationDate());
+        Assertions.assertEquals(version, test.getMenuItem().getVersion());
+        Assertions.assertEquals(id, test.getMenuItem().getPizzaInfo().getId());
+        Assertions.assertEquals(name, test.getMenuItem().getPizzaInfo().getName());
+        Assertions.assertEquals(description, test.getMenuItem().getPizzaInfo().getDescription());
+        Assertions.assertEquals(size, test.getMenuItem().getPizzaInfo().getSize());
+        Assertions.assertEquals(creationDate, test.getMenuItem().getPizzaInfo().getCreationDate());
+        Assertions.assertEquals(version, test.getMenuItem().getPizzaInfo().getVersion());
     }
 
     @Test
@@ -59,8 +81,8 @@ class SelectedItemMapperTest {
                 .creationDate(creationDate).version(version).build();
         final MenuItem menuItem = MenuItem.builder().id(id).pizzaInfo(pizzaInfo).price(price)
                 .creationDate(creationDate).version(version).build();
-        final ISelectedItem selectedItem = SelectedItem.builder().id(id).menuItem(menuItem).orderId(id).count(count)
-        .createAt(creationDate).version(version).build();
+        final ISelectedItem selectedItem = SelectedItem.builder().id(id).menuItem(menuItem).count(count)
+                .createAt(creationDate).build();
         final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(name).description(description)
                 .size(size).createdAt(creationDate).version(version).build();
         final MenuItemDtoOutput menuItemDtoOutput = MenuItemDtoOutput.builder().id(id).price(price)
@@ -75,11 +97,8 @@ class SelectedItemMapperTest {
         Assertions.assertNotNull(test.getMenuItem());
         Assertions.assertNotNull(test.getMenuItem().getPizzaInfo());
         Assertions.assertEquals(id, test.getId());
-        Assertions.assertEquals(id, test.getOrderId());
-        Assertions.assertEquals(id, test.getMenuItemId());
         Assertions.assertEquals(count, test.getCount());
         Assertions.assertEquals(creationDate, test.getCreatedAt());
-        Assertions.assertEquals(version, test.getVersion());
         Assertions.assertEquals(id, test.getMenuItem().getId());
         Assertions.assertEquals(price, test.getMenuItem().getPrice());
         Assertions.assertEquals(creationDate, test.getMenuItem().getCreatedAt());

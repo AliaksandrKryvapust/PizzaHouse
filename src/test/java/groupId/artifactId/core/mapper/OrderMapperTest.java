@@ -6,7 +6,6 @@ import groupId.artifactId.core.dto.output.MenuItemDtoOutput;
 import groupId.artifactId.core.dto.output.OrderDtoOutput;
 import groupId.artifactId.core.dto.output.PizzaInfoDtoOutput;
 import groupId.artifactId.core.dto.output.SelectedItemDtoOutput;
-import groupId.artifactId.core.dto.output.crud.OrderDtoCrudOutput;
 import groupId.artifactId.dao.entity.MenuItem;
 import groupId.artifactId.dao.entity.Order;
 import groupId.artifactId.dao.entity.PizzaInfo;
@@ -39,40 +38,42 @@ class OrderMapperTest {
         // preconditions
         final long id = 1L;
         final int count = 5;
+        final double price = 18.0;
+        final String name = "ITALIANO PIZZA";
+        final String description = "Mozzarella cheese, basilica, ham";
+        final int size = 32;
+        final int version = 1;
+        final Instant creationDate = Instant.now();
+        final PizzaInfo pizzaInfo = PizzaInfo.builder().id(id).name(name).description(description).size(size)
+                .creationDate(creationDate).version(version).build();
         final OrderDtoInput orderDtoInput = OrderDtoInput.builder().selectedItems(singletonList(SelectedItemDtoInput.builder()
                 .menuItemId(id).count(count).build())).build();
-        final ISelectedItem selectedItem = SelectedItem.builder().id(id).orderId(id).count(count).build();
-        Mockito.when(selectedItemMapper.inputMapping(any(SelectedItemDtoInput.class), any(Long.class))).thenReturn(selectedItem);
+        final MenuItem menuItem = MenuItem.builder().id(id).pizzaInfo(pizzaInfo).price(price)
+                .creationDate(creationDate).version(version).build();
+        final ISelectedItem selectedItem = SelectedItem.builder().id(id).count(count).menuItem(menuItem).build();
+        Mockito.when(selectedItemMapper.inputMapping(any(SelectedItemDtoInput.class), any())).thenReturn(selectedItem);
 
         //test
-        IOrder test = orderMapper.inputMapping(orderDtoInput, id);
+        IOrder test = orderMapper.inputMapping(orderDtoInput, singletonList(menuItem));
 
         // assert
         Assertions.assertNotNull(test);
         Assertions.assertNotNull(test.getSelectedItems());
-        Assertions.assertEquals(id, test.getId());
         for (ISelectedItem item : test.getSelectedItems()) {
-            Assertions.assertEquals(id, item.getOrderId());
+            Assertions.assertNotNull(item.getMenuItem());
+            Assertions.assertNotNull(item.getMenuItem().getPizzaInfo());
             Assertions.assertEquals(count, item.getCount());
+            Assertions.assertEquals(id, item.getMenuItem().getId());
+            Assertions.assertEquals(price, item.getMenuItem().getPrice());
+            Assertions.assertEquals(creationDate, item.getMenuItem().getCreationDate());
+            Assertions.assertEquals(version, item.getMenuItem().getVersion());
+            Assertions.assertEquals(id, item.getMenuItem().getPizzaInfo().getId());
+            Assertions.assertEquals(name, item.getMenuItem().getPizzaInfo().getName());
+            Assertions.assertEquals(description, item.getMenuItem().getPizzaInfo().getDescription());
+            Assertions.assertEquals(size, item.getMenuItem().getPizzaInfo().getSize());
+            Assertions.assertEquals(creationDate, item.getMenuItem().getPizzaInfo().getCreationDate());
+            Assertions.assertEquals(version, item.getMenuItem().getPizzaInfo().getVersion());
         }
-    }
-
-    @Test
-    void outputCrudMapping() {
-        // preconditions
-        final long id = 1L;
-        final int version = 1;
-        final Instant creationDate = Instant.now();
-        final IOrder order = new Order(id, creationDate, version);
-
-        //test
-        OrderDtoCrudOutput test = orderMapper.outputCrudMapping(order);
-
-        // assert
-        Assertions.assertNotNull(test);
-        Assertions.assertEquals(id, test.getId());
-        Assertions.assertEquals(creationDate, test.getCreatedAt());
-        Assertions.assertEquals(version, test.getVersion());
     }
 
     @Test
@@ -90,15 +91,15 @@ class OrderMapperTest {
                 .creationDate(creationDate).version(version).build();
         final MenuItem menuItem = MenuItem.builder().id(id).pizzaInfo(pizzaInfo).price(price)
                 .creationDate(creationDate).version(version).build();
-        List<ISelectedItem> selectedItems = singletonList(SelectedItem.builder().id(id).menuItem(menuItem).orderId(id).count(count)
-                .createAt(creationDate).version(version).build());
+        List<ISelectedItem> selectedItems = singletonList(SelectedItem.builder().id(id).menuItem(menuItem).count(count)
+                .createAt(creationDate).build());
         final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(name).description(description)
                 .size(size).createdAt(creationDate).version(version).build();
         final MenuItemDtoOutput menuItemDtoOutput = MenuItemDtoOutput.builder().id(id).price(price)
                 .createdAt(creationDate).version(version).pizzaInfo(pizzaInfoDtoOutput).build();
         SelectedItemDtoOutput outputs = SelectedItemDtoOutput.builder().menuItem(menuItemDtoOutput)
-                .id(id).menuItemId(id).orderId(id).count(count).createdAt(creationDate).version(version).build();
-        final IOrder order = new Order(selectedItems, id, creationDate, version);
+                .id(id).count(count).createdAt(creationDate).build();
+        final IOrder order = new Order(id, selectedItems);
         Mockito.when(selectedItemMapper.outputMapping(any(ISelectedItem.class))).thenReturn(outputs);
 
         //test
@@ -108,17 +109,12 @@ class OrderMapperTest {
         Assertions.assertNotNull(test);
         Assertions.assertNotNull(test.getSelectedItems());
         Assertions.assertEquals(id, test.getId());
-        Assertions.assertEquals(creationDate, test.getCreatedAt());
-        Assertions.assertEquals(version, test.getVersion());
         for (SelectedItemDtoOutput output : test.getSelectedItems()) {
             Assertions.assertNotNull(output.getMenuItem());
             Assertions.assertNotNull(output.getMenuItem().getPizzaInfo());
             Assertions.assertEquals(id, output.getId());
-            Assertions.assertEquals(id, output.getOrderId());
-            Assertions.assertEquals(id, output.getMenuItemId());
             Assertions.assertEquals(count, output.getCount());
             Assertions.assertEquals(creationDate, output.getCreatedAt());
-            Assertions.assertEquals(version, output.getVersion());
             Assertions.assertEquals(id, output.getMenuItem().getId());
             Assertions.assertEquals(price, output.getMenuItem().getPrice());
             Assertions.assertEquals(creationDate, output.getMenuItem().getCreatedAt());

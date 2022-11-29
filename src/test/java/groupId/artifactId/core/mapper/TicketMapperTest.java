@@ -31,9 +31,9 @@ class TicketMapperTest {
     void outputCrudMapping() {
         // preconditions
         final long id = 1L;
-        final int version = 1;
         final Instant creationDate = Instant.now();
-        final ITicket ticket = new Ticket(id, id, creationDate, version);
+        final Order order = new Order(id, singletonList(new SelectedItem()));
+        final ITicket ticket = new Ticket(id, order, creationDate);
 
         //test
         TicketDtoCrudOutput test = ticketMapper.outputCrudMapping(ticket);
@@ -43,14 +43,12 @@ class TicketMapperTest {
         Assertions.assertEquals(id, test.getId());
         Assertions.assertEquals(id, test.getOrderId());
         Assertions.assertEquals(creationDate, test.getCreateAt());
-        Assertions.assertEquals(version, test.getVersion());
     }
 
     @Test
     void outputMapping() {
         // preconditions
         final long id = 1L;
-        final long orderId = 1L;
         final int version = 1;
         final int count = 10;
         final double price = 18.0;
@@ -62,16 +60,17 @@ class TicketMapperTest {
                 .creationDate(creationDate).version(version).build();
         final MenuItem menuItem = MenuItem.builder().id(id).pizzaInfo(pizzaInfo).price(price)
                 .creationDate(creationDate).version(version).build();
-        List<ISelectedItem> selectedItems = singletonList(SelectedItem.builder().id(id).menuItem(menuItem).orderId(id).count(count)
-                .createAt(creationDate).version(version).build());
+        List<ISelectedItem> selectedItems = singletonList(SelectedItem.builder().id(id).menuItem(menuItem).count(count)
+                .createAt(creationDate).build());
         final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(name).description(description)
                 .size(size).createdAt(creationDate).version(version).build();
         final MenuItemDtoOutput menuItemDtoOutput = MenuItemDtoOutput.builder().id(id).price(price)
                 .createdAt(creationDate).version(version).pizzaInfo(pizzaInfoDtoOutput).build();
         List<SelectedItemDtoOutput> outputs = singletonList(SelectedItemDtoOutput.builder().menuItem(menuItemDtoOutput)
-                .id(id).menuItemId(id).orderId(id).count(count).createdAt(creationDate).version(version).build());
-        final ITicket ticket = new Ticket(new Order(selectedItems, id, creationDate, version), id, orderId, creationDate, version);
-        final OrderDtoOutput dtoOutput = new OrderDtoOutput(outputs, id, creationDate, version);
+                .id(id).count(count).createdAt(creationDate).build());
+        final Order order = new Order(id, selectedItems);
+        final ITicket ticket = new Ticket(id, order, creationDate);
+        final OrderDtoOutput dtoOutput = new OrderDtoOutput(outputs, id);
         Mockito.when(orderMapper.outputMapping(any(IOrder.class))).thenReturn(dtoOutput);
 
         //test
@@ -82,21 +81,14 @@ class TicketMapperTest {
         Assertions.assertNotNull(test.getOrder());
         Assertions.assertNotNull(test.getOrder().getSelectedItems());
         Assertions.assertEquals(id, test.getId());
-        Assertions.assertEquals(orderId, test.getOrderId());
         Assertions.assertEquals(creationDate, test.getCreatedAt());
-        Assertions.assertEquals(version, test.getVersion());
         Assertions.assertEquals(id, test.getOrder().getId());
-        Assertions.assertEquals(creationDate, test.getOrder().getCreatedAt());
-        Assertions.assertEquals(version, test.getOrder().getVersion());
         for (SelectedItemDtoOutput output : test.getOrder().getSelectedItems()) {
             Assertions.assertNotNull(output.getMenuItem());
             Assertions.assertNotNull(output.getMenuItem().getPizzaInfo());
             Assertions.assertEquals(id, output.getId());
-            Assertions.assertEquals(id, output.getOrderId());
-            Assertions.assertEquals(id, output.getMenuItemId());
             Assertions.assertEquals(count, output.getCount());
             Assertions.assertEquals(creationDate, output.getCreatedAt());
-            Assertions.assertEquals(version, output.getVersion());
             Assertions.assertEquals(id, output.getMenuItem().getId());
             Assertions.assertEquals(price, output.getMenuItem().getPrice());
             Assertions.assertEquals(creationDate, output.getMenuItem().getCreatedAt());
