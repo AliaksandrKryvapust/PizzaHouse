@@ -13,7 +13,5 @@ import java.time.Instant;
 public class TicketDtoOutput {
     private final @NonNull OrderDtoOutput order;
     private final @NonNull Long id;
-    private final @NonNull Long orderId;
     private final @NonNull Instant createdAt;
-    private final @NonNull Integer version;
 }
