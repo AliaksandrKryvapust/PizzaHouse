@@ -90,29 +90,4 @@ public class ApiOrderServlet extends HttpServlet {
                     "\tresponse status: " + resp.getStatus());
         }
     }
-
-    //DELETE POSITION
-    //need param id  (id = 1)
-    //param delete - true/false completely delete (delete=false)
-    @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
-        try {
-            String id = req.getParameter(Constants.PARAMETER_ID);
-            String delete = req.getParameter(Constants.PARAMETER_DELETE);
-            if (id != null && delete != null) {
-                if (orderService.isTicketIdValid(Long.valueOf(id))) {
-                    orderService.delete(id, delete);
-                    resp.setStatus(HttpServletResponse.SC_OK);
-                } else {
-                    resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
-                }
-            } else {
-                resp.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
-            }
-        } catch (Exception e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            logger.error("/api/order crashed during doDelete method" + e.getMessage() + "\t" + e.getCause() +
-                    "\tresponse status: " + resp.getStatus());
-        }
-    }
 }
