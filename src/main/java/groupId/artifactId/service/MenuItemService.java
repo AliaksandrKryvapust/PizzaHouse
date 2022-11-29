@@ -94,6 +94,19 @@ public class MenuItemService implements IMenuItemService {
     }
 
     @Override
+    public List<IMenuItem> getRow(List<Long> ids, EntityManager entityTransaction) {
+        try {
+            return this.menuItemDao.getAllLock(ids, entityTransaction);
+        } catch (DaoException e) {
+            throw new ServiceException(e.getMessage(), e);
+        } catch (NoContentException e) {
+            throw new NoContentException(e.getMessage());
+        } catch (Exception e) {
+            throw new ServiceException("Failed to get Menu Item at Service by id" + "\tcause" + e.getMessage(), e);
+        }
+    }
+
+    @Override
     public MenuItemDtoOutput update(MenuItemDtoInput menuItemDtoInput, String id, String version) {
         try {
             entityManager.getTransaction().begin();
