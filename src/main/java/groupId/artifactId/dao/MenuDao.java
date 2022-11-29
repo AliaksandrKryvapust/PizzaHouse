@@ -9,7 +9,6 @@ import groupId.artifactId.exceptions.NoContentException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
