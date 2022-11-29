@@ -23,7 +23,6 @@ class MenuItemValidatorTest {
     @Test()
     void validatePreconditionOne() {
         // preconditions
-        final long id = 1L;
         final double price = -20.0;
         final String pizzaName = "ITALIANO PIZZA";
         final String description = "Mozzarella cheese, basilica, ham";

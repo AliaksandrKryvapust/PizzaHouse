@@ -9,6 +9,7 @@ import groupId.artifactId.dao.entity.*;
 import groupId.artifactId.dao.entity.api.ICompletedOrder;
 import groupId.artifactId.dao.entity.api.IPizza;
 import groupId.artifactId.dao.entity.api.ISelectedItem;
+import groupId.artifactId.dao.entity.api.ITicket;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,7 +41,6 @@ class CompletedOrderServiceTest {
     void getAllData() {
         // preconditions
         final long id = 1L;
-        final long orderId = 1L;
         final int version = 1;
         final int count = 10;
         final double price = 18.0;
@@ -52,22 +52,23 @@ class CompletedOrderServiceTest {
                 .creationDate(creationDate).version(version).build();
         final MenuItem menuItem = MenuItem.builder().id(id).pizzaInfo(pizzaInfo).price(price)
                 .creationDate(creationDate).version(version).build();
-        List<ISelectedItem> selectedItems = Collections.singletonList(SelectedItem.builder().id(id).menuItem(menuItem).orderId(id).count(count)
-                .createAt(creationDate).version(version).build());
+        List<ISelectedItem> selectedItems = Collections.singletonList(SelectedItem.builder().id(id).menuItem(menuItem)
+                .count(count).createAt(creationDate).build());
         final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(name).description(description)
                 .size(size).createdAt(creationDate).version(version).build();
-        final MenuItemDtoOutput menuItemDtoOutput = MenuItemDtoOutput.builder().id (id).price(price)
+        final MenuItemDtoOutput menuItemDtoOutput = MenuItemDtoOutput.builder().id(id).price(price)
                 .createdAt(creationDate).version(version).pizzaInfo(pizzaInfoDtoOutput).build();
         List<SelectedItemDtoOutput> outputs = singletonList(SelectedItemDtoOutput.builder().menuItem(menuItemDtoOutput)
-                .id(id).menuItemId(id).orderId(id).count(count).createdAt(creationDate).version(version).build());
+                .id(id).count(count).createdAt(creationDate).build());
         List<IPizza> pizzas = Collections.singletonList(new Pizza(id, id, name, size, creationDate, version));
         List<PizzaDtoOutput> pizzaDtoOutputs = Collections.singletonList(PizzaDtoOutput.builder().id(id)
                 .completedOrderId(id).name(name).size(size).createdAt(creationDate).version(version).build());
-        final ICompletedOrder completedOrder = new CompletedOrder(new Ticket(new Order(selectedItems, id, creationDate, version), id,
-                orderId, creationDate, version), pizzas, id, id, creationDate, version);
-        final OrderDtoOutput orderDtoOutput = new OrderDtoOutput(outputs, id, creationDate, version);
-        final TicketDtoOutput ticketDtoOutput = TicketDtoOutput.builder().order(orderDtoOutput).id(id).orderId(orderId)
-                .createdAt(creationDate).version(version).build();
+        final Order order = new Order(id, selectedItems);
+        final ITicket ticket = new Ticket(id, order, creationDate);
+        final ICompletedOrder completedOrder = new CompletedOrder(ticket, pizzas, id, id, creationDate, version);
+        final OrderDtoOutput orderDtoOutput = new OrderDtoOutput(outputs, id);
+        final TicketDtoOutput ticketDtoOutput = TicketDtoOutput.builder().order(orderDtoOutput).id(id)
+                .createdAt(creationDate).build();
         final CompletedOrderDtoOutput dtoOutput = CompletedOrderDtoOutput.builder().ticket(ticketDtoOutput)
                 .items(pizzaDtoOutputs).id(id).ticketId(id).createdAt(creationDate).version(version).build();
         Mockito.when(completedOrderDao.getAllData(id)).thenReturn(completedOrder);
@@ -87,21 +88,14 @@ class CompletedOrderServiceTest {
         Assertions.assertEquals(creationDate, test.getCreatedAt());
         Assertions.assertEquals(version, test.getVersion());
         Assertions.assertEquals(id, test.getTicket().getId());
-        Assertions.assertEquals(orderId, test.getTicket().getOrderId());
         Assertions.assertEquals(creationDate, test.getTicket().getCreatedAt());
-        Assertions.assertEquals(version, test.getTicket().getVersion());
         Assertions.assertEquals(id, test.getTicket().getOrder().getId());
-        Assertions.assertEquals(creationDate, test.getTicket().getOrder().getCreatedAt());
-        Assertions.assertEquals(version, test.getTicket().getOrder().getVersion());
         for (SelectedItemDtoOutput output : test.getTicket().getOrder().getSelectedItems()) {
             Assertions.assertNotNull(output.getMenuItem());
             Assertions.assertNotNull(output.getMenuItem().getPizzaInfo());
             Assertions.assertEquals(id, output.getId());
-            Assertions.assertEquals(id, output.getOrderId());
-            Assertions.assertEquals(id, output.getMenuItemId());
             Assertions.assertEquals(count, output.getCount());
             Assertions.assertEquals(creationDate, output.getCreatedAt());
-            Assertions.assertEquals(version, output.getVersion());
             Assertions.assertEquals(id, output.getMenuItem().getId());
             Assertions.assertEquals(price, output.getMenuItem().getPrice());
             Assertions.assertEquals(creationDate, output.getMenuItem().getCreatedAt());
@@ -127,7 +121,6 @@ class CompletedOrderServiceTest {
     void getAllDataRow() {
         // preconditions
         final long id = 1L;
-        final long orderId = 1L;
         final int version = 1;
         final int count = 10;
         final double price = 18.0;
@@ -139,11 +132,12 @@ class CompletedOrderServiceTest {
                 .creationDate(creationDate).version(version).build();
         final MenuItem menuItem = MenuItem.builder().id(id).pizzaInfo(pizzaInfo).price(price)
                 .creationDate(creationDate).version(version).build();
-        List<ISelectedItem> selectedItems = singletonList(SelectedItem.builder().id(id).menuItem(menuItem).orderId(id).count(count)
-                .createAt(creationDate).version(version).build());
+        List<ISelectedItem> selectedItems = singletonList(SelectedItem.builder().id(id).menuItem(menuItem).count(count)
+                .createAt(creationDate).build());
         List<IPizza> pizzas = singletonList(new Pizza(id, id, name, size, creationDate, version));
-        final ICompletedOrder completedOrder = new CompletedOrder(new Ticket(new Order(selectedItems, id, creationDate, version), id,
-                orderId, creationDate, version), pizzas, id, id, creationDate, version);
+        final Order order = new Order(id, selectedItems);
+        final ITicket ticket = new Ticket(id, order, creationDate);
+        final ICompletedOrder completedOrder = new CompletedOrder(ticket, pizzas, id, id, creationDate, version);
         Mockito.when(completedOrderDao.getAllData(id)).thenReturn(completedOrder);
 
         //test
@@ -160,20 +154,14 @@ class CompletedOrderServiceTest {
         Assertions.assertEquals(creationDate, test.getCreationDate());
         Assertions.assertEquals(version, test.getVersion());
         Assertions.assertEquals(id, test.getTicket().getId());
-        Assertions.assertEquals(orderId, test.getTicket().getOrderId());
         Assertions.assertEquals(creationDate, test.getTicket().getCreateAt());
-        Assertions.assertEquals(version, test.getTicket().getVersion());
         Assertions.assertEquals(id, test.getTicket().getOrder().getId());
-        Assertions.assertEquals(creationDate, test.getTicket().getOrder().getCreationDate());
-        Assertions.assertEquals(version, test.getTicket().getOrder().getVersion());
         for (ISelectedItem output : test.getTicket().getOrder().getSelectedItems()) {
             Assertions.assertNotNull(output.getMenuItem());
             Assertions.assertNotNull(output.getMenuItem().getPizzaInfo());
             Assertions.assertEquals(id, output.getId());
-            Assertions.assertEquals(id, output.getOrderId());
             Assertions.assertEquals(count, output.getCount());
             Assertions.assertEquals(creationDate, output.getCreateAt());
-            Assertions.assertEquals(version, output.getVersion());
             Assertions.assertEquals(id, output.getMenuItem().getId());
             Assertions.assertEquals(price, output.getMenuItem().getPrice());
             Assertions.assertEquals(creationDate, output.getMenuItem().getCreationDate());
