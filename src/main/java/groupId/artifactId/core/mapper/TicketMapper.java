@@ -15,9 +15,9 @@ public class TicketMapper {
     public TicketDtoCrudOutput outputCrudMapping(ITicket ticket) {
         return TicketDtoCrudOutput.builder()
                 .id(ticket.getId())
-                .orderId(ticket.getOrderId())
+                .orderId(ticket.getOrder().getId())
                 .createAt(ticket.getCreateAt())
-                .version(ticket.getVersion()).build();
+                .build();
     }
 
     public TicketDtoOutput outputMapping(ITicket ticket) {
@@ -25,8 +25,7 @@ public class TicketMapper {
         return TicketDtoOutput.builder()
                 .order(orderDtoOutput)
                 .id(ticket.getId())
-                .orderId(ticket.getOrderId())
                 .createdAt(ticket.getCreateAt())
-                .version(ticket.getVersion()).build();
+                .build();
     }
 }

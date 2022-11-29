@@ -4,7 +4,10 @@ import groupId.artifactId.core.dto.input.SelectedItemDtoInput;
 import groupId.artifactId.core.dto.output.MenuItemDtoOutput;
 import groupId.artifactId.core.dto.output.SelectedItemDtoOutput;
 import groupId.artifactId.dao.entity.SelectedItem;
+import groupId.artifactId.dao.entity.api.IMenuItem;
 import groupId.artifactId.dao.entity.api.ISelectedItem;
+
+import java.util.List;
 
 public class SelectedItemMapper {
     private final MenuItemMapper menuItemMapper;
@@ -13,8 +16,10 @@ public class SelectedItemMapper {
         this.menuItemMapper = menuItemMapper;
     }
 
-    public ISelectedItem inputMapping(SelectedItemDtoInput input, Long orderId) {
-        return SelectedItem.builder().count(input.getCount()).build();
+    public ISelectedItem inputMapping(SelectedItemDtoInput input, List<IMenuItem> menuItems) {
+        return SelectedItem.builder()
+                .menuItem(menuItems.stream().filter((i) -> i.getId().equals(input.getMenuItemId())).findFirst().orElse(null))
+                .count(input.getCount()).build();
     }
 
     public SelectedItemDtoOutput outputMapping(ISelectedItem item) {
@@ -22,11 +27,9 @@ public class SelectedItemMapper {
         return SelectedItemDtoOutput.builder()
                 .menuItem(menuItem)
                 .id(item.getId())
-                .menuItemId(item.getMenuItem().getId())
-                .orderId(item.getOrderId())
                 .count(item.getCount())
                 .createdAt(item.getCreateAt())
-                .version(item.getVersion()).build();
+                .build();
 
     }
 }
