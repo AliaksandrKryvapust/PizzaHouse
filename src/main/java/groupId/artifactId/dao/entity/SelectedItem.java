@@ -23,13 +23,10 @@ public class SelectedItem implements ISelectedItem {
     @Setter
     private IMenuItem menuItem;
     @Setter
-    private Long orderId;
-    @Setter
     private Integer count;
+
     @org.hibernate.annotations.Generated(GenerationTime.INSERT)
     private Instant createAt;
-    @Version
-    private Integer version;
 
     @Override
     public String toString() {
@@ -38,7 +35,6 @@ public class SelectedItem implements ISelectedItem {
                 ", id=" + id +
                 ", count=" + count +
                 ", createAt=" + createAt +
-                ", version=" + version +
                 '}';
     }
 }
