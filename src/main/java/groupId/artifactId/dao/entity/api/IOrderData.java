@@ -4,17 +4,9 @@ import java.time.Instant;
 import java.util.List;
 
 public interface IOrderData {
-    ITicket getTicket();
-
-    List<IOrderStage> getOrderHistory();
-
     Long getId();
-
-    Long getTicketId();
-
-    Boolean isDone();
-
+    ITicket getTicket();
+    List<IOrderStage> getOrderHistory();
+    Boolean getDone();
     Instant getCreationDate();
-
-    Integer getVersion();
 }
