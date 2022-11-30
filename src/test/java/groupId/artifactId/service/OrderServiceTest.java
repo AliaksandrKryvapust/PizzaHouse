@@ -142,11 +142,7 @@ class OrderServiceTest {
         Mockito.when(entityManager.getTransaction()).thenReturn(transaction);
         Mockito.when(menuItemService.getRow(ids, entityManager)).thenReturn(singletonList(menuItem));
         Mockito.when(selectedItemMapper.inputMapping(any(SelectedItemDtoInput.class), any())).thenReturn(selectedItems.get(0));
-        Mockito.when(ticketDao.saveItems(any(List.class), any(EntityManager.class))).thenReturn(selectedItems);
         Mockito.when(ticketDao.save(any(ITicket.class), any(EntityManager.class))).thenReturn(ticket);
-        Mockito.when(ticketDao.update(any(IOrder.class), any(List.class) ,any(EntityManager.class))).thenReturn(order);
-
-
 //        Mockito.when(orderDataService.save(any(OrderDataDtoInput.class))).thenReturn(dtoCrudOutput);
 //        ArgumentCaptor<OrderDataDtoInput> value = ArgumentCaptor.forClass(OrderDataDtoInput.class);
         Mockito.when(ticketMapper.outputCrudMapping(any(ITicket.class))).thenReturn(crudOutput);
