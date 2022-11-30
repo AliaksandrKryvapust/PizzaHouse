@@ -18,7 +18,7 @@ public class Ticket implements ITicket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToOne(targetEntity = Order.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(targetEntity = Order.class, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     @Setter
     private IOrder order;
