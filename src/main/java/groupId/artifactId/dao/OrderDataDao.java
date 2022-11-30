@@ -1,239 +1,90 @@
 package groupId.artifactId.dao;
 
 import groupId.artifactId.dao.api.IOrderDataDao;
-import groupId.artifactId.dao.entity.*;
-import groupId.artifactId.dao.entity.api.*;
+import groupId.artifactId.dao.entity.api.IOrderData;
 import groupId.artifactId.exceptions.DaoException;
 import groupId.artifactId.exceptions.NoContentException;
-import groupId.artifactId.exceptions.OptimisticLockException;
 
 import javax.persistence.EntityManager;
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static groupId.artifactId.core.Constants.ORDER_DATA_FK;
-import static java.sql.Statement.RETURN_GENERATED_KEYS;
+import static groupId.artifactId.core.Constants.*;
 
 public class OrderDataDao implements IOrderDataDao {
-    private static final String INSERT_ORDER_DATA_SQL = "INSERT INTO pizza_manager.order_data (ticket_id,done)\n VALUES (?, ?)";
-    private static final String SELECT_ORDER_DATA_SQL = "SELECT id, ticket_id, done, creation_date, version " +
-            "FROM pizza_manager.order_data ORDER BY id;";
-    private static final String SELECT_ORDER_DATA_BY_ID_SQL = "SELECT id, ticket_id, done, creation_date, version " +
-            "FROM pizza_manager.order_data WHERE id=?;";
-    private static final String SELECT_ORDER_DATA_BY_TICKET_ID_SQL = "SELECT id, ticket_id, done, creation_date, version " +
-            "FROM pizza_manager.order_data WHERE ticket_id=?;";
-    private static final String SELECT_ORDER_DATA_ALL_DATA_SQL = "SELECT order_data.id AS id, order_data.ticket_id AS odti, " +
-            "done, order_data.creation_date AS odcd , order_data.version AS ver, os.id AS osid, os.description AS osd, " +
-            "os.creation_date AS oscd, os.version AS osver, t.order_id AS tid, t.creation_date AS tcd, t.version AS tver, " +
-            "ot.creation_date AS ocd, ot.version AS over, si.id AS siid, menu_item_id, count, si.creation_date AS sicd, " +
-            "si.version AS siver, price, pizza_info_id, mi.creation_date AS micd, mi.version AS miver, menu_id, name, " +
-            "pi.description AS pid, size, pi.creation_date AS picd, pi.version AS piver " +
-            "FROM pizza_manager.order_data INNER JOIN  pizza_manager.order_stage os on order_data.id = os.order_data_id " +
-            "INNER JOIN pizza_manager.selected_item si on ot.id = si.order_id INNER JOIN pizza_manager.menu_item mi on mi.id = si.menu_item_id " +
-            "INNER JOIN pizza_manager.pizza_info pi on pi.id = mi.pizza_info_id  WHERE order_data.ticket_id=? " +
-            "ORDER BY id, odti, osid, tid, siid, menu_item_id, pizza_info_id;";
-    private static final String UPDATE_ORDER_DATA_SQL = "UPDATE pizza_manager.order_data SET version=version+1, done=? " +
-            "WHERE id=? AND version=?";
-    private final DataSource dataSource;
+    private static final String SELECT_ORDER_DATA = "SELECT data from OrderData data ORDER BY data.id";
+    private static final String SELECT_ORDER_DATA_BY_TICKET = "SELECT data from OrderData data WHERE ticket.id=:id ORDER BY data.id";
+    private final EntityManager entityManager;
 
-    public OrderDataDao(DataSource dataSource) {
-        this.dataSource = dataSource;
+    public OrderDataDao(EntityManager entityManager) {
+        this.entityManager = entityManager;
     }
 
     @Override
     public IOrderData save(IOrderData orderData, EntityManager entityTransaction) {
-        if (orderData.getId() != null || orderData.getVersion() != null) {
-            throw new IllegalStateException("OrderData id & version should be empty");
+        if (orderData.getId() != null) {
+            throw new IllegalStateException("Order data id should be empty");
         }
-        try (Connection con = dataSource.getConnection()) {
-            try (PreparedStatement statement = con.prepareStatement(INSERT_ORDER_DATA_SQL, RETURN_GENERATED_KEYS)) {
-                long rows = 0;
-                statement.setLong(1, orderData.getTicketId());
-                statement.setBoolean(2, orderData.isDone());
-                rows += statement.executeUpdate();
-                if (rows > 1) {
-                    throw new IllegalStateException("Incorrect order data table update, more than 1 row affected");
-                }
-                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                    generatedKeys.next();
-                    return new OrderData(generatedKeys.getLong(1), orderData.getTicketId(), orderData.isDone());
-                }
-            }
-        } catch (SQLException e) {
-            if (e.getMessage().contains(ORDER_DATA_FK)) {
-                throw new NoContentException("order data table insert failed, check preconditions and FK values: "
+        try {
+            entityTransaction.persist(orderData);
+            return orderData;
+        } catch (Exception e) {
+            if (e.getMessage().contains(ORDER_STAGE_UK) || e.getMessage().contains(ORDER_DATA_FK) ||
+                    e.getMessage().contains(ORDER_STAGE_FK)) {
+                throw new NoContentException("order data table insert failed,  check preconditions and FK values: "
                         + orderData);
             } else {
-                throw new DaoException("Failed to save new Order data" + orderData, e);
+                throw new DaoException("Failed to save new Order data" + orderData + "\t cause" + e.getMessage(), e);
             }
         }
     }
 
     @Override
     public List<IOrderData> get() {
-        try (Connection con = dataSource.getConnection()) {
-            List<IOrderData> orderData = new ArrayList<>();
-            try (PreparedStatement statement = con.prepareStatement(SELECT_ORDER_DATA_SQL)) {
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        orderData.add(this.mapper(resultSet));
-                    }
-                }
+        try {
+            List<?> iOrderData = entityManager.createQuery(SELECT_ORDER_DATA).getResultList();
+            List<IOrderData> output = iOrderData.stream().filter((i) -> i instanceof IOrderData)
+                    .map(IOrderData.class::cast).collect(Collectors.toList());
+            if (!output.isEmpty()) {
+                return output;
+            } else {
+                throw new IllegalStateException("Failed to get List of order data");
             }
-            return orderData;
         } catch (Exception e) {
-            throw new DaoException("Failed to get List of Order Data", e);
+            throw new DaoException("Failed to get List of order data\tcause: " + e.getMessage(), e);
         }
     }
 
     @Override
     public IOrderData get(Long id) {
-        try (Connection con = dataSource.getConnection()) {
-            try (PreparedStatement statement = con.prepareStatement(SELECT_ORDER_DATA_BY_ID_SQL)) {
-                statement.setLong(1, id);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    resultSet.next();
-                    if (!resultSet.isLast()) {
-                        throw new NoContentException("There is no Order Data with id:" + id);
-                    }
-                    return this.mapper(resultSet);
-                }
+        try {
+            IOrderData orderData = (IOrderData) entityManager.createQuery(SELECT_ORDER_DATA_BY_TICKET).setParameter("id", id)
+                    .getResultList();
+            if (orderData == null) {
+                throw new NoContentException("There is no Order data by ticket id:" + id);
             }
-        } catch (SQLException e) {
-            throw new DaoException("Failed to get Order Data by id:" + id, e);
-        }
-    }
-
-    @Override
-    public IOrderData update(IOrderData orderData, Long id, Integer version, EntityManager entityTransaction) {
-        if (orderData.getId() != null || orderData.getVersion() != null) {
-            throw new IllegalStateException("Order Data id & version should be empty");
-        }
-        try (Connection con = dataSource.getConnection()) {
-            try (PreparedStatement statement = con.prepareStatement(UPDATE_ORDER_DATA_SQL)) {
-                long rows = 0;
-                statement.setBoolean(1, orderData.isDone());
-                statement.setLong(2, id);
-                statement.setInt(3, version);
-                rows += statement.executeUpdate();
-                if (rows == 0) {
-                    throw new OptimisticLockException("order data table update failed, version does not match update denied");
-                }
-                if (rows > 1) {
-                    throw new IllegalStateException("Incorrect order data table update, more than 1 row affected");
-                }
-                return new OrderData(id, orderData.getTicketId(), orderData.isDone());
-            }
-        } catch (SQLException e) {
-            throw new DaoException("Failed to update Order data" + orderData + " with id:" + id, e);
-        }
-    }
-
-    @Override
-    public IOrderData getAllData(Long id) {
-        try (Connection con = dataSource.getConnection()) {
-            try (PreparedStatement statement = con.prepareStatement(SELECT_ORDER_DATA_ALL_DATA_SQL)) {
-                statement.setLong(1, id);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    return this.allDataMapper(resultSet);
-                }
-            }
-        } catch (SQLException e) {
-            throw new DaoException("Failed to get Order Stage by Ticket id:" + id, e);
-        }
-    }
-
-    @Override
-    public IOrderData getDataByTicket(Long id) {
-        try (Connection con = dataSource.getConnection()) {
-            try (PreparedStatement statement = con.prepareStatement(SELECT_ORDER_DATA_BY_TICKET_ID_SQL)) {
-                statement.setLong(1, id);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    resultSet.next();
-                    if (!resultSet.isLast()) {
-                        throw new NoContentException("There is no Order Data with ticket id:" + id);
-                    }
-                    return this.mapper(resultSet);
-                }
-            }
-        } catch (SQLException e) {
-            throw new DaoException("Failed to get Order Data by ticket id:" + id, e);
-        }
-    }
-
-    @Override
-    public Boolean exist(Long id) {
-        try (Connection con = dataSource.getConnection()) {
-            try (PreparedStatement statement = con.prepareStatement(SELECT_ORDER_DATA_BY_ID_SQL)) {
-                statement.setLong(1, id);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    return resultSet.next();
-                }
-            }
+            return orderData;
+        } catch (NoContentException e) {
+            throw new NoContentException(e.getMessage());
         } catch (Exception e) {
-            throw new DaoException("Failed to select Order Data with id:" + id, e);
+            throw new DaoException("Failed to get Ticket from Data Base by id:" + id + "cause: " + e.getMessage(), e);
         }
     }
 
     @Override
-    public Boolean doesTicketExist(Long id) {
-        try (Connection con = dataSource.getConnection()) {
-            try (PreparedStatement statement = con.prepareStatement(SELECT_ORDER_DATA_BY_TICKET_ID_SQL)) {
-                statement.setLong(1, id);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    return resultSet.next();
-                }
-            }
-        } catch (SQLException e) {
-            throw new DaoException("Failed to select Order Data with ticket id:" + id, e);
-        }
-    }
-
-    private IOrderData mapper(ResultSet resultSet) throws SQLException {
-        List<IOrderStage> stages = new ArrayList<>();
-        return new OrderData(new Ticket(), stages, resultSet.getLong("id"), resultSet.getLong("ticket_id"),
-                resultSet.getBoolean("done"), resultSet.getTimestamp("creation_date").toInstant(),
-                resultSet.getInt("version"));
-    }
-
-    private IOrderData allDataMapper(ResultSet resultSet) throws SQLException {
-        List<IOrderStage> stages = new ArrayList<>();
-        List<ISelectedItem> items = new ArrayList<>();
-        IOrder order;
-        ITicket ticket;
-        IOrderData orderData = new OrderData();
-        while (resultSet.next()) {
-            PizzaInfo pizzaInfo = new PizzaInfo(resultSet.getLong("pizza_info_id"), resultSet.getString("name"),
-                    resultSet.getString("pid"), resultSet.getInt("size"),
-                    resultSet.getTimestamp("picd").toInstant(), resultSet.getInt("piver"));
-            IMenuItem menuItem = new MenuItem(resultSet.getLong("menu_item_id"), pizzaInfo, resultSet.getDouble("price"),
-                    resultSet.getTimestamp("micd").toInstant(), resultSet.getInt("miver"));
-            ISelectedItem selectedItem = SelectedItem.builder().id(resultSet.getLong("siid")).menuItem(menuItem)
-                            .count(resultSet.getInt("count"))
-                    .createAt(resultSet.getTimestamp("sicd").toInstant()).build();
-            items.add(selectedItem);
-            IOrderStage orderStage = new OrderStage(resultSet.getLong("osid"), resultSet.getLong("id"),
-                    resultSet.getString("osd"), resultSet.getTimestamp("oscd").toInstant(),
-                    resultSet.getInt("osver"));
-            stages.add(orderStage);
-            if (resultSet.isLast()) {
-                order = new Order(resultSet.getLong("tid"), items);
-                ticket = new Ticket( resultSet.getLong("odti"), order,
-                        resultSet.getTimestamp("tcd").toInstant());
-                orderData = new OrderData(ticket, stages, resultSet.getLong("id"), resultSet.getLong("odti"),
-                        resultSet.getBoolean("done"), resultSet.getTimestamp("odcd").toInstant(),
-                        resultSet.getInt("ver"));
+    public IOrderData update(IOrderData orderData, EntityManager entityTransaction) {
+        try {
+            entityTransaction.merge(orderData);
+            return orderData;
+        } catch (Exception e) {
+            if (e.getMessage().contains(ORDER_STAGE_UK) || e.getMessage().contains(ORDER_DATA_FK) ||
+                    e.getMessage().contains(ORDER_STAGE_FK)) {
+                throw new NoContentException("order data table update failed,  check preconditions and FK values: "
+                        + orderData);
+            } else {
+                throw new DaoException("Failed to update new Order data" + orderData + "\t cause" + e.getMessage(), e);
             }
         }
-        if (orderData.getOrderHistory()==null || orderData.getTicket()==null || orderData.getId()==null){
-            throw new NoContentException("There is no Order Data with such id");
-        }
-        return orderData;
     }
 }
 
