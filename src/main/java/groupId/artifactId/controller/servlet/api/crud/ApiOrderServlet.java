@@ -40,7 +40,7 @@ public class ApiOrderServlet extends HttpServlet {
         try {
             String id = req.getParameter(Constants.PARAMETER_ID);
             if (id != null) {
-                resp.getWriter().write(jsonConverter.fromTicketCrudToJson(orderService.get(Long.valueOf(id))));
+                resp.getWriter().write(jsonConverter.fromTicketToJson(orderService.getAllData(Long.valueOf(id))));
             } else {
                 resp.getWriter().write(jsonConverter.fromTicketListToJson(orderService.get()));
             }
