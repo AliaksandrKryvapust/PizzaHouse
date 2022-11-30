@@ -13,7 +13,7 @@ import static groupId.artifactId.core.Constants.*;
 
 public class OrderDataDao implements IOrderDataDao {
     private static final String SELECT_ORDER_DATA = "SELECT data from OrderData data ORDER BY data.id";
-    private static final String SELECT_ORDER_DATA_BY_TICKET = "SELECT data from OrderData data WHERE ticket.id=:id ORDER BY data.id";
+    private static final String SELECT_ORDER_DATA_BY_TICKET = "SELECT data from OrderData data WHERE ticket.id=:id";
     private final EntityManager entityManager;
 
     public OrderDataDao(EntityManager entityManager) {
