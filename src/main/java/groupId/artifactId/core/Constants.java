@@ -19,4 +19,6 @@ public class Constants {
     public static final String PIZZA_FK = "pizza_completed_order_FK";
     public static final String SELECTED_ITEM_FK = "selected_item_menu_item_FK";
     public static final String SELECTED_ITEM_FK2 = "selected_item_order_FK";
+    public static final String ORDER_FINISH_DESCRIPTION = "Completed";
+    public static final String ORDER_START_DESCRIPTION = "Order accepted";
 }
