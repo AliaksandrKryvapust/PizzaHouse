@@ -43,7 +43,7 @@ public class ApiMenuServlet extends HttpServlet {
         try {
             String id = req.getParameter(Constants.PARAMETER_ID);
             if (id != null) {
-                resp.getWriter().write(jsonConverter.fromMenuToCrudJson(menuService.get(Long.valueOf(id))));
+                resp.getWriter().write(jsonConverter.fromMenuToJson(menuService.getAllData(Long.valueOf(id))));
             } else {
                 resp.getWriter().write(jsonConverter.fromMenuListToJson(menuService.get()));
             }
