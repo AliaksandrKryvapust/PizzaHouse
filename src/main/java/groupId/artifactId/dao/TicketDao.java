@@ -40,41 +40,6 @@ public class TicketDao implements ITicketDao {
     }
 
     @Override
-    public List<ISelectedItem> saveItems(List<ISelectedItem> items, EntityManager entityTransaction) {
-        try {
-            items.forEach(entityTransaction::persist);
-            return items;
-        } catch (Exception e) {
-            if (e.getMessage().contains(TICKET_UK) || e.getMessage().contains(SELECTED_ITEM_FK) ||
-                    e.getMessage().contains(SELECTED_ITEM_FK2)) {
-                throw new NoContentException("ticket table insert failed,  check preconditions and FK values: "
-                        + items);
-            } else {
-                throw new DaoException("Failed to save new Ticket" + items + "\t cause" + e.getMessage(), e);
-            }
-        }
-    }
-
-    @Override
-    public IOrder update(IOrder order, List<ISelectedItem> items, EntityManager entityTransaction) {
-        try {
-            Order update = (Order) order;
-            update.setSelectedItems(items);
-            entityTransaction.merge(update);
-            return update;
-        } catch (NoContentException e) {
-            throw new NoContentException(e.getMessage());
-        } catch (Exception e) {
-            if (e.getMessage().contains(SELECTED_ITEM_FK) || e.getMessage().contains(SELECTED_ITEM_FK2)) {
-                throw new NoContentException("selected_item table insert failed,  check preconditions and FK values: "
-                        + items);
-            } else {
-                throw new DaoException("Failed to update selected_item" + items + " at order:" + order + "\t cause" + e.getMessage(), e);
-            }
-        }
-    }
-
-    @Override
     public List<ITicket> get() {
         try {
             List<?> iTicket = entityManager.createQuery(SELECT_TICKET).getResultList();
@@ -102,34 +67,6 @@ public class TicketDao implements ITicketDao {
             throw new NoContentException(e.getMessage());
         } catch (Exception e) {
             throw new DaoException("Failed to get Ticket from Data Base by id:" + id + "cause: " + e.getMessage(), e);
-        }
-    }
-
-    @Override
-    public void delete(Long id, Boolean delete, EntityManager entityTransaction) {
-        try {
-            ITicket ticket = this.getLock(id, entityTransaction);
-            if (delete) {
-                entityTransaction.remove(ticket);
-            }
-        } catch (NoContentException e) {
-            throw new NoContentException(e.getMessage());
-        } catch (Exception e) {
-            throw new DaoException("Failed to delete Ticket with id:" + id + "\tcause: " + e.getMessage(), e);
-        }
-    }
-
-    private ITicket getLock(Long id, EntityManager entityTransaction) {
-        try {
-            ITicket ticket = entityTransaction.find(Ticket.class, id);
-            if (ticket == null) {
-                throw new NoContentException("There is no Ticket with id:" + id);
-            }
-            return ticket;
-        } catch (NoContentException e) {
-            throw new NoContentException(e.getMessage());
-        } catch (Exception e) {
-            throw new DaoException("Failed to get Lock of Ticket from Data Base by id:" + id + "cause: " + e.getMessage(), e);
         }
     }
 }
