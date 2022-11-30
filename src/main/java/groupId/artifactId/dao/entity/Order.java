@@ -20,7 +20,7 @@ public class Order implements IOrder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(targetEntity = SelectedItem.class, fetch = FetchType.EAGER)
+    @OneToMany(targetEntity = SelectedItem.class, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @Fetch(FetchMode.SELECT)
     @JoinColumn(name = "order_id", referencedColumnName = "id", nullable = false)
     @Setter
