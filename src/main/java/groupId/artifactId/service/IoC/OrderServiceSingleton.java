@@ -3,7 +3,6 @@ package groupId.artifactId.service.IoC;
 import groupId.artifactId.core.mapper.*;
 import groupId.artifactId.dao.IoC.TicketDaoSingleton;
 import groupId.artifactId.dao.api.EntityManagerFactoryHibernate;
-import groupId.artifactId.service.MenuItemService;
 import groupId.artifactId.service.OrderService;
 import groupId.artifactId.service.api.IOrderService;
 
@@ -14,8 +13,8 @@ public class OrderServiceSingleton {
     public OrderServiceSingleton() {
         this.orderService = new OrderService(TicketDaoSingleton.getInstance(), OrderDataServiceSingleton.getInstance(),
                 MenuItemServiceSingleton.getInstance(), EntityManagerFactoryHibernate.getEntityManager(), new TicketMapper(new OrderMapper(
-                new SelectedItemMapper(new MenuItemMapper(new PizzaInfoMapper())))), new OrderMapper(new SelectedItemMapper(
-                new MenuItemMapper(new PizzaInfoMapper()))), new SelectedItemMapper(new MenuItemMapper(new PizzaInfoMapper())));
+                new SelectedItemMapper(new MenuItemMapper(new PizzaInfoMapper())))),
+                new SelectedItemMapper(new MenuItemMapper(new PizzaInfoMapper())));
     }
 
     public static IOrderService getInstance() {

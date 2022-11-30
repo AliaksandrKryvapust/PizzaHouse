@@ -4,7 +4,6 @@ import groupId.artifactId.core.dto.input.OrderDtoInput;
 import groupId.artifactId.core.dto.input.SelectedItemDtoInput;
 import groupId.artifactId.core.dto.output.TicketDtoOutput;
 import groupId.artifactId.core.dto.output.crud.TicketDtoCrudOutput;
-import groupId.artifactId.core.mapper.OrderMapper;
 import groupId.artifactId.core.mapper.SelectedItemMapper;
 import groupId.artifactId.core.mapper.TicketMapper;
 import groupId.artifactId.dao.api.ITicketDao;
@@ -33,19 +32,15 @@ public class OrderService implements IOrderService {
     private final IMenuItemService menuItemService;
     private final EntityManager entityManager;
     private final TicketMapper ticketMapper;
-    private final OrderMapper orderMapper;
     private final SelectedItemMapper selectedItemMapper;
-    private Long idToDelete;
 
     public OrderService(ITicketDao ticketDao, IOrderDataService orderDataService, IMenuItemService menuItemService,
-                        EntityManager entityManager, TicketMapper ticketMapper, OrderMapper orderMapper,
-                        SelectedItemMapper selectedItemMapper) {
+                        EntityManager entityManager, TicketMapper ticketMapper, SelectedItemMapper selectedItemMapper) {
         this.ticketDao = ticketDao;
         this.orderDataService = orderDataService;
         this.menuItemService = menuItemService;
         this.entityManager = entityManager;
         this.ticketMapper = ticketMapper;
-        this.orderMapper = orderMapper;
         this.selectedItemMapper = selectedItemMapper;
     }
 
@@ -68,44 +63,22 @@ public class OrderService implements IOrderService {
             List<Long> menuItemsId = orderDtoInput.getSelectedItems().stream().map(SelectedItemDtoInput::getMenuItemId)
                     .collect(Collectors.toList());
             List<IMenuItem> menuItems = this.menuItemService.getRow(menuItemsId, this.entityManager);
-            entityManager.getTransaction().begin();
-            List<ISelectedItem> input = orderDtoInput.getSelectedItems().stream()
+            List<ISelectedItem> inputSelectedItems = orderDtoInput.getSelectedItems().stream()
                     .map((i) -> selectedItemMapper.inputMapping(i, menuItems)).collect(Collectors.toList());
-            List<ISelectedItem> savedItems = this.ticketDao.saveItems(input, this.entityManager);
-            Ticket ticket = (Ticket) this.ticketDao.save(Ticket.builder().order(new Order()).build(), this.entityManager);
-            entityManager.getTransaction().commit();
-            idToDelete = ticket.getId();
             entityManager.getTransaction().begin();
-            IOrder updatedOrder = this.ticketDao.update(ticket.getOrder(), savedItems, this.entityManager);
-            ticket.setOrder(updatedOrder);
-//            IOrder orderInput = orderMapper.inputMapping(orderDtoInput, menuItems);
-//            Ticket ticket = (Ticket) this.ticketDao.save(Ticket.builder().order(new Order()).build(), this.entityManager);
-//            entityManager.getTransaction().commit();
-//            idToDelete=ticket.getId();
-//            entityManager.getTransaction().begin();
-//            Order savedOrder = (Order) ticket.getOrder();
-//            savedOrder.setSelectedItems(orderInput.getSelectedItems());
-//            IOrder orderOutput = this.ticketDao.saveItems(savedOrder, this.entityManager);
-//            ticket.setOrder(orderOutput);
-
-
+            IOrder newOrder = Order.builder().selectedItems(inputSelectedItems).build();
+            ITicket ticket = this.ticketDao.save(Ticket.builder().order(newOrder).build(), this.entityManager);
 //            orderDataService.save(OrderDataDtoInput.builder().ticketId(ticket.getId()).done(false)
 //                    .description("Order accepted").build());
-
-
             entityManager.getTransaction().commit();
             return ticketMapper.outputCrudMapping(ticket);
         } catch (DaoException e) {
-            this.delete();
             throw new ServiceException(e.getMessage(), e);
         } catch (NoContentException e) {
-            this.delete();
             throw new NoContentException(e.getMessage());
         } catch (IllegalStateException e) {
-            this.delete();
             throw new IllegalStateException(e);
         } catch (Exception e) {
-            this.delete();
             throw new ServiceException("Failed to save Order" + orderDtoInput, e);
         } finally {
             if (entityManager.getTransaction().isActive()) {
@@ -141,10 +114,5 @@ public class OrderService implements IOrderService {
         } catch (Exception e) {
             throw new ServiceException("Failed to get Ticket at Service by id" + id, e);
         }
-    }
-
-    private void delete() {
-        this.ticketDao.delete(idToDelete, false, this.entityManager);
-        this.entityManager.getTransaction().commit();
     }
 }
