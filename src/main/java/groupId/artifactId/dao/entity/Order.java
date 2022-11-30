@@ -22,7 +22,7 @@ public class Order implements IOrder {
 
     @OneToMany(targetEntity = SelectedItem.class, fetch = FetchType.EAGER)
     @Fetch(FetchMode.SELECT)
-    @JoinColumn(name = "order_id", referencedColumnName = "id")
+    @JoinColumn(name = "order_id", referencedColumnName = "id", nullable = false)
     @Setter
     private List<ISelectedItem> selectedItems;
 

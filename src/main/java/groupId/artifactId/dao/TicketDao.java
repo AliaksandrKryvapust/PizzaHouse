@@ -1,10 +1,7 @@
 package groupId.artifactId.dao;
 
 import groupId.artifactId.dao.api.ITicketDao;
-import groupId.artifactId.dao.entity.Order;
 import groupId.artifactId.dao.entity.Ticket;
-import groupId.artifactId.dao.entity.api.IOrder;
-import groupId.artifactId.dao.entity.api.ISelectedItem;
 import groupId.artifactId.dao.entity.api.ITicket;
 import groupId.artifactId.exceptions.DaoException;
 import groupId.artifactId.exceptions.NoContentException;
