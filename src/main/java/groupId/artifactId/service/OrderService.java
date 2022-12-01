@@ -1,5 +1,6 @@
 package groupId.artifactId.service;
 
+import groupId.artifactId.core.dto.input.OrderDataDtoInput;
 import groupId.artifactId.core.dto.input.OrderDtoInput;
 import groupId.artifactId.core.dto.input.SelectedItemDtoInput;
 import groupId.artifactId.core.dto.output.TicketDtoOutput;
@@ -25,10 +26,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static groupId.artifactId.core.Constants.ORDER_START_DESCRIPTION;
+
 public class OrderService implements IOrderService {
     private final ITicketDao ticketDao;
     private final IOrderDataService orderDataService;
-
     private final IMenuItemService menuItemService;
     private final EntityManager entityManager;
     private final TicketMapper ticketMapper;
@@ -58,6 +60,19 @@ public class OrderService implements IOrderService {
     }
 
     @Override
+    public ITicket getRow(Long id) {
+        try {
+            return this.ticketDao.get(id);
+        } catch (DaoException e) {
+            throw new ServiceException(e.getMessage(), e);
+        } catch (NoContentException e) {
+            throw new NoContentException(e.getMessage());
+        } catch (Exception e) {
+            throw new ServiceException("Failed to getAll data from Ticket at Service by id" + id, e);
+        }
+    }
+
+    @Override
     public TicketDtoCrudOutput save(OrderDtoInput orderDtoInput) {
         try {
             List<Long> menuItemsId = orderDtoInput.getSelectedItems().stream().map(SelectedItemDtoInput::getMenuItemId)
@@ -68,8 +83,9 @@ public class OrderService implements IOrderService {
             entityManager.getTransaction().begin();
             IOrder newOrder = Order.builder().selectedItems(inputSelectedItems).build();
             ITicket ticket = this.ticketDao.save(Ticket.builder().order(newOrder).build(), this.entityManager);
-//            orderDataService.save(OrderDataDtoInput.builder().ticketId(ticket.getId()).done(false)
-//                    .description("Order accepted").build());
+            OrderDataDtoInput dtoInput = OrderDataDtoInput.builder().ticketId(ticket.getId())
+                    .description(ORDER_START_DESCRIPTION).ticket(ticket).build();
+            orderDataService.create(dtoInput, this.entityManager);
             entityManager.getTransaction().commit();
             return ticketMapper.outputCrudMapping(ticket);
         } catch (DaoException e) {
