@@ -1,6 +1,5 @@
 package groupId.artifactId.core.mapper;
 
-import groupId.artifactId.core.dto.input.OrderDataDtoInput;
 import groupId.artifactId.core.dto.output.*;
 import groupId.artifactId.core.dto.output.crud.OrderDataDtoCrudOutput;
 import groupId.artifactId.dao.entity.*;
@@ -31,38 +30,16 @@ class OrderDataMapperTest {
     @Mock
     private TicketMapper ticketMapper;
 
-    @Test
-    void inputMapping() {
-        // preconditions
-        final long id = 1L;
-        final boolean done = false;
-        final String description = "Order accepted";
-        final OrderDataDtoInput orderDataDtoInput = OrderDataDtoInput.builder().ticketId(id).done(done)
-                .description(description).build();
-        final IOrderStage stages = new OrderStage(description);
-        Mockito.when(orderStageMapper.inputMapping(any(String.class))).thenReturn(stages);
-
-        //test
-        IOrderData test = orderDataMapper.inputMapping(orderDataDtoInput);
-
-        // assert
-        Assertions.assertNotNull(test);
-        Assertions.assertNotNull(test.getOrderHistory());
-        Assertions.assertEquals(id, test.getTicketId());
-        Assertions.assertEquals(done, test.isDone());
-        for (IOrderStage stage : test.getOrderHistory()) {
-            Assertions.assertEquals(description, stage.getDescription());
-        }
-    }
 
     @Test
     void outputCrudMapping() {
         // preconditions
         final long id = 1L;
-        final int version = 1;
         final boolean done = false;
         final Instant creationDate = Instant.now();
-        final IOrderData orderData = new OrderData(id, id, done, creationDate, version);
+        final ITicket ticket = Ticket.builder().id(id).createAt(creationDate).build();
+        final IOrderData orderData = OrderData.builder().ticket(ticket).id(id).done(done)
+                .creationDate(creationDate).build();
 
         //test
         OrderDataDtoCrudOutput test = orderDataMapper.outputCrudMapping(orderData);
@@ -73,7 +50,6 @@ class OrderDataMapperTest {
         Assertions.assertEquals(id, test.getTicketId());
         Assertions.assertEquals(done, test.getDone());
         Assertions.assertEquals(creationDate, test.getCreatedAt());
-        Assertions.assertEquals(version, test.getVersion());
     }
 
     @Test
@@ -101,12 +77,14 @@ class OrderDataMapperTest {
                 .createdAt(creationDate).version(version).pizzaInfo(pizzaInfoDtoOutput).build();
         List<SelectedItemDtoOutput> outputs = singletonList(SelectedItemDtoOutput.builder().menuItem(menuItemDtoOutput)
                 .id(id).count(count).createdAt(creationDate).build());
-        List<IOrderStage> orderStages = singletonList(new OrderStage(id, id, stageDescription, creationDate, version));
-        final OrderStageDtoOutput stageDtoOutputs = OrderStageDtoOutput.builder().id(id).orderDataId(id)
-                .description(stageDescription).createdAt(creationDate).version(version).build();
+        List<IOrderStage> orderStages = singletonList(OrderStage.builder().id(id).description(stageDescription)
+                .creationDate(creationDate).build());
+        final OrderStageDtoOutput stageDtoOutputs = OrderStageDtoOutput.builder().id(id)
+                .description(stageDescription).createdAt(creationDate).build();
         final Order order = new Order(id, selectedItems);
         final ITicket ticket = new Ticket(id, order, creationDate);
-        final IOrderData orderData = new OrderData(ticket, orderStages, id, id, done, creationDate, version);
+        final IOrderData orderData = OrderData.builder().ticket(ticket).orderHistory(orderStages).id(id).done(done)
+                .creationDate(creationDate).build();
         final OrderDtoOutput orderDtoOutput = new OrderDtoOutput(outputs, id);
         final TicketDtoOutput ticketDtoOutput = TicketDtoOutput.builder().order(orderDtoOutput).id(id)
                 .createdAt(creationDate).build();
@@ -123,10 +101,8 @@ class OrderDataMapperTest {
         Assertions.assertNotNull(test.getTicket().getOrder());
         Assertions.assertNotNull(test.getTicket().getOrder().getSelectedItems());
         Assertions.assertEquals(id, test.getId());
-        Assertions.assertEquals(id, test.getTicketId());
         Assertions.assertEquals(done, test.getDone());
         Assertions.assertEquals(creationDate, test.getCreatedAt());
-        Assertions.assertEquals(version, test.getVersion());
         Assertions.assertEquals(id, test.getTicket().getId());
         Assertions.assertEquals(creationDate, test.getTicket().getCreatedAt());
         Assertions.assertEquals(id, test.getTicket().getOrder().getId());
@@ -149,10 +125,8 @@ class OrderDataMapperTest {
         }
         for (OrderStageDtoOutput output : test.getOrderHistory()) {
             Assertions.assertEquals(id, output.getId());
-            Assertions.assertEquals(id, output.getOrderDataId());
             Assertions.assertEquals(stageDescription, output.getDescription());
             Assertions.assertEquals(creationDate, output.getCreatedAt());
-            Assertions.assertEquals(version, output.getVersion());
         }
     }
 

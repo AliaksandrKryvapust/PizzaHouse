@@ -33,10 +33,9 @@ class OrderStageMapperTest {
     void outputMapping() {
         // preconditions
         final long id = 1L;
-        final int version = 1;
         final String stageDescription = "Stage #";
         final Instant creationDate = Instant.now();
-        IOrderStage orderStages = new OrderStage(id, id, stageDescription, creationDate, version);
+        IOrderStage orderStages = OrderStage.builder().id(id).description(stageDescription).creationDate(creationDate).build();
 
         //test
         OrderStageDtoOutput test = orderStageMapper.outputMapping(orderStages);
@@ -44,9 +43,7 @@ class OrderStageMapperTest {
         // assert
         Assertions.assertNotNull(test);
         Assertions.assertEquals(id, test.getId());
-        Assertions.assertEquals(id, test.getOrderDataId());
         Assertions.assertEquals(stageDescription, test.getDescription());
         Assertions.assertEquals(creationDate, test.getCreatedAt());
-        Assertions.assertEquals(version, test.getVersion());
     }
 }
