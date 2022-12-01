@@ -74,9 +74,9 @@ public class OrderDataDao implements IOrderDataDao {
     }
 
     @Override
-    public IOrderData getOptional(Long id) {
+    public IOrderData getOptional(Long id, EntityManager entityTransaction) {
         try {
-            List<?> iOrderData = entityManager.createQuery(SELECT_ORDER_DATA_BY_TICKET).setParameter(1, id)
+            List<?> iOrderData = entityTransaction.createQuery(SELECT_ORDER_DATA_BY_TICKET).setParameter(1, id)
                     .getResultList();
             return iOrderData.stream().filter((i) -> i instanceof IOrderData).map(IOrderData.class::cast)
                     .findFirst().orElse(null);
@@ -88,7 +88,7 @@ public class OrderDataDao implements IOrderDataDao {
     @Override
     public IOrderData update(IOrderData orderData, EntityManager entityTransaction) {
         try {
-            entityTransaction.merge(orderData);
+            entityTransaction.persist(orderData);
             return orderData;
         } catch (Exception e) {
             if (e.getMessage().contains(ORDER_STAGE_UK) || e.getMessage().contains(ORDER_DATA_FK) ||

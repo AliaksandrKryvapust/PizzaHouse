@@ -156,7 +156,7 @@ class OrderDataServiceTest {
                 .createdAt(creationDate).build();
         Mockito.when(entityManager.getTransaction()).thenReturn(transaction);
         Mockito.when(orderStageMapper.inputMapping(any(String.class))).thenReturn(stage);
-        Mockito.when(orderDataDao.getOptional(any(Long.class))).thenReturn(orderData);
+        Mockito.when(orderDataDao.getOptional(any(Long.class), any(EntityManager.class))).thenReturn(orderData);
         Mockito.when(orderDataDao.update(any(IOrderData.class), any(EntityManager.class))).thenReturn(orderData);
         Mockito.when(orderDataMapper.outputCrudMapping(any(IOrderData.class))).thenReturn(dtoOutput);
 

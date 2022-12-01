@@ -18,6 +18,7 @@ import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static groupId.artifactId.core.Constants.ORDER_FINISH_DESCRIPTION;
 import static java.util.Collections.singletonList;
 
 public class OrderDataService implements IOrderDataService {
@@ -67,9 +68,10 @@ public class OrderDataService implements IOrderDataService {
     public OrderDataDtoCrudOutput save(OrderDataDtoInput dtoInput) {
         try {
             IOrderStage inputOrderStages = this.orderStageMapper.inputMapping(dtoInput.getDescription());
-            OrderData orderData = (OrderData) this.orderDataDao.getOptional(dtoInput.getTicketId());
             entityManager.getTransaction().begin();
+            OrderData orderData = (OrderData) this.orderDataDao.getOptional(dtoInput.getTicketId(),this.entityManager);
             orderData.getOrderHistory().add(inputOrderStages);
+            orderData.setDone(inputOrderStages.getDescription().equals(ORDER_FINISH_DESCRIPTION));
             IOrderData orderDataOutput = this.orderDataDao.update(orderData, this.entityManager);
 //            if (inputOrderStages.getDescription().equals(ORDER_FINISH_DESCRIPTION)){
 //                this.completedOrderService.save();
