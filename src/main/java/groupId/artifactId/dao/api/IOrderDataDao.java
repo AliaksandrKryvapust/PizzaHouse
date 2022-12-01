@@ -6,4 +6,5 @@ import javax.persistence.EntityManager;
 
 public interface IOrderDataDao extends IDao<IOrderData> {
     IOrderData update(IOrderData orderData, EntityManager entityTransaction);
+    IOrderData getOptional(Long id);
 }

@@ -13,7 +13,7 @@ import static groupId.artifactId.core.Constants.*;
 
 public class OrderDataDao implements IOrderDataDao {
     private static final String SELECT_ORDER_DATA = "SELECT data from OrderData data ORDER BY data.id";
-    private static final String SELECT_ORDER_DATA_BY_TICKET = "SELECT data from OrderData data WHERE ticket.id=:id";
+    private static final String SELECT_ORDER_DATA_BY_TICKET = "SELECT data from OrderData data WHERE ticket.id=?1";
     private final EntityManager entityManager;
 
     public OrderDataDao(EntityManager entityManager) {
@@ -58,14 +58,28 @@ public class OrderDataDao implements IOrderDataDao {
     @Override
     public IOrderData get(Long id) {
         try {
-            IOrderData orderData = (IOrderData) entityManager.createQuery(SELECT_ORDER_DATA_BY_TICKET).setParameter("id", id)
+            List<?> iOrderData = entityManager.createQuery(SELECT_ORDER_DATA_BY_TICKET).setParameter(1, id)
                     .getResultList();
+            IOrderData orderData = iOrderData.stream().filter((i) -> i instanceof IOrderData)
+                    .map(IOrderData.class::cast).findFirst().orElse(null);
             if (orderData == null) {
                 throw new NoContentException("There is no Order data by ticket id:" + id);
             }
             return orderData;
         } catch (NoContentException e) {
             throw new NoContentException(e.getMessage());
+        } catch (Exception e) {
+            throw new DaoException("Failed to get Ticket from Data Base by id:" + id + "cause: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public IOrderData getOptional(Long id) {
+        try {
+            List<?> iOrderData = entityManager.createQuery(SELECT_ORDER_DATA_BY_TICKET).setParameter(1, id)
+                    .getResultList();
+            return iOrderData.stream().filter((i) -> i instanceof IOrderData).map(IOrderData.class::cast)
+                    .findFirst().orElse(null);
         } catch (Exception e) {
             throw new DaoException("Failed to get Ticket from Data Base by id:" + id + "cause: " + e.getMessage(), e);
         }
