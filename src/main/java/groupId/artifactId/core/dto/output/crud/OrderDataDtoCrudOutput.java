@@ -15,5 +15,4 @@ public class OrderDataDtoCrudOutput {
     private final @NonNull Long ticketId;
     private final @NonNull Boolean done;
     private final Instant createdAt;
-    private final Integer version;
 }
