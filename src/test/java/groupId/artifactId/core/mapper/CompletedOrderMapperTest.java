@@ -47,10 +47,12 @@ class CompletedOrderMapperTest {
                 .creationDate(creationDate).version(version).build();
         final List<ISelectedItem> selectedItems = singletonList(SelectedItem.builder().id(id).menuItem(menuItem)
                 .count(count).createAt(creationDate).build());
-        final List<IOrderStage> orderStages = singletonList(new OrderStage(id, id, stageDescription, creationDate, version));
+        List<IOrderStage> orderStages = singletonList(OrderStage.builder().id(id).description(stageDescription)
+                .creationDate(creationDate).build());
         final Order order = new Order(id, selectedItems);
         final ITicket ticket = new Ticket(id, order, creationDate);
-        final IOrderData orderData = new OrderData(ticket, orderStages, id, id, done, creationDate, version);
+        final IOrderData orderData = OrderData.builder().ticket(ticket).orderHistory(orderStages).id(id).done(done)
+                .creationDate(creationDate).build();
 
         //test
         ICompletedOrder test = completedOrderMapper.inputMapping(orderData);
