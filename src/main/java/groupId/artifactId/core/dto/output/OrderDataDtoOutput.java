@@ -15,8 +15,6 @@ public class OrderDataDtoOutput {
     private final @NonNull TicketDtoOutput ticket;
     private final @NonNull List<OrderStageDtoOutput> orderHistory;
     private final @NonNull Long id;
-    private final @NonNull Long ticketId;
     private final @NonNull Boolean done;
     private final @NonNull Instant createdAt;
-    private final @NonNull Integer version;
 }
