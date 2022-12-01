@@ -17,10 +17,9 @@ class OrderDataValidatorTest {
     @Test
     void validatePreconditionOne() {
         // preconditions
-        final boolean done = false;
         final String description = "Order accepted";
         final String messageExpected = "None of Ticket id in OrderDataDtoInput have been sent as an input";
-        final OrderDataDtoInput orderDataDtoInput = OrderDataDtoInput.builder().ticketId(0L).done(done)
+        final OrderDataDtoInput orderDataDtoInput = OrderDataDtoInput.builder().ticketId(0L)
                 .description(description).build();
 
         //test
@@ -34,10 +33,9 @@ class OrderDataValidatorTest {
     void validatePreconditionTwo() {
         // preconditions
         final long id = 1L;
-        final boolean done = false;
         final String description = "";
         final String messageExpected = "None of Order Stage description have been sent as an input";
-        final OrderDataDtoInput orderDataDtoInput = OrderDataDtoInput.builder().ticketId(id).done(done)
+        final OrderDataDtoInput orderDataDtoInput = OrderDataDtoInput.builder().ticketId(id)
                 .description(description).build();
 
         //test
