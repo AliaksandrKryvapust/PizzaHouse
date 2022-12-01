@@ -2,7 +2,7 @@ package groupId.artifactId.service.IoC;
 
 import groupId.artifactId.core.mapper.*;
 import groupId.artifactId.dao.IoC.OrderDataDaoSingleton;
-import groupId.artifactId.dao.IoC.OrderStageDaoSingleton;
+import groupId.artifactId.dao.api.EntityManagerFactoryHibernate;
 import groupId.artifactId.service.OrderDataService;
 import groupId.artifactId.service.api.IOrderDataService;
 
@@ -11,11 +11,10 @@ public class OrderDataServiceSingleton {
     private volatile static OrderDataServiceSingleton firstInstance = null;
 
     public OrderDataServiceSingleton() {
-        this.orderDataService = new OrderDataService(OrderDataDaoSingleton.getInstance(), OrderStageDaoSingleton.getInstance(),
-                CompletedOrderServiceSingleton.getInstance(), new CompletedOrderMapper(new TicketMapper(new OrderMapper(
-                new SelectedItemMapper(new MenuItemMapper(new PizzaInfoMapper())))), new PizzaMapper()),
-                new OrderDataMapper(new OrderStageMapper(), new TicketMapper(new OrderMapper(new SelectedItemMapper
-                        (new MenuItemMapper(new PizzaInfoMapper()))))));
+        this.orderDataService = new OrderDataService(OrderDataDaoSingleton.getInstance(),
+                new OrderDataMapper(new OrderStageMapper(),
+                        new TicketMapper(new OrderMapper(new SelectedItemMapper(new MenuItemMapper(new PizzaInfoMapper()))))),
+                new OrderStageMapper(), EntityManagerFactoryHibernate.getEntityManager());
     }
 
     public static IOrderDataService getInstance() {
