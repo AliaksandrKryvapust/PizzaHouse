@@ -1,110 +1,31 @@
 package groupId.artifactId.dao.entity;
 
 import groupId.artifactId.dao.entity.api.IPizza;
+import lombok.*;
 
-import java.time.Instant;
+import javax.persistence.*;
 
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity
+@Table(name = "pizza", schema = "pizza_manager")
 public class Pizza implements IPizza {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long completedOrderId;
+    @Setter
     private String name;
+    @Setter
     private Integer size;
-    private Instant creationDate;
-    private Integer version;
-
-    public Pizza() {
-    }
-
-    public Pizza(String name, Integer size) {
-        this.name = name;
-        this.size = size;
-    }
-
-    public Pizza(Long completedOrderId, String name, Integer size) {
-        this.completedOrderId = completedOrderId;
-        this.name = name;
-        this.size = size;
-    }
-
-    public Pizza(Long id, Long completedOrderId, String name, Integer size) {
-        this.id = id;
-        this.completedOrderId = completedOrderId;
-        this.name = name;
-        this.size = size;
-    }
-
-    public Pizza(Long id, Long completedOrderId, String name, Integer size, Instant creationDate, Integer version) {
-        this.id = id;
-        this.completedOrderId = completedOrderId;
-        this.name = name;
-        this.size = size;
-        this.creationDate = creationDate;
-        this.version = version;
-    }
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Override
-    public Long getCompletedOrderId() {
-        return completedOrderId;
-    }
-
-    public void setCompletedOrderId(Long completedOrderId) {
-        this.completedOrderId = completedOrderId;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public Integer getSize() {
-        return size;
-    }
-
-    public void setSize(Integer size) {
-        this.size = size;
-    }
-
-    @Override
-    public Instant getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(Instant creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    @Override
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
 
     @Override
     public String toString() {
         return "Pizza{" +
                 "id=" + id +
-                ", completedOrderId=" + completedOrderId +
                 ", name='" + name + '\'' +
                 ", size=" + size +
-                ", creationDate=" + creationDate +
-                ", version=" + version +
                 '}';
     }
 }
