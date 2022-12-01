@@ -12,8 +12,6 @@ import java.time.Instant;
 @ToString
 public class OrderStageDtoOutput {
     private final @NonNull Long id;
-    private final @NonNull Long orderDataId;
     private final @NonNull String description;
     private final @NonNull Instant createdAt;
-    private final @NonNull Integer version;
 }

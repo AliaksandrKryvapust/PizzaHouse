@@ -1,16 +1,13 @@
 package groupId.artifactId.core.mapper;
 
-import groupId.artifactId.core.dto.input.OrderDataDtoInput;
 import groupId.artifactId.core.dto.output.OrderDataDtoOutput;
 import groupId.artifactId.core.dto.output.OrderStageDtoOutput;
 import groupId.artifactId.core.dto.output.TicketDtoOutput;
 import groupId.artifactId.core.dto.output.crud.OrderDataDtoCrudOutput;
-import groupId.artifactId.dao.entity.OrderData;
 import groupId.artifactId.dao.entity.api.IOrderData;
 import groupId.artifactId.dao.entity.api.IOrderStage;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class OrderDataMapper {
@@ -22,18 +19,13 @@ public class OrderDataMapper {
         this.ticketMapper = ticketMapper;
     }
 
-    public IOrderData inputMapping(OrderDataDtoInput dtoInput) {
-        List<IOrderStage> orderStage = Collections.singletonList(orderStageMapper.inputMapping(dtoInput.getDescription()));
-        return new OrderData(orderStage, dtoInput.getTicketId(), dtoInput.getDone());
-    }
-
     public OrderDataDtoCrudOutput outputCrudMapping(IOrderData orderData) {
         return OrderDataDtoCrudOutput.builder()
                 .id(orderData.getId())
-                .ticketId(orderData.getTicketId())
-                .done(orderData.isDone())
+                .ticketId(orderData.getTicket().getId())
+                .done(orderData.getDone())
                 .createdAt(orderData.getCreationDate())
-                .version(orderData.getVersion()).build();
+                .build();
     }
 
     public OrderDataDtoOutput outputMapping(IOrderData orderData) {
@@ -47,9 +39,8 @@ public class OrderDataMapper {
                 .ticket(ticketDtoOutPut)
                 .orderHistory(stageDtoOutputs)
                 .id(orderData.getId())
-                .ticketId(orderData.getTicketId())
-                .done(orderData.isDone())
+                .done(orderData.getDone())
                 .createdAt(orderData.getCreationDate())
-                .version(orderData.getVersion()).build();
+                .build();
     }
 }
