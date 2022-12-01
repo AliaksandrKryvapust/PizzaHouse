@@ -29,7 +29,7 @@ public class CompletedOrderMapper {
                     selectedItem.getMenuItem().getPizzaInfo().getSize());
             temp.add(pizza);
         }
-        return new CompletedOrder(ticket, temp, orderData.getTicketId());
+        return new CompletedOrder(ticket, temp, orderData.getTicket().getId());
     }
 
     public CompletedOrderDtoCrudOutput outputCrudMapping(ICompletedOrder completedOrder) {
