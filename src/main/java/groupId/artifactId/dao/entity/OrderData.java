@@ -29,6 +29,8 @@ public class OrderData implements IOrderData {
     @Setter
     private List<IOrderStage> orderHistory;
     @Setter
+//    @Column(columnDefinition = "boolean default false", nullable = false)
+    @org.hibernate.annotations.Generated(GenerationTime.INSERT)
     private Boolean done;
     @org.hibernate.annotations.Generated(GenerationTime.INSERT)
     private Instant creationDate;
