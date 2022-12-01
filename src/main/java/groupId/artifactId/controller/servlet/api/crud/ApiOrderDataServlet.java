@@ -7,10 +7,12 @@ import groupId.artifactId.controller.validator.api.IOrderDataValidator;
 import groupId.artifactId.core.Constants;
 import groupId.artifactId.core.dto.input.OrderDataDtoInput;
 import groupId.artifactId.core.dto.output.crud.OrderDataDtoCrudOutput;
+import groupId.artifactId.dao.entity.api.ITicket;
 import groupId.artifactId.exceptions.NoContentException;
-import groupId.artifactId.exceptions.OptimisticLockException;
 import groupId.artifactId.service.IoC.OrderDataServiceSingleton;
+import groupId.artifactId.service.IoC.OrderServiceSingleton;
 import groupId.artifactId.service.api.IOrderDataService;
+import groupId.artifactId.service.api.IOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "OrderData", urlPatterns = "/api/order_data")
 public class ApiOrderDataServlet extends HttpServlet {
     private final IOrderDataService orderDataService;
+    private final IOrderService orderService;
     private final IOrderDataValidator orderDataValidator;
     private final Logger logger;
     private final JsonConverter jsonConverter;
@@ -29,19 +32,20 @@ public class ApiOrderDataServlet extends HttpServlet {
     public ApiOrderDataServlet() {
         this.orderDataService = OrderDataServiceSingleton.getInstance();
         this.orderDataValidator = OrderDataValidatorSingleton.getInstance();
+        this.orderService = OrderServiceSingleton.getInstance();
         this.logger = LoggerFactory.getLogger(this.getClass());
         this.jsonConverter = JsonConverterSingleton.getInstance();
     }
 
     //Read POSITION
     //1) Read list
-    //2) Read item need id param  (id = 1)
+    //2) Read item need ticket id param  (id = 1)
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         try {
             String id = req.getParameter(Constants.PARAMETER_ID);
             if (id != null) {
-                resp.getWriter().write(jsonConverter.fromOrderDataCrudToJson(orderDataService.get(Long.valueOf(id))));
+                resp.getWriter().write(jsonConverter.fromOrderDataToJson(orderDataService.getAllData(Long.valueOf(id))));
             } else {
                 resp.getWriter().write(jsonConverter.fromOrderDataListToJson(orderDataService.get()));
             }
@@ -67,14 +71,17 @@ public class ApiOrderDataServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            OrderDataDtoInput orderData = jsonConverter.fromJsonToOrderData(req.getInputStream());
+            OrderDataDtoInput orderDataInput = jsonConverter.fromJsonToOrderData(req.getInputStream());
             try {
-                orderDataValidator.validate(orderData);
+                orderDataValidator.validate(orderDataInput);
             } catch (IllegalArgumentException e) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 logger.error("/api/order_data input is not valid " + e.getMessage() + "\t" + e.getCause() +
                         "\tresponse status: " + resp.getStatus());
             }
+            ITicket ticket = this.orderService.getRow(orderDataInput.getTicketId());
+            OrderDataDtoInput orderData = OrderDataDtoInput.builder().ticketId(orderDataInput.getTicketId())
+                    .description(orderDataInput.getDescription()).ticket(ticket).build();
             OrderDataDtoCrudOutput output = orderDataService.save(orderData);
             resp.getWriter().write(jsonConverter.fromOrderDataCrudToJson(output));
             resp.setStatus(HttpServletResponse.SC_CREATED);
@@ -85,50 +92,6 @@ public class ApiOrderDataServlet extends HttpServlet {
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             logger.error("/api/order_data crashed during doPost method" + e.getMessage() + "\t" + e.getCause() +
-                    "\tresponse status: " + resp.getStatus());
-        }
-    }
-
-    //UPDATE POSITION
-    //need param id  (id = 3)
-    //need param version/date_update - optimistic lock (version=12)
-    //body json
-//    {
-//        "done": true,
-//            "ticket_id": 1,
-//            "description": "ready"
-//    }
-    @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) {
-        try {
-            String id = req.getParameter(Constants.PARAMETER_ID);
-            String version = req.getParameter(Constants.PARAMETER_VERSION);
-            if (id != null && version != null) {
-                OrderDataDtoInput orderData = jsonConverter.fromJsonToOrderData(req.getInputStream());
-                try {
-                    orderDataValidator.validate(orderData);
-                } catch (IllegalArgumentException e) {
-                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    logger.error("/api/order_data input is not valid " + e.getMessage() + "\t" + e.getCause() +
-                            "\tresponse status: " + resp.getStatus());
-                }
-                OrderDataDtoCrudOutput output = orderDataService.update(orderData, id, version);
-                resp.getWriter().write(jsonConverter.fromOrderDataCrudToJson(output));
-                resp.setStatus(HttpServletResponse.SC_CREATED);
-            } else {
-                resp.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
-            }
-        } catch (NoContentException e) {
-            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            logger.error("/api/order_data there is no content to fulfill doPut method " + e.getMessage() + "\t" + e.getCause() +
-                    "\tresponse status: " + resp.getStatus());
-        } catch (OptimisticLockException e) {
-            resp.setStatus(HttpServletResponse.SC_CONFLICT);
-            logger.error("/api/order_data optimistic lock during doPost method" + e.getMessage() + "\t" + e.getCause() +
-                    "\tresponse status: " + resp.getStatus());
-        } catch (Exception e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            logger.error("/api/order_data crashed during doPut method" + e.getMessage() + "\t" + e.getCause() +
                     "\tresponse status: " + resp.getStatus());
         }
     }
