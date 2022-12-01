@@ -9,15 +9,14 @@ public class OrderStageMapper {
     }
 
     public IOrderStage inputMapping(String description) {
-        return new OrderStage(description);
+        return OrderStage.builder().description(description).build();
     }
 
     public OrderStageDtoOutput outputMapping(IOrderStage orderStage) {
         return OrderStageDtoOutput.builder()
                 .id(orderStage.getId())
-                .orderDataId(orderStage.getOrderDataId())
                 .description(orderStage.getDescription())
                 .createdAt(orderStage.getCreationDate())
-                .version(orderStage.getVersion()).build();
+                .build();
     }
 }
