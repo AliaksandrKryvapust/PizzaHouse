@@ -1,21 +1,20 @@
 package groupId.artifactId.service;
 
+import groupId.artifactId.core.dto.input.OrderDataDtoInput;
 import groupId.artifactId.core.dto.input.OrderDtoInput;
 import groupId.artifactId.core.dto.input.SelectedItemDtoInput;
 import groupId.artifactId.core.dto.output.*;
-import groupId.artifactId.core.dto.output.crud.OrderDataDtoCrudOutput;
 import groupId.artifactId.core.dto.output.crud.TicketDtoCrudOutput;
-import groupId.artifactId.core.mapper.OrderMapper;
 import groupId.artifactId.core.mapper.SelectedItemMapper;
 import groupId.artifactId.core.mapper.TicketMapper;
 import groupId.artifactId.dao.TicketDao;
 import groupId.artifactId.dao.entity.*;
-import groupId.artifactId.dao.entity.api.IOrder;
 import groupId.artifactId.dao.entity.api.ISelectedItem;
 import groupId.artifactId.dao.entity.api.ITicket;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -28,6 +27,7 @@ import java.util.List;
 
 import static java.util.Collections.singletonList;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 class OrderServiceTest {
@@ -41,8 +41,6 @@ class OrderServiceTest {
     private MenuItemService menuItemService;
     @Mock
     private TicketMapper ticketMapper;
-    @Mock
-    private OrderMapper orderMapper;
     @Mock
     private SelectedItemMapper selectedItemMapper;
     @Mock
@@ -116,7 +114,6 @@ class OrderServiceTest {
         // preconditions
         final long id = 1L;
         final int count = 5;
-        final boolean done = false;
         final String description = "Order accepted";
         final double price = 18.0;
         final String name = "ITALIANO PIZZA";
@@ -137,27 +134,24 @@ class OrderServiceTest {
         final ITicket ticket = new Ticket(id, order, creationDate);
         final TicketDtoCrudOutput crudOutput = TicketDtoCrudOutput.builder().id(id).orderId(id).createAt(creationDate)
                 .build();
-        final OrderDataDtoCrudOutput dtoCrudOutput = OrderDataDtoCrudOutput.builder()
-                .id(id).ticketId(id).done(done).build();
         Mockito.when(entityManager.getTransaction()).thenReturn(transaction);
         Mockito.when(menuItemService.getRow(ids, entityManager)).thenReturn(singletonList(menuItem));
         Mockito.when(selectedItemMapper.inputMapping(any(SelectedItemDtoInput.class), any())).thenReturn(selectedItems.get(0));
         Mockito.when(ticketDao.save(any(ITicket.class), any(EntityManager.class))).thenReturn(ticket);
-//        Mockito.when(orderDataService.save(any(OrderDataDtoInput.class))).thenReturn(dtoCrudOutput);
-//        ArgumentCaptor<OrderDataDtoInput> value = ArgumentCaptor.forClass(OrderDataDtoInput.class);
+        ArgumentCaptor<OrderDataDtoInput> value = ArgumentCaptor.forClass(OrderDataDtoInput.class);
+        ArgumentCaptor<EntityManager> value2 = ArgumentCaptor.forClass(EntityManager.class);
         Mockito.when(ticketMapper.outputCrudMapping(any(ITicket.class))).thenReturn(crudOutput);
 
         //test
         TicketDtoCrudOutput test = orderService.save(orderDtoInput);
-//        Mockito.verify(orderDataService, times(1)).save(value.capture());
+        Mockito.verify(orderDataService, times(1)).create(value.capture(), value2.capture());
 
         // assert
         Assertions.assertNotNull(test);
         Assertions.assertEquals(id, test.getId());
         Assertions.assertEquals(id, test.getOrderId());
-//        Assertions.assertEquals(id, value.getValue().getTicketId());
-//        Assertions.assertEquals(done, value.getValue().getDone());
-//        Assertions.assertEquals(description, value.getValue().getDescription());
+        Assertions.assertEquals(id, value.getValue().getTicketId());
+        Assertions.assertEquals(description, value.getValue().getDescription());
     }
 
     @Test
