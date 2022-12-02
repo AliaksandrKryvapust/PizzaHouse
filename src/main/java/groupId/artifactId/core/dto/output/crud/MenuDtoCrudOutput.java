@@ -12,8 +12,8 @@ import java.time.Instant;
 @ToString
 public class MenuDtoCrudOutput {
     private final @NonNull Long id;
-    private final Instant createdAt;
-    private final Integer version;
+    private final @NonNull Instant createdAt;
+    private final @NonNull Integer version;
     private final @NonNull String name;
     private final @NonNull Boolean enable;
 }

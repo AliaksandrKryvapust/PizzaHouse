@@ -13,5 +13,5 @@ import java.time.Instant;
 public class TicketDtoCrudOutput {
     private final @NonNull Long id;
     private final @NonNull Long orderId;
-    private final Instant createAt;
+    private final @NonNull Instant createAt;
 }
