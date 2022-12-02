@@ -26,6 +26,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
+import static groupId.artifactId.core.Constants.ORDER_FINISH_DESCRIPTION;
 import static java.util.Collections.singletonList;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
@@ -134,7 +135,6 @@ class OrderDataServiceTest {
         final double price = 18.0;
         final String name = "ITALIANO PIZZA";
         final String description = "Mozzarella cheese, basilica, ham";
-        final String stageDescription = "Stage #";
         final int size = 32;
         final boolean done = false;
         final Instant creationDate = Instant.now();
@@ -146,7 +146,7 @@ class OrderDataServiceTest {
                 .createAt(creationDate).build());
         final Order order = new Order(id, selectedItems);
         final ITicket ticket = new Ticket(id, order, creationDate);
-        final OrderDataDtoInput orderDataDtoInput = OrderDataDtoInput.builder().ticketId(id).description(stageDescription).build();
+        final OrderDataDtoInput orderDataDtoInput = OrderDataDtoInput.builder().ticketId(id).description(ORDER_FINISH_DESCRIPTION).build();
         IOrderStage stage = OrderStage.builder().description(description).id(id).creationDate(creationDate).build();
         List<IOrderStage> stages = new ArrayList<>();
         stages.add(stage);
