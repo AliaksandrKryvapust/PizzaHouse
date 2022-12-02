@@ -13,6 +13,5 @@ import java.time.Instant;
 public class CompletedOrderDtoCrudOutput {
     private final @NonNull Long id;
     private final @NonNull Long ticketId;
-    private final Instant createdAt;
-    private final Integer version;
+    private final @NonNull Instant createdAt;
 }

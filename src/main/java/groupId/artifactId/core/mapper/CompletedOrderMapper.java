@@ -6,10 +6,13 @@ import groupId.artifactId.core.dto.output.TicketDtoOutput;
 import groupId.artifactId.core.dto.output.crud.CompletedOrderDtoCrudOutput;
 import groupId.artifactId.dao.entity.CompletedOrder;
 import groupId.artifactId.dao.entity.Pizza;
-import groupId.artifactId.dao.entity.api.*;
+import groupId.artifactId.dao.entity.api.ICompletedOrder;
+import groupId.artifactId.dao.entity.api.IOrderData;
+import groupId.artifactId.dao.entity.api.IPizza;
+import groupId.artifactId.dao.entity.api.ITicket;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CompletedOrderMapper {
 
@@ -23,36 +26,28 @@ public class CompletedOrderMapper {
 
     public ICompletedOrder inputMapping(IOrderData orderData) {
         ITicket ticket = orderData.getTicket();
-        List<IPizza> temp = new ArrayList<>();
-        for (ISelectedItem selectedItem : ticket.getOrder().getSelectedItems()) {
-            IPizza pizza = new Pizza(selectedItem.getMenuItem().getPizzaInfo().getName(),
-                    selectedItem.getMenuItem().getPizzaInfo().getSize());
-            temp.add(pizza);
-        }
-        return new CompletedOrder(ticket, temp, orderData.getTicket().getId());
+        List<IPizza> temp = ticket.getOrder().getSelectedItems().stream().map((i) -> Pizza.builder()
+                        .name(i.getMenuItem().getPizzaInfo().getName()).size(i.getMenuItem().getPizzaInfo().getSize()).build())
+                .collect(Collectors.toList());
+        return CompletedOrder.builder().ticket(ticket).items(temp).build();
     }
 
     public CompletedOrderDtoCrudOutput outputCrudMapping(ICompletedOrder completedOrder) {
         return CompletedOrderDtoCrudOutput.builder()
                 .id(completedOrder.getId())
-                .ticketId(completedOrder.getTicketId())
+                .ticketId(completedOrder.getTicket().getId())
                 .createdAt(completedOrder.getCreationDate())
-                .version(completedOrder.getVersion()).build();
+                .build();
     }
 
     public CompletedOrderDtoOutput outputMapping(ICompletedOrder completedOrder) {
-        List<PizzaDtoOutput> temp = new ArrayList<>();
-        for (IPizza pizza : completedOrder.getItems()) {
-            PizzaDtoOutput output = pizzaMapper.outputMapping(pizza);
-            temp.add(output);
-        }
+        List<PizzaDtoOutput> temp = completedOrder.getItems().stream().map(pizzaMapper::outputMapping).collect(Collectors.toList());
         TicketDtoOutput ticketDtoOutPut = ticketMapper.outputMapping(completedOrder.getTicket());
         return CompletedOrderDtoOutput.builder()
                 .ticket(ticketDtoOutPut)
                 .items(temp)
                 .id(completedOrder.getId())
-                .ticketId(completedOrder.getTicketId())
                 .createdAt(completedOrder.getCreationDate())
-                .version(completedOrder.getVersion()).build();
+                .build();
     }
 }

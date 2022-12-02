@@ -10,10 +10,8 @@ public class PizzaMapper {
     public PizzaDtoOutput outputMapping(IPizza pizza){
         return PizzaDtoOutput.builder()
                 .id(pizza.getId())
-                .completedOrderId(pizza.getCompletedOrderId())
                 .name(pizza.getName())
                 .size(pizza.getSize())
-                .createdAt(pizza.getCreationDate())
-                .version(pizza.getVersion()).build();
+                .build();
     }
 }
