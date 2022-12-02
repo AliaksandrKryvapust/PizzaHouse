@@ -61,7 +61,6 @@ class CompletedOrderMapperTest {
         Assertions.assertNotNull(test);
         Assertions.assertNotNull(test.getTicket());
         Assertions.assertNotNull(test.getItems());
-        Assertions.assertEquals(id, test.getTicketId());
         Assertions.assertEquals(creationDate, test.getTicket().getCreateAt());
         Assertions.assertEquals(id, test.getTicket().getOrder().getId());
         for (ISelectedItem output : test.getTicket().getOrder().getSelectedItems()) {
@@ -76,8 +75,23 @@ class CompletedOrderMapperTest {
         // preconditions
         final long id = 1L;
         final int version = 1;
+        final int count = 10;
+        final double price = 18.0;
+        final String name = "ITALIANO PIZZA";
+        final String description = "Mozzarella cheese, basilica, ham";
+        final int size = 32;
         final Instant creationDate = Instant.now();
-        ICompletedOrder completedOrders = new CompletedOrder(id, id, creationDate, version);
+        final PizzaInfo pizzaInfo = PizzaInfo.builder().id(id).name(name).description(description).size(size)
+                .creationDate(creationDate).version(version).build();
+        final MenuItem menuItem = MenuItem.builder().id(id).pizzaInfo(pizzaInfo).price(price)
+                .creationDate(creationDate).version(version).build();
+        final List<ISelectedItem> selectedItems = singletonList(SelectedItem.builder().id(id).menuItem(menuItem)
+                .count(count).createAt(creationDate).build());
+        final Order order = new Order(id, selectedItems);
+        final ITicket ticket = new Ticket(id, order, creationDate);
+        List<IPizza> pizzas = singletonList(Pizza.builder().id(id).name(name).size(size).build());
+        ICompletedOrder completedOrders = CompletedOrder.builder().items(pizzas).ticket(ticket).id(id)
+                .creationDate(creationDate).build();
 
         //test
         CompletedOrderDtoCrudOutput test = completedOrderMapper.outputCrudMapping(completedOrders);
@@ -87,7 +101,6 @@ class CompletedOrderMapperTest {
         Assertions.assertEquals(id, test.getId());
         Assertions.assertEquals(id, test.getTicketId());
         Assertions.assertEquals(creationDate, test.getCreatedAt());
-        Assertions.assertEquals(version, test.getVersion());
     }
 
     @Test
@@ -107,10 +120,11 @@ class CompletedOrderMapperTest {
                 .creationDate(creationDate).version(version).build();
         List<ISelectedItem> selectedItems = Collections.singletonList(SelectedItem.builder().id(id).menuItem(menuItem)
                 .count(count).createAt(creationDate).build());
-        List<IPizza> pizzas = Collections.singletonList(new Pizza(id, id, name, size, creationDate, version));
         final Order order = new Order(id, selectedItems);
         final ITicket ticket = new Ticket(id, order, creationDate);
-        final ICompletedOrder completedOrder = new CompletedOrder(ticket, pizzas, id, id, creationDate, version);
+        List<IPizza> pizzas = singletonList(Pizza.builder().id(id).name(name).size(size).build());
+        ICompletedOrder completedOrders = CompletedOrder.builder().items(pizzas).ticket(ticket).id(id)
+                .creationDate(creationDate).build();
         final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(name).description(description)
                 .size(size).createdAt(creationDate).version(version).build();
         final MenuItemDtoOutput menuItemDtoOutput = MenuItemDtoOutput.builder().id(id).price(price)
@@ -121,12 +135,12 @@ class CompletedOrderMapperTest {
         final TicketDtoOutput ticketDtoOutput = TicketDtoOutput.builder().order(orderDtoOutput).id(id)
                 .createdAt(creationDate).build();
         final PizzaDtoOutput pizzaDtoOutputs = PizzaDtoOutput.builder().id(id)
-                .completedOrderId(id).name(name).size(size).createdAt(creationDate).version(version).build();
+                .name(name).size(size).build();
         Mockito.when(pizzaMapper.outputMapping(any(IPizza.class))).thenReturn(pizzaDtoOutputs);
         Mockito.when(ticketMapper.outputMapping(any(ITicket.class))).thenReturn(ticketDtoOutput);
 
         //test
-        CompletedOrderDtoOutput test = completedOrderMapper.outputMapping(completedOrder);
+        CompletedOrderDtoOutput test = completedOrderMapper.outputMapping(completedOrders);
 
         // assert
         Assertions.assertNotNull(test);
@@ -135,9 +149,7 @@ class CompletedOrderMapperTest {
         Assertions.assertNotNull(test.getTicket().getOrder());
         Assertions.assertNotNull(test.getTicket().getOrder().getSelectedItems());
         Assertions.assertEquals(id, test.getId());
-        Assertions.assertEquals(id, test.getTicketId());
         Assertions.assertEquals(creationDate, test.getCreatedAt());
-        Assertions.assertEquals(version, test.getVersion());
         Assertions.assertEquals(id, test.getTicket().getId());
         Assertions.assertEquals(creationDate, test.getTicket().getCreatedAt());
         Assertions.assertEquals(id, test.getTicket().getOrder().getId());
@@ -160,11 +172,8 @@ class CompletedOrderMapperTest {
         }
         for (PizzaDtoOutput output : test.getItems()) {
             Assertions.assertEquals(id, output.getId());
-            Assertions.assertEquals(id, output.getCompletedOrderId());
             Assertions.assertEquals(name, output.getName());
             Assertions.assertEquals(size, output.getSize());
-            Assertions.assertEquals(creationDate, output.getCreatedAt());
-            Assertions.assertEquals(version, output.getVersion());
         }
     }
 }

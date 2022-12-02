@@ -9,8 +9,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.Instant;
-
 @ExtendWith(MockitoExtension.class)
 class PizzaMapperTest {
     @InjectMocks
@@ -20,11 +18,9 @@ class PizzaMapperTest {
     void outputMapping() {
         // preconditions
         final long id = 1L;
-        final int version = 1;
         final String name = "ITALIANO PIZZA";
         final int size = 32;
-        final Instant creationDate = Instant.now();
-        IPizza pizza = new Pizza(id, id, name, size, creationDate, version);
+        IPizza pizza = Pizza.builder().id(id).name(name).size(size).build();
 
         //test
         PizzaDtoOutput test = pizzaMapper.outputMapping(pizza);
@@ -32,10 +28,7 @@ class PizzaMapperTest {
         // assert
         Assertions.assertNotNull(test);
         Assertions.assertEquals(id, test.getId());
-        Assertions.assertEquals(id, test.getCompletedOrderId());
         Assertions.assertEquals(name, test.getName());
         Assertions.assertEquals(size, test.getSize());
-        Assertions.assertEquals(creationDate, test.getCreatedAt());
-        Assertions.assertEquals(version, test.getVersion());
     }
 }
