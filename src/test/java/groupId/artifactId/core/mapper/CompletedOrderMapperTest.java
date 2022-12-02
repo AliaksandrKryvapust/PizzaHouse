@@ -41,8 +41,7 @@ class CompletedOrderMapperTest {
         final int size = 32;
         final boolean done = false;
         final Instant creationDate = Instant.now();
-        final PizzaInfo pizzaInfo = PizzaInfo.builder().id(id).name(name).description(description).size(size)
-                .creationDate(creationDate).version(version).build();
+        final PizzaInfo pizzaInfo = PizzaInfo.builder().name(name).description(description).size(size).build();
         final MenuItem menuItem = MenuItem.builder().id(id).pizzaInfo(pizzaInfo).price(price)
                 .creationDate(creationDate).version(version).build();
         final List<ISelectedItem> selectedItems = singletonList(SelectedItem.builder().id(id).menuItem(menuItem)
@@ -81,8 +80,7 @@ class CompletedOrderMapperTest {
         final String description = "Mozzarella cheese, basilica, ham";
         final int size = 32;
         final Instant creationDate = Instant.now();
-        final PizzaInfo pizzaInfo = PizzaInfo.builder().id(id).name(name).description(description).size(size)
-                .creationDate(creationDate).version(version).build();
+        final PizzaInfo pizzaInfo = PizzaInfo.builder().name(name).description(description).size(size).build();
         final MenuItem menuItem = MenuItem.builder().id(id).pizzaInfo(pizzaInfo).price(price)
                 .creationDate(creationDate).version(version).build();
         final List<ISelectedItem> selectedItems = singletonList(SelectedItem.builder().id(id).menuItem(menuItem)
@@ -114,8 +112,7 @@ class CompletedOrderMapperTest {
         final String description = "Mozzarella cheese, basilica, ham";
         final int size = 32;
         final Instant creationDate = Instant.now();
-        final PizzaInfo pizzaInfo = PizzaInfo.builder().id(id).name(name).description(description).size(size)
-                .creationDate(creationDate).version(version).build();
+        final PizzaInfo pizzaInfo = PizzaInfo.builder().name(name).description(description).size(size).build();
         final MenuItem menuItem = MenuItem.builder().id(id).pizzaInfo(pizzaInfo).price(price)
                 .creationDate(creationDate).version(version).build();
         List<ISelectedItem> selectedItems = Collections.singletonList(SelectedItem.builder().id(id).menuItem(menuItem)
@@ -125,8 +122,8 @@ class CompletedOrderMapperTest {
         List<IPizza> pizzas = singletonList(Pizza.builder().id(id).name(name).size(size).build());
         ICompletedOrder completedOrders = CompletedOrder.builder().items(pizzas).ticket(ticket).id(id)
                 .creationDate(creationDate).build();
-        final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(name).description(description)
-                .size(size).createdAt(creationDate).version(version).build();
+        final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().name(name).description(description)
+                .size(size).build();
         final MenuItemDtoOutput menuItemDtoOutput = MenuItemDtoOutput.builder().id(id).price(price)
                 .createdAt(creationDate).version(version).pizzaInfo(pizzaInfoDtoOutput).build();
         List<SelectedItemDtoOutput> outputs = singletonList(SelectedItemDtoOutput.builder().menuItem(menuItemDtoOutput)
@@ -163,12 +160,9 @@ class CompletedOrderMapperTest {
             Assertions.assertEquals(price, output.getMenuItem().getPrice());
             Assertions.assertEquals(creationDate, output.getMenuItem().getCreatedAt());
             Assertions.assertEquals(version, output.getMenuItem().getVersion());
-            Assertions.assertEquals(id, output.getMenuItem().getPizzaInfo().getId());
             Assertions.assertEquals(name, output.getMenuItem().getPizzaInfo().getName());
             Assertions.assertEquals(description, output.getMenuItem().getPizzaInfo().getDescription());
             Assertions.assertEquals(size, output.getMenuItem().getPizzaInfo().getSize());
-            Assertions.assertEquals(creationDate, output.getMenuItem().getPizzaInfo().getCreatedAt());
-            Assertions.assertEquals(version, output.getMenuItem().getPizzaInfo().getVersion());
         }
         for (PizzaDtoOutput output : test.getItems()) {
             Assertions.assertEquals(id, output.getId());

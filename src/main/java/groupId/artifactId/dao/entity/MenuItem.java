@@ -1,12 +1,11 @@
 package groupId.artifactId.dao.entity;
 
 import groupId.artifactId.dao.entity.api.IMenuItem;
-import groupId.artifactId.dao.entity.api.IPizzaInfo;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.GenerationTime;
 
+import javax.persistence.*;
 import java.time.Instant;
 
 @Getter
@@ -19,10 +18,9 @@ public class MenuItem implements IMenuItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToOne(targetEntity = PizzaInfo.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "pizza_info_id", referencedColumnName = "id")
+    @Embedded
     @Setter
-    private IPizzaInfo pizzaInfo;
+    private PizzaInfo pizzaInfo;
     @Setter
     private Double price;
     @Generated(GenerationTime.INSERT)

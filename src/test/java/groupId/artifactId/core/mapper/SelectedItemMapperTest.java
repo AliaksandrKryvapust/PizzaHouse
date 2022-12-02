@@ -41,8 +41,7 @@ class SelectedItemMapperTest {
         final int version = 1;
         final Instant creationDate = Instant.now();
         final SelectedItemDtoInput dtoInput = SelectedItemDtoInput.builder().menuItemId(id).count(count).build();
-        final PizzaInfo pizzaInfo = PizzaInfo.builder().id(id).name(name).description(description).size(size)
-                .creationDate(creationDate).version(version).build();
+        final PizzaInfo pizzaInfo = PizzaInfo.builder().name(name).description(description).size(size).build();
         final MenuItem menuItem = MenuItem.builder().id(id).pizzaInfo(pizzaInfo).price(price)
                 .creationDate(creationDate).version(version).build();
 
@@ -58,12 +57,9 @@ class SelectedItemMapperTest {
         Assertions.assertEquals(price, test.getMenuItem().getPrice());
         Assertions.assertEquals(creationDate, test.getMenuItem().getCreationDate());
         Assertions.assertEquals(version, test.getMenuItem().getVersion());
-        Assertions.assertEquals(id, test.getMenuItem().getPizzaInfo().getId());
         Assertions.assertEquals(name, test.getMenuItem().getPizzaInfo().getName());
         Assertions.assertEquals(description, test.getMenuItem().getPizzaInfo().getDescription());
         Assertions.assertEquals(size, test.getMenuItem().getPizzaInfo().getSize());
-        Assertions.assertEquals(creationDate, test.getMenuItem().getPizzaInfo().getCreationDate());
-        Assertions.assertEquals(version, test.getMenuItem().getPizzaInfo().getVersion());
     }
 
     @Test
@@ -77,14 +73,13 @@ class SelectedItemMapperTest {
         final String description = "Mozzarella cheese, basilica, ham";
         final int size = 32;
         final Instant creationDate = Instant.now();
-        final PizzaInfo pizzaInfo = PizzaInfo.builder().id(id).name(name).description(description).size(size)
-                .creationDate(creationDate).version(version).build();
+        final PizzaInfo pizzaInfo = PizzaInfo.builder().name(name).description(description).size(size).build();
         final MenuItem menuItem = MenuItem.builder().id(id).pizzaInfo(pizzaInfo).price(price)
                 .creationDate(creationDate).version(version).build();
         final ISelectedItem selectedItem = SelectedItem.builder().id(id).menuItem(menuItem).count(count)
                 .createAt(creationDate).build();
-        final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().id(id).name(name).description(description)
-                .size(size).createdAt(creationDate).version(version).build();
+        final PizzaInfoDtoOutput pizzaInfoDtoOutput = PizzaInfoDtoOutput.builder().name(name).description(description)
+                .size(size).build();
         final MenuItemDtoOutput menuItemDtoOutput = MenuItemDtoOutput.builder().id(id).price(price)
                 .createdAt(creationDate).version(version).pizzaInfo(pizzaInfoDtoOutput).build();
         Mockito.when(menuItemMapper.outputMapping(any(IMenuItem.class))).thenReturn(menuItemDtoOutput);
@@ -103,11 +98,8 @@ class SelectedItemMapperTest {
         Assertions.assertEquals(price, test.getMenuItem().getPrice());
         Assertions.assertEquals(creationDate, test.getMenuItem().getCreatedAt());
         Assertions.assertEquals(version, test.getMenuItem().getVersion());
-        Assertions.assertEquals(id, test.getMenuItem().getPizzaInfo().getId());
         Assertions.assertEquals(name, test.getMenuItem().getPizzaInfo().getName());
         Assertions.assertEquals(description, test.getMenuItem().getPizzaInfo().getDescription());
         Assertions.assertEquals(size, test.getMenuItem().getPizzaInfo().getSize());
-        Assertions.assertEquals(creationDate, test.getMenuItem().getPizzaInfo().getCreatedAt());
-        Assertions.assertEquals(version, test.getMenuItem().getPizzaInfo().getVersion());
     }
 }

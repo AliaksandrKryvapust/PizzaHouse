@@ -4,6 +4,7 @@ import groupId.artifactId.core.dto.input.MenuItemDtoInput;
 import groupId.artifactId.core.dto.output.MenuItemDtoOutput;
 import groupId.artifactId.core.dto.output.PizzaInfoDtoOutput;
 import groupId.artifactId.dao.entity.MenuItem;
+import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.api.IMenuItem;
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
 
@@ -17,7 +18,7 @@ public class MenuItemMapper {
     public IMenuItem inputMapping(MenuItemDtoInput menuItemDtoInput) {
         IPizzaInfo pizzaInfo = pizzaInfoMapper.inputMapping(menuItemDtoInput.getPizzaInfoDtoInput());
         return MenuItem.builder().price(menuItemDtoInput.getPrice())
-                .pizzaInfo(pizzaInfo).build();
+                .pizzaInfo((PizzaInfo) pizzaInfo).build();
     }
 
     public MenuItemDtoOutput outputMapping(IMenuItem menuItem) {

@@ -28,9 +28,6 @@ public class MenuItemDao implements IMenuItemDao {
         if (menuItem.getId() != null || menuItem.getVersion() != null) {
             throw new IllegalStateException("MenuItem id & version should be empty");
         }
-        if (menuItem.getPizzaInfo().getId() != null || menuItem.getPizzaInfo().getVersion() != null) {
-            throw new IllegalStateException("Pizza Info id & version should be empty");
-        }
         try {
             entityTransaction.persist(menuItem);
             return menuItem;
@@ -50,15 +47,12 @@ public class MenuItemDao implements IMenuItemDao {
         if (menuItem.getId() != null || menuItem.getVersion() != null) {
             throw new IllegalStateException("MenuItem id & version should be empty");
         }
-        if (menuItem.getPizzaInfo().getId() != null || menuItem.getPizzaInfo().getVersion() != null) {
-            throw new IllegalStateException("Pizza Info id & version should be empty");
-        }
         try {
             MenuItem currentEntity = (MenuItem) this.getLock(id, entityTransaction);
             if (!currentEntity.getVersion().equals(version)) {
                 throw new OptimisticLockException();
             }
-            PizzaInfo currentPizzaInfo = (PizzaInfo) currentEntity.getPizzaInfo();
+            PizzaInfo currentPizzaInfo = currentEntity.getPizzaInfo();
             currentPizzaInfo.setName(menuItem.getPizzaInfo().getName());
             currentPizzaInfo.setDescription(menuItem.getPizzaInfo().getDescription());
             currentPizzaInfo.setSize(menuItem.getPizzaInfo().getSize());
