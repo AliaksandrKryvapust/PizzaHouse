@@ -1,4 +1,4 @@
-package groupId.artifactId.controller.servlet.api.crud;
+package groupId.artifactId.controller.servlet.api;
 
 import groupId.artifactId.controller.utils.IoC.JsonConverterSingleton;
 import groupId.artifactId.controller.utils.JsonConverter;

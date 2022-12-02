@@ -1,4 +1,4 @@
-package groupId.artifactId.controller.servlet.api.crud;
+package groupId.artifactId.controller.servlet.api;
 
 import groupId.artifactId.controller.utils.IoC.JsonConverterSingleton;
 import groupId.artifactId.controller.utils.JsonConverter;
@@ -28,13 +28,13 @@ public class ApiCompletedOrderServlet extends HttpServlet {
 
     //Read POSITION
     //1) Read list
-    //2) Read item need id param  (id = 5)
+    //2)  Read item need ticket id param (id = 5)
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         try {
             String id = req.getParameter(Constants.PARAMETER_ID);
             if (id != null) {
-                resp.getWriter().write(jsonConverter.fromCompletedOrderCrudToJson(completedOrderService.get(Long.valueOf(id))));
+                resp.getWriter().write(jsonConverter.fromCompletedOrderToJson(completedOrderService.getAllData(Long.valueOf(id))));
             } else {
                 resp.getWriter().write(jsonConverter.fromCompletedOrderListToJson(completedOrderService.get()));
             }
@@ -49,5 +49,4 @@ public class ApiCompletedOrderServlet extends HttpServlet {
                     "\tresponse status: " + resp.getStatus());
         }
     }
-
 }
