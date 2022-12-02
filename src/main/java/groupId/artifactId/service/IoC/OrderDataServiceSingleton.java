@@ -14,7 +14,10 @@ public class OrderDataServiceSingleton {
         this.orderDataService = new OrderDataService(OrderDataDaoSingleton.getInstance(),
                 new OrderDataMapper(new OrderStageMapper(),
                         new TicketMapper(new OrderMapper(new SelectedItemMapper(new MenuItemMapper(new PizzaInfoMapper()))))),
-                new OrderStageMapper(), EntityManagerFactoryHibernate.getEntityManager());
+                new OrderStageMapper(), EntityManagerFactoryHibernate.getEntityManager(),
+                CompletedOrderServiceSingleton.getInstance(), new CompletedOrderMapper(new TicketMapper(
+                        new OrderMapper(new SelectedItemMapper(new MenuItemMapper(new PizzaInfoMapper())))),
+                new PizzaMapper()));
     }
 
     public static IOrderDataService getInstance() {

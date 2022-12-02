@@ -3,6 +3,7 @@ package groupId.artifactId.service;
 import groupId.artifactId.core.dto.input.OrderDataDtoInput;
 import groupId.artifactId.core.dto.output.OrderDataDtoOutput;
 import groupId.artifactId.core.dto.output.crud.OrderDataDtoCrudOutput;
+import groupId.artifactId.core.mapper.CompletedOrderMapper;
 import groupId.artifactId.core.mapper.OrderDataMapper;
 import groupId.artifactId.core.mapper.OrderStageMapper;
 import groupId.artifactId.dao.api.IOrderDataDao;
@@ -12,6 +13,7 @@ import groupId.artifactId.dao.entity.api.IOrderStage;
 import groupId.artifactId.exceptions.DaoException;
 import groupId.artifactId.exceptions.NoContentException;
 import groupId.artifactId.exceptions.ServiceException;
+import groupId.artifactId.service.api.ICompletedOrderService;
 import groupId.artifactId.service.api.IOrderDataService;
 
 import javax.persistence.EntityManager;
@@ -26,13 +28,18 @@ public class OrderDataService implements IOrderDataService {
     private final OrderDataMapper orderDataMapper;
     private final OrderStageMapper orderStageMapper;
     private final EntityManager entityManager;
+    private final ICompletedOrderService completedOrderService;
+    private final CompletedOrderMapper completedOrderMapper;
 
-    public OrderDataService(IOrderDataDao orderDataDao, OrderDataMapper orderDataMapper,
-                            OrderStageMapper orderStageMapper, EntityManager entityManager) {
+    public OrderDataService(IOrderDataDao orderDataDao, OrderDataMapper orderDataMapper, OrderStageMapper orderStageMapper,
+                            EntityManager entityManager, ICompletedOrderService completedOrderService,
+                            CompletedOrderMapper completedOrderMapper) {
         this.orderDataDao = orderDataDao;
         this.orderDataMapper = orderDataMapper;
         this.orderStageMapper = orderStageMapper;
         this.entityManager = entityManager;
+        this.completedOrderService = completedOrderService;
+        this.completedOrderMapper = completedOrderMapper;
     }
 
     @Override
@@ -69,13 +76,13 @@ public class OrderDataService implements IOrderDataService {
         try {
             IOrderStage inputOrderStages = this.orderStageMapper.inputMapping(dtoInput.getDescription());
             entityManager.getTransaction().begin();
-            OrderData orderData = (OrderData) this.orderDataDao.getOptional(dtoInput.getTicketId(),this.entityManager);
+            OrderData orderData = (OrderData) this.orderDataDao.getOptional(dtoInput.getTicketId(), this.entityManager);
             orderData.getOrderHistory().add(inputOrderStages);
             orderData.setDone(inputOrderStages.getDescription().equals(ORDER_FINISH_DESCRIPTION));
             IOrderData orderDataOutput = this.orderDataDao.update(orderData, this.entityManager);
-//            if (inputOrderStages.getDescription().equals(ORDER_FINISH_DESCRIPTION)){
-//                this.completedOrderService.save();
-//            }
+            if (inputOrderStages.getDescription().equals(ORDER_FINISH_DESCRIPTION)) {
+                this.completedOrderService.create(completedOrderMapper.inputMapping(orderDataOutput), this.entityManager);
+            }
             entityManager.getTransaction().commit();
             return orderDataMapper.outputCrudMapping(orderDataOutput);
         } catch (DaoException e) {
