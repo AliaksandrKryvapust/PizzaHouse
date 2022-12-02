@@ -3,38 +3,33 @@ package groupId.artifactId.service;
 import groupId.artifactId.core.dto.output.CompletedOrderDtoOutput;
 import groupId.artifactId.core.dto.output.crud.CompletedOrderDtoCrudOutput;
 import groupId.artifactId.core.mapper.CompletedOrderMapper;
-import groupId.artifactId.dao.api.EntityManagerFactoryHibernate;
 import groupId.artifactId.dao.api.ICompletedOrderDao;
-import groupId.artifactId.dao.api.IPizzaDao;
-import groupId.artifactId.dao.entity.CompletedOrder;
-import groupId.artifactId.dao.entity.Pizza;
 import groupId.artifactId.dao.entity.api.ICompletedOrder;
-import groupId.artifactId.dao.entity.api.IPizza;
 import groupId.artifactId.exceptions.DaoException;
 import groupId.artifactId.exceptions.NoContentException;
 import groupId.artifactId.exceptions.ServiceException;
 import groupId.artifactId.service.api.ICompletedOrderService;
 
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CompletedOrderService implements ICompletedOrderService {
     private final ICompletedOrderDao completedOrderDao;
-    private final IPizzaDao pizzaDao;
-
     private final CompletedOrderMapper completedOrderMapper;
+    private final EntityManager entityManager;
 
-
-    public CompletedOrderService(ICompletedOrderDao completedOrderDao, IPizzaDao pizzaDao, CompletedOrderMapper completedOrderMapper) {
+    public CompletedOrderService(ICompletedOrderDao completedOrderDao,
+                                 CompletedOrderMapper completedOrderMapper, EntityManager entityManager) {
         this.completedOrderDao = completedOrderDao;
-        this.pizzaDao = pizzaDao;
         this.completedOrderMapper = completedOrderMapper;
+        this.entityManager = entityManager;
     }
 
     @Override
     public CompletedOrderDtoOutput getAllData(Long id) {
         try {
-            return completedOrderMapper.outputMapping(this.completedOrderDao.getAllData(id));
+            return completedOrderMapper.outputMapping(this.completedOrderDao.get(id));
         } catch (DaoException e) {
             throw new ServiceException(e.getMessage(), e);
         } catch (NoContentException e) {
@@ -45,40 +40,10 @@ public class CompletedOrderService implements ICompletedOrderService {
     }
 
     @Override
-    public ICompletedOrder getAllDataRow(Long id) {
+    public CompletedOrderDtoCrudOutput create(ICompletedOrder type, EntityManager entityTransaction) {
         try {
-            return this.completedOrderDao.getAllData(id);
-        } catch (DaoException e) {
-            throw new ServiceException(e.getMessage(), e);
-        } catch (NoContentException e) {
-            throw new NoContentException(e.getMessage());
-        } catch (Exception e) {
-            throw new ServiceException("Failed to getAllDataRow at Completed order Service by id" + id, e);
-        }
-    }
-
-    @Override
-    public Boolean isPizzaIdValid(Long id) {
-        try {
-            return this.pizzaDao.exist(id);
-        } catch (DaoException e) {
-            throw new ServiceException(e.getMessage(), e);
-        } catch (Exception e) {
-            throw new ServiceException("Failed to check pizza state at Completed order Service by id" + id, e);
-        }
-    }
-
-    @Override
-    public CompletedOrderDtoCrudOutput save(ICompletedOrder type) {
-        try {
-            ICompletedOrder completedOrder = this.completedOrderDao.save(type, EntityManagerFactoryHibernate.getEntityManager());
-            List<IPizza> pizzas = new ArrayList<>();// completedOrderId needed
-            for (IPizza pizza : type.getItems()) {
-                IPizza output = this.pizzaDao.save(new Pizza(completedOrder.getId(), pizza.getName(), pizza.getSize()), EntityManagerFactoryHibernate.getEntityManager());
-                pizzas.add(output);
-            }
-            return completedOrderMapper.outputCrudMapping(new CompletedOrder(completedOrder.getTicket(), pizzas,
-                    completedOrder.getId(), completedOrder.getTicketId()));
+            ICompletedOrder completedOrder = this.completedOrderDao.save(type, entityTransaction);
+            return completedOrderMapper.outputCrudMapping(completedOrder);
         } catch (DaoException e) {
             throw new ServiceException(e.getMessage(), e);
         } catch (NoContentException e) {
@@ -87,6 +52,27 @@ public class CompletedOrderService implements ICompletedOrderService {
             throw new IllegalStateException(e);
         } catch (Exception e) {
             throw new ServiceException("Failed to save Completed order" + type, e);
+        }
+    }
+    @Override
+    public CompletedOrderDtoCrudOutput save(ICompletedOrder type) {
+        try {
+            entityManager.getTransaction().begin();
+            CompletedOrderDtoCrudOutput output = this.create(type, this.entityManager);
+            entityManager.getTransaction().commit();
+            return output;
+        } catch (DaoException e) {
+            throw new ServiceException(e.getMessage(), e);
+        } catch (NoContentException e) {
+            throw new NoContentException(e.getMessage());
+        } catch (IllegalStateException e) {
+            throw new IllegalStateException(e);
+        } catch (Exception e) {
+            throw new ServiceException("Failed to save Completed order" + type, e);
+        } finally {
+            if (entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
+            }
         }
     }
 
