@@ -1,17 +1,19 @@
 package groupId.artifactId.controller.servlet.api;
 
-import groupId.artifactId.controller.utils.IoC.JsonConverterSingleton;
+import groupId.artifactId.AppContext;
 import groupId.artifactId.controller.utils.JsonConverter;
-import groupId.artifactId.controller.validator.IoC.MenuValidatorSingleton;
+import groupId.artifactId.controller.validator.MenuValidator;
 import groupId.artifactId.controller.validator.api.IMenuValidator;
 import groupId.artifactId.core.Constants;
 import groupId.artifactId.core.dto.input.MenuDtoInput;
 import groupId.artifactId.core.dto.output.crud.MenuDtoCrudOutput;
 import groupId.artifactId.exceptions.NoContentException;
-import groupId.artifactId.service.IoC.MenuServiceSingleton;
+import groupId.artifactId.service.MenuService;
 import groupId.artifactId.service.api.IMenuService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import javax.persistence.OptimisticLockException;
 import javax.servlet.annotation.WebServlet;
@@ -28,11 +30,13 @@ public class ApiMenuServlet extends HttpServlet {
     private final Logger logger;
     private final JsonConverter jsonConverter;
 
+    @Autowired
     public ApiMenuServlet() {
-        this.menuService = MenuServiceSingleton.getInstance();
-        this.menuValidator = MenuValidatorSingleton.getInstance();
+        AnnotationConfigApplicationContext context = AppContext.getContext();
+        this.menuService = context.getBean(MenuService.class);
+        this.menuValidator = context.getBean(MenuValidator.class);
         this.logger = LoggerFactory.getLogger(this.getClass());
-        this.jsonConverter = JsonConverterSingleton.getInstance();
+        this.jsonConverter = context.getBean(JsonConverter.class);
     }
     //Read POSITION
     //1) Read list
