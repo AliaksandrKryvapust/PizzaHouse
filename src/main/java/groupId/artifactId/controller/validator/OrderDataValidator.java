@@ -2,11 +2,10 @@ package groupId.artifactId.controller.validator;
 
 import groupId.artifactId.controller.validator.api.IOrderDataValidator;
 import groupId.artifactId.core.dto.input.OrderDataDtoInput;
+import org.springframework.stereotype.Component;
 
+@Component
 public class OrderDataValidator implements IOrderDataValidator {
-
-    public OrderDataValidator() {
-    }
 
     @Override
     public void validate(OrderDataDtoInput orderDataDtoInput) {
