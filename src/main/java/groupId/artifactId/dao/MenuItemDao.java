@@ -6,17 +6,21 @@ import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.api.IMenuItem;
 import groupId.artifactId.exceptions.DaoException;
 import groupId.artifactId.exceptions.NoContentException;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static groupId.artifactId.core.Constants.*;
 
+@Repository
 public class MenuItemDao implements IMenuItemDao {
     private static final String SELECT_MENU_ITEM = "SELECT menuItem from MenuItem menuItem ORDER BY id";
     private static final String SELECT_MENU_ITEMS_BY_IDS = "SELECT menuItem FROM MenuItem menuItem WHERE menuItem.id IN :ids";
+    @PersistenceContext
     private final EntityManager entityManager;
 
     public MenuItemDao(EntityManager entityManager) {
