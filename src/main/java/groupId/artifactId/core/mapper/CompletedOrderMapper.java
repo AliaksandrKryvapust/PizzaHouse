@@ -10,15 +10,21 @@ import groupId.artifactId.dao.entity.api.ICompletedOrder;
 import groupId.artifactId.dao.entity.api.IOrderData;
 import groupId.artifactId.dao.entity.api.IPizza;
 import groupId.artifactId.dao.entity.api.ITicket;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
+@Scope(value = "prototype", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class CompletedOrderMapper {
 
     private final TicketMapper ticketMapper;
     private final PizzaMapper pizzaMapper;
-
+    @Autowired
     public CompletedOrderMapper(TicketMapper ticketMapper, PizzaMapper pizzaMapper) {
         this.ticketMapper = ticketMapper;
         this.pizzaMapper = pizzaMapper;
