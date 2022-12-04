@@ -15,22 +15,28 @@ import groupId.artifactId.exceptions.NoContentException;
 import groupId.artifactId.exceptions.ServiceException;
 import groupId.artifactId.service.api.ICompletedOrderService;
 import groupId.artifactId.service.api.IOrderDataService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static groupId.artifactId.core.Constants.ORDER_FINISH_DESCRIPTION;
 import static java.util.Collections.singletonList;
 
+@Service
 public class OrderDataService implements IOrderDataService {
     private final IOrderDataDao orderDataDao;
     private final OrderDataMapper orderDataMapper;
     private final OrderStageMapper orderStageMapper;
+    @PersistenceContext
     private final EntityManager entityManager;
     private final ICompletedOrderService completedOrderService;
     private final CompletedOrderMapper completedOrderMapper;
 
+    @Autowired
     public OrderDataService(IOrderDataDao orderDataDao, OrderDataMapper orderDataMapper, OrderStageMapper orderStageMapper,
                             EntityManager entityManager, ICompletedOrderService completedOrderService,
                             CompletedOrderMapper completedOrderMapper) {
