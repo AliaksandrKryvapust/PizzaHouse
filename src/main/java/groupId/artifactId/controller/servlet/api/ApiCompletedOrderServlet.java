@@ -1,13 +1,15 @@
 package groupId.artifactId.controller.servlet.api;
 
-import groupId.artifactId.controller.utils.IoC.JsonConverterSingleton;
+import groupId.artifactId.AppContext;
 import groupId.artifactId.controller.utils.JsonConverter;
 import groupId.artifactId.core.Constants;
 import groupId.artifactId.exceptions.NoContentException;
-import groupId.artifactId.service.IoC.CompletedOrderServiceSingleton;
+import groupId.artifactId.service.CompletedOrderService;
 import groupId.artifactId.service.api.ICompletedOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,13 +18,16 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet(name = "CompletedOrder", urlPatterns = "/api/completed_order")
 public class ApiCompletedOrderServlet extends HttpServlet {
+
     private final ICompletedOrderService completedOrderService;
     private final JsonConverter jsonConverter;
     private final Logger logger;
 
+    @Autowired
     public ApiCompletedOrderServlet() {
-        this.completedOrderService = CompletedOrderServiceSingleton.getInstance();
-        this.jsonConverter = JsonConverterSingleton.getInstance();
+        AnnotationConfigApplicationContext context = AppContext.getContext();
+        this.completedOrderService = context.getBean(CompletedOrderService.class);
+        this.jsonConverter = context.getBean(JsonConverter.class);
         this.logger = LoggerFactory.getLogger(this.getClass());
     }
 
