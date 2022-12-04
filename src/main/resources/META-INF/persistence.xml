@@ -27,7 +27,7 @@
             <property name="hibernate.connection.pool_size" value="10"/>
             <property name="hibernate.default_schema" value="pizza_manager"/>
             <property name="hibernate.physical_naming_strategy"
-                      value="groupId.artifactId.dao.api.CustomNamingStrategy"/>
+                      value="groupId.artifactId.dao.utils.CustomNamingStrategy"/>
         </properties>
 
     </persistence-unit>
