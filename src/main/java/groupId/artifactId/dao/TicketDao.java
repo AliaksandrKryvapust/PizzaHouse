@@ -5,15 +5,19 @@ import groupId.artifactId.dao.entity.Ticket;
 import groupId.artifactId.dao.entity.api.ITicket;
 import groupId.artifactId.exceptions.DaoException;
 import groupId.artifactId.exceptions.NoContentException;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static groupId.artifactId.core.Constants.*;
 
+@Repository
 public class TicketDao implements ITicketDao {
     private static final String SELECT_TICKET = "SELECT ticket from Ticket ticket ORDER BY ticket.id";
+    @PersistenceContext
     private final EntityManager entityManager;
 
     public TicketDao(EntityManager entityManager) {
