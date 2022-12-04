@@ -1,17 +1,18 @@
 package groupId.artifactId.controller.servlet.api;
 
-import groupId.artifactId.controller.utils.IoC.JsonConverterSingleton;
+import groupId.artifactId.AppContext;
 import groupId.artifactId.controller.utils.JsonConverter;
-import groupId.artifactId.controller.validator.IoC.OrderValidatorSingleton;
+import groupId.artifactId.controller.validator.OrderValidator;
 import groupId.artifactId.controller.validator.api.IOrderValidator;
 import groupId.artifactId.core.Constants;
 import groupId.artifactId.core.dto.input.OrderDtoInput;
 import groupId.artifactId.core.dto.output.crud.TicketDtoCrudOutput;
 import groupId.artifactId.exceptions.NoContentException;
-import groupId.artifactId.service.IoC.OrderServiceSingleton;
+import groupId.artifactId.service.OrderService;
 import groupId.artifactId.service.api.IOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -26,10 +27,11 @@ public class ApiOrderServlet extends HttpServlet {
     private final JsonConverter jsonConverter;
 
     public ApiOrderServlet() {
-        this.orderService = OrderServiceSingleton.getInstance();
-        this.orderValidator = OrderValidatorSingleton.getInstance();
+        AnnotationConfigApplicationContext context = AppContext.getContext();
+        this.orderService = context.getBean(OrderService.class);
+        this.orderValidator = context.getBean(OrderValidator.class);
         this.logger = LoggerFactory.getLogger(this.getClass());
-        this.jsonConverter = JsonConverterSingleton.getInstance();
+        this.jsonConverter = context.getBean(JsonConverter.class);
     }
 
     //Read POSITION
