@@ -1,20 +1,21 @@
 package groupId.artifactId.controller.servlet.api;
 
-import groupId.artifactId.controller.utils.IoC.JsonConverterSingleton;
+import groupId.artifactId.AppContext;
 import groupId.artifactId.controller.utils.JsonConverter;
-import groupId.artifactId.controller.validator.IoC.OrderDataValidatorSingleton;
+import groupId.artifactId.controller.validator.OrderDataValidator;
 import groupId.artifactId.controller.validator.api.IOrderDataValidator;
 import groupId.artifactId.core.Constants;
 import groupId.artifactId.core.dto.input.OrderDataDtoInput;
 import groupId.artifactId.core.dto.output.crud.OrderDataDtoCrudOutput;
 import groupId.artifactId.dao.entity.api.ITicket;
 import groupId.artifactId.exceptions.NoContentException;
-import groupId.artifactId.service.IoC.OrderDataServiceSingleton;
-import groupId.artifactId.service.IoC.OrderServiceSingleton;
+import groupId.artifactId.service.OrderDataService;
+import groupId.artifactId.service.OrderService;
 import groupId.artifactId.service.api.IOrderDataService;
 import groupId.artifactId.service.api.IOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -30,11 +31,12 @@ public class ApiOrderDataServlet extends HttpServlet {
     private final JsonConverter jsonConverter;
 
     public ApiOrderDataServlet() {
-        this.orderDataService = OrderDataServiceSingleton.getInstance();
-        this.orderDataValidator = OrderDataValidatorSingleton.getInstance();
-        this.orderService = OrderServiceSingleton.getInstance();
+        AnnotationConfigApplicationContext context = AppContext.getContext();
+        this.orderDataService = context.getBean(OrderDataService.class);
+        this.orderDataValidator = context.getBean(OrderDataValidator.class);
+        this.orderService = context.getBean(OrderService.class);
         this.logger = LoggerFactory.getLogger(this.getClass());
-        this.jsonConverter = JsonConverterSingleton.getInstance();
+        this.jsonConverter = context.getBean(JsonConverter.class);
     }
 
     //Read POSITION
