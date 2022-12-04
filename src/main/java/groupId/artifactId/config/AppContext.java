@@ -1,6 +1,5 @@
 package groupId.artifactId.config;
 
-import groupId.artifactId.AppConfig;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class AppContext {
