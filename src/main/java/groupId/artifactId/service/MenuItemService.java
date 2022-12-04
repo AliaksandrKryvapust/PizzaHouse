@@ -12,20 +12,25 @@ import groupId.artifactId.exceptions.NoContentException;
 import groupId.artifactId.exceptions.ServiceException;
 import groupId.artifactId.service.api.IMenuItemService;
 import groupId.artifactId.service.api.IMenuService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Component
 public class MenuItemService implements IMenuItemService {
     private final IMenuItemDao menuItemDao;
     private final MenuItemMapper menuItemMapper;
+    @PersistenceContext
     private final EntityManager entityManager;
-
     private final IMenuService menuService;
 
+    @Autowired
     public MenuItemService(IMenuItemDao menuItemDao, MenuItemMapper menuItemMapper, EntityManager entityManager, IMenuService menuService) {
         this.menuItemDao = menuItemDao;
         this.menuItemMapper = menuItemMapper;
