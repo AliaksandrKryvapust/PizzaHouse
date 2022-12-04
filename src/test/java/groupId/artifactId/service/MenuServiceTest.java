@@ -227,8 +227,6 @@ class MenuServiceTest {
         final IMenu menu = Menu.builder().id(id).creationDate(creationDate).version(version).name(name)
                 .enable(enable).items(items).build();
         final IMenuItem item = MenuItem.builder().pizzaInfo(pizzaInfo).price(price).build();
-        Mockito.when(entityManager.getTransaction()).thenReturn(transaction);
-
         Mockito.when(menuDao.updateItems(any(IMenu.class), any(IMenuItem.class), any(EntityManager.class)))
                 .thenReturn(menu);
 
