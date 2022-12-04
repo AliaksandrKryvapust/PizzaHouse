@@ -9,16 +9,22 @@ import groupId.artifactId.exceptions.DaoException;
 import groupId.artifactId.exceptions.NoContentException;
 import groupId.artifactId.exceptions.ServiceException;
 import groupId.artifactId.service.api.ICompletedOrderService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class CompletedOrderService implements ICompletedOrderService {
     private final ICompletedOrderDao completedOrderDao;
     private final CompletedOrderMapper completedOrderMapper;
+    @PersistenceContext
     private final EntityManager entityManager;
 
+    @Autowired
     public CompletedOrderService(ICompletedOrderDao completedOrderDao,
                                  CompletedOrderMapper completedOrderMapper, EntityManager entityManager) {
         this.completedOrderDao = completedOrderDao;
@@ -54,6 +60,7 @@ public class CompletedOrderService implements ICompletedOrderService {
             throw new ServiceException("Failed to save Completed order" + type, e);
         }
     }
+
     @Override
     public CompletedOrderDtoCrudOutput save(ICompletedOrder type) {
         try {
