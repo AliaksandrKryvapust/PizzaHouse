@@ -7,14 +7,20 @@ import groupId.artifactId.core.dto.input.*;
 import groupId.artifactId.core.dto.output.*;
 import groupId.artifactId.core.dto.output.crud.*;
 import groupId.artifactId.exceptions.IncorrectJsonParseException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletInputStream;
 import java.io.IOException;
 import java.util.List;
 
+@Component
+@Scope(value = "prototype", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class JsonConverter {
     private final ObjectMapper mapper;
-
+    @Autowired
     public JsonConverter(ObjectMapper mapper) {
         this.mapper = mapper;
     }
@@ -105,14 +111,6 @@ public class JsonConverter {
             return mapper.writeValueAsString(output);
         } catch (JsonProcessingException e) {
             throw new IncorrectJsonParseException("failed to write List of OrderDataDtoCrudOutput as json", e);
-        }
-    }
-
-    public String fromCompletedOrderCrudToJson(CompletedOrderDtoCrudOutput output) {
-        try {
-            return mapper.writeValueAsString(output);
-        } catch (JsonProcessingException e) {
-            throw new IncorrectJsonParseException("failed to write CompletedOrderDtoCrudOutput as json", e);
         }
     }
 
