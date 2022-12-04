@@ -4,17 +4,21 @@ import groupId.artifactId.dao.api.ICompletedOrderDao;
 import groupId.artifactId.dao.entity.api.ICompletedOrder;
 import groupId.artifactId.exceptions.DaoException;
 import groupId.artifactId.exceptions.NoContentException;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static groupId.artifactId.core.Constants.COMPLETED_ORDER_FK;
 import static groupId.artifactId.core.Constants.PIZZA_FK;
 
+@Repository
 public class CompletedOrderDao implements ICompletedOrderDao {
     private static final String SELECT_COMPLETED_ORDER = "SELECT order from CompletedOrder order ORDER BY order.id";
     private static final String SELECT_COMPLETED_ORDER_BY_TICKET = "SELECT order from CompletedOrder order WHERE ticket.id=?1";
+    @PersistenceContext
     private final EntityManager entityManager;
 
     public CompletedOrderDao(EntityManager entityManager) {
