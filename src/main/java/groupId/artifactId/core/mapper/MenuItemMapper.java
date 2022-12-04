@@ -7,10 +7,16 @@ import groupId.artifactId.dao.entity.MenuItem;
 import groupId.artifactId.dao.entity.PizzaInfo;
 import groupId.artifactId.dao.entity.api.IMenuItem;
 import groupId.artifactId.dao.entity.api.IPizzaInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.stereotype.Component;
 
+@Component
+@Scope(value = "prototype", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class MenuItemMapper {
     private final PizzaInfoMapper pizzaInfoMapper;
-
+    @Autowired
     public MenuItemMapper(PizzaInfoMapper pizzaInfoMapper) {
         this.pizzaInfoMapper = pizzaInfoMapper;
     }
