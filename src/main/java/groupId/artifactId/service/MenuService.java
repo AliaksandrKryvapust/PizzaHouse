@@ -11,17 +11,23 @@ import groupId.artifactId.exceptions.DaoException;
 import groupId.artifactId.exceptions.NoContentException;
 import groupId.artifactId.exceptions.ServiceException;
 import groupId.artifactId.service.api.IMenuService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class MenuService implements IMenuService {
     private final IMenuDao dao;
     private final MenuMapper menuMapper;
+    @PersistenceContext
     private final EntityManager entityManager;
 
+    @Autowired
     public MenuService(IMenuDao dao, MenuMapper menuMapper, EntityManager entityManager) {
         this.dao = dao;
         this.menuMapper = menuMapper;
@@ -121,10 +127,6 @@ public class MenuService implements IMenuService {
         } catch (Exception e) {
             throw new ServiceException("Failed to update Menu at Service " + menu + "by menuItem:" + menuItem
                     + "\tcause" + e.getMessage(), e);
-        } finally {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
-            }
         }
     }
 
