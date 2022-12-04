@@ -4,10 +4,16 @@ import groupId.artifactId.core.dto.output.OrderDtoOutput;
 import groupId.artifactId.core.dto.output.TicketDtoOutput;
 import groupId.artifactId.core.dto.output.crud.TicketDtoCrudOutput;
 import groupId.artifactId.dao.entity.api.ITicket;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.stereotype.Component;
 
+@Component
+@Scope(value = "prototype", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class TicketMapper {
     private final OrderMapper orderMapper;
-
+    @Autowired
     public TicketMapper(OrderMapper orderMapper) {
         this.orderMapper = orderMapper;
     }
