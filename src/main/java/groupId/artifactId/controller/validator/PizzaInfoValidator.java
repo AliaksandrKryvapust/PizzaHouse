@@ -2,8 +2,10 @@ package groupId.artifactId.controller.validator;
 
 import groupId.artifactId.controller.validator.api.IPizzaInfoValidator;
 import groupId.artifactId.core.dto.input.PizzaInfoDtoInput;
+import org.springframework.stereotype.Component;
 
-public class PizzaInfoValidator implements IPizzaInfoValidator {
+@Component
+class PizzaInfoValidator implements IPizzaInfoValidator {
     public PizzaInfoValidator() {
     }
 
