@@ -3,7 +3,9 @@ package groupId.artifactId.controller.validator;
 import groupId.artifactId.controller.validator.api.IOrderValidator;
 import groupId.artifactId.core.dto.input.OrderDtoInput;
 import groupId.artifactId.core.dto.input.SelectedItemDtoInput;
+import org.springframework.stereotype.Component;
 
+@Component
 public class OrderValidator implements IOrderValidator {
 
     @Override
