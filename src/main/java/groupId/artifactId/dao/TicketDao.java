@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,7 +33,7 @@ public class TicketDao implements ITicketDao {
         try {
             entityTransaction.persist(ticket);
             return ticket;
-        } catch (Exception e) {
+        } catch (PersistenceException e) {
             if (e.getMessage().contains(TICKET_UK) || e.getMessage().contains(SELECTED_ITEM_FK) ||
                     e.getMessage().contains(SELECTED_ITEM_FK2)) {
                 throw new NoContentException("ticket table insert failed,  check preconditions and FK values: "
@@ -40,6 +41,8 @@ public class TicketDao implements ITicketDao {
             } else {
                 throw new DaoException("Failed to save new Ticket" + ticket + "\t cause" + e.getMessage(), e);
             }
+        } catch (Exception e) {
+            throw new DaoException("Failed to save new Ticket" + ticket + "\t cause" + e.getMessage(), e);
         }
     }
 

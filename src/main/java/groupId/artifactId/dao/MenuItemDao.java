@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,7 +36,7 @@ public class MenuItemDao implements IMenuItemDao {
         try {
             entityTransaction.persist(menuItem);
             return menuItem;
-        } catch (Exception e) {
+        } catch (PersistenceException e) {
             if (e.getMessage().contains(MENU_ITEM_UK) || e.getMessage().contains(MENU_ITEM_FK)
                     || e.getMessage().contains(MENU_ITEM_FK2)) {
                 throw new NoContentException("menu item table insert failed,  check preconditions and FK values: "
@@ -43,6 +44,8 @@ public class MenuItemDao implements IMenuItemDao {
             } else {
                 throw new DaoException("Failed to save new MenuItem" + menuItem + "\t cause" + e.getMessage(), e);
             }
+        } catch (Exception e) {
+            throw new DaoException("Failed to save new MenuItem" + menuItem + "\t cause" + e.getMessage(), e);
         }
     }
 
@@ -68,7 +71,7 @@ public class MenuItemDao implements IMenuItemDao {
             throw new NoContentException(e.getMessage());
         } catch (OptimisticLockException e) {
             throw new OptimisticLockException("menu_item table update failed, version does not match update denied");
-        } catch (Exception e) {
+        } catch (PersistenceException e) {
             if (e.getMessage().contains(MENU_ITEM_UK) || e.getMessage().contains(MENU_ITEM_FK)
                     || e.getMessage().contains(MENU_ITEM_FK2)) {
                 throw new NoContentException("menu_item table insert failed,  check preconditions and FK values: "
@@ -76,6 +79,8 @@ public class MenuItemDao implements IMenuItemDao {
             } else {
                 throw new DaoException("Failed to update menu_item" + menuItem + " by id:" + id + "\t cause" + e.getMessage(), e);
             }
+        } catch (Exception e) {
+            throw new DaoException("Failed to update menu_item" + menuItem + " by id:" + id + "\t cause" + e.getMessage(), e);
         }
     }
 

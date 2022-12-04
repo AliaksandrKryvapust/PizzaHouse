@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,7 +33,7 @@ public class OrderDataDao implements IOrderDataDao {
         try {
             entityTransaction.persist(orderData);
             return orderData;
-        } catch (Exception e) {
+        } catch (PersistenceException e) {
             if (e.getMessage().contains(ORDER_STAGE_UK) || e.getMessage().contains(ORDER_DATA_FK) ||
                     e.getMessage().contains(ORDER_STAGE_FK)) {
                 throw new NoContentException("order data table insert failed,  check preconditions and FK values: "
@@ -40,6 +41,8 @@ public class OrderDataDao implements IOrderDataDao {
             } else {
                 throw new DaoException("Failed to save new Order data" + orderData + "\t cause" + e.getMessage(), e);
             }
+        } catch (Exception e) {
+            throw new DaoException("Failed to save new Order data" + orderData + "\t cause" + e.getMessage(), e);
         }
     }
 
@@ -94,7 +97,7 @@ public class OrderDataDao implements IOrderDataDao {
         try {
             entityTransaction.persist(orderData);
             return orderData;
-        } catch (Exception e) {
+        } catch (PersistenceException e) {
             if (e.getMessage().contains(ORDER_STAGE_UK) || e.getMessage().contains(ORDER_DATA_FK) ||
                     e.getMessage().contains(ORDER_STAGE_FK)) {
                 throw new NoContentException("order data table update failed,  check preconditions and FK values: "
@@ -102,6 +105,8 @@ public class OrderDataDao implements IOrderDataDao {
             } else {
                 throw new DaoException("Failed to update new Order data" + orderData + "\t cause" + e.getMessage(), e);
             }
+        } catch (Exception e) {
+            throw new DaoException("Failed to update new Order data" + orderData + "\t cause" + e.getMessage(), e);
         }
     }
 }

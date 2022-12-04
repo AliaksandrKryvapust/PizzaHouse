@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,13 +34,16 @@ public class CompletedOrderDao implements ICompletedOrderDao {
         try {
             entityTransaction.persist(completedOrder);
             return completedOrder;
-        } catch (Exception e) {
+        } catch (PersistenceException e) {
             if (e.getMessage().contains(COMPLETED_ORDER_FK) || e.getMessage().contains(PIZZA_FK)) {
                 throw new NoContentException("completed order table insert failed,  check preconditions and FK values: "
                         + completedOrder);
             } else {
                 throw new DaoException("Failed to save new Order data" + completedOrder + "\t cause" + e.getMessage(), e);
             }
+        } catch (Exception e) {
+            throw new DaoException("Failed to save new Order data" + completedOrder + "\t cause" + e.getMessage(), e);
+
         }
     }
 

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,13 +66,15 @@ public class MenuDao implements IMenuDao {
         try {
             entityTransaction.persist(menu);
             return menu;
-        } catch (Exception e) {
+        } catch (PersistenceException e) {
             if (e.getMessage().contains(MENU_UK)) {
                 throw new NoContentException("menu table insert failed,  check preconditions and FK values: "
                         + menu);
             } else {
                 throw new DaoException("Failed to save new Menu" + menu + "\t cause" + e.getMessage(), e);
             }
+        } catch (Exception e) {
+            throw new DaoException("Failed to save new Menu" + menu + "\t cause" + e.getMessage(), e);
         }
     }
 
@@ -96,13 +99,15 @@ public class MenuDao implements IMenuDao {
             throw new NoContentException(e.getMessage());
         } catch (OptimisticLockException e) {
             throw new OptimisticLockException("menu table update failed, version does not match update denied");
-        } catch (Exception e) {
+        } catch (PersistenceException e) {
             if (e.getMessage().contains(MENU_UK)) {
                 throw new NoContentException("menu table update failed,  check preconditions and FK values: "
                         + menu);
             } else {
                 throw new DaoException("Failed to update menu" + menu + " by id:" + id + "\t cause" + e.getMessage(), e);
             }
+        } catch (Exception e) {
+            throw new DaoException("Failed to update menu" + menu + " by id:" + id + "\t cause" + e.getMessage(), e);
         }
     }
 
@@ -119,7 +124,7 @@ public class MenuDao implements IMenuDao {
             throw new NoContentException(e.getMessage());
         } catch (OptimisticLockException e) {
             throw new OptimisticLockException("menu table update failed, version does not match update denied");
-        } catch (Exception e) {
+        } catch (PersistenceException e) {
             if (e.getMessage().contains(MENU_UK)) {
                 throw new NoContentException("menu table update failed,  check preconditions and FK values: "
                         + menu);
@@ -127,6 +132,10 @@ public class MenuDao implements IMenuDao {
                 throw new DaoException("Failed to update menu" + menu + " with MenuItem:" + menuItem + "\t cause" +
                         e.getMessage(), e);
             }
+        } catch (Exception e) {
+            throw new DaoException("Failed to update menu" + menu + " with MenuItem:" + menuItem + "\t cause" +
+                    e.getMessage(), e);
+
         }
     }
 
