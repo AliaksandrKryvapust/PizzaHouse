@@ -2,7 +2,9 @@ package groupId.artifactId.controller.validator;
 
 import groupId.artifactId.controller.validator.api.IMenuValidator;
 import groupId.artifactId.core.dto.input.MenuDtoInput;
+import org.springframework.stereotype.Component;
 
+@Component
 public class MenuValidator implements IMenuValidator {
 
     public MenuValidator() {
