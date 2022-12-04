@@ -8,13 +8,20 @@ import groupId.artifactId.core.dto.output.crud.MenuDtoCrudOutput;
 import groupId.artifactId.dao.entity.Menu;
 import groupId.artifactId.dao.entity.api.IMenu;
 import groupId.artifactId.dao.entity.api.IMenuItem;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
+@Scope(value = "prototype", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class MenuMapper {
     private final MenuItemMapper menuItemMapper;
 
+    @Autowired
     public MenuMapper(MenuItemMapper menuItemMapper) {
         this.menuItemMapper = menuItemMapper;
     }
