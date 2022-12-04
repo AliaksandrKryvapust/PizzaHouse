@@ -20,22 +20,28 @@ import groupId.artifactId.exceptions.ServiceException;
 import groupId.artifactId.service.api.IMenuItemService;
 import groupId.artifactId.service.api.IOrderDataService;
 import groupId.artifactId.service.api.IOrderService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static groupId.artifactId.core.Constants.ORDER_START_DESCRIPTION;
 
+@Service
 public class OrderService implements IOrderService {
     private final ITicketDao ticketDao;
     private final IOrderDataService orderDataService;
     private final IMenuItemService menuItemService;
+    @PersistenceContext
     private final EntityManager entityManager;
     private final TicketMapper ticketMapper;
     private final SelectedItemMapper selectedItemMapper;
 
+    @Autowired
     public OrderService(ITicketDao ticketDao, IOrderDataService orderDataService, IMenuItemService menuItemService,
                         EntityManager entityManager, TicketMapper ticketMapper, SelectedItemMapper selectedItemMapper) {
         this.ticketDao = ticketDao;
