@@ -6,17 +6,20 @@ import groupId.artifactId.dao.entity.api.IMenu;
 import groupId.artifactId.dao.entity.api.IMenuItem;
 import groupId.artifactId.exceptions.DaoException;
 import groupId.artifactId.exceptions.NoContentException;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static groupId.artifactId.core.Constants.MENU_UK;
 
-
+@Repository
 public class MenuDao implements IMenuDao {
     private static final String SELECT_MENU = "SELECT menu from Menu menu ORDER BY id";
+    @PersistenceContext
     private final EntityManager entityManager;
 
     public MenuDao(EntityManager entityManager) {
