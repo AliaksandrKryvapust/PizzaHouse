@@ -1,6 +1,6 @@
 package groupId.artifactId.controller.servlet.api;
 
-import groupId.artifactId.AppContext;
+import groupId.artifactId.config.AppContext;
 import groupId.artifactId.controller.utils.JsonConverter;
 import groupId.artifactId.controller.validator.OrderDataValidator;
 import groupId.artifactId.controller.validator.api.IOrderDataValidator;

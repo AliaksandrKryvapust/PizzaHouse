@@ -1,6 +1,6 @@
 package groupId.artifactId.controller.servlet.api;
 
-import groupId.artifactId.AppContext;
+import groupId.artifactId.config.AppContext;
 import groupId.artifactId.controller.utils.JsonConverter;
 import groupId.artifactId.core.Constants;
 import groupId.artifactId.exceptions.NoContentException;
